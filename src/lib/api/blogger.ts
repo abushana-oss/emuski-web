@@ -197,9 +197,12 @@ export const fetchBlogPosts = cache(
   async (blogType: BlogType, maxResults: number = 50): Promise<BlogPost[]> => {
     const blogId = BLOG_IDS[blogType];
 
-    // Skip if blog ID not configured
+    // Skip if blog ID not configured (silent for optional blogs)
     if (!blogId) {
-      console.info(`Blog ${blogType} not configured, returning empty array`);
+      // Only log if it's not the optional successStories blog
+      if (blogType !== 'successStories') {
+        console.info(`Blog ${blogType} not configured, returning empty array`);
+      }
       return [];
     }
 
