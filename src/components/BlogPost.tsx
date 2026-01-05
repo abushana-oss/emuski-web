@@ -975,7 +975,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                 </div>
               </div>
 
-              {/* Right Sidebar - Table of Contents */}
+              {/* Right Sidebar - Table of Contents & CTA */}
               <aside
                 className={`${tocOpen ? 'fixed inset-0 bg-black/50 z-50 lg:relative lg:bg-transparent' : 'hidden'} lg:block lg:sticky lg:top-20 lg:self-start`}
                 onClick={(e) => {
@@ -999,12 +999,13 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                     </button>
                   )}
 
-                  <div className="bg-white lg:border lg:border-gray-200 lg:rounded-lg lg:p-6">
+                  {/* Table of Contents */}
+                  <div className="bg-white lg:border lg:border-gray-200 lg:rounded-lg lg:p-6 mb-6">
                     <h3 className="text-sm font-bold text-[#171A22] uppercase tracking-wider mb-6">
                       Table of Contents
                     </h3>
                     {isMounted && tableOfContents.length > 0 ? (
-                      <nav ref={tocNavRef} className="space-y-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
+                      <nav ref={tocNavRef} className="space-y-1 max-h-[calc(100vh-24rem)] overflow-y-auto">
                         {tableOfContents.map((item, index) => {
                           const isActive = activeSection === item.id;
                           return (
@@ -1027,12 +1028,43 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                       </nav>
                     ) : (
                       // Placeholder to maintain structure during hydration
-                      <nav className="space-y-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
+                      <nav className="space-y-1 max-h-[calc(100vh-24rem)] overflow-y-auto">
                         <div className="h-4 bg-gray-200 rounded w-full animate-pulse mb-2"></div>
                         <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse mb-2"></div>
                         <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse mb-2"></div>
                       </nav>
                     )}
+                  </div>
+
+                  {/* Sticky Call to Action - Desktop Only */}
+                  <div className="hidden lg:block sticky top-24 bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg p-6 shadow-lg border border-teal-500">
+                    <div className="text-center">
+                      <h3 className="text-xl font-bold text-white mb-3">
+                        Need Expert Help?
+                      </h3>
+                      <p className="text-teal-50 text-sm mb-5 leading-relaxed">
+                        Get professional manufacturing solutions tailored to your business needs
+                      </p>
+                      <div className="space-y-2.5">
+                        <a
+                          href="/contact"
+                          className="block w-full bg-white text-teal-700 px-5 py-3 rounded-lg font-bold hover:bg-teal-50 transition-all hover:scale-105 text-sm shadow-md"
+                        >
+                          Contact Us Now
+                        </a>
+                        <a
+                          href="tel:+918667088060"
+                          className="block w-full bg-teal-800 text-white px-5 py-3 rounded-lg font-bold hover:bg-teal-900 transition-all hover:scale-105 text-sm border border-teal-600 shadow-md"
+                        >
+                          +91-86670-88060
+                        </a>
+                      </div>
+                      <div className="text-teal-100 text-xs mt-4 space-y-1">
+                        <div>✓ Free Consultation</div>
+                        <div>✓ 15+ Years Experience</div>
+                        <div>✓ ISO Certified</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </aside>
