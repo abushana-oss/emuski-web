@@ -450,7 +450,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       </div>
 
       {/* Floating Action Buttons - Safe area aware */}
-      <div className="fixed right-4 md:right-8 bottom-24 md:bottom-32 z-[200] flex flex-col gap-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <div className="fixed right-4 md:right-8 bottom-6 md:bottom-8 z-[200] flex flex-col gap-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {/* Share Button */}
         <div className="relative">
           <button
@@ -520,16 +520,6 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
           <ArrowLeft className="h-4 w-4 md:h-5 md:w-5 rotate-90" />
         </button>
       </div>
-
-      {/* Mobile TOC Toggle - Enhanced for better visibility */}
-      <button
-        onClick={() => setTocOpen(!tocOpen)}
-        className="lg:hidden fixed left-4 bottom-24 z-[200] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-teal-600 to-teal-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 border border-teal-500"
-        aria-label="Open table of contents"
-      >
-        <Menu className="h-5 w-5" />
-        <span className="text-sm font-semibold">Contents</span>
-      </button>
 
       {/* Header */}
       <section className="bg-white pt-24 pb-6 md:pb-8">
