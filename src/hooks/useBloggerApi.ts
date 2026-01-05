@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import {
-  getBlogId,
   fetchBloggerPosts,
   fetchBloggerPost,
   searchBloggerPostsByLabel,
@@ -10,15 +9,13 @@ import {
   BloggerPost
 } from '../api/bloggerApi';
 
-// Your Blogger blog URL - Update this with your actual Blogger blog URL
-// Example: 'https://yourblog.blogspot.com' or your custom domain
-const BLOG_URL = 'https://emuski.blogspot.com'; // TODO: Replace with your actual blog URL
+// Emuski Feature Blog ID - All manufacturing articles
+const BLOG_ID = '3331639473149657933';
 
 export const useBloggerPosts = (maxResults: number = 10) => {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [blogId, setBlogId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -26,12 +23,8 @@ export const useBloggerPosts = (maxResults: number = 10) => {
         setLoading(true);
         setError(null);
 
-        // Get blog ID
-        const id = await getBlogId(BLOG_URL);
-        setBlogId(id);
-
-        // Fetch posts
-        const response = await fetchBloggerPosts(id, maxResults);
+        // Fetch posts directly using blog ID
+        const response = await fetchBloggerPosts(BLOG_ID, maxResults);
 
         // Convert to local format
         const convertedPosts = response.items.map(convertBloggerPostToLocalFormat);
@@ -47,7 +40,7 @@ export const useBloggerPosts = (maxResults: number = 10) => {
     fetchPosts();
   }, [maxResults]);
 
-  return { posts, loading, error, blogId };
+  return { posts, loading, error, blogId: BLOG_ID };
 };
 
 export const useBloggerPost = (postId: string) => {
@@ -61,11 +54,8 @@ export const useBloggerPost = (postId: string) => {
         setLoading(true);
         setError(null);
 
-        // Get blog ID
-        const blogId = await getBlogId(BLOG_URL);
-
-        // Fetch post
-        const bloggerPost = await fetchBloggerPost(blogId, postId);
+        // Fetch post directly using blog ID
+        const bloggerPost = await fetchBloggerPost(BLOG_ID, postId);
 
         // Convert to local format
         const convertedPost = convertBloggerPostToLocalFormat(bloggerPost);
@@ -97,11 +87,8 @@ export const useBloggerPostsByLabel = (label: string, maxResults: number = 10) =
         setLoading(true);
         setError(null);
 
-        // Get blog ID
-        const blogId = await getBlogId(BLOG_URL);
-
-        // Fetch posts by label
-        const response = await searchBloggerPostsByLabel(blogId, label, maxResults);
+        // Fetch posts by label directly using blog ID
+        const response = await searchBloggerPostsByLabel(BLOG_ID, label, maxResults);
 
         // Convert to local format
         const convertedPosts = response.items.map(convertBloggerPostToLocalFormat);

@@ -2,8 +2,10 @@ import { Navbar } from "@/components/Navbar"
 import { BlogPage } from "@/components/BlogPage"
 import { Footer } from "@/components/Footer"
 import { Metadata } from 'next'
+import { fetchAllBlogs } from '@/lib/api/blogger'
 
-export const dynamic = 'force-dynamic'
+// Enable ISR - Revalidate every hour instead of force-dynamic
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Manufacturing Blog | Engineering Insights & AI Innovation | EMUSKI',
@@ -38,11 +40,17 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Blog() {
+export default async function Blog() {
+  // Server-side data fetching with caching
+  const { manufacturing, engineering } = await fetchAllBlogs(50)
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <BlogPage />
+      <BlogPage
+        manufacturingPosts={manufacturing}
+        engineeringPosts={engineering}
+      />
       <Footer />
     </div>
   )

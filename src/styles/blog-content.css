@@ -79,11 +79,17 @@
   }
 }
 
-/* Main content area - ensure proper scrolling */
+/* Main content area - prevent layout shifts and scroll conflicts */
 @media (min-width: 1024px) {
   .article-main-content {
-    min-height: 150vh; /* Ensure enough height to scroll and trigger sticky */
+    min-height: auto; /* Let content determine natural height */
+    contain: layout; /* Prevent layout shifts from affecting scroll */
   }
+}
+
+/* Prevent any elements from triggering scroll adjustments */
+.article-main-content * {
+  scroll-snap-align: none !important;
 }
 
 /* Ensure grid container doesn't interfere with sticky */
@@ -94,18 +100,28 @@
   }
 }
 
-/* Ensure headings have proper scroll margin for sticky header - Semrush style */
+/* Ensure headings have proper scroll margin for sticky header - with FAQ section optimization */
 .article-content h2,
 .article-content h3,
 .article-content h4 {
-  scroll-margin-top: 96px; /* 96px for desktop navigation (64px navbar + 32px padding) */
+  scroll-margin-top: 120px; /* Increased to 120px for better spacing (64px navbar + 56px padding) */
+  scroll-snap-align: none; /* Prevent scroll-snap conflicts */
+}
+
+/* FAQ sections need extra scroll margin to prevent glitching */
+.article-content .faq-question {
+  scroll-margin-top: 140px; /* Extra margin for FAQ questions */
 }
 
 @media (max-width: 768px) {
   .article-content h2,
   .article-content h3,
   .article-content h4 {
-    scroll-margin-top: 80px; /* 80px for mobile (64px navbar + 16px padding) */
+    scroll-margin-top: 100px; /* Increased for mobile (64px navbar + 36px padding) */
+  }
+
+  .article-content .faq-question {
+    scroll-margin-top: 120px;
   }
 }
 
@@ -120,13 +136,14 @@
 /* Ensure paragraphs have proper spacing and no overflow - Enhanced */
 .article-content p {
   margin-top: 0;
-  margin-bottom: 1.25rem;
-  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  line-height: 1.75;
   max-width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
   color: #171A22 !important;
-  font-size: 16px !important;
+  font-size: 18px !important;
+  font-weight: 400;
 }
 
 /* First paragraph - Make it stand out (Lead Paragraph) */
@@ -176,13 +193,16 @@
   letter-spacing: -0.02em;
 }
 
-/* FAQ Questions - Extra Bold (Applied via JavaScript) */
+/* FAQ Questions - Extra Bold (Applied via JavaScript) with scroll optimization */
 .article-content .faq-question {
   font-weight: 900 !important;
   color: #171A22 !important;
   margin-top: 1.5rem !important;
   margin-bottom: 1rem !important;
   letter-spacing: -0.03em !important;
+  /* Prevent scroll glitching on FAQ sections */
+  contain: layout style;
+  will-change: auto; /* Don't animate to prevent scroll conflicts */
 }
 
 /* Ensure all text inside FAQ questions is bold */
@@ -286,13 +306,14 @@
 }
 
 .article-content li {
-  margin-bottom: 0.75rem;
-  line-height: 1.6;
+  margin-bottom: 0.875rem;
+  line-height: 1.75;
   max-width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
   color: #171A22;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 400;
 }
 
 /* Nested lists */
@@ -479,8 +500,8 @@
 
   .article-content p,
   .article-content li {
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 16px !important;
+    line-height: 1.7;
   }
 
   .article-content ul,

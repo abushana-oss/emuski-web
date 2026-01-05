@@ -1,9 +1,9 @@
 const config = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-    ...(process.env.NODE_ENV === 'production' ? {
-      '@fullhuman/postcss-purgecss': {
+  plugins: [
+    'tailwindcss',
+    'autoprefixer',
+    ...(process.env.NODE_ENV === 'production' ? [
+      ['@fullhuman/postcss-purgecss', {
         content: [
           './app/**/*.{js,jsx,ts,tsx}',
           './src/**/*.{js,jsx,ts,tsx}',
@@ -140,8 +140,8 @@ const config = {
         },
         // Don't remove CSS from node_modules that we need
         blocklist: [],
-      },
-      cssnano: {
+      }],
+      ['cssnano', {
         preset: ['default', {
           discardComments: { removeAll: true },
           normalizeWhitespace: true,
@@ -150,9 +150,9 @@ const config = {
           reduceIdents: false, // Prevent breaking animations
           zindex: false, // Prevent z-index optimization
         }]
-      }
-    } : {}),
-  },
+      }]
+    ] : []),
+  ],
 }
 
 export default config

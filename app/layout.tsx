@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
-import Script from 'next/script'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import '@/index.css'
 import { Providers } from './providers'
 
@@ -87,45 +87,6 @@ export default function RootLayout({
           media="(min-width: 768px)"
           fetchPriority="high"
         />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-
-        {/* Google Analytics - Lazy loaded after user interaction */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-
-              // Lazy load GA only after user interaction or 3 seconds
-              let gaLoaded = false;
-              function loadGA() {
-                if (gaLoaded) return;
-                gaLoaded = true;
-                gtag('js', new Date());
-                gtag('config', 'G-QFDFYZLZPK', {
-                  'send_page_view': false,
-                  'cookie_flags': 'SameSite=None;Secure'
-                });
-                var script = document.createElement('script');
-                script.async = true;
-                script.src = 'https://www.googletagmanager.com/gtag/js?id=G-QFDFYZLZPK';
-                document.head.appendChild(script);
-              }
-
-              // Load on first interaction with passive listeners to reduce main-thread work
-              ['mousedown', 'touchstart'].forEach(function(event) {
-                window.addEventListener(event, loadGA, { once: true, passive: true });
-              });
-              ['keydown', 'scroll'].forEach(function(event) {
-                window.addEventListener(event, loadGA, { once: true, passive: true });
-              });
-
-              // Fallback: load after 3 seconds
-              setTimeout(loadGA, 3000);
-            `
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -195,13 +156,8 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <Script
-          src="https://www.google.com/recaptcha/api.js"
-          strategy="lazyOnload"
-          async
-          defer
-        />
         <Providers>{children}</Providers>
+        <GoogleAnalytics gaId="G-QFDFYZLZPK" />
       </body>
     </html>
   )

@@ -81,7 +81,7 @@ export const Recaptcha = ({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <div className="recaptcha-container">
+      <div className="recaptcha-container inline-block">
         <Suspense fallback={
           <div className="flex items-center space-x-2 text-sm text-gray-500 py-6">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emuski-teal"></div>
@@ -138,7 +138,7 @@ export const Recaptcha = ({
         </div>
       )}
 
-      {isLoaded && !error && (
+      {isLoaded && !error && size === 'normal' && (
         <p className="text-xs text-gray-500">
           This site is protected by reCAPTCHA and the Google{' '}
           <a

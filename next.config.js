@@ -13,7 +13,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Environment variables
-const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
 
 /**
@@ -198,9 +197,6 @@ const nextConfig = {
 
   // Experimental features
   experimental: {
-    // Optimize CSS with critical CSS extraction
-    optimizeCss: true,
-
     // Optimize package imports to reduce bundle size
     optimizePackageImports: [
       'lucide-react',
@@ -225,7 +221,38 @@ const nextConfig = {
   turbopack: {},
 
   // Webpack configuration
-  webpack: configureWebpack,
+  webpack: (config, options) => {
+    // Fix SWC helpers resolution issue in Next.js 16
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@swc/helpers/_/_async_to_generator': '@swc/helpers/_async_to_generator',
+      '@swc/helpers/_/_call_super': '@swc/helpers/_call_super',
+      '@swc/helpers/_/_class_call_check': '@swc/helpers/_class_call_check',
+      '@swc/helpers/_/_class_private_field_get': '@swc/helpers/_class_private_field_get',
+      '@swc/helpers/_/_class_private_field_init': '@swc/helpers/_class_private_field_init',
+      '@swc/helpers/_/_class_private_field_set': '@swc/helpers/_class_private_field_set',
+      '@swc/helpers/_/_class_private_method_get': '@swc/helpers/_class_private_method_get',
+      '@swc/helpers/_/_class_private_method_init': '@swc/helpers/_class_private_method_init',
+      '@swc/helpers/_/_construct': '@swc/helpers/_construct',
+      '@swc/helpers/_/_create_class': '@swc/helpers/_create_class',
+      '@swc/helpers/_/_define_property': '@swc/helpers/_define_property',
+      '@swc/helpers/_/_inherits': '@swc/helpers/_inherits',
+      '@swc/helpers/_/_instanceof': '@swc/helpers/_instanceof',
+      '@swc/helpers/_/_interop_require_default': '@swc/helpers/_interop_require_default',
+      '@swc/helpers/_/_interop_require_wildcard': '@swc/helpers/_interop_require_wildcard',
+      '@swc/helpers/_/_object_spread': '@swc/helpers/_object_spread',
+      '@swc/helpers/_/_object_spread_props': '@swc/helpers/_object_spread_props',
+      '@swc/helpers/_/_object_without_properties': '@swc/helpers/_object_without_properties',
+      '@swc/helpers/_/_sliced_to_array': '@swc/helpers/_sliced_to_array',
+      '@swc/helpers/_/_to_array': '@swc/helpers/_to_array',
+      '@swc/helpers/_/_to_consumable_array': '@swc/helpers/_to_consumable_array',
+      '@swc/helpers/_/_ts_generator': '@swc/helpers/_ts_generator',
+      '@swc/helpers/_/_type_of': '@swc/helpers/_type_of',
+      '@swc/helpers/_/_wrap_native_super': '@swc/helpers/_wrap_native_super',
+    };
+
+    return configureWebpack(config, options);
+  },
 };
 
 export default nextConfig;

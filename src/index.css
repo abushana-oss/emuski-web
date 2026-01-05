@@ -15,15 +15,27 @@ All colors MUST be HSL.
 */
 
 @layer base {
-    /* Smooth scroll behavior for better UX */
+    /* Smooth scroll behavior for better UX - with performance optimization */
     html {
         scroll-behavior: smooth;
+        scroll-padding-top: 120px; /* Increased to prevent navbar overlap */
+        /* Prevent scroll-snap which can cause glitching */
+        scroll-snap-type: none;
+        /* Optimize scroll performance */
+        overflow-anchor: auto;
     }
 
     /* Disable smooth scroll for users who prefer reduced motion */
     @media (prefers-reduced-motion: reduce) {
         html {
             scroll-behavior: auto;
+        }
+    }
+
+    /* Mobile scroll optimization */
+    @media (max-width: 768px) {
+        html {
+            scroll-padding-top: 100px;
         }
     }
 
@@ -192,11 +204,16 @@ All colors MUST be HSL.
         font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
         font-variation-settings: normal;
         overflow-x: hidden;
+        overflow-y: scroll; /* Always show scrollbar to prevent layout shift */
         width: 100%;
         margin: 0;
         padding: 0;
         font-size: 18px;
         line-height: 1.7;
+        /* Improve scroll performance and prevent glitches */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain; /* Prevent scroll chaining */
+        scroll-snap-type: none; /* Disable scroll snap */
     }
 
     @media (min-width: 640px) {
@@ -388,4 +405,33 @@ All colors MUST be HSL.
 .stagger-fade-in > * {
   animation: fadeIn 0.5s ease-in-out forwards;
   opacity: 0;
+}
+
+/* reCAPTCHA Container Styling */
+.recaptcha-container {
+  display: inline-block;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.recaptcha-compact .recaptcha-container {
+  background: white;
+  border-radius: 6px;
+  padding: 0;
+  overflow: visible;
+}
+
+/* Ensure reCAPTCHA iframe fits properly */
+.recaptcha-container > div,
+.recaptcha-container iframe {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide the hidden textarea */
+.g-recaptcha-response {
+  display: none !important;
 }

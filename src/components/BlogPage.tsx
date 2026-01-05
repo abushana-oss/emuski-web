@@ -1,229 +1,83 @@
 'use client'
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Filter, Calendar, User, Clock, ChevronRight } from "lucide-react";
-import { Card } from "./ui/card";
-import { useBloggerPosts } from "../hooks/useBloggerApi";
-import { useEngineeringPosts } from "../hooks/useEngineeringBlogger";
-import { BlogPostSummary } from "../api/types";
+import { BlogPost } from "@/lib/api/blogger";
 import { EmailSubscription } from "./EmailSubscription";
-import { LoadingPage, ServerErrorPage } from "./ui/error-pages";
 import { SuccessStoriesSection } from "./SuccessStoriesSection";
 
-// Helper function to extract first sentence
 const getFirstSentence = (text: string): string => {
   if (!text) return '';
-  // Match first sentence ending with . ! or ?
-  const match = text.match(/^[^.!?]+[.!?]/);
-  return match ? match[0].trim() : text.split('.')[0].trim() + '.';
+  const match = text.match(/^[^.!?]*[.!?]/);
+  return match ? match[0].trim() : text.split('\n')[0].trim().slice(0, 150) + '...';
 };
 
-export const BlogPage = () => {
+const POSTS_PER_PAGE = 6;
+
+interface BlogPageProps {
+  manufacturingPosts: BlogPost[];
+  engineeringPosts: BlogPost[];
+}
+
+export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch posts from both Manufacturing and Engineering blogs
-  const { posts: manufacturingPosts, loading: mfgLoading, error: mfgError } = useBloggerPosts(20);
-  const { posts: engineeringPosts, loading: engLoading, error: engError } = useEngineeringPosts(20);
+  // Primary blog posts (manufacturing-focused)
+  const allPosts = useMemo(() => [...manufacturingPosts], [manufacturingPosts]);
 
-  // Combine posts from both blogs
-  const allPosts = useMemo(() => {
-    return [...(manufacturingPosts || []), ...(engineeringPosts || [])];
-  }, [manufacturingPosts, engineeringPosts]);
-
-  const loading = mfgLoading || engLoading;
-  const error = mfgError || engError;
-
-  // Extract categories from posts
   const categories = useMemo(() => {
-    const cats = new Set(['All']);
-    allPosts.forEach(post => {
-      if (post.category) cats.add(post.category);
-    });
+    const cats = new Set<string>(['All']);
+    allPosts.forEach(post => post.category && cats.add(post.category));
     return Array.from(cats);
   }, [allPosts]);
 
-  // Filter posts based on category
   const filteredPosts = useMemo(() => {
-    return allPosts.filter(post => {
-      const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
-      return matchesCategory;
-    });
+    if (selectedCategory === "All") return allPosts;
+    return allPosts.filter(post => post.category === selectedCategory);
   }, [allPosts, selectedCategory]);
 
-  const featuredPosts = filteredPosts.slice(0, 3); // First 3 as featured
-  const regularPosts = filteredPosts.slice(3); // Rest as regular
+  // Reset page when category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
 
+  // Smooth scroll to articles on pagination
+  const scrollToArticles = useCallback(() => {
+    const element = document.getElementById('latest-articles');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, []);
 
-  // Handle loading state
-  if (loading) {
-    return <LoadingPage title="Loading Articles" description="Please wait while we fetch the latest insights..." />;
-  }
+  useEffect(() => {
+    if (currentPage > 1) {
+      scrollToArticles();
+    }
+  }, [currentPage, scrollToArticles]);
 
-  // If error or no posts from API, show simplified state
-  if (error || allPosts.length === 0) {
+  const featuredPost = filteredPosts[0];
+  const regularPostsAll = filteredPosts.slice(1);
+  const totalPages = Math.ceil(regularPostsAll.length / POSTS_PER_PAGE);
+  const paginatedPosts = regularPostsAll.slice(
+    (currentPage - 1) * POSTS_PER_PAGE,
+    currentPage * POSTS_PER_PAGE
+  );
+
+  const hasPosts = allPosts.length > 0;
+
+  if (!hasPosts) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* Header Navigation */}
-        <section className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-            <div className="flex items-center justify-between py-4">
-              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Manufacturing Blog</h1>
-            </div>
+        <section className="bg-white py-24">
+          <div className="max-w-4xl mx-auto text-center px-6">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">No Articles Yet</h1>
+            <p className="text-lg text-gray-600">Check back soon for expert insights on manufacturing and engineering.</p>
           </div>
         </section>
-
-        {/* Message */}
-        <section className="bg-white py-16">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 text-center">
-            {error ? (
-              <div className="max-w-2xl mx-auto">
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Updating Blog Content</h2>
-                  <p className="text-gray-700">
-                    We're currently updating our blog content. Meanwhile, explore our success stories and resources below.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="max-w-2xl mx-auto">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">No articles found</h2>
-                <p className="text-gray-600">Check back soon for new manufacturing insights and expert perspectives.</p>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Topics & Newsletter Section */}
-        <section className="bg-white py-16 border-t border-gray-200">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-            <div className="grid lg:grid-cols-2 gap-12">
-              {/* Topics */}
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">Topics We Cover</h3>
-
-                {/* Manufacturing Topics */}
-                <div className="mb-6">
-                  <h4 className="text-lg font-bold text-emuski-teal-dark mb-3 flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                    </svg>
-                    Manufacturing
-                  </h4>
-                  <div className="grid grid-cols-1 gap-2 ml-7">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                      <span className="text-gray-700">Precision Manufacturing</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                      <span className="text-gray-700">CNC Machining & Fabrication</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                      <span className="text-gray-700">Quality Assurance</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                      <span className="text-gray-700">Industry 4.0 & Smart Factories</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Engineering Topics */}
-                <div>
-                  <h4 className="text-lg font-bold text-emuski-teal-dark mb-3 flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                    </svg>
-                    Engineering
-                  </h4>
-                  <div className="grid grid-cols-1 gap-2 ml-7">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                      <span className="text-gray-700">Cost Engineering & VAVE</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                      <span className="text-gray-700">Design for Manufacturing (DFM)</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                      <span className="text-gray-700">Supply Chain Optimization</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                      <span className="text-gray-700">AI & Automation</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Newsletter */}
-              <div className="bg-gradient-to-br from-emuski-teal to-emuski-teal-dark rounded-2xl p-8 text-white">
-                <EmailSubscription variant="default" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Engineering Blog Section */}
-        {engineeringPosts.length > 0 && (
-          <section className="bg-gray-50 py-16">
-            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-              <div className="mb-8 flex items-center space-x-3">
-                <div className="h-12 w-1 bg-emuski-teal-dark rounded"></div>
-                <h2 className="text-3xl font-bold text-gray-900">Engineering Services</h2>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {engineeringPosts.slice(0, 6).map((post) => (
-                  <Link key={post.id} href={`/blog/${post.slug}`}>
-                    <article className="group cursor-pointer bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg hover:border-emuski-teal/40 transition-all duration-300 h-full flex flex-col">
-                      <div className="relative h-52 overflow-hidden">
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute top-3 left-3">
-                          <span className="inline-block px-2.5 py-1 bg-emuski-teal text-white text-xs font-semibold rounded">
-                            Engineering
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="p-5 flex-1 flex flex-col">
-                        <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-emuski-teal-dark transition-colors line-clamp-2 leading-snug">
-                          {post.title}
-                        </h3>
-
-                        <p className="text-sm text-gray-600 mb-4 flex-1">
-                          {getFirstSentence(post.excerpt)}
-                        </p>
-
-                        <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
-                          <div className="flex items-center space-x-3">
-                            <span className="font-medium text-gray-700">{post.author}</span>
-                            <span>•</span>
-                            <div className="flex items-center space-x-1">
-                              <Clock className="h-3 w-3" />
-                              <span>{post.readTime}</span>
-                            </div>
-                          </div>
-                          <span>{new Date(post.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                        </div>
-                      </div>
-                    </article>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Success Stories Section */}
+        {engineeringPosts.length > 0 && <EngineeringSection posts={engineeringPosts} />}
         <SuccessStoriesSection />
       </div>
     );
@@ -231,122 +85,137 @@ export const BlogPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Navigation */}
-      <section className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-          <div className="flex items-center justify-between py-4">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">Manufacturing Blog</h1>
+      {/* Hero Header */}
+      <section className="relative py-16 lg:py-24 overflow-hidden" style={{ backgroundColor: 'rgb(18, 26, 33)' }}>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4fd3d4_1px,transparent_1px),linear-gradient(to_bottom,#4fd3d4_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        </div>
+        <div className="relative z-10 container mx-auto px-6 lg:px-12">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <span className="text-emuski-teal text-sm font-semibold uppercase tracking-wider">Engineering Blog</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
+              Expert Insights for Modern Manufacturing and Engineering
+            </h1>
+            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto">
+              Practical strategies to reduce costs, improve quality, and implement intelligent manufacturing solutions.
+            </p>
+            <a
+              href="#latest-articles"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-emuski-teal-darker hover:bg-emuski-teal-dark text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl"
+            >
+              Explore Articles
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Sticky Category Navigation */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="flex items-center justify-between py-5">
+            <h2 className="text-2xl font-bold text-gray-900">Manufacturing Blog</h2>
 
             {/* Desktop Categories */}
-            <div className="hidden md:flex items-center space-x-6">
-              {categories.slice(0, 5).map(category => (
+            <div className="hidden md:flex items-center gap-8">
+              {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`text-sm font-medium transition-colors relative ${
+                  className={`relative text-sm font-medium transition-colors pb-1 ${
                     selectedCategory === category
-                      ? 'text-emuski-teal-dark font-semibold after:absolute after:bottom-[-18px] after:left-0 after:right-0 after:h-0.5 after:bg-emuski-teal-dark'
+                      ? 'text-emuski-teal-dark after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-emuski-teal-dark'
                       : 'text-gray-600 hover:text-emuski-teal-dark'
                   }`}
+                  aria-current={selectedCategory === category ? 'page' : undefined}
                 >
                   {category}
                 </button>
               ))}
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Filter Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              aria-label="Toggle menu"
+              className="md:hidden p-3 rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Filter by category"
+              aria-expanded={mobileMenuOpen}
             >
               <Filter className="h-5 w-5 text-gray-700" />
             </button>
           </div>
 
-          {/* Mobile Categories Dropdown */}
+          {/* Mobile Dropdown */}
           {mobileMenuOpen && (
-            <div className="md:hidden pb-4 pt-2 border-t border-gray-100 mt-4">
-              <div className="space-y-2">
-                {categories.map(category => (
-                  <button
-                    key={category}
-                    onClick={() => {
-                      setSelectedCategory(category);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      selectedCategory === category
-                        ? 'bg-emuski-teal/10 text-emuski-teal-dark font-semibold'
-                        : 'text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
+            <div className="md:hidden py-4 border-t border-gray-100 animate-in slide-in-from-top-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`block w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                    selectedCategory === category
+                      ? 'bg-emuski-teal/10 text-emuski-teal-dark'
+                      : 'hover:bg-gray-50 text-gray-700'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
             </div>
           )}
         </div>
-      </section>
+      </nav>
 
-      {/* Hero Featured Post */}
-      {featuredPosts.length > 0 && (
-        <section className="bg-white py-12">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-            <Link href={`/blog/${featuredPosts[0].slug}`}>
-              <div className="group cursor-pointer bg-gradient-to-br from-emuski-teal/5 to-blue-50 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-500">
-                <div className="grid lg:grid-cols-2 gap-0">
-                  {/* Image */}
-                  <div className="relative h-[300px] lg:h-[500px] overflow-hidden">
-                    <img
-                      src={featuredPosts[0].image}
-                      alt={featuredPosts[0].title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-block px-4 py-1.5 bg-emuski-teal text-white text-xs font-bold uppercase tracking-wider rounded-full">
-                        Featured
-                      </span>
+      {/* Featured Post */}
+      {featuredPost && (
+        <section className="bg-white py-12 lg:py-16">
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+            <Link href={`/blog/${featuredPost.slug}`} className="block group">
+              <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 rounded-2xl overflow-hidden bg-gradient-to-br from-emuski-teal/5 to-blue-50 hover:shadow-2xl transition-shadow">
+                <div className="relative h-64 lg:h-96 overflow-hidden">
+                  <img
+                    src={featuredPost.image}
+                    alt={featuredPost.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                  <span className="absolute top-4 left-4 px-4 py-1.5 bg-emuski-teal text-white text-xs font-bold uppercase rounded-full">
+                    Featured
+                  </span>
+                </div>
+
+                <div className="p-8 lg:p-12 flex flex-col justify-center">
+                  <span className="inline-block px-4 py-1.5 bg-emuski-teal/10 text-emuski-teal-dark text-xs font-bold uppercase rounded mb-4">
+                    {featuredPost.category}
+                  </span>
+                  <h3 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6 group-hover:text-emuski-teal-dark transition-colors">
+                    {featuredPost.title}
+                  </h3>
+                  <p className="text-lg text-gray-600 mb-8">{getFirstSentence(featuredPost.excerpt)}</p>
+
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      <span>{featuredPost.author}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      <time dateTime={featuredPost.publishDate}>
+                        {new Date(featuredPost.publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                      </time>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      <span>{featuredPost.readTime}</span>
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="p-8 lg:p-12 flex flex-col justify-center">
-                    <div className="mb-4">
-                      <span className="inline-block px-3 py-1 bg-emuski-teal/10 text-emuski-teal-dark text-xs font-semibold uppercase tracking-wider rounded">
-                        {featuredPosts[0].category}
-                      </span>
-                    </div>
-
-                    <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 group-hover:text-emuski-teal-dark transition-colors leading-tight">
-                      {featuredPosts[0].title}
-                    </h2>
-
-                    <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                      {getFirstSentence(featuredPosts[0].excerpt)}
-                    </p>
-
-                    <div className="flex items-center space-x-6 text-sm text-gray-500 mb-6">
-                      <div className="flex items-center space-x-2">
-                        <User className="h-4 w-4" />
-                        <span>{featuredPosts[0].author}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4" />
-                        <span>{new Date(featuredPosts[0].publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4" />
-                        <span>{featuredPosts[0].readTime}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center text-emuski-teal-dark font-semibold group-hover:text-emuski-teal-darker">
-                      Read Full Article
-                      <ChevronRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
+                  <span className="inline-flex items-center text-emuski-teal-dark font-semibold group-hover:translate-x-1 transition-transform">
+                    Read Article <ChevronRight className="h-5 w-5 ml-1" />
+                  </span>
                 </div>
               </div>
             </Link>
@@ -354,239 +223,219 @@ export const BlogPage = () => {
         </section>
       )}
 
-      {/* Latest Articles Section */}
-      <section className="bg-gray-50 py-12">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-          <div className="mb-8 flex items-center justify-between">
+      {/* Latest Articles */}
+      <section id="latest-articles" className="bg-gray-50 py-12 lg:py-16">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="flex items-center justify-between mb-10">
             <h2 className="text-3xl font-bold text-gray-900">Latest Articles</h2>
-            {regularPosts.length > 0 && (
-              <span className="text-sm text-gray-500">
-                Showing {regularPosts.length} article{regularPosts.length !== 1 ? 's' : ''}
-              </span>
+            {regularPostsAll.length > 0 && (
+              <p className="text-sm text-gray-600">
+                Showing {(currentPage - 1) * POSTS_PER_PAGE + 1}–{Math.min(currentPage * POSTS_PER_PAGE, regularPostsAll.length)} of {regularPostsAll.length}
+              </p>
             )}
           </div>
 
-          {/* Article Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {regularPosts.map((post) => (
-              <Link key={post.id} href={`/blog/${post.slug}`}>
-                <article className="group cursor-pointer bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg hover:border-emuski-teal/40 transition-all duration-300 h-full flex flex-col">
-                  {/* Image */}
-                  <div className="relative h-52 overflow-hidden">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <span className="inline-block px-2.5 py-1 bg-white/95 text-gray-900 text-xs font-medium rounded">
-                        {post.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-5 flex-1 flex flex-col">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-emuski-teal-dark transition-colors line-clamp-2 leading-snug">
-                      {post.title}
-                    </h3>
-
-                    <p className="text-sm text-gray-600 mb-4 flex-1">
-                      {getFirstSentence(post.excerpt)}
-                    </p>
-
-                    {/* Meta */}
-                    <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
-                      <div className="flex items-center space-x-3">
-                        <span className="font-medium text-gray-700">{post.author}</span>
-                        <span>•</span>
-                        <div className="flex items-center space-x-1">
-                          <Clock className="h-3 w-3" />
-                          <span>{post.readTime}</span>
-                        </div>
-                      </div>
-                      <span>{new Date(post.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                    </div>
-                  </div>
-                </article>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* No Results */}
-      {filteredPosts.length === 0 && allPosts.length > 0 && (
-        <section className="bg-white py-16">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-            <div className="max-w-2xl mx-auto text-center space-y-4">
-              <h3 className="text-2xl font-bold text-gray-900">No articles found</h3>
-              <p className="text-gray-600">
-                No articles available in this category. Browse all articles by clearing the filter.
-              </p>
-              <button
-                onClick={() => setSelectedCategory("All")}
-                className="inline-flex items-center px-6 py-3 bg-emuski-teal-dark hover:bg-emuski-teal-darker text-white font-semibold rounded-lg transition-colors"
-              >
-                Clear All Filters
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Topics & Newsletter Section */}
-      <section className="bg-white py-16 border-t border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Topics */}
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Topics We Cover</h3>
-
-              {/* Manufacturing Topics */}
-              <div className="mb-6">
-                <h4 className="text-lg font-bold text-emuski-teal-dark mb-3 flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                  </svg>
-                  Manufacturing
-                </h4>
-                <div className="grid grid-cols-1 gap-2 ml-7">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                    <span className="text-gray-700">Precision Manufacturing</span>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                    <span className="text-gray-700">CNC Machining & Fabrication</span>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                    <span className="text-gray-700">Quality Assurance</span>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                    <span className="text-gray-700">Industry 4.0 & Smart Factories</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Engineering Topics */}
-              <div>
-                <h4 className="text-lg font-bold text-emuski-teal-dark mb-3 flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                  </svg>
-                  Engineering
-                </h4>
-                <div className="grid grid-cols-1 gap-2 ml-7">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                    <span className="text-gray-700">Cost Engineering & VAVE</span>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                    <span className="text-gray-700">Design for Manufacturing (DFM)</span>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                    <span className="text-gray-700">Supply Chain Optimization</span>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emuski-teal mt-2"></div>
-                    <span className="text-gray-700">AI & Automation</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Newsletter */}
-            <div className="bg-gradient-to-br from-emuski-teal to-emuski-teal-dark rounded-2xl p-8 text-white">
-              <EmailSubscription variant="default" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Engineering Blog Section */}
-      {engineeringPosts.length > 0 && (
-        <section className="bg-gray-50 py-16">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
-            <div className="mb-8 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="h-12 w-1 bg-emuski-teal-dark rounded"></div>
-                <h2 className="text-3xl font-bold text-gray-900">Engineering Services</h2>
-              </div>
-              <span className="text-sm text-gray-500">
-                {engineeringPosts.length} article{engineeringPosts.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-
-            {/* Engineering Articles Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {engineeringPosts.slice(0, 6).map((post) => (
-                <Link key={post.id} href={`/blog/${post.slug}`}>
-                  <article className="group cursor-pointer bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg hover:border-emuski-teal/40 transition-all duration-300 h-full flex flex-col">
-                    {/* Image */}
-                    <div className="relative h-52 overflow-hidden">
+          {paginatedPosts.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {paginatedPosts.map((post) => (
+                <article key={post.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-emuski-teal/30 transition-all duration-300 flex flex-col">
+                  <Link href={`/blog/${post.slug}`} className="block">
+                    <div className="relative h-56 overflow-hidden">
                       <img
                         src={post.image}
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
                       />
-                      <div className="absolute top-3 left-3">
-                        <span className="inline-block px-2.5 py-1 bg-emuski-teal text-white text-xs font-semibold rounded">
-                          Engineering
-                        </span>
-                      </div>
+                      <span className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold rounded">
+                        {post.category}
+                      </span>
                     </div>
+                  </Link>
 
-                    {/* Content */}
-                    <div className="p-5 flex-1 flex flex-col">
-                      <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-emuski-teal-dark transition-colors line-clamp-2 leading-snug">
+                  <div className="p-6 flex-1 flex flex-col">
+                    <Link href={`/blog/${post.slug}`} className="block flex-1">
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 hover:text-emuski-teal-dark transition-colors line-clamp-2">
                         {post.title}
                       </h3>
-
-                      <p className="text-sm text-gray-600 mb-4 flex-1">
+                      <p className="text-gray-600 text-sm mb-6 flex-1 line-clamp-3">
                         {getFirstSentence(post.excerpt)}
                       </p>
+                    </Link>
 
-                      {/* Meta */}
-                      <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
-                        <div className="flex items-center space-x-3">
-                          <span className="font-medium text-gray-700">{post.author}</span>
-                          <span>•</span>
-                          <div className="flex items-center space-x-1">
-                            <Clock className="h-3 w-3" />
-                            <span>{post.readTime}</span>
-                          </div>
-                        </div>
-                        <span>{new Date(post.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                    <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
+                      <div className="flex items-center gap-4">
+                        <span className="font-medium text-gray-700">{post.author}</span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3.5 w-3.5" />
+                          {post.readTime}
+                        </span>
                       </div>
+                      <time dateTime={post.publishDate}>
+                        {new Date(post.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </time>
                     </div>
-                  </article>
-                </Link>
+                  </div>
+                </article>
               ))}
             </div>
+          ) : (
+            <div className="text-center py-16">
+              <p className="text-xl text-gray-600 mb-6">No articles found in this category.</p>
+              <button
+                onClick={() => setSelectedCategory("All")}
+                className="px-6 py-3 bg-emuski-teal-dark hover:bg-emuski-teal-darker text-white font-semibold rounded-lg transition-colors"
+              >
+                Show All Articles
+              </button>
+            </div>
+          )}
 
-            {/* View All Link */}
-            {engineeringPosts.length > 6 && (
-              <div className="mt-8 text-center">
-                <button
-                  onClick={() => setSelectedCategory('Engineering')}
-                  className="inline-flex items-center px-6 py-3 bg-emuski-teal-dark hover:bg-emuski-teal-darker text-white font-semibold rounded-lg transition-colors"
-                >
-                  View All Engineering Articles
-                  <ChevronRight className="h-5 w-5 ml-1" />
-                </button>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <nav className="mt-16 flex justify-center items-center gap-3" aria-label="Pagination">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-5 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Previous page"
+              >
+                Previous
+              </button>
+
+              <div className="flex gap-2">
+                {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                  const page = i + 1;
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-12 h-12 rounded-lg font-medium transition-colors ${
+                        currentPage === page
+                          ? 'bg-emuski-teal text-white'
+                          : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
+                      aria-current={currentPage === page ? 'page' : undefined}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
               </div>
-            )}
-          </div>
-        </section>
-      )}
 
-      {/* Success Stories Section */}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="px-5 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Next page"
+              >
+                Next
+              </button>
+            </nav>
+          )}
+        </div>
+      </section>
+
+      {/* Topics + Newsletter */}
+      <section className="bg-white py-12 border-t border-gray-100">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 mb-6">Popular Topics</h3>
+            <div className="grid grid-cols-2 gap-8">
+              <div>
+                <h4 className="font-semibold text-emuski-teal-dark mb-3">Manufacturing</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  {['Precision Engineering', 'CNC Machining', 'Quality Control', 'Smart Factory'].map(topic => (
+                    <li key={topic} className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-emuski-teal rounded-full" />
+                      {topic}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-emuski-teal-dark mb-3">Engineering</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  {['Cost Optimization', 'DFM/DFA', 'Supply Chain', 'AI Integration'].map(topic => (
+                    <li key={topic} className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-emuski-teal rounded-full" />
+                      {topic}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-emuski-teal to-emuski-teal-dark rounded-2xl p-8 text-white">
+            <EmailSubscription variant="compact" />
+          </div>
+        </div>
+      </section>
+
+      {/* Independent Engineering Articles Section */}
+      {engineeringPosts.length > 0 && <EngineeringSection posts={engineeringPosts} />}
+
       <SuccessStoriesSection />
     </div>
   );
 };
+
+// Independent Engineering Section (no state dependency)
+const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => (
+  <section className="bg-gray-50 py-16">
+    <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+      <div className="flex items-center justify-between mb-10">
+        <div className="flex items-center gap-4">
+          <div className="w-1 h-12 bg-emuski-teal-dark rounded" />
+          <h2 className="text-3xl font-bold text-gray-900">Engineering Articles</h2>
+        </div>
+        <span className="text-sm text-gray-600">{posts.length} articles</span>
+      </div>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {posts.slice(0, 6).map((post) => (
+          <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
+            <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all h-full flex flex-col">
+              <div className="relative h-56 overflow-hidden">
+                <img 
+                  src={post.image} 
+                  alt={post.title} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  loading="lazy" 
+                />
+                <span className="absolute top-4 left-4 px-3 py-1 bg-emuski-teal text-white text-xs font-bold rounded">
+                  Engineering
+                </span>
+              </div>
+              <div className="p-6 flex-1 flex flex-col">
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emuski-teal-dark line-clamp-2">
+                  {post.title}
+                </h3>
+                <p className="text-gray-600 text-sm mb-6 flex-1 line-clamp-3">
+                  {getFirstSentence(post.excerpt)}
+                </p>
+                <div className="flex justify-between text-xs text-gray-500 pt-4 border-t">
+                  <span className="font-medium text-gray-700">{post.author}</span>
+                  <span>{new Date(post.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                </div>
+              </div>
+            </article>
+          </Link>
+        ))}
+      </div>
+
+      {posts.length > 6 && (
+        <div className="text-center mt-12">
+          <Link
+            href="/blog?category=Engineering" // You can handle this query param in BlogPage if needed
+            className="inline-flex items-center gap-2 px-8 py-4 bg-emuski-teal-dark hover:bg-emuski-teal-darker text-white font-bold rounded-lg transition-colors"
+          >
+            View All Engineering Articles
+            <ChevronRight className="h-5 w-5" />
+          </Link>
+        </div>
+      )}
+    </div>
+  </section>
+);

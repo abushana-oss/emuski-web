@@ -1,45 +1,31 @@
 'use client'
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
-import Head from "next/head";
 import { ArrowLeft, Twitter, Linkedin, Facebook, Mail, Menu, Share2, Bookmark, Clock, Calendar, ChevronRight } from "lucide-react";
-import { useBloggerPosts } from "../hooks/useBloggerApi";
-import { useSuccessStoriesPosts } from "../hooks/useSuccessStoriesBlogger";
-import { useEngineeringPosts } from "../hooks/useEngineeringBlogger";
-import { BlogNotFoundPage, LoadingPage } from "./ui/error-pages";
+import { BlogPost } from "@/lib/api/blogger";
 import "../styles/blog-content.css";
 
-export const BlogPostComponent = () => {
-  const params = useParams();
-  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+interface BlogPostComponentProps {
+  post: BlogPost;
+  allPosts: BlogPost[];
+}
+
+export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) => {
   const [activeSection, setActiveSection] = useState<string>('');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const articleRef = useRef<HTMLElement>(null);
   const tocNavRef = useRef<HTMLElement>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
 
-  // Fetch from all three blogs: Manufacturing, Engineering, and Success Stories
-  const { posts: manufacturingPosts, loading: mfgLoading, error: mfgError } = useBloggerPosts(50);
-  const { posts: engineeringPosts, loading: engLoading, error: engError } = useEngineeringPosts(50);
-  const { posts: storyPosts, loading: storyLoading, error: storyError } = useSuccessStoriesPosts(50);
-
-  // Combine posts from all three blogs
-  const allPosts = useMemo(() => {
-    return [...(manufacturingPosts || []), ...(engineeringPosts || []), ...(storyPosts || [])];
-  }, [manufacturingPosts, engineeringPosts, storyPosts]);
-
-  const loading = mfgLoading || engLoading || storyLoading;
-  const error = mfgError || engError || storyError;
-
-  const post = useMemo(() => {
-    return allPosts.find(p => p.slug === slug);
-  }, [allPosts, slug]);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const relatedPosts = useMemo(() => {
     if (!post) return [];
@@ -55,8 +41,31 @@ export const BlogPostComponent = () => {
       }));
   }, [allPosts, post]);
 
-  const tableOfContents = useMemo(() => {
+  // Get next 3 manufacturing-related blog posts to feature
+  const nextPosts = useMemo(() => {
     if (!post) return [];
+
+    // Filter for manufacturing-related categories
+    const manufacturingCategories = ['Manufacturing', 'Engineering', 'Lean Manufacturing', 'Quality Control', 'Production', 'Industrial'];
+
+    return allPosts
+      .filter(p => {
+        // Exclude current post
+        if (p.id === post.id) return false;
+
+        // Include if category matches manufacturing-related categories
+        return manufacturingCategories.some(cat =>
+          p.category.toLowerCase().includes(cat.toLowerCase())
+        );
+      })
+      .slice(0, 3); // Get first 3 manufacturing posts
+  }, [allPosts, post]);
+
+  const tableOfContents = useMemo(() => {
+    if (!post || !isMounted) return [];
+    // Only run on client-side to avoid SSR issues
+    if (typeof document === 'undefined') return [];
+
     const headings: { id: string; text: string; level: number }[] = [];
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = post.fullContent;
@@ -70,165 +79,235 @@ export const BlogPostComponent = () => {
     });
 
     return headings;
-  }, [post]);
+  }, [post, isMounted]);
 
-  // Scroll progress tracking - optimized with requestAnimationFrame
+  // Scroll progress tracking - optimized to prevent scroll conflicts
   useEffect(() => {
     let ticking = false;
+    let timeoutId: NodeJS.Timeout | null = null;
 
     const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+      if (documentHeight > 0) {
+        const scrollPercent = (scrollTop / documentHeight) * 100;
+        setScrollProgress(Math.min(100, Math.max(0, scrollPercent)));
+      }
+      ticking = false;
+    };
+
+    // Use requestAnimationFrame for smooth, performant scroll tracking
+    const throttledHandleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (!contentRef.current) {
-            ticking = false;
-            return;
-          }
-
-          const contentElement = contentRef.current;
-          const contentRect = contentElement.getBoundingClientRect();
-          const contentHeight = contentElement.offsetHeight;
-          const viewportHeight = window.innerHeight;
-
-          // Calculate progress based on content visibility
-          const contentTop = contentRect.top;
-          const scrolled = Math.max(0, -contentTop);
-          const totalScrollable = contentHeight - viewportHeight;
-          const scrollPercent = totalScrollable > 0 ? (scrolled / totalScrollable) * 100 : 0;
-
-          setScrollProgress(Math.min(100, Math.max(0, scrollPercent)));
-          ticking = false;
+          handleScroll();
         });
         ticking = true;
       }
     };
 
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    handleScroll(); // Initial calculation
+
+    return () => {
+      window.removeEventListener('scroll', throttledHandleScroll);
+      if (timeoutId) clearTimeout(timeoutId);
+      ticking = false;
+    };
   }, []);
 
-  // Accurate section detection using IntersectionObserver
+  // Improved section detection using IntersectionObserver with debouncing
   useEffect(() => {
-    if (!contentRef.current) return;
+    if (!contentRef.current || !isMounted) return;
 
     const headings = contentRef.current.querySelectorAll('h2[id], h3[id]');
     if (headings.length === 0) return;
 
+    // Use a more conservative configuration to prevent scroll conflicts
     const observerOptions = {
-      rootMargin: '-100px 0px -66% 0px',
-      threshold: [0, 0.25, 0.5, 0.75, 1]
+      root: null,
+      rootMargin: '-120px 0px -60% 0px', // More conservative margins
+      threshold: 0.1 // Simpler threshold to reduce callback frequency
     };
 
+    let timeoutId: NodeJS.Timeout;
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0) {
-          setActiveSection(entry.target.id);
+      // Debounce the updates to prevent rapid-fire changes
+      if (timeoutId) clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(() => {
+        // Find the first visible heading
+        const visibleEntry = entries.find(entry => entry.isIntersecting);
+        if (visibleEntry) {
+          setActiveSection(visibleEntry.target.id);
         }
-      });
+      }, 100); // 100ms debounce
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     headings.forEach((heading) => observer.observe(heading));
 
-    return () => observer.disconnect();
-  }, [post]);
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      observer.disconnect();
+    };
+  }, [isMounted, post]);
 
   // REMOVED: Client-side metadata manipulation
   // Metadata is now handled server-side via generateMetadata in page.tsx
   // This prevents canonical tags from appearing outside <head> and improves SEO
 
   useEffect(() => {
-    if (post && contentRef.current) {
-      const headingElements = contentRef.current.querySelectorAll('h2, h3, h4, h5, h6');
-      headingElements.forEach((heading, index) => {
-        heading.id = `heading-${index}`;
+    if (post && contentRef.current && isMounted) {
+      // Use requestAnimationFrame to prevent blocking scroll
+      requestAnimationFrame(() => {
+        if (!contentRef.current) return;
 
-        // Make FAQ questions extra bold - ONLY if it's an actual question with "?"
-        const text = heading.textContent || '';
-        const lowerText = text.toLowerCase();
-
-        // Only apply extra bold if:
-        // 1. Contains a question mark AND starts with question words, OR
-        // 2. Explicitly mentions "FAQ" or "Frequently Asked"
-        const isQuestion = text.includes('?') && (
-          lowerText.startsWith('what ') ||
-          lowerText.startsWith('how ') ||
-          lowerText.startsWith('why ') ||
-          lowerText.startsWith('when ') ||
-          lowerText.startsWith('where ') ||
-          lowerText.startsWith('who ') ||
-          lowerText.startsWith('can ') ||
-          lowerText.startsWith('is ') ||
-          lowerText.startsWith('are ') ||
-          lowerText.startsWith('does ') ||
-          lowerText.startsWith('do ')
-        );
-
-        const isFAQSection = lowerText.includes('faq') || lowerText.includes('frequently asked');
-
-        if (isQuestion || isFAQSection) {
-          (heading as HTMLElement).style.fontWeight = '900';
-          (heading as HTMLElement).style.color = '#171A22';
-          heading.classList.add('faq-question');
-
-          // Ensure inner content is bold
-          const allElements = heading.querySelectorAll('*');
-          allElements.forEach(element => {
-            (element as HTMLElement).style.fontWeight = '900';
-          });
-
-          // If there's no strong tag, wrap the content
-          if (!heading.querySelector('strong')) {
-            const innerHTML = heading.innerHTML;
-            heading.innerHTML = `<strong>${innerHTML}</strong>`;
+        const headingElements = contentRef.current.querySelectorAll('h2, h3, h4, h5, h6');
+        headingElements.forEach((heading, index) => {
+          // Only set ID if it doesn't already have one
+          if (!heading.id) {
+            heading.id = `heading-${index}`;
           }
-        }
+
+          // Make FAQ questions extra bold - ONLY if it's an actual question with "?"
+          const text = heading.textContent || '';
+          const lowerText = text.toLowerCase();
+
+          // Only apply extra bold if:
+          // 1. Contains a question mark AND starts with question words, OR
+          // 2. Explicitly mentions "FAQ" or "Frequently Asked"
+          const isQuestion = text.includes('?') && (
+            lowerText.startsWith('what ') ||
+            lowerText.startsWith('how ') ||
+            lowerText.startsWith('why ') ||
+            lowerText.startsWith('when ') ||
+            lowerText.startsWith('where ') ||
+            lowerText.startsWith('who ') ||
+            lowerText.startsWith('can ') ||
+            lowerText.startsWith('is ') ||
+            lowerText.startsWith('are ') ||
+            lowerText.startsWith('does ') ||
+            lowerText.startsWith('do ')
+          );
+
+          const isFAQSection = lowerText.includes('faq') || lowerText.includes('frequently asked');
+
+          if (isQuestion || isFAQSection) {
+            (heading as HTMLElement).style.fontWeight = '900';
+            (heading as HTMLElement).style.color = '#171A22';
+            heading.classList.add('faq-question');
+
+            // Ensure inner content is bold
+            const allElements = heading.querySelectorAll('*');
+            allElements.forEach(element => {
+              (element as HTMLElement).style.fontWeight = '900';
+            });
+
+            // If there's no strong tag, wrap the content
+            if (!heading.querySelector('strong')) {
+              const innerHTML = heading.innerHTML;
+              heading.innerHTML = `<strong>${innerHTML}</strong>`;
+            }
+          }
+        });
       });
     }
-  }, [post]);
+  }, [post, isMounted]);
 
-  // Auto-scroll active TOC item into view - NO smooth behavior to prevent glitching
-  useEffect(() => {
-    if (activeSection && tocNavRef.current) {
-      const activeButton = tocNavRef.current.querySelector(`button[data-section="${activeSection}"]`);
-      if (activeButton) {
-        activeButton.scrollIntoView({
-          behavior: 'auto',
-          block: 'nearest',
-          inline: 'nearest'
-        });
+  // Disabled auto-scroll for TOC to prevent scroll conflicts
+  // The TOC will still highlight active sections without interfering with page scroll
+
+  // REMOVED: Body scroll lock that was causing scroll jumping
+  // The TOC overlay now handles scroll behavior better without interfering with body scroll
+
+  // Generate comprehensive structured data for MAXIMUM SEO
+  const wordCount = post.fullContent.replace(/<[^>]*>/g, '').split(/\s+/).filter(word => word.length > 0).length;
+  const readingTimeMinutes = Math.ceil(wordCount / 200); // Average reading speed: 200 words/minute
+
+  // Extract FAQ questions from content for FAQ schema
+  const extractFAQs = () => {
+    if (typeof document === 'undefined' || !isMounted) return [];
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = post.fullContent;
+    const faqQuestions: Array<{question: string, answer: string}> = [];
+
+    // Find headings that look like questions
+    const headings = tempDiv.querySelectorAll('h2, h3, h4');
+    headings.forEach((heading) => {
+      const text = heading.textContent || '';
+      if (text.includes('?')) {
+        let answer = '';
+        let nextEl = heading.nextElementSibling;
+        while (nextEl && !['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(nextEl.tagName)) {
+          answer += nextEl.textContent + ' ';
+          nextEl = nextEl.nextElementSibling;
+        }
+        if (answer.trim()) {
+          faqQuestions.push({
+            question: text.trim(),
+            answer: answer.trim().substring(0, 500)
+          });
+        }
       }
-    }
-  }, [activeSection]);
+    });
+    return faqQuestions;
+  };
 
-  if (loading) {
-    return <LoadingPage title="Loading Article" description="Please wait while we fetch this article..." />;
-  }
+  const faqs = useMemo(() => extractFAQs(), [post, isMounted]);
 
-  if (error || !post) {
-    return <BlogNotFoundPage description={error} />;
-  }
-
-  // Generate structured data for SEO
-  const structuredData = {
+  // ENHANCED Article Schema with ALL SEO fields
+  const articleSchema = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": "Article",
+    "@id": `https://www.emuski.com/blog/${post.slug}#article`,
     "headline": post.title,
-    "description": post.excerpt,
-    "image": post.image,
+    "alternativeHeadline": post.excerpt,
+    "description": post.metaDescription || post.excerpt,
+    "image": {
+      "@type": "ImageObject",
+      "@id": `https://www.emuski.com/blog/${post.slug}#primaryimage`,
+      "url": post.image,
+      "width": 1200,
+      "height": 630,
+      "caption": post.title
+    },
     "datePublished": post.publishDate,
     "dateModified": post.publishDate,
     "author": {
       "@type": "Person",
+      "@id": "https://www.emuski.com/#author",
       "name": post.author,
-      "image": post.authorImage
+      "url": "https://www.emuski.com/about",
+      "image": {
+        "@type": "ImageObject",
+        "url": post.authorImage || "https://www.emuski.com/assets/authors/default.jpg",
+        "caption": post.author
+      },
+      "jobTitle": "Manufacturing Expert",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "EMUSKI"
+      }
     },
     "publisher": {
       "@type": "Organization",
+      "@id": "https://www.emuski.com/#organization",
       "name": "EMUSKI",
+      "url": "https://www.emuski.com",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.emuski.com/logo.png"
+        "url": "https://www.emuski.com/logo.webp",
+        "width": 250,
+        "height": 60
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-86670-88060",
+        "contactType": "Customer Service",
+        "areaServed": "IN",
+        "availableLanguage": ["English", "Hindi"]
       }
     },
     "mainEntityOfPage": {
@@ -237,7 +316,92 @@ export const BlogPostComponent = () => {
     },
     "keywords": post.tags?.join(", "),
     "articleSection": post.category,
-    "wordCount": post.fullContent.replace(/<[^>]*>/g, '').split(/\s+/).length
+    "articleBody": post.fullContent.replace(/<[^>]*>/g, '').substring(0, 1000),
+    "wordCount": wordCount,
+    "timeRequired": `PT${readingTimeMinutes}M`,
+    "inLanguage": "en-US",
+    "isAccessibleForFree": true,
+    "url": `https://www.emuski.com/blog/${post.slug}`,
+    "about": {
+      "@type": "Thing",
+      "name": post.category
+    },
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [".article-content"]
+    }
+  };
+
+  // Breadcrumb Schema
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.emuski.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://www.emuski.com/blog"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post.category,
+        "item": `https://www.emuski.com/blog?category=${encodeURIComponent(post.category)}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": post.title,
+        "item": `https://www.emuski.com/blog/${post.slug}`
+      }
+    ]
+  };
+
+  // FAQ Schema
+  const faqSchema = faqs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  } : null;
+
+  // WebPage Schema
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `https://www.emuski.com/blog/${post.slug}`,
+    "url": `https://www.emuski.com/blog/${post.slug}`,
+    "name": post.title,
+    "description": post.metaDescription || post.excerpt,
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": "https://www.emuski.com/#website",
+      "url": "https://www.emuski.com",
+      "name": "EMUSKI Manufacturing Solutions"
+    },
+    "primaryImageOfPage": {
+      "@id": `https://www.emuski.com/blog/${post.slug}#primaryimage`
+    },
+    "datePublished": post.publishDate,
+    "dateModified": post.publishDate,
+    "inLanguage": "en-US",
+    "potentialAction": {
+      "@type": "ReadAction",
+      "target": [`https://www.emuski.com/blog/${post.slug}`]
+    }
   };
 
   const handleShare = (platform: string) => {
@@ -262,39 +426,88 @@ export const BlogPostComponent = () => {
   };
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 96; // Account for sticky navbar (64px navbar + 32px padding)
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-      const targetPosition = elementPosition - offset;
+    // Close TOC on mobile after clicking a section
+    setTocOpen(false);
 
-      // Disable smooth scroll temporarily to prevent conflicts
-      const originalBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
+    // Use a slight delay to ensure TOC closes smoothly before scrolling
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 120; // Increased offset to prevent overlap with sticky navbar
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const targetPosition = elementPosition - offset;
 
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
-
-      // Re-enable smooth scroll after navigation
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = originalBehavior;
-      }, 50);
-
-      // Update active section immediately for better UX
-      setTimeout(() => setActiveSection(id), 100);
-      setTocOpen(false);
-    }
+        // Use a more controlled scroll to prevent glitching
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 50); // Small delay to prevent conflicts
   };
 
+  // Prevent body scroll when TOC is open on mobile - IMPROVED
+  useEffect(() => {
+    if (tocOpen) {
+      // Store current scroll position before locking
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore scroll position when unlocking
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+    };
+  }, [tocOpen]);
+
   return (
-    <article ref={articleRef} className="min-h-screen bg-white">
-      {/* Structured Data for SEO */}
+    <article ref={articleRef} className="min-h-screen bg-white" itemScope itemType="https://schema.org/Article">
+      {/* Article Schema - PRIMARY SEO */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
+
+      {/* Breadcrumb Schema - Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
+      {/* FAQ Schema - If FAQs exist */}
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+
+      {/* WebPage Schema - Additional Context */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+
+      {/* Meta tags for social sharing */}
+      <meta itemProp="name" content={post.title} />
+      <meta itemProp="description" content={post.metaDescription || post.excerpt} />
+      <meta itemProp="image" content={post.image} />
+      <meta itemProp="datePublished" content={post.publishDate} />
+      <meta itemProp="author" content={post.author} />
 
       {/* Reading Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-gray-100 z-50">
@@ -405,29 +618,37 @@ export const BlogPostComponent = () => {
               </span>
             </div>
 
-            {/* Title */}
-            <h1 className="text-[28px] sm:text-[36px] md:text-[42px] lg:text-[48px] font-black leading-[1.15] mb-5 sm:mb-6 text-[#171A22] tracking-tight">
+            {/* Title - SEO Optimized */}
+            <h1
+              className="text-[28px] sm:text-[36px] md:text-[42px] lg:text-[48px] font-black leading-[1.15] mb-5 sm:mb-6 text-[#171A22] tracking-tight"
+              itemProp="headline"
+            >
               {post.title}
             </h1>
 
-            {/* Excerpt */}
+            {/* Excerpt - SEO Description */}
             {post.excerpt && (
-              <p className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8 font-normal">
+              <p
+                className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8 font-normal"
+                itemProp="description"
+              >
                 {post.excerpt}
               </p>
             )}
 
-            {/* Author & Meta Info */}
+            {/* Author & Meta Info - SEO Optimized */}
             <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-gray-200">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3" itemProp="author" itemScope itemType="https://schema.org/Person">
                 <img
                   src={post.authorImage || '/assets/authors/default.jpg'}
                   alt={post.author}
                   className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover ring-2 ring-teal-100"
+                  loading="lazy"
+                  itemProp="image"
                 />
                 <div>
-                  <p className="font-bold text-[#171A22] text-base sm:text-lg">{post.author}</p>
-                  <p className="text-xs sm:text-sm text-gray-600">Manufacturing Expert</p>
+                  <p className="font-bold text-[#171A22] text-base sm:text-lg" itemProp="name">{post.author}</p>
+                  <p className="text-xs sm:text-sm text-gray-600" itemProp="jobTitle">Manufacturing Expert</p>
                 </div>
               </div>
 
@@ -436,31 +657,39 @@ export const BlogPostComponent = () => {
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-gray-600">
                 <div className="flex items-center gap-1.5">
                   <Calendar className="h-4 w-4 text-teal-600" />
-                  <time dateTime={post.publishDate} className="font-medium">
+                  <time dateTime={post.publishDate} className="font-medium" itemProp="datePublished">
                     {new Date(post.publishDate).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric'
                     })}
                   </time>
+                  <meta itemProp="dateModified" content={post.publishDate} />
                 </div>
                 <span className="text-gray-400">•</span>
                 <div className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4 text-teal-600" />
                   <span className="font-medium">{post.readTime}</span>
+                  <meta itemProp="timeRequired" content={`PT${readingTimeMinutes}M`} />
                 </div>
               </div>
             </div>
 
-            {/* Featured Image */}
-            <div className="mb-0 relative group">
+            {/* Featured Image - SEO Optimized */}
+            <div className="mb-0 relative group" itemProp="image" itemScope itemType="https://schema.org/ImageObject">
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
               <img
                 src={post.image}
                 alt={post.title}
                 className="w-full h-auto object-cover rounded-xl shadow-lg border border-gray-200 transition-transform duration-300 group-hover:scale-[1.01]"
                 style={{ maxHeight: '500px', objectFit: 'cover' }}
+                loading="eager"
+                fetchPriority="high"
+                itemProp="url contentUrl"
               />
+              <meta itemProp="width" content="1200" />
+              <meta itemProp="height" content="630" />
+              <meta itemProp="caption" content={post.title} />
             </div>
           </div>
         </div>
@@ -474,9 +703,10 @@ export const BlogPostComponent = () => {
               {/* Main Content */}
               <div ref={mainContentRef} className="article-main-content">
                 <div className="bg-white pt-0">
-                  {/* Article Content */}
+                  {/* Article Content - SEO Optimized */}
                   <div
                     ref={contentRef}
+                    itemProp="articleBody"
                     className="article-content prose prose-lg max-w-none
                       prose-headings:font-extrabold prose-headings:text-[#171A22] prose-headings:scroll-mt-24
                       prose-h1:text-[42px] prose-h1:leading-[1.2] prose-h1:mt-12 prose-h1:mb-6 prose-h1:font-black
@@ -510,9 +740,9 @@ export const BlogPostComponent = () => {
 
                         // STEP 1: Preserve bold formatting - Convert all bold indicators to <strong>
                         // This must happen BEFORE we remove inline styles
-                        // Handle font-weight in spans and divs
+                        // Handle font-weight in spans, divs, and paragraphs
                         html = html.replace(/<(span|div|p)([^>]*)\s*style="([^"]*font-weight:\s*(?:bold|700|800|900)[^"]*)"([^>]*)>([\s\S]*?)<\/\1>/gi,
-                          (match, tag, before, style, after, content) => {
+                          (_match, tag, before, _style, after, content) => {
                             // If content is not already wrapped in strong/b, wrap it
                             if (!content.includes('<strong>') && !content.includes('<b>')) {
                               return `<${tag}${before}${after}><strong>${content}</strong></${tag}>`;
@@ -524,7 +754,7 @@ export const BlogPostComponent = () => {
                         html = html.replace(/<b(\s[^>]*)?>/gi, '<strong>');
                         html = html.replace(/<\/b>/gi, '</strong>');
 
-                        // Clean up inline styles but preserve some important ones
+                        // Clean up inline styles but preserve text content
                         html = html.replace(/\sstyle="[^"]*"/gi, '');
 
                         // HARDENING: strip any stray <title>, <head>, or canonical tags that
@@ -536,11 +766,9 @@ export const BlogPostComponent = () => {
                         html = html.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '');
                         html = html.replace(/<html[^>]*>|<\/html>|<body[^>]*>|<\/body>/gi, '');
 
-                        // Remove Google Docs specific attributes
+                        // Remove ONLY Google Docs specific attributes (keep other attributes)
                         html = html.replace(/\sface="[^"]*"/gi, '');
-                        html = html.replace(/\sdir="[^"]*"/gi, '');
-                        html = html.replace(/\srole="[^"]*"/gi, '');
-                        html = html.replace(/\saria-level="[^"]*"/gi, '');
+                        html = html.replace(/\sdir="ltr"/gi, ''); // Only remove dir="ltr", keep others
                         html = html.replace(/\sid="docs-internal-guid-[^"]*"/gi, '');
 
                         // EXTRA HARDENING: strip any <meta> tags that may have been
@@ -555,16 +783,16 @@ export const BlogPostComponent = () => {
 
                         // Remove the first image (featured image) to avoid duplication
                         let firstImageRemoved = false;
-                        html = html.replace(/<img([^>]*)>/i, (match, attrs) => {
+                        html = html.replace(/<img([^>]*)>/i, (_match, _attrs) => {
                           if (!firstImageRemoved) {
                             firstImageRemoved = true;
                             return ''; // Remove the first image
                           }
-                          return match; // Keep subsequent images
+                          return _match; // Keep subsequent images
                         });
 
                         // Clean up images - keep them but remove inline styles and fix attributes
-                        html = html.replace(/<img([^>]*)>/gi, (match, attrs) => {
+                        html = html.replace(/<img([^>]*)>/gi, (_match, attrs) => {
                           // Extract src attribute - handle both single and double quotes
                           const srcMatch = attrs.match(/src\s*=\s*["']([^"']+)["']/i) ||
                                           attrs.match(/src\s*=\s*([^\s>]+)/i);
@@ -590,8 +818,8 @@ export const BlogPostComponent = () => {
                           return '';
                         });
 
-                        // Remove separator divs that blogger adds (but keep images inside)
-                        html = html.replace(/<div[^>]*class=["'][^"']*separator[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi, '$1');
+                        // Unwrap separator divs - remove the div but keep all content inside
+                        html = html.replace(/<div([^>]*class=["'][^"']*separator[^"']*["'][^>]*)>([\s\S]*?)<\/div>/gi, '$2');
 
                         // Convert <i> tags to <em> for better semantic HTML
                         html = html.replace(/<i(\s[^>]*)?>([\s\S]+?)<\/i>/gi, '<em>$2</em>');
@@ -599,7 +827,7 @@ export const BlogPostComponent = () => {
                         // Ensure FAQ questions have strong tags wrapped
                         // Only wrap if it's a question (contains ?) AND starts with question words
                         html = html.replace(/<(h[2-6])([^>]*)>([\s\S]*?)\?([^<]*)<\/h[2-6]>/gi,
-                          (match, tag, attrs, content, afterQuestion) => {
+                          (_match, tag, attrs, content, afterQuestion) => {
                             const fullContent = content + '?' + afterQuestion;
                             const lowerContent = fullContent.toLowerCase();
 
@@ -613,33 +841,41 @@ export const BlogPostComponent = () => {
                                 return `<${tag}${attrs}><strong>${fullContent}</strong></${tag}>`;
                               }
                             }
-                            return match;
+                            return _match;
                           });
 
-                        // Clean up span tags - BUT preserve those with strong tags inside
-                        html = html.replace(/<span[^>]*>(.*?)<\/span>/gi, (match, content) => {
-                          // If the span contains strong or em tags, keep those tags but remove the span
+                        // Clean up span tags - unwrap but preserve content inside
+                        html = html.replace(/<span[^>]*>(.*?)<\/span>/gi, (_match, content) => {
+                          // Remove the span wrapper but keep all content inside
                           return content;
                         });
 
-                        // Clean up empty divs BUT preserve divs with images
-                        html = html.replace(/<div([^>]*)>\s*<\/div>/gi, (match, attrs) => {
-                          // Don't remove if it might be a container for images
-                          if (attrs.includes('class') || attrs.includes('id')) {
-                            return match;
-                          }
-                          return '';
-                        });
+                        // IMPORTANT: Do NOT remove divs with classes or content
+                        // Only remove divs that are completely empty with no attributes
+                        html = html.replace(/<div>\s*<\/div>/gi, '');
 
-                        // Clean up empty and whitespace-only paragraphs
-                        html = html.replace(/<p[^>]*>(&nbsp;|\s|<br\s*\/?>)*<\/p>/gi, '');
+                        // Convert divs without classes to semantic elements where appropriate
+                        // But preserve all divs with classes as they may be needed for styling
+
+                        // CRITICAL: Only remove paragraphs that are COMPLETELY empty
+                        // Do NOT remove paragraphs with any text content, even if they have special characters
+                        // This regex only matches <p> tags with absolutely nothing inside, or only whitespace
+                        html = html.replace(/<p[^>]*>[\s]*<\/p>/gi, '');
+                        html = html.replace(/<p[^>]*>&nbsp;<\/p>/gi, '');
+                        html = html.replace(/<p[^>]*><br\s*\/?><\/p>/gi, '');
+                        html = html.replace(/<p[^>]*><br\s*\/?>\s*<br\s*\/?><\/p>/gi, '');
 
                         // Fix list items - unwrap nested p tags
                         html = html.replace(/<li([^>]*)>\s*<p[^>]*>(.*?)<\/p>\s*<\/li>/gi, '<li$1>$2</li>');
 
-                        // Remove unwanted "Pasted text" artifacts from Google Docs
+                         // Remove unwanted "Pasted text" artifacts from Google Docs
                         html = html.replace(/\[Pasted text #?\d*\s*\+?\d*\s*lines?\]/gi, '');
                         html = html.replace(/\[Pasted text[^\]]*\]/gi, '');
+
+                         // IMPORTANT: Do NOT remove content with specific classes
+                        // Only remove schema.org markup that's duplicate
+                        // Remove ONLY the schema wrapper divs, but preserve the content inside
+                        html = html.replace(/<div[^>]*itemprop="acceptedAnswer"[^>]*itemscope[^>]*itemtype="https:\/\/schema\.org\/Answer"[^>]*>([\s\S]*?)<\/div>/gi, '$1');
 
                         // Clean nbsp entities and unicode spaces
                         html = html.replace(/&nbsp;/g, ' ');
@@ -648,6 +884,8 @@ export const BlogPostComponent = () => {
                         // Remove excessive line breaks
                         html = html.replace(/(<br\s*\/?>){3,}/gi, '<br /><br />');
 
+                         // No additional cleanup needed - targeted removal above should handle duplicates
+
                         // Normalize multiple spaces
                         html = html.replace(/\s{2,}/g, ' ');
 
@@ -655,11 +893,10 @@ export const BlogPostComponent = () => {
                         // This helps avoid "internal outlinks with no anchor text" SEO warnings from imported Blogger HTML
                         html = html.replace(/<a([^>]*)>\s*<\/a>/gi, '');
 
-                        // Remove empty tags but preserve structure (run twice for nested empties)
-                        // BUT don't remove divs that might contain images
-                        for (let i = 0; i < 2; i++) {
-                          html = html.replace(/<(p|li|h[1-6])[^>]*>\s*<\/\1>/gi, '');
-                        }
+                        // Remove ONLY truly empty heading and list tags (no content at all)
+                        // Be conservative - only remove if there's truly nothing inside
+                        html = html.replace(/<(h[1-6])[^>]*>[\s\n\r]*<\/\1>/gi, '');
+                        html = html.replace(/<li[^>]*>[\s\n\r]*<\/li>/gi, '');
 
                         // Trim whitespace between tags but keep single space
                         html = html.replace(/>\s+</g, '> <');
@@ -670,36 +907,43 @@ export const BlogPostComponent = () => {
                     }}
                   />
 
-                  {/* Tags */}
+                  {/* Tags - SEO Keywords */}
                   {post.tags && post.tags.length > 0 && (
                     <div className="mt-10 pt-8 border-t border-gray-200">
-                      <div className="flex flex-wrap gap-2">
+                      <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-3">Related Topics</h3>
+                      <div className="flex flex-wrap gap-2" itemProp="keywords">
                         {post.tags.map((tag, index) => (
-                          <span
+                          <a
                             key={index}
+                            href={`/blog?tag=${encodeURIComponent(tag)}`}
                             className="inline-block px-3 py-1 bg-teal-50 text-teal-700 text-sm font-medium rounded hover:bg-teal-100 transition-colors"
+                            rel="tag"
                           >
                             {tag}
-                          </span>
+                          </a>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Author Bio Section */}
+                  {/* Author Bio Section - SEO Enhanced */}
                   <div className="mt-10 pt-8 border-t border-gray-200">
-                    <div className="flex items-start gap-4 p-6 bg-[#F6F7F8] rounded-lg">
+                    <div className="flex items-start gap-4 p-6 bg-[#F6F7F8] rounded-lg" itemProp="author" itemScope itemType="https://schema.org/Person">
                       <img
                         src={post.authorImage || '/assets/authors/default.jpg'}
                         alt={post.author}
                         className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                        loading="lazy"
+                        itemProp="image"
                       />
                       <div className="flex-1 min-w-0">
                         <h4 className="text-base font-bold text-[#171A22] mb-2">About the Author</h4>
-                        <p className="font-semibold text-[#171A22] mb-1">{post.author}</p>
-                        <p className="text-sm text-gray-600 leading-relaxed">
+                        <p className="font-semibold text-[#171A22] mb-1" itemProp="name">{post.author}</p>
+                        <p className="text-sm text-gray-600 leading-relaxed" itemProp="description">
                           Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.
                         </p>
+                        <meta itemProp="jobTitle" content="Manufacturing Expert" />
+                        <meta itemProp="url" content="https://www.emuski.com/about" />
                       </div>
                     </div>
                   </div>
@@ -732,8 +976,19 @@ export const BlogPostComponent = () => {
               </div>
 
               {/* Right Sidebar - Table of Contents */}
-              <aside className={`${tocOpen ? 'fixed inset-0 bg-black/50 z-50 lg:relative lg:bg-transparent' : 'hidden'} lg:block lg:sticky lg:top-20 lg:self-start`}>
-                <div className={`${tocOpen ? 'fixed left-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto p-6' : ''}`}>
+              <aside
+                className={`${tocOpen ? 'fixed inset-0 bg-black/50 z-50 lg:relative lg:bg-transparent' : 'hidden'} lg:block lg:sticky lg:top-20 lg:self-start`}
+                onClick={(e) => {
+                  // Close TOC when clicking overlay (not the TOC itself)
+                  if (e.target === e.currentTarget) {
+                    setTocOpen(false);
+                  }
+                }}
+              >
+                <div
+                  className={`${tocOpen ? 'fixed left-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto p-6 overscroll-contain' : ''}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {/* Mobile Close Button */}
                   {tocOpen && (
                     <button
@@ -744,11 +999,11 @@ export const BlogPostComponent = () => {
                     </button>
                   )}
 
-                  {tableOfContents.length > 0 && (
-                    <div className="bg-white lg:border lg:border-gray-200 lg:rounded-lg lg:p-6">
-                      <h3 className="text-sm font-bold text-[#171A22] uppercase tracking-wider mb-6">
-                        Table of Contents
-                      </h3>
+                  <div className="bg-white lg:border lg:border-gray-200 lg:rounded-lg lg:p-6">
+                    <h3 className="text-sm font-bold text-[#171A22] uppercase tracking-wider mb-6">
+                      Table of Contents
+                    </h3>
+                    {isMounted && tableOfContents.length > 0 ? (
                       <nav ref={tocNavRef} className="space-y-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
                         {tableOfContents.map((item, index) => {
                           const isActive = activeSection === item.id;
@@ -770,8 +1025,15 @@ export const BlogPostComponent = () => {
                           );
                         })}
                       </nav>
-                    </div>
-                  )}
+                    ) : (
+                      // Placeholder to maintain structure during hydration
+                      <nav className="space-y-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
+                        <div className="h-4 bg-gray-200 rounded w-full animate-pulse mb-2"></div>
+                        <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse mb-2"></div>
+                        <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse mb-2"></div>
+                      </nav>
+                    )}
+                  </div>
                 </div>
               </aside>
             </div>
@@ -779,22 +1041,94 @@ export const BlogPostComponent = () => {
         </section>
       </div>
 
-
-      {/* Related Articles */}
-      {relatedPosts.length > 0 && (
-        <section className="py-16 bg-[#F6F7F8] border-t border-gray-200">
+      {/* Continue Reading - Manufacturing Blogs Section */}
+      {nextPosts.length > 0 && (
+        <section className="py-12 bg-gradient-to-br from-emuski-teal/5 to-blue-50 border-t border-gray-200">
           <div className="container mx-auto px-6 lg:px-16 max-w-[1440px]">
-            <h2 className="text-[32px] font-bold text-[#171A22] mb-8">Related Articles</h2>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-gray-900">Continue Reading - Manufacturing Insights</h2>
+              <span className="text-sm text-gray-500">{nextPosts.length} Featured Articles</span>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {nextPosts.map((nextPost) => (
+                <Link
+                  key={nextPost.id}
+                  href={`/blog/${nextPost.slug}`}
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="group"
+                >
+                  <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+                    {/* Image */}
+                    <div className="relative h-52 overflow-hidden">
+                      <img
+                        src={nextPost.image}
+                        alt={nextPost.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <span className="inline-block px-2.5 py-1 bg-emuski-teal text-white text-xs font-semibold uppercase tracking-wider rounded">
+                          {nextPost.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-emuski-teal-dark transition-colors line-clamp-2 leading-tight">
+                        {nextPost.title}
+                      </h3>
+
+                      <p className="text-sm text-gray-600 mb-4 flex-1 line-clamp-3 leading-relaxed">
+                        {nextPost.excerpt}
+                      </p>
+
+                      <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
+                        <div className="flex items-center space-x-3">
+                          <div className="flex items-center space-x-1">
+                            <Calendar className="h-3 w-3" />
+                            <span>{new Date(nextPost.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                          </div>
+                          <span>•</span>
+                          <div className="flex items-center space-x-1">
+                            <Clock className="h-3 w-3" />
+                            <span>{nextPost.readTime}</span>
+                          </div>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-emuski-teal group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Related Articles - SEO Internal Linking */}
+      {relatedPosts.length > 0 && (
+        <section className="py-16 bg-[#F6F7F8] border-t border-gray-200" itemScope itemType="https://schema.org/ItemList">
+          <div className="container mx-auto px-6 lg:px-16 max-w-[1440px]">
+            <h2 className="text-[32px] font-bold text-[#171A22] mb-8" itemProp="name">Related Articles in {post.category}</h2>
+            <meta itemProp="numberOfItems" content={relatedPosts.length.toString()} />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost) => (
-                <Link key={relatedPost.id} href={relatedPost.link} className="group">
+                <Link
+                  key={relatedPost.id}
+                  href={relatedPost.link}
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="group"
+                >
                   <div className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-200">
                     <div className="h-48 overflow-hidden">
                       <img
                         src={relatedPost.image}
                         alt={relatedPost.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
                       />
                     </div>
                     <div className="p-5">
