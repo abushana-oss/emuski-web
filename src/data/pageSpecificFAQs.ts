@@ -223,7 +223,7 @@ export const CONTACT_FAQS: FAQItem[] = [
   {
     id: 'how-to-contact-EMUSKI',
     question: 'How can I contact EMUSKI for manufacturing inquiries?',
-    answer: 'You can contact EMUSKI through multiple channels: Phone +91-86670-88060, Email abushan.isro@gmail.com, visit our facility at 126, RNS Plaza, Electronic City Phase 2, Bangalore, or use our online contact form. We respond to inquiries within 24 hours with dedicated project managers for international clients.',
+    answer: 'You can contact EMUSKI through multiple channels: Phone +91-86670-88060, Email enquiries@emuski.com, visit our facility at 126, RNS Plaza, Electronic City Phase 2, Bangalore, or use our online contact form. We respond to inquiries within 24 hours with dedicated project managers for international clients.',
     category: 'Contact Information',
     keywords: ['contact EMUSKI', 'manufacturing inquiry', 'Bangalore manufacturing contact', 'international client support', 'project manager assignment']
   },

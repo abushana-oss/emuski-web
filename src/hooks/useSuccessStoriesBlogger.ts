@@ -2,19 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import {
-  getBlogId,
   fetchBloggerPosts,
   convertBloggerPostToLocalFormat,
 } from '../api/bloggerApi';
 
-// Success Stories Blogger blog URL
-const SUCCESS_STORIES_BLOG_URL = 'https://emuski-stories.blogspot.com';
+// Success Stories Blogger blog ID from environment
+const SUCCESS_STORIES_BLOG_ID = process.env.NEXT_PUBLIC_SUCCESS_STORIES_BLOG_ID || '850833685312209325';
 
 export const useSuccessStoriesPosts = (maxResults: number = 10) => {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [blogId, setBlogId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -22,23 +20,25 @@ export const useSuccessStoriesPosts = (maxResults: number = 10) => {
         setLoading(true);
         setError(null);
 
-        // Get blog ID for success stories blog
-        const id = await getBlogId(SUCCESS_STORIES_BLOG_URL);
-        setBlogId(id);
+        // Check if blog ID is available
+        if (!SUCCESS_STORIES_BLOG_ID) {
+          throw new Error('Success Stories blog ID not configured');
+        }
 
-        // Fetch posts
-        const response = await fetchBloggerPosts(id, maxResults);
+        // Fetch posts directly using blog ID
+        const response = await fetchBloggerPosts(SUCCESS_STORIES_BLOG_ID, maxResults);
 
-        // Convert to local format and set category to "Case Study"
+        // Convert to local format and set category to "Success Story"
         const convertedPosts = response.items.map(post => {
           const converted = convertBloggerPostToLocalFormat(post);
           return {
             ...converted,
-            category: 'Case Study'
+            category: 'Success Story'
           };
         });
         setPosts(convertedPosts);
       } catch (err: any) {
+        console.error('Error fetching success stories:', err);
         setError(err.message || 'Failed to fetch success stories');
         setPosts([]);
       } finally {
@@ -49,5 +49,5 @@ export const useSuccessStoriesPosts = (maxResults: number = 10) => {
     fetchPosts();
   }, [maxResults]);
 
-  return { posts, loading, error, blogId };
+  return { posts, loading, error };
 };

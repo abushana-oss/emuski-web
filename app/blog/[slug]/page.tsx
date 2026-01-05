@@ -1,8 +1,6 @@
 import { Navbar } from "@/components/Navbar"
 import { BlogPostComponent } from "@/components/BlogPost"
 import { Footer } from "@/components/Footer"
-import { SuccessStoryDetail } from "@/components/SuccessStoryDetail"
-import { getSuccessStoryBySlug, getRelatedSuccessStories } from "@/data/successStories"
 import { fetchPostBySlug, fetchAllBlogs, generateBlogStaticParams } from "@/lib/api/blogger"
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -18,40 +16,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
 
-  // Check if it's a success story
-  const successStory = getSuccessStoryBySlug(slug);
-
-  if (successStory) {
-    return {
-      title: `${successStory.title} | Case Study | EMUSKI`,
-      description: successStory.excerpt,
-      alternates: {
-        canonical: `https://www.emuski.com/blog/${slug}`,
-      },
-      openGraph: {
-        title: successStory.title,
-        description: successStory.excerpt,
-        type: 'article',
-        url: `https://www.emuski.com/blog/${slug}`,
-        images: [
-          {
-            url: successStory.heroImage,
-            width: 1200,
-            height: 630,
-            alt: successStory.title,
-          },
-        ],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: successStory.title,
-        description: successStory.excerpt,
-        images: [successStory.heroImage],
-      },
-    };
-  }
-
-  // For regular blog posts, fetch from server
+  // Fetch blog post from server (includes success stories from Blogger)
   const post = await fetchPostBySlug(slug);
 
   if (!post) {
@@ -73,12 +38,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : (post.metaDescription || post.excerpt);
 
   // Enhanced title with power words for better CTR
-  const seoTitle = `${post.title} | EMUSKI Blog - Manufacturing Excellence Guide`;
+  const isSuccessStory = post.category === 'Case Study' || post.category === 'Success Story';
+  const seoTitle = isSuccessStory
+    ? `${post.title} | Manufacturing Success Story | EMUSKI`
+    : `${post.title} | EMUSKI Blog - Manufacturing Excellence Guide`;
+
+  // Enhanced keywords for success stories
+  const keywords = isSuccessStory
+    ? [
+        'manufacturing success story',
+        'case study',
+        'precision manufacturing',
+        'rapid production',
+        'quality manufacturing',
+        'OEM manufacturing',
+        ...(post.tags || [])
+      ]
+    : post.tags || [];
 
   return {
     title: seoTitle,
     description: metaDescription,
-    keywords: post.tags.join(', '),
+    keywords: keywords.join(', '),
     authors: [{ name: post.author, url: 'https://www.emuski.com/about' }],
     creator: post.author,
     publisher: 'EMUSKI Manufacturing Solutions',
@@ -169,21 +150,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  // Check if it's a success story
-  const successStory = getSuccessStoryBySlug(slug);
-
-  if (successStory) {
-    const relatedStories = getRelatedSuccessStories(successStory.id, successStory.relatedStories);
-    return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <SuccessStoryDetail story={successStory} relatedStories={relatedStories} />
-        <Footer />
-      </div>
-    );
-  }
-
-  // Fetch blog post from server
+  // Fetch blog post from server (includes success stories)
   const post = await fetchPostBySlug(slug);
 
   if (!post) {
@@ -193,11 +160,98 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   // Fetch all posts for related articles
   const { all: allPosts } = await fetchAllBlogs(50);
 
+  // Check if this is a success story
+  const isSuccessStory = post.category === 'Case Study' || post.category === 'Success Story';
+
+  // Generate JSON-LD structured data
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `https://www.emuski.com/blog/${slug}`,
+    headline: post.title,
+    description: post.excerpt,
+    image: {
+      '@type': 'ImageObject',
+      url: post.image,
+      width: 1200,
+      height: 630,
+    },
+    datePublished: post.publishDate,
+    dateModified: post.publishDate,
+    author: {
+      '@type': isSuccessStory ? 'Organization' : 'Person',
+      name: post.author,
+      ...(isSuccessStory && {
+        url: 'https://www.emuski.com',
+      }),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'EMUSKI Manufacturing Solutions',
+      url: 'https://www.emuski.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.emuski.com/logo.png',
+        width: 600,
+        height: 60,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://www.emuski.com/blog/${slug}`,
+    },
+    articleSection: post.category,
+    keywords: post.tags?.join(', '),
+    ...(isSuccessStory && {
+      about: {
+        '@type': 'Thing',
+        name: 'Manufacturing Success Story',
+        description: post.excerpt,
+      },
+    }),
+  };
+
+  // Generate BreadcrumbList structured data
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.emuski.com',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: 'https://www.emuski.com/blog',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: `https://www.emuski.com/blog/${slug}`,
+      },
+    ],
+  };
+
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-      <BlogPostComponent post={post} allPosts={allPosts} />
-      <Footer />
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+      />
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <BlogPostComponent post={post} allPosts={allPosts} />
+        <Footer />
+      </div>
+    </>
   )
 }

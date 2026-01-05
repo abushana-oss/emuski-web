@@ -76,7 +76,7 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
     } catch (error) {
       // Send email notification for new subscription
       const emailData = {
-        to: 'abushan.isro@gmail.com',
+        to: 'enquiries@emuski.com',
         from: 'noreply@EMUSKI.com',
         subject: 'New Email Subscription - EMUSKI',
         html: `
@@ -88,7 +88,7 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
         `
       };
       
-      console.log('📧 SUBSCRIPTION EMAIL TO SEND TO abushan.isro@gmail.com:', emailData);
+      console.log('📧 SUBSCRIPTION EMAIL TO SEND TO enquiries@emuski.com:', emailData);
       
       // Fallback: Store in localStorage for now (replace with proper backend)
       const subscribers = JSON.parse(localStorage.getItem("emuski_subscribers") || "[]");
