@@ -219,9 +219,9 @@ export default function PrecisionEngineering() {
             </li>
             <li className="text-gray-400">/</li>
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <span itemProp="item" className="text-gray-900 font-medium">
+              <Link href="/precision-engineering" itemProp="item" className="text-gray-900 font-medium">
                 <span itemProp="name">Precision Engineering</span>
-              </span>
+              </Link>
               <meta itemProp="position" content="2" />
             </li>
           </ol>
