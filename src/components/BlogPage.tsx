@@ -336,6 +336,57 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
         </div>
       </section>
 
+      {/* Related/Recommended Articles Section */}
+      {allPosts.length > 6 && (
+        <section className="bg-gradient-to-br from-gray-50 to-blue-50/30 py-16 border-t border-gray-200">
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">You May Also Like</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Explore more insights on manufacturing excellence, cost optimization, and engineering innovations
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {allPosts.slice(Math.min(6, allPosts.length - 4), Math.min(10, allPosts.length)).map((post) => (
+                <Link key={post.id} href={`/blog/${post.slug}`} className="group">
+                  <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-emuski-teal/30 transition-all duration-300 h-full flex flex-col">
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold rounded">
+                        {post.category}
+                      </span>
+                    </div>
+
+                    <div className="p-5 flex-1 flex flex-col">
+                      <h3 className="text-base font-bold text-gray-900 mb-2 group-hover:text-emuski-teal-dark transition-colors line-clamp-2 leading-tight">
+                        {post.title}
+                      </h3>
+                      <p className="text-xs text-gray-600 mb-4 flex-1 line-clamp-2 leading-relaxed">
+                        {getFirstSentence(post.excerpt)}
+                      </p>
+
+                      <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
+                        <span className="font-medium text-gray-700">{post.author}</span>
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {post.readTime}
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Topics + Newsletter */}
       <section className="bg-white py-12 border-t border-gray-100">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">

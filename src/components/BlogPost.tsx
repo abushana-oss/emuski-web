@@ -27,22 +27,63 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
     setIsMounted(true);
   }, []);
 
-  // Get next 3 related blog posts based on exact category
+  // Get next 3 related blog posts - smart fallback logic
   const nextPosts = useMemo(() => {
     if (!post) return [];
 
-    // Get the current post's category
     const currentCategory = post.category;
 
-    return allPosts
-      .filter(p => {
-        // Exclude current post
-        if (p.id === post.id) return false;
+    // Manufacturing-related categories
+    const manufacturingCategories = ['Manufacturing', '5S', 'Lean Manufacturing', 'Quality Control', 'Production', 'Supply Chain'];
+    const engineeringCategories = ['Engineering', 'Precision Engineering', 'VAVE', 'Cost Optimization', 'Design'];
 
-        // Only show posts from the exact same category
-        return p.category === currentCategory;
-      })
-      .slice(0, 3); // Get first 3 posts from same category
+    const isManufacturing = manufacturingCategories.some(cat =>
+      currentCategory.toLowerCase().includes(cat.toLowerCase())
+    );
+    const isEngineering = engineeringCategories.some(cat =>
+      currentCategory.toLowerCase().includes(cat.toLowerCase())
+    );
+
+    // Filter posts - exclude current post
+    const availablePosts = allPosts.filter(p => p.id !== post.id);
+
+    // Strategy 1: Try exact category match first
+    let relatedPosts = availablePosts.filter(p => p.category === currentCategory);
+
+    // Strategy 2: If not enough, expand to same domain (Manufacturing or Engineering)
+    if (relatedPosts.length < 3) {
+      const domainPosts = availablePosts.filter(p => {
+        const postCategory = p.category.toLowerCase();
+
+        if (isManufacturing) {
+          return manufacturingCategories.some(cat => postCategory.includes(cat.toLowerCase()));
+        }
+        if (isEngineering) {
+          return engineeringCategories.some(cat => postCategory.includes(cat.toLowerCase()));
+        }
+        return false;
+      });
+
+      // Combine and deduplicate
+      const combinedIds = new Set(relatedPosts.map(p => p.id));
+      domainPosts.forEach(p => {
+        if (!combinedIds.has(p.id)) {
+          relatedPosts.push(p);
+          combinedIds.add(p.id);
+        }
+      });
+    }
+
+    // Strategy 3: If still not enough, show any recent posts
+    if (relatedPosts.length < 3) {
+      availablePosts.forEach(p => {
+        if (!relatedPosts.find(rp => rp.id === p.id)) {
+          relatedPosts.push(p);
+        }
+      });
+    }
+
+    return relatedPosts.slice(0, 3); // Return first 3 posts
   }, [allPosts, post]);
 
   // Generate TOC from actual rendered DOM after content is mounted
@@ -1051,10 +1092,13 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         <section className="py-12 bg-gradient-to-br from-emuski-teal/5 to-blue-50 border-t border-gray-200">
           <div className="container mx-auto px-6 lg:px-16 max-w-[1440px]">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold text-gray-900">
-                More from {post.category}
-              </h2>
-              <span className="text-sm text-gray-500">{nextPosts.length} Related Articles</span>
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                  Related Manufacturing Articles
+                </h2>
+                <p className="text-gray-600">Keep exploring insights on manufacturing excellence and engineering</p>
+              </div>
+              <span className="text-sm text-gray-500">{nextPosts.length} Articles</span>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
