@@ -192,6 +192,112 @@ const nextConfig = {
     ];
   },
 
+  // SEO-friendly redirects for old/incorrect URLs
+  async redirects() {
+    return [
+      // Trailing slash redirects (SEO best practice: consistent URLs)
+      {
+        source: '/services/',
+        destination: '/manufacturing-services',
+        permanent: true, // 301
+      },
+      {
+        source: '/about/',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/contact-us/',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/blog/',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/gallery/',
+        destination: '/gallery',
+        permanent: true,
+      },
+
+      // Old service URLs to current pages
+      {
+        source: '/services',
+        destination: '/manufacturing-services',
+        permanent: true,
+      },
+      {
+        source: '/platform',
+        destination: '/solutions/ai',
+        permanent: true,
+      },
+      {
+        source: '/platform/',
+        destination: '/solutions/ai',
+        permanent: true,
+      },
+      {
+        source: '/cnc-machining-services',
+        destination: '/manufacturing-services',
+        permanent: true,
+      },
+      {
+        source: '/ai-manufacturing-solutions',
+        destination: '/solutions/ai',
+        permanent: true,
+      },
+      {
+        source: '/rapid-prototyping-bangalore',
+        destination: '/manufacturing-services',
+        permanent: true,
+      },
+
+      // Language variants redirect to main site (no i18n implemented)
+      {
+        source: '/es/:path*',
+        destination: '/',
+        permanent: false, // 302 - temporary until i18n is implemented
+      },
+      {
+        source: '/fr/:path*',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/cn/:path*',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/kr/:path*',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/jp/:path*',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/de/:path*',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/it/:path*',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/us/:path*',
+        destination: '/',
+        permanent: false,
+      },
+    ];
+  },
+
   // Image optimization
   images: imageConfig,
 

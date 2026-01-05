@@ -17,6 +17,7 @@ Allow: /precision-engineering
 Allow: /solutions/ai
 Allow: /industries
 Allow: /blog
+Allow: /blog/*
 Allow: /contact
 Allow: /gallery
 
@@ -43,6 +44,7 @@ Allow: /electronics-manufacturing*
 # Block development and sensitive files
 Disallow: /api/
 Disallow: /admin/
+Disallow: /newsroom/
 Disallow: /node_modules/
 Disallow: /dist/
 Disallow: /.vite/
@@ -53,6 +55,22 @@ Disallow: /.git/
 Disallow: /package.json
 Disallow: /tsconfig.json
 Disallow: /vite.config.ts
+
+# Block non-existent language variants (redirected to main site)
+Disallow: /es/
+Disallow: /fr/
+Disallow: /cn/
+Disallow: /kr/
+Disallow: /jp/
+Disallow: /de/
+Disallow: /it/
+Disallow: /us/
+
+# Block old/redirected URLs (prevent duplicate indexing)
+Disallow: /services/
+Disallow: /platform/
+Disallow: /about/
+Disallow: /contact-us/
 
 # Block non-essential file types from crawling
 Disallow: /*.pdf

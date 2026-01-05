@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.emuski.com/cookie-policy',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 }
 
 export default function CookiePolicyLayout({
