@@ -47,30 +47,8 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       .slice(0, 3); // Get first 3 manufacturing posts
   }, [allPosts, post]);
 
-  const tableOfContents = useMemo(() => {
-    if (!post || !isMounted) return [];
-    // Only run on client-side to avoid SSR issues
-    if (typeof document === 'undefined') return [];
-
-    const headings: { id: string; text: string; level: number }[] = [];
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = post.fullContent;
-    const headingElements = tempDiv.querySelectorAll('h2, h3');
-
-    let validIndex = 0;
-    headingElements.forEach((heading) => {
-      const text = (heading.textContent || '').trim();
-      // Only include headings with actual text content
-      if (text) {
-        const id = `heading-${validIndex}`;
-        const level = parseInt(heading.tagName.substring(1));
-        headings.push({ id, text, level });
-        validIndex++;
-      }
-    });
-
-    return headings;
-  }, [post, isMounted]);
+  // Generate TOC from actual rendered DOM after content is mounted
+  const [tableOfContents, setTableOfContents] = useState<{ id: string; text: string; level: number }[]>([]);
 
   // Scroll progress tracking - optimized to prevent scroll conflicts
   useEffect(() => {
@@ -156,6 +134,8 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         // Only assign IDs to h2 and h3 (matching TOC), and only to non-empty ones
         const headingElements = contentRef.current.querySelectorAll('h2, h3');
         let validIndex = 0;
+        const tocItems: { id: string; text: string; level: number }[] = [];
+
         headingElements.forEach((heading) => {
           const text = (heading.textContent || '').trim();
 
@@ -163,6 +143,12 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
           if (text && !heading.id) {
             heading.id = `heading-${validIndex}`;
             validIndex++;
+          }
+
+          // Add to TOC if it has text and ID
+          if (text && heading.id) {
+            const level = parseInt(heading.tagName.substring(1));
+            tocItems.push({ id: heading.id, text, level });
           }
 
           // Make FAQ questions extra bold - ONLY if it's an actual question with "?"
@@ -205,6 +191,9 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
             }
           }
         });
+
+        // Update TOC after all IDs are assigned
+        setTableOfContents(tocItems);
       });
     }
   }, [post, isMounted]);
