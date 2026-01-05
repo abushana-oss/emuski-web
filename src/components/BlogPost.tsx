@@ -27,24 +27,22 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
     setIsMounted(true);
   }, []);
 
-  // Get next 3 manufacturing-related blog posts to feature
+  // Get next 3 related blog posts based on exact category
   const nextPosts = useMemo(() => {
     if (!post) return [];
 
-    // Filter for manufacturing-related categories
-    const manufacturingCategories = ['Manufacturing', 'Engineering', 'Lean Manufacturing', 'Quality Control', 'Production', 'Industrial'];
+    // Get the current post's category
+    const currentCategory = post.category;
 
     return allPosts
       .filter(p => {
         // Exclude current post
         if (p.id === post.id) return false;
 
-        // Include if category matches manufacturing-related categories
-        return manufacturingCategories.some(cat =>
-          p.category.toLowerCase().includes(cat.toLowerCase())
-        );
+        // Only show posts from the exact same category
+        return p.category === currentCategory;
       })
-      .slice(0, 3); // Get first 3 manufacturing posts
+      .slice(0, 3); // Get first 3 posts from same category
   }, [allPosts, post]);
 
   // Generate TOC from actual rendered DOM after content is mounted
@@ -1058,13 +1056,15 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         </section>
       </div>
 
-      {/* Continue Reading - Manufacturing Blogs Section */}
+      {/* Continue Reading - Related Blogs Section */}
       {nextPosts.length > 0 && (
         <section className="py-12 bg-gradient-to-br from-emuski-teal/5 to-blue-50 border-t border-gray-200">
           <div className="container mx-auto px-6 lg:px-16 max-w-[1440px]">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold text-gray-900">Continue Reading - Manufacturing Insights</h2>
-              <span className="text-sm text-gray-500">{nextPosts.length} Featured Articles</span>
+              <h2 className="text-3xl font-bold text-gray-900">
+                More from {post.category}
+              </h2>
+              <span className="text-sm text-gray-500">{nextPosts.length} Related Articles</span>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
