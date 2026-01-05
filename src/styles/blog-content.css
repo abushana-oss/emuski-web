@@ -100,28 +100,34 @@
   }
 }
 
-/* Ensure headings have proper scroll margin for sticky header - with FAQ section optimization */
+/* Ensure headings have proper scroll margin for sticky header - SIMPLIFIED to prevent scroll conflicts */
 .article-content h2,
 .article-content h3,
-.article-content h4 {
-  scroll-margin-top: 120px; /* Increased to 120px for better spacing (64px navbar + 56px padding) */
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+  scroll-margin-top: 140px; /* Consistent margin for all headings (navbar + padding) */
   scroll-snap-align: none; /* Prevent scroll-snap conflicts */
+  scroll-behavior: auto; /* Disable smooth scroll on headings to prevent glitching */
 }
 
-/* FAQ sections need extra scroll margin to prevent glitching */
+/* FAQ sections - same margin to prevent special treatment that causes glitches */
 .article-content .faq-question {
-  scroll-margin-top: 140px; /* Extra margin for FAQ questions */
+  scroll-margin-top: 140px; /* Same as regular headings for consistency */
+  scroll-snap-align: none;
 }
 
 @media (max-width: 768px) {
   .article-content h2,
   .article-content h3,
-  .article-content h4 {
-    scroll-margin-top: 100px; /* Increased for mobile (64px navbar + 36px padding) */
+  .article-content h4,
+  .article-content h5,
+  .article-content h6 {
+    scroll-margin-top: 110px; /* Smaller for mobile (navbar + padding) */
   }
 
   .article-content .faq-question {
-    scroll-margin-top: 120px;
+    scroll-margin-top: 110px; /* Same as regular headings */
   }
 }
 
@@ -133,17 +139,40 @@
   box-sizing: border-box !important;
 }
 
-/* Ensure paragraphs have proper spacing and no overflow - Enhanced */
+/* Ensure paragraphs have proper spacing and no overflow - Responsive */
 .article-content p {
   margin-top: 0;
-  margin-bottom: 1.5rem;
-  line-height: 1.75;
+  margin-bottom: 1.25rem;
+  line-height: 1.65;
   max-width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
   color: #171A22 !important;
-  font-size: 18px !important;
+  font-size: 15px !important; /* Optimized for mobile */
   font-weight: 400;
+}
+
+@media (min-width: 640px) {
+  .article-content p {
+    font-size: 16px !important;
+    line-height: 1.7;
+    margin-bottom: 1.35rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .article-content p {
+    font-size: 17px !important;
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .article-content p {
+    font-size: 18px !important;
+    line-height: 1.75;
+  }
 }
 
 /* First paragraph - Make it stand out (Lead Paragraph) */

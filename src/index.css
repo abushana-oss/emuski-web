@@ -208,8 +208,8 @@ All colors MUST be HSL.
         width: 100%;
         margin: 0;
         padding: 0;
-        font-size: 18px;
-        line-height: 1.7;
+        font-size: 16px; /* Optimized for mobile readability */
+        line-height: 1.6;
         /* Improve scroll performance and prevent glitches */
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain; /* Prevent scroll chaining */
@@ -218,11 +218,26 @@ All colors MUST be HSL.
 
     @media (min-width: 640px) {
         body {
-            font-size: 19px;
+            font-size: 17px;
+            line-height: 1.65;
+        }
+    }
+
+    @media (min-width: 768px) {
+        body {
+            font-size: 18px;
+            line-height: 1.7;
         }
     }
 
     @media (min-width: 1024px) {
+        body {
+            font-size: 19px;
+            line-height: 1.75;
+        }
+    }
+
+    @media (min-width: 1280px) {
         body {
             font-size: 20px;
             line-height: 1.75;

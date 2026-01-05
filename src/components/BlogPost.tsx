@@ -27,20 +27,6 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
     setIsMounted(true);
   }, []);
 
-  const relatedPosts = useMemo(() => {
-    if (!post) return [];
-    return allPosts
-      .filter(p => p.id !== post.id && p.category === post.category)
-      .slice(0, 3)
-      .map(p => ({
-        id: parseInt(p.id),
-        title: p.title,
-        excerpt: p.excerpt,
-        image: p.image,
-        link: `/blog/${p.slug}`
-      }));
-  }, [allPosts, post]);
-
   // Get next 3 manufacturing-related blog posts to feature
   const nextPosts = useMemo(() => {
     if (!post) return [];
@@ -71,11 +57,16 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
     tempDiv.innerHTML = post.fullContent;
     const headingElements = tempDiv.querySelectorAll('h2, h3');
 
-    headingElements.forEach((heading, index) => {
-      const text = heading.textContent || '';
-      const id = `heading-${index}`;
-      const level = parseInt(heading.tagName.substring(1));
-      headings.push({ id, text, level });
+    let validIndex = 0;
+    headingElements.forEach((heading) => {
+      const text = (heading.textContent || '').trim();
+      // Only include headings with actual text content
+      if (text) {
+        const id = `heading-${validIndex}`;
+        const level = parseInt(heading.tagName.substring(1));
+        headings.push({ id, text, level });
+        validIndex++;
+      }
     });
 
     return headings;
@@ -117,39 +108,37 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
     };
   }, []);
 
-  // Improved section detection using IntersectionObserver with debouncing
+  // Improved section detection using IntersectionObserver - NO DEBOUNCE to prevent scroll loop
   useEffect(() => {
     if (!contentRef.current || !isMounted) return;
 
     const headings = contentRef.current.querySelectorAll('h2[id], h3[id]');
     if (headings.length === 0) return;
 
-    // Use a more conservative configuration to prevent scroll conflicts
+    // Simplified configuration to prevent scroll conflicts and looping
     const observerOptions = {
       root: null,
-      rootMargin: '-120px 0px -60% 0px', // More conservative margins
-      threshold: 0.1 // Simpler threshold to reduce callback frequency
+      rootMargin: '-100px 0px -80% 0px', // Conservative: only highlight when near top of viewport
+      threshold: 0 // Single threshold to minimize callback frequency
     };
 
-    let timeoutId: NodeJS.Timeout;
+    // Direct callback WITHOUT debouncing - debouncing was causing the scroll loop
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      // Debounce the updates to prevent rapid-fire changes
-      if (timeoutId) clearTimeout(timeoutId);
+      // Only process if we're not currently programmatically scrolling
+      if ((window as any).__isScrollingProgrammatically) return;
 
-      timeoutId = setTimeout(() => {
-        // Find the first visible heading
-        const visibleEntry = entries.find(entry => entry.isIntersecting);
-        if (visibleEntry) {
-          setActiveSection(visibleEntry.target.id);
-        }
-      }, 100); // 100ms debounce
+      // Find the first intersecting entry (topmost visible heading)
+      const intersecting = entries.filter(entry => entry.isIntersecting);
+      if (intersecting.length > 0) {
+        // Use the first one (topmost)
+        setActiveSection(intersecting[0].target.id);
+      }
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     headings.forEach((heading) => observer.observe(heading));
 
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
       observer.disconnect();
     };
   }, [isMounted, post]);
@@ -164,15 +153,19 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       requestAnimationFrame(() => {
         if (!contentRef.current) return;
 
-        const headingElements = contentRef.current.querySelectorAll('h2, h3, h4, h5, h6');
-        headingElements.forEach((heading, index) => {
-          // Only set ID if it doesn't already have one
-          if (!heading.id) {
-            heading.id = `heading-${index}`;
+        // Only assign IDs to h2 and h3 (matching TOC), and only to non-empty ones
+        const headingElements = contentRef.current.querySelectorAll('h2, h3');
+        let validIndex = 0;
+        headingElements.forEach((heading) => {
+          const text = (heading.textContent || '').trim();
+
+          // Only assign ID to headings with actual text content
+          if (text && !heading.id) {
+            heading.id = `heading-${validIndex}`;
+            validIndex++;
           }
 
           // Make FAQ questions extra bold - ONLY if it's an actual question with "?"
-          const text = heading.textContent || '';
           const lowerText = text.toLowerCase();
 
           // Only apply extra bold if:
@@ -429,21 +422,39 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
     // Close TOC on mobile after clicking a section
     setTocOpen(false);
 
+    // Set flag to prevent IntersectionObserver from interfering during programmatic scroll
+    (window as any).__isScrollingProgrammatically = true;
+
     // Use a slight delay to ensure TOC closes smoothly before scrolling
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
-        const offset = 120; // Increased offset to prevent overlap with sticky navbar
+        const offset = 120; // Offset to prevent overlap with sticky navbar
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
         const targetPosition = elementPosition - offset;
 
-        // Use a more controlled scroll to prevent glitching
+        // Temporarily disable CSS smooth scroll to prevent conflicts
+        const htmlElement = document.documentElement;
+        const originalScrollBehavior = htmlElement.style.scrollBehavior;
+        htmlElement.style.scrollBehavior = 'auto';
+
+        // Instant scroll for precision
         window.scrollTo({
           top: targetPosition,
-          behavior: 'smooth'
+          behavior: 'auto' // Use instant scroll to prevent loop
         });
+
+        // Restore original scroll behavior
+        htmlElement.style.scrollBehavior = originalScrollBehavior;
+
+        // Clear the programmatic scroll flag after a short delay
+        setTimeout(() => {
+          (window as any).__isScrollingProgrammatically = false;
+        }, 150);
+      } else {
+        (window as any).__isScrollingProgrammatically = false;
       }
-    }, 50); // Small delay to prevent conflicts
+    }, 50);
   };
 
   // Prevent body scroll when TOC is open on mobile - IMPROVED
@@ -587,13 +598,14 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         </button>
       </div>
 
-      {/* Mobile TOC Toggle */}
+      {/* Mobile TOC Toggle - Enhanced for better visibility */}
       <button
         onClick={() => setTocOpen(!tocOpen)}
-        className="lg:hidden fixed left-4 bottom-32 z-[100] w-12 h-12 rounded-full bg-teal-600 text-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all hover:scale-110"
-        aria-label="Table of contents"
+        className="lg:hidden fixed left-4 bottom-32 z-[100] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-teal-600 to-teal-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 border border-teal-500"
+        aria-label="Open table of contents"
       >
         <Menu className="h-5 w-5" />
+        <span className="text-sm font-semibold">Contents</span>
       </button>
 
       {/* Header */}
@@ -697,38 +709,38 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
 
       {/* Main Content with Sidebar */}
       <div className="relative bg-white">
-        <section className="pt-8 pb-8">
-          <div className="container mx-auto px-6 lg:px-16 max-w-[1440px]">
-            <div className="lg:grid lg:grid-cols-[885px_1fr] lg:gap-16">
+        <section className="pt-4 sm:pt-6 md:pt-8 pb-8">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-16 max-w-[1440px]">
+            <div className="lg:grid lg:grid-cols-[885px_1fr] lg:gap-12 xl:gap-16">
               {/* Main Content */}
-              <div ref={mainContentRef} className="article-main-content">
+              <div ref={mainContentRef} className="article-main-content w-full">
                 <div className="bg-white pt-0">
                   {/* Article Content - SEO Optimized */}
                   <div
                     ref={contentRef}
                     itemProp="articleBody"
-                    className="article-content prose prose-lg max-w-none
+                    className="article-content prose prose-base sm:prose-lg max-w-none
                       prose-headings:font-extrabold prose-headings:text-[#171A22] prose-headings:scroll-mt-24
-                      prose-h1:text-[42px] prose-h1:leading-[1.2] prose-h1:mt-12 prose-h1:mb-6 prose-h1:font-black
-                      prose-h2:text-[32px] prose-h2:leading-[1.3] prose-h2:mt-12 prose-h2:mb-5 prose-h2:font-extrabold prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-3
-                      prose-h3:text-[24px] prose-h3:leading-[1.4] prose-h3:mt-10 prose-h3:mb-4 prose-h3:font-extrabold
-                      prose-h4:text-[20px] prose-h4:leading-[1.4] prose-h4:mt-8 prose-h4:mb-3 prose-h4:font-extrabold
-                      prose-h5:text-[18px] prose-h5:leading-[1.5] prose-h5:mt-6 prose-h5:mb-2 prose-h5:font-bold
-                      prose-h6:text-[16px] prose-h6:leading-[1.5] prose-h6:mt-6 prose-h6:mb-2 prose-h6:font-bold
-                      prose-p:text-[#171A22] prose-p:leading-[1.6] prose-p:mb-5 prose-p:text-base
+                      prose-h1:text-[28px] sm:prose-h1:text-[36px] lg:prose-h1:text-[42px] prose-h1:leading-[1.2] prose-h1:mt-8 sm:prose-h1:mt-12 prose-h1:mb-4 sm:prose-h1:mb-6 prose-h1:font-black
+                      prose-h2:text-[24px] sm:prose-h2:text-[28px] lg:prose-h2:text-[32px] prose-h2:leading-[1.3] prose-h2:mt-8 sm:prose-h2:mt-12 prose-h2:mb-4 sm:prose-h2:mb-5 prose-h2:font-extrabold prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-2 sm:prose-h2:pb-3
+                      prose-h3:text-[20px] sm:prose-h3:text-[22px] lg:prose-h3:text-[24px] prose-h3:leading-[1.4] prose-h3:mt-6 sm:prose-h3:mt-10 prose-h3:mb-3 sm:prose-h3:mb-4 prose-h3:font-extrabold
+                      prose-h4:text-[18px] sm:prose-h4:text-[20px] prose-h4:leading-[1.4] prose-h4:mt-6 sm:prose-h4:mt-8 prose-h4:mb-2 sm:prose-h4:mb-3 prose-h4:font-extrabold
+                      prose-h5:text-[16px] sm:prose-h5:text-[18px] prose-h5:leading-[1.5] prose-h5:mt-5 sm:prose-h5:mt-6 prose-h5:mb-2 prose-h5:font-bold
+                      prose-h6:text-[15px] sm:prose-h6:text-[16px] prose-h6:leading-[1.5] prose-h6:mt-4 sm:prose-h6:mt-6 prose-h6:mb-2 prose-h6:font-bold
+                      prose-p:text-[#171A22] prose-p:leading-[1.6] sm:prose-p:leading-[1.7] prose-p:mb-4 sm:prose-p:mb-5 prose-p:text-[15px] sm:prose-p:text-base
                       prose-a:text-teal-600 prose-a:underline prose-a:underline-offset-2 prose-a:decoration-dotted hover:prose-a:text-teal-700 hover:prose-a:no-underline
                       prose-strong:text-[#171A22] prose-strong:font-black
                       prose-em:text-[#171A22] prose-em:italic
-                      prose-ul:my-5 prose-ul:space-y-2 prose-ul:list-disc prose-ul:pl-6
-                      prose-ol:my-5 prose-ol:space-y-2 prose-ol:list-decimal prose-ol:pl-6
-                      prose-li:text-[#171A22] prose-li:leading-[1.6] prose-li:text-base prose-li:mb-2
-                      prose-blockquote:border-l-4 prose-blockquote:border-teal-600 prose-blockquote:bg-[#FFE5CB] prose-blockquote:pl-6 prose-blockquote:pr-6 prose-blockquote:py-4 prose-blockquote:my-6 prose-blockquote:not-italic prose-blockquote:text-[#171A22] prose-blockquote:rounded-lg
+                      prose-ul:my-4 sm:prose-ul:my-5 prose-ul:space-y-2 prose-ul:list-disc prose-ul:pl-5 sm:prose-ul:pl-6
+                      prose-ol:my-4 sm:prose-ol:my-5 prose-ol:space-y-2 prose-ol:list-decimal prose-ol:pl-5 sm:prose-ol:pl-6
+                      prose-li:text-[#171A22] prose-li:leading-[1.6] sm:prose-li:leading-[1.7] prose-li:text-[15px] sm:prose-li:text-base prose-li:mb-1.5 sm:prose-li:mb-2
+                      prose-blockquote:border-l-4 prose-blockquote:border-teal-600 prose-blockquote:bg-[#FFE5CB] prose-blockquote:pl-4 sm:prose-blockquote:pl-6 prose-blockquote:pr-4 sm:prose-blockquote:pr-6 prose-blockquote:py-3 sm:prose-blockquote:py-4 prose-blockquote:my-4 sm:prose-blockquote:my-6 prose-blockquote:not-italic prose-blockquote:text-[#171A22] prose-blockquote:rounded-lg
                       prose-code:bg-[#F6F7F8] prose-code:text-teal-700 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
-                      prose-pre:bg-[#171A22] prose-pre:text-white prose-pre:p-6 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:my-6
-                      prose-img:rounded-lg prose-img:border prose-img:border-gray-200 prose-img:my-8 prose-img:w-full prose-img:h-auto
-                      prose-table:w-full prose-table:border-collapse prose-table:my-6
-                      prose-th:bg-gray-100 prose-th:p-3 prose-th:border prose-th:border-gray-300 prose-th:font-bold prose-th:text-left
-                      prose-td:p-3 prose-td:border prose-td:border-gray-300"
+                      prose-pre:bg-[#171A22] prose-pre:text-white prose-pre:p-4 sm:prose-pre:p-6 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:my-4 sm:prose-pre:my-6
+                      prose-img:rounded-lg prose-img:border prose-img:border-gray-200 prose-img:my-6 sm:prose-img:my-8 prose-img:w-full prose-img:h-auto
+                      prose-table:w-full prose-table:border-collapse prose-table:my-4 sm:prose-table:my-6 prose-table:text-sm sm:prose-table:text-base
+                      prose-th:bg-gray-100 prose-th:p-2 sm:prose-th:p-3 prose-th:border prose-th:border-gray-300 prose-th:font-bold prose-th:text-left prose-th:text-xs sm:prose-th:text-sm
+                      prose-td:p-2 sm:prose-td:p-3 prose-td:border prose-td:border-gray-300 prose-td:text-xs sm:prose-td:text-sm"
                     style={{
                       wordWrap: 'break-word',
                       overflowWrap: 'break-word',
@@ -975,96 +987,124 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                 </div>
               </div>
 
-              {/* Right Sidebar - Table of Contents & CTA */}
+              {/* Right Sidebar - Sticky TOC & CTA */}
               <aside
-                className={`${tocOpen ? 'fixed inset-0 bg-black/50 z-50 lg:relative lg:bg-transparent' : 'hidden'} lg:block lg:sticky lg:top-20 lg:self-start`}
+                className={`${
+                  tocOpen
+                    ? 'fixed inset-0 bg-black/50 z-50 lg:relative lg:bg-transparent'
+                    : 'hidden'
+                } lg:block`}
                 onClick={(e) => {
-                  // Close TOC when clicking overlay (not the TOC itself)
+                  // Close TOC when clicking overlay (mobile)
                   if (e.target === e.currentTarget) {
                     setTocOpen(false);
                   }
                 }}
               >
+                {/* Sticky Container - Remains fixed while scrolling */}
                 <div
-                  className={`${tocOpen ? 'fixed left-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto p-6 overscroll-contain' : ''}`}
+                  className={`${
+                    tocOpen
+                      ? 'fixed left-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto p-6 overscroll-contain'
+                      : 'lg:sticky lg:top-20 lg:self-start'
+                  }`}
+                  style={{ maxHeight: 'calc(100vh - 5rem)' }}
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* Mobile Close Button */}
                   {tocOpen && (
                     <button
                       onClick={() => setTocOpen(false)}
-                      className="lg:hidden absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold"
+                      className="lg:hidden absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold hover:bg-gray-200 transition-colors z-10"
+                      aria-label="Close table of contents"
                     >
                       ×
                     </button>
                   )}
 
-                  {/* Table of Contents */}
-                  <div className="bg-white lg:border lg:border-gray-200 lg:rounded-lg lg:p-6 mb-6">
-                    <h3 className="text-sm font-bold text-[#171A22] uppercase tracking-wider mb-6">
-                      Table of Contents
-                    </h3>
-                    {isMounted && tableOfContents.length > 0 ? (
-                      <nav ref={tocNavRef} className="space-y-1 max-h-[calc(100vh-24rem)] overflow-y-auto">
-                        {tableOfContents.map((item, index) => {
-                          const isActive = activeSection === item.id;
-                          return (
-                            <button
-                              key={index}
-                              data-section={item.id}
-                              onClick={() => scrollToSection(item.id)}
-                              className={`block w-full text-left text-sm py-2 px-3 rounded transition-colors ${
-                                item.level === 3 ? 'pl-6' : 'pl-3'
-                              } ${
-                                isActive
-                                  ? 'text-teal-700 font-semibold bg-teal-50'
-                                  : 'text-gray-700 hover:text-teal-600 hover:bg-gray-50'
-                              }`}
-                            >
-                              <span className="line-clamp-2 leading-snug">{item.text}</span>
-                            </button>
-                          );
-                        })}
-                      </nav>
-                    ) : (
-                      // Placeholder to maintain structure during hydration
-                      <nav className="space-y-1 max-h-[calc(100vh-24rem)] overflow-y-auto">
-                        <div className="h-4 bg-gray-200 rounded w-full animate-pulse mb-2"></div>
-                        <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse mb-2"></div>
-                        <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse mb-2"></div>
-                      </nav>
-                    )}
-                  </div>
+                  {/* Scrollable Inner Container */}
+                  <div className="lg:space-y-4">
 
-                  {/* Sticky Call to Action - Desktop Only */}
-                  <div className="hidden lg:block sticky top-24 bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg p-6 shadow-lg border border-teal-500">
-                    <div className="text-center">
-                      <h3 className="text-xl font-bold text-white mb-3">
-                        Need Expert Help?
+                    {/* Table of Contents - Scrollable */}
+                    <div className="bg-white lg:border lg:border-gray-200 lg:rounded-lg lg:p-5 lg:max-h-[calc(100vh-28rem)] lg:overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                      <h3 className="text-sm font-bold text-[#171A22] uppercase tracking-wider mb-4 sticky top-0 bg-white pb-2 border-b border-gray-200 z-10">
+                        Table of Contents
                       </h3>
-                      <p className="text-teal-50 text-sm mb-5 leading-relaxed">
-                        Get professional manufacturing solutions tailored to your business needs
-                      </p>
-                      <div className="space-y-2.5">
-                        <a
-                          href="/contact"
-                          className="block w-full bg-white text-teal-700 px-5 py-3 rounded-lg font-bold hover:bg-teal-50 transition-all hover:scale-105 text-sm shadow-md"
-                        >
-                          Contact Us Now
-                        </a>
-                        <a
-                          href="tel:+918667088060"
-                          className="block w-full bg-teal-800 text-white px-5 py-3 rounded-lg font-bold hover:bg-teal-900 transition-all hover:scale-105 text-sm border border-teal-600 shadow-md"
-                        >
-                          +91-86670-88060
-                        </a>
-                      </div>
-                      <div className="text-teal-100 text-xs mt-4 space-y-1">
-                        <div>✓ Free Consultation</div>
-                        <div>✓ 15+ Years Experience</div>
-                        <div>✓ ISO Certified</div>
+                      {isMounted && tableOfContents.length > 0 ? (
+                        <nav ref={tocNavRef} className="space-y-0.5">
+                          {tableOfContents.map((item, index) => {
+                            const isActive = activeSection === item.id;
+                            return (
+                              <button
+                                key={index}
+                                data-section={item.id}
+                                onClick={() => scrollToSection(item.id)}
+                                className={`block w-full text-left text-sm py-2 px-3 rounded-md transition-all duration-200 ${
+                                  item.level === 3 ? 'pl-6 text-xs' : 'pl-3'
+                                } ${
+                                  isActive
+                                    ? 'text-teal-700 font-semibold bg-teal-50 border-l-2 border-teal-600'
+                                    : 'text-gray-700 hover:text-teal-600 hover:bg-gray-50 border-l-2 border-transparent'
+                                }`}
+                                aria-current={isActive ? 'true' : 'false'}
+                              >
+                                <span className="line-clamp-2 leading-snug">{item.text}</span>
+                              </button>
+                            );
+                          })}
+                        </nav>
+                      ) : (
+                        // Loading skeleton
+                        <nav className="space-y-2" aria-label="Loading table of contents">
+                          <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
+                          <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                          <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse"></div>
+                        </nav>
+                      )}
+                    </div>
+
+                    {/* Call to Action - Fixed Position */}
+                    <div className="hidden lg:block bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg p-5 shadow-xl border border-teal-500">
+                      <div className="text-center">
+                        <h3 className="text-lg font-bold text-white mb-2 leading-tight">
+                          Need Expert Help?
+                        </h3>
+                        <p className="text-teal-50 text-xs mb-4 leading-relaxed">
+                          Get professional manufacturing solutions tailored to your business needs
+                        </p>
+                        <div className="space-y-2">
+                          <a
+                            href="/contact"
+                            className="block w-full bg-white text-teal-700 px-4 py-2.5 rounded-lg font-bold hover:bg-teal-50 hover:shadow-lg active:scale-95 transition-all text-sm"
+                            aria-label="Contact EMUSKI for manufacturing solutions"
+                          >
+                            Contact Us Now
+                          </a>
+                          <a
+                            href="tel:+918667088060"
+                            className="block w-full bg-teal-800 text-white px-4 py-2.5 rounded-lg font-bold hover:bg-teal-900 hover:shadow-lg active:scale-95 transition-all text-sm border border-teal-600"
+                            aria-label="Call EMUSKI at +91-86670-88060"
+                          >
+                            +91-86670-88060
+                          </a>
+                        </div>
+                        <div className="text-teal-100 text-xs mt-3 space-y-1">
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-teal-300 rounded-full"></span>
+                            <span>Free Consultation</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-teal-300 rounded-full"></span>
+                            <span>15+ Years Experience</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-teal-300 rounded-full"></span>
+                            <span>ISO Certified</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
+
                   </div>
                 </div>
               </aside>
@@ -1139,45 +1179,6 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         </section>
       )}
 
-      {/* Related Articles - SEO Internal Linking */}
-      {relatedPosts.length > 0 && (
-        <section className="py-16 bg-[#F6F7F8] border-t border-gray-200" itemScope itemType="https://schema.org/ItemList">
-          <div className="container mx-auto px-6 lg:px-16 max-w-[1440px]">
-            <h2 className="text-[32px] font-bold text-[#171A22] mb-8" itemProp="name">Related Articles in {post.category}</h2>
-            <meta itemProp="numberOfItems" content={relatedPosts.length.toString()} />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedPosts.map((relatedPost) => (
-                <Link
-                  key={relatedPost.id}
-                  href={relatedPost.link}
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  className="group"
-                >
-                  <div className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-200">
-                    <div className="h-48 overflow-hidden">
-                      <img
-                        src={relatedPost.image}
-                        alt={relatedPost.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="p-5">
-                      <h3 className="text-lg font-bold text-[#171A22] mb-2 group-hover:text-teal-600 transition-colors line-clamp-2 leading-tight">
-                        {relatedPost.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">
-                        {relatedPost.excerpt}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
     </article>
   );
