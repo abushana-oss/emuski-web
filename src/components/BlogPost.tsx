@@ -50,11 +50,8 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
   // Generate TOC from actual rendered DOM after content is mounted
   const [tableOfContents, setTableOfContents] = useState<{ id: string; text: string; level: number }[]>([]);
 
-  // Scroll progress tracking - optimized to prevent scroll conflicts
+  // Scroll progress tracking - passive listener only
   useEffect(() => {
-    let ticking = false;
-    let timeoutId: NodeJS.Timeout | null = null;
-
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -63,62 +60,39 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         const scrollPercent = (scrollTop / documentHeight) * 100;
         setScrollProgress(Math.min(100, Math.max(0, scrollPercent)));
       }
-      ticking = false;
     };
 
-    // Use requestAnimationFrame for smooth, performant scroll tracking
-    const throttledHandleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial calculation
 
     return () => {
-      window.removeEventListener('scroll', throttledHandleScroll);
-      if (timeoutId) clearTimeout(timeoutId);
-      ticking = false;
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  // Improved section detection using IntersectionObserver - NO DEBOUNCE to prevent scroll loop
+  // Passive section detection - no scroll interference
   useEffect(() => {
     if (!contentRef.current || !isMounted) return;
 
     const headings = contentRef.current.querySelectorAll('h2[id], h3[id]');
     if (headings.length === 0) return;
 
-    // Simplified configuration to prevent scroll conflicts and looping
     const observerOptions = {
-      root: null,
-      rootMargin: '-100px 0px -80% 0px', // Conservative: only highlight when near top of viewport
-      threshold: 0 // Single threshold to minimize callback frequency
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: 0
     };
 
-    // Direct callback WITHOUT debouncing - debouncing was causing the scroll loop
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      // Only process if we're not currently programmatically scrolling
-      if ((window as any).__isScrollingProgrammatically) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, observerOptions);
 
-      // Find the first intersecting entry (topmost visible heading)
-      const intersecting = entries.filter(entry => entry.isIntersecting);
-      if (intersecting.length > 0) {
-        // Use the first one (topmost)
-        setActiveSection(intersecting[0].target.id);
-      }
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
     headings.forEach((heading) => observer.observe(heading));
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [isMounted, post]);
 
   // REMOVED: Client-side metadata manipulation
@@ -408,68 +382,24 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
   };
 
   const scrollToSection = (id: string) => {
-    // Close TOC on mobile after clicking a section
+    // Close TOC on mobile
     setTocOpen(false);
 
-    // Set flag to prevent IntersectionObserver from interfering during programmatic scroll
-    (window as any).__isScrollingProgrammatically = true;
-
-    // Use a slight delay to ensure TOC closes smoothly before scrolling
-    setTimeout(() => {
-      const element = document.getElementById(id);
-      if (element) {
-        const offset = 120; // Offset to prevent overlap with sticky navbar
-        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-        const targetPosition = elementPosition - offset;
-
-        // Temporarily disable CSS smooth scroll to prevent conflicts
-        const htmlElement = document.documentElement;
-        const originalScrollBehavior = htmlElement.style.scrollBehavior;
-        htmlElement.style.scrollBehavior = 'auto';
-
-        // Instant scroll for precision
-        window.scrollTo({
-          top: targetPosition,
-          behavior: 'auto' // Use instant scroll to prevent loop
-        });
-
-        // Restore original scroll behavior
-        htmlElement.style.scrollBehavior = originalScrollBehavior;
-
-        // Clear the programmatic scroll flag after a short delay
-        setTimeout(() => {
-          (window as any).__isScrollingProgrammatically = false;
-        }, 150);
-      } else {
-        (window as any).__isScrollingProgrammatically = false;
-      }
-    }, 50);
+    // Use native anchor navigation - browser handles everything
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
-  // Prevent body scroll when TOC is open on mobile - IMPROVED
+  // Prevent body scroll when TOC is open on mobile
   useEffect(() => {
     if (tocOpen) {
-      // Store current scroll position before locking
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
     } else {
-      // Restore scroll position when unlocking
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
       document.body.style.overflow = '';
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
-      }
     }
     return () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
       document.body.style.overflow = '';
     };
   }, [tocOpen]);
@@ -509,28 +439,32 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       <meta itemProp="datePublished" content={post.publishDate} />
       <meta itemProp="author" content={post.author} />
 
-      {/* Reading Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-gray-100 z-50">
+      {/* Reading Progress Bar - GPU Accelerated */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gray-100 z-50 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 transition-all duration-150 ease-out shadow-sm"
-          style={{ width: `${scrollProgress}%` }}
+          className="h-full bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 shadow-sm origin-left"
+          style={{
+            transform: `scaleX(${scrollProgress / 100})`,
+            willChange: 'transform',
+            transition: 'transform 150ms ease-out'
+          }}
         />
       </div>
 
-      {/* Floating Action Buttons */}
-      <div className="fixed right-4 md:right-8 bottom-32 z-[100] flex flex-col gap-3">
+      {/* Floating Action Buttons - Safe area aware */}
+      <div className="fixed right-4 md:right-8 bottom-24 md:bottom-32 z-[200] flex flex-col gap-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {/* Share Button */}
         <div className="relative">
           <button
             onClick={() => setShowShareMenu(!showShareMenu)}
-            className="w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 flex items-center justify-center text-gray-700 hover:text-teal-600 transition-all hover:scale-110"
+            className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 flex items-center justify-center text-gray-700 hover:text-teal-600 transition-all hover:scale-110"
             aria-label="Share article"
           >
-            <Share2 className="h-5 w-5" />
+            <Share2 className="h-4 w-4 md:h-5 md:w-5" />
           </button>
           
           {showShareMenu && (
-            <div className="absolute bottom-16 right-0 bg-white rounded-2xl shadow-2xl border border-gray-200 p-3 min-w-[200px] animate-in fade-in slide-in-from-bottom-4 duration-200">
+            <div className="absolute bottom-16 right-0 md:right-auto bg-white rounded-2xl shadow-2xl border border-gray-200 p-3 min-w-[200px] animate-in fade-in slide-in-from-bottom-4 duration-200 z-[300]">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-2">Share Article</p>
               <button
                 onClick={() => handleShare('linkedin')}
@@ -567,30 +501,32 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         {/* Bookmark Button */}
         <button
           onClick={() => setIsBookmarked(!isBookmarked)}
-          className={`w-12 h-12 rounded-full shadow-lg hover:shadow-xl border transition-all hover:scale-110 flex items-center justify-center ${
-            isBookmarked 
-              ? 'bg-teal-600 text-white border-teal-600' 
+          className={`w-11 h-11 md:w-12 md:h-12 rounded-full shadow-lg hover:shadow-xl border transition-all hover:scale-110 flex items-center justify-center ${
+            isBookmarked
+              ? 'bg-teal-600 text-white border-teal-600'
               : 'bg-white text-gray-700 hover:text-teal-600 border-gray-200'
           }`}
           aria-label="Bookmark article"
         >
-          <Bookmark className={`h-5 w-5 ${isBookmarked ? 'fill-current' : ''}`} />
+          <Bookmark className={`h-4 w-4 md:h-5 md:w-5 ${isBookmarked ? 'fill-current' : ''}`} />
         </button>
 
         {/* Scroll to Top */}
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 flex items-center justify-center text-gray-700 hover:text-teal-600 transition-all hover:scale-110"
+          onClick={() => {
+            document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-white shadow-lg hover:shadow-xl border border-gray-200 flex items-center justify-center text-gray-700 hover:text-teal-600 transition-all hover:scale-110"
           aria-label="Scroll to top"
         >
-          <ArrowLeft className="h-5 w-5 rotate-90" />
+          <ArrowLeft className="h-4 w-4 md:h-5 md:w-5 rotate-90" />
         </button>
       </div>
 
       {/* Mobile TOC Toggle - Enhanced for better visibility */}
       <button
         onClick={() => setTocOpen(!tocOpen)}
-        className="lg:hidden fixed left-4 bottom-32 z-[100] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-teal-600 to-teal-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 border border-teal-500"
+        className="lg:hidden fixed left-4 bottom-24 z-[200] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-teal-600 to-teal-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 border border-teal-500"
         aria-label="Open table of contents"
       >
         <Menu className="h-5 w-5" />
@@ -678,12 +614,12 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
 
             {/* Featured Image - SEO Optimized */}
             <div className="mb-0 relative group" itemProp="image" itemScope itemType="https://schema.org/ImageObject">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" style={{ willChange: 'opacity' }}></div>
               <img
                 src={post.image}
                 alt={post.title}
                 className="w-full h-auto object-cover rounded-xl shadow-lg border border-gray-200 transition-transform duration-300 group-hover:scale-[1.01]"
-                style={{ maxHeight: '500px', objectFit: 'cover' }}
+                style={{ maxHeight: '500px', objectFit: 'cover', willChange: 'transform', contentVisibility: 'auto' }}
                 loading="eager"
                 fetchPriority="high"
                 itemProp="url contentUrl"
@@ -733,7 +669,9 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                     style={{
                       wordWrap: 'break-word',
                       overflowWrap: 'break-word',
-                      wordBreak: 'break-word'
+                      wordBreak: 'break-word',
+                      transform: 'translateZ(0)',
+                      willChange: 'scroll-position'
                     }}
                     dangerouslySetInnerHTML={{
                       __html: (() => {
@@ -782,15 +720,9 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                         // First, extract images from anchor tags (Blogger often wraps images in links)
                         html = html.replace(/<a[^>]*>\s*(<img[^>]*>)\s*<\/a>/gi, '$1');
 
-                        // Remove the first image (featured image) to avoid duplication
-                        let firstImageRemoved = false;
-                        html = html.replace(/<img([^>]*)>/i, (_match, _attrs) => {
-                          if (!firstImageRemoved) {
-                            firstImageRemoved = true;
-                            return ''; // Remove the first image
-                          }
-                          return _match; // Keep subsequent images
-                        });
+                        // Check if first image matches the featured image to avoid duplication
+                        const featuredImageUrl = post.image;
+                        let isFirstImage = true;
 
                         // Clean up images - keep them but remove inline styles and fix attributes
                         html = html.replace(/<img([^>]*)>/gi, (_match, attrs) => {
@@ -811,16 +743,38 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                               src = src.replace(/\/s\d+(-c)?\//, '/s1600/');
                             }
 
-                            const alt = altMatch ? altMatch[1] : (titleMatch ? titleMatch[1] : '');
+                            // Only remove first image if it matches the featured image URL
+                            if (isFirstImage) {
+                              isFirstImage = false;
+                              // Normalize URLs for comparison
+                              const normalizedSrc = src.replace(/^https?:\/\//i, '').replace(/\/s\d+(-c)?\//, '/');
+                              const normalizedFeatured = featuredImageUrl.replace(/^https?:\/\//i, '').replace(/\/s\d+(-c)?\//, '/');
 
-                            // Return clean img tag with proper classes
-                            return `<img src="${src}" alt="${alt}" class="w-full h-auto rounded-lg border border-gray-200 my-8 object-cover" loading="lazy" onerror="this.style.display='none'" />`;
+                              if (normalizedSrc.includes(normalizedFeatured) || normalizedFeatured.includes(normalizedSrc)) {
+                                return ''; // Remove duplicate featured image
+                              }
+                            }
+
+                            const alt = altMatch ? altMatch[1] : (titleMatch ? titleMatch[1] : post.title);
+
+                            // Return clean img tag - use eager loading to prevent scroll lag
+                            // Modern browsers handle image loading efficiently
+                            return `<img src="${src}" alt="${alt}" class="w-full h-auto rounded-lg border border-gray-200 my-8 object-cover" loading="eager" decoding="async" />`;
                           }
                           return '';
                         });
 
                         // Unwrap separator divs - remove the div but keep all content inside
                         html = html.replace(/<div([^>]*class=["'][^"']*separator[^"']*["'][^>]*)>([\s\S]*?)<\/div>/gi, '$2');
+
+                        // CRITICAL FIX: Unwrap divs that contain images + headings together (causes scroll glitches)
+                        // Pattern: <div><img...><h2>...</h2></div> or similar combinations
+                        // This pattern must be applied multiple times to handle nested divs
+                        for (let i = 0; i < 3; i++) {
+                          html = html.replace(/<div(?:[^>]*)>\s*(<img[^>]*>)\s*(<h[1-6][^>]*>[\s\S]*?<\/h[1-6]>)\s*<\/div>/gi, '$1\n$2');
+                          html = html.replace(/<div(?:[^>]*)>\s*(<img[^>]*>)\s*<\/div>/gi, '$1');
+                          html = html.replace(/<div>\s*(<(?:h[1-6]|p|ul|ol|blockquote|pre|img)[^>]*>[\s\S]*?<\/(?:h[1-6]|p|ul|ol|blockquote|pre)>)\s*<\/div>/gi, '$1');
+                        }
 
                         // Convert <i> tags to <em> for better semantic HTML
                         html = html.replace(/<i(\s[^>]*)?>([\s\S]+?)<\/i>/gi, '<em>$2</em>');
@@ -851,9 +805,11 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                           return content;
                         });
 
-                        // IMPORTANT: Do NOT remove divs with classes or content
-                        // Only remove divs that are completely empty with no attributes
-                        html = html.replace(/<div>\s*<\/div>/gi, '');
+                        // Remove empty divs (with or without attributes)
+                        html = html.replace(/<div[^>]*>\s*<\/div>/gi, '');
+
+                        // Remove divs that ONLY contain whitespace or &nbsp;
+                        html = html.replace(/<div[^>]*>[\s\u00a0]*<\/div>/gi, '');
 
                         // Convert divs without classes to semantic elements where appropriate
                         // But preserve all divs with classes as they may be needed for styling
@@ -1116,7 +1072,6 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                 <Link
                   key={nextPost.id}
                   href={`/blog/${nextPost.slug}`}
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   className="group"
                 >
                   <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 h-full flex flex-col">

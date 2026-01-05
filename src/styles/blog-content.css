@@ -1,5 +1,17 @@
 /* Blog Content - Professional Typography & Reading Experience */
 
+/* Use native browser scroll behavior with optimizations */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimize main document scrolling */
+body {
+  /* Enable GPU acceleration for smooth scrolling */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
 /* Optimize font rendering for better readability */
 * {
   -webkit-font-smoothing: antialiased;
@@ -16,8 +28,15 @@
   margin-top: 0 !important;
   padding-top: 0 !important;
 
-  /* Optimal line length for readability (50-75 characters per line) */
+  /* Optimal line length for readability */
   max-width: 72ch;
+
+  /* Optimize scroll performance */
+  will-change: scroll-position;
+
+  /* Prevent unnecessary repaints */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Remove extra spacing at article start */
@@ -31,103 +50,53 @@
   padding-top: 0 !important;
 }
 
-/* Ensure sidebar sticky positioning works perfectly - Semrush style */
+/* Sidebar sticky positioning - native browser behavior */
 @media (min-width: 1024px) {
-  /* Right Sidebar - Sticky Table of Contents - STAYS PINNED */
   aside {
-    position: -webkit-sticky !important;
-    position: sticky !important;
-    top: 5rem !important; /* 80px - Stick below navbar (navbar is 64px + 16px spacing) */
-    align-self: flex-start !important; /* Critical for sticky to work in grid */
-    height: fit-content !important;
-    max-height: calc(100vh - 6rem) !important;
-    z-index: 10;
+    position: sticky;
+    top: 5rem;
+    align-self: flex-start;
+    height: fit-content;
+    max-height: calc(100vh - 6rem);
   }
 
-  /* TOC Container - stays pinned with sidebar */
-  aside > div {
-    position: relative;
-    max-height: calc(100vh - 7rem);
-  }
-
-  /* TOC Navigation - scrolls smoothly with page, no nested overflow */
   aside nav {
-    overflow-x: hidden !important;
-    max-height: calc(100vh - 8rem) !important;
-    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    max-height: calc(100vh - 16rem);
     scrollbar-width: thin;
     scrollbar-color: rgba(20, 184, 166, 0.3) transparent;
   }
 
-  /* Webkit scrollbar styling */
   aside nav::-webkit-scrollbar {
     width: 4px;
-  }
-
-  aside nav::-webkit-scrollbar-track {
-    background: transparent;
   }
 
   aside nav::-webkit-scrollbar-thumb {
     background: rgba(20, 184, 166, 0.3);
     border-radius: 2px;
-    transition: background 0.2s;
-  }
-
-  aside nav::-webkit-scrollbar-thumb:hover {
-    background: rgba(20, 184, 166, 0.5);
   }
 }
 
-/* Main content area - prevent layout shifts and scroll conflicts */
-@media (min-width: 1024px) {
-  .article-main-content {
-    min-height: auto; /* Let content determine natural height */
-    contain: layout; /* Prevent layout shifts from affecting scroll */
-  }
-}
-
-/* Prevent any elements from triggering scroll adjustments */
-.article-main-content * {
-  scroll-snap-align: none !important;
-}
-
-/* Ensure grid container doesn't interfere with sticky */
-@media (min-width: 1024px) {
-  .lg\:grid {
-    display: grid;
-    position: relative;
-  }
-}
-
-/* Ensure headings have proper scroll margin for sticky header - SIMPLIFIED to prevent scroll conflicts */
+/* Scroll margin for headings - accounts for sticky navbar */
+.article-content h1,
 .article-content h2,
 .article-content h3,
 .article-content h4,
 .article-content h5,
-.article-content h6 {
-  scroll-margin-top: 140px; /* Consistent margin for all headings (navbar + padding) */
-  scroll-snap-align: none; /* Prevent scroll-snap conflicts */
-  scroll-behavior: auto; /* Disable smooth scroll on headings to prevent glitching */
-}
-
-/* FAQ sections - same margin to prevent special treatment that causes glitches */
+.article-content h6,
 .article-content .faq-question {
-  scroll-margin-top: 140px; /* Same as regular headings for consistency */
-  scroll-snap-align: none;
+  scroll-margin-top: 120px;
 }
 
 @media (max-width: 768px) {
+  .article-content h1,
   .article-content h2,
   .article-content h3,
   .article-content h4,
   .article-content h5,
-  .article-content h6 {
-    scroll-margin-top: 110px; /* Smaller for mobile (navbar + padding) */
-  }
-
+  .article-content h6,
   .article-content .faq-question {
-    scroll-margin-top: 110px; /* Same as regular headings */
+    scroll-margin-top: 100px;
   }
 }
 
@@ -150,6 +119,8 @@
   color: #171A22 !important;
   font-size: 15px !important; /* Optimized for mobile */
   font-weight: 400;
+  /* Optimize rendering */
+  contain: layout style;
 }
 
 @media (min-width: 640px) {
@@ -220,18 +191,17 @@
   overflow-wrap: break-word;
   word-wrap: break-word;
   letter-spacing: -0.02em;
+  /* Optimize rendering */
+  contain: layout style;
 }
 
-/* FAQ Questions - Extra Bold (Applied via JavaScript) with scroll optimization */
+/* FAQ Questions - Extra Bold (Applied via JavaScript) */
 .article-content .faq-question {
   font-weight: 900 !important;
   color: #171A22 !important;
   margin-top: 1.5rem !important;
   margin-bottom: 1rem !important;
   letter-spacing: -0.03em !important;
-  /* Prevent scroll glitching on FAQ sections */
-  contain: layout style;
-  will-change: auto; /* Don't animate to prevent scroll conflicts */
 }
 
 /* Ensure all text inside FAQ questions is bold */
@@ -324,6 +294,8 @@
   padding-left: 2rem;
   max-width: 100%;
   list-style-position: outside;
+  /* Optimize rendering */
+  contain: layout;
 }
 
 .article-content ul {
@@ -433,17 +405,36 @@
   text-align: left;
 }
 
-/* Images - Enhanced Display with Error Handling */
+/* Images - Optimized for scroll performance and layout stability */
 .article-content img {
   max-width: 100% !important;
   height: auto !important;
   width: 100% !important;
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  margin: 2rem auto;
-  display: block;
-  object-fit: contain;
+  margin: 2rem auto !important;
+  display: block !important;
+  object-fit: cover;
   background: #f3f4f6;
+  /* Prevent layout shift - reserve space before image loads */
+  aspect-ratio: 16 / 9;
+  min-height: 300px;
+  /* Optimize rendering without blocking scroll */
+  content-visibility: auto;
+  contain-intrinsic-size: 800px 450px;
+  /* Prevent drag */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Ensure proper spacing after images, even if followed by headings */
+.article-content img + h1,
+.article-content img + h2,
+.article-content img + h3,
+.article-content img + h4,
+.article-content img + h5,
+.article-content img + h6 {
+  margin-top: 2rem !important;
 }
 
 /* Ensure images from Blogger load properly */
@@ -585,6 +576,12 @@
 /* Remove separator divs */
 .article-content .separator {
   display: none;
+}
+
+/* Ensure any remaining divs don't interfere with layout or scroll */
+.article-content div {
+  /* No positioning that could interfere with scroll */
+  position: static !important;
 }
 
 /* Ensure proper container behavior */
