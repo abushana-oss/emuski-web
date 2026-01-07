@@ -11,8 +11,6 @@
  * - Unified tracking across GA, GTM, and Mixpanel
  */
 
-import { trackMixpanelEvent, trackMixpanelPageView } from './mixpanel';
-
 // Type definitions for analytics events
 export interface AnalyticsEvent {
   action: string;
@@ -34,15 +32,14 @@ export interface BlogEngagementEvent {
   value?: number;
 }
 
-// Declare gtag function for TypeScript
+// Declare mixpanel function for TypeScript (gtag and dataLayer from @next/third-parties)
 declare global {
   interface Window {
-    gtag?: (
-      command: string,
-      targetId: string | Date,
-      config?: Record<string, any>
-    ) => void;
-    dataLayer?: any[];
+    mixpanel?: {
+      track: (eventName: string, properties?: Record<string, any>) => void;
+      identify: (userId: string) => void;
+      people: { set: (properties: Record<string, any>) => void };
+    };
   }
 }
 
@@ -76,11 +73,13 @@ export const trackEvent = ({
   }
 
   // Mixpanel
-  trackMixpanelEvent(action, {
-    category,
-    label,
-    value,
-  });
+  if (typeof window !== 'undefined' && window.mixpanel) {
+    window.mixpanel.track(action, {
+      category,
+      label,
+      value,
+    });
+  }
 };
 
 /**
@@ -112,10 +111,13 @@ export const trackPageView = (url: string, title?: string): void => {
   }
 
   // Mixpanel
-  trackMixpanelPageView(url, {
-    title: pageTitle,
-    location: pageLocation,
-  });
+  if (typeof window !== 'undefined' && window.mixpanel) {
+    window.mixpanel.track('Page View', {
+      page: url,
+      title: pageTitle,
+      location: pageLocation,
+    });
+  }
 };
 
 /**

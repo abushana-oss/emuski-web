@@ -7,7 +7,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { Analytics } from "@/components/analytics/Analytics"
-import "@/lib/mixpanel" // Initialize Mixpanel
 
 // Lazy load WhatsApp widget - not critical for initial render
 const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), {
