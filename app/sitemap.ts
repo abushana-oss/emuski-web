@@ -16,67 +16,72 @@ export const revalidate = 3600; // 1 hour ISR, matches blog revalidation
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.emuski.com';
-  const currentDate = new Date().toISOString();
+
+  // Fixed dates for static pages - only update when pages actually change
+  // This prevents unnecessary crawling and crawl budget waste
+  const STATIC_PAGES_LASTMOD = '2025-12-15'; // Update this when you modify static pages
+  const LEGAL_PAGES_LASTMOD = '2024-11-01'; // Update this when legal pages change
+  const currentDate = new Date().toISOString(); // Only for dynamic blog listing
 
   // Static pages with high priority (only include pages that actually exist)
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: currentDate,
+      lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'weekly',
       priority: 1.0,
     },
     {
       url: `${baseUrl}/manufacturing-services`,
-      lastModified: currentDate,
+      lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/precision-engineering`,
-      lastModified: currentDate,
+      lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/solutions/ai`,
-      lastModified: currentDate,
+      lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: currentDate,
+      lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: currentDate,
+      lastModified: currentDate, // Dynamic - changes when new posts are added
       changeFrequency: 'daily',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/gallery`,
-      lastModified: currentDate,
+      lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/privacy-policy`,
-      lastModified: currentDate,
+      lastModified: LEGAL_PAGES_LASTMOD,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/cookie-policy`,
-      lastModified: currentDate,
+      lastModified: LEGAL_PAGES_LASTMOD,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/terms-and-conditions`,
-      lastModified: currentDate,
+      lastModified: LEGAL_PAGES_LASTMOD,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
