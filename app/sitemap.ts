@@ -38,6 +38,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.95,
     },
     {
+      url: `${baseUrl}/cost-engineering-services`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/cost-engineering-uk`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/cost-engineering-usa`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/cost-engineering-germany`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.95,
+    },
+    {
       url: `${baseUrl}/manufacturing-services`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
