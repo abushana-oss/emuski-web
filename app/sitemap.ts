@@ -32,6 +32,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/manufacturing-in-bangalore`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.95,
+    },
+    {
       url: `${baseUrl}/manufacturing-services`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',

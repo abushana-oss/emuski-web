@@ -94,10 +94,11 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@graph": [
                 {
-                  "@type": "Organization",
+                  "@type": ["Organization", "LocalBusiness", "Manufacturer"],
                   "@id": "https://www.emuski.com/#organization",
                   "name": "EMUSKI",
                   "legalName": "EMUSKI Manufacturing Solutions Private Limited",
+                  "alternateName": "EMUSKI Manufacturing",
                   "url": "https://www.emuski.com/",
                   "logo": {
                     "@type": "ImageObject",
@@ -105,13 +106,33 @@ export default function RootLayout({
                     "width": 3375,
                     "height": 3375
                   },
+                  "image": [
+                    "https://www.emuski.com/logo.webp",
+                    "https://www.emuski.com/og-image.png"
+                  ],
+                  "description": "Leading OEM manufacturing company in Bangalore providing precision engineering, rapid prototyping, custom manufacturing, and AI-powered production solutions for automotive, aerospace, medical devices, and electronics industries.",
+                  "foundingDate": "2008",
+                  "slogan": "Your One-Stop Solution for OEM Excellence",
+                  "priceRange": "$$",
+                  "telephone": "+91-86670-88060",
+                  "email": "enquiries@emuski.com",
                   "contactPoint": [
                     {
                       "@type": "ContactPoint",
                       "telephone": "+91-86670-88060",
                       "contactType": "Customer Service",
+                      "email": "enquiries@emuski.com",
                       "availableLanguage": ["English", "Hindi"],
-                      "areaServed": "IN"
+                      "areaServed": ["IN", "Global"],
+                      "contactOption": "TollFree"
+                    },
+                    {
+                      "@type": "ContactPoint",
+                      "telephone": "+91-86670-88060",
+                      "contactType": "Sales",
+                      "email": "enquiries@emuski.com",
+                      "availableLanguage": ["English"],
+                      "areaServed": "Worldwide"
                     }
                   ],
                   "address": {
@@ -121,7 +142,131 @@ export default function RootLayout({
                     "addressRegion": "Karnataka",
                     "postalCode": "560100",
                     "addressCountry": "IN"
-                  }
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": "12.9716",
+                    "longitude": "77.5946"
+                  },
+                  "areaServed": [
+                    {
+                      "@type": "City",
+                      "name": "Bangalore"
+                    },
+                    {
+                      "@type": "City",
+                      "name": "Bengaluru"
+                    },
+                    {
+                      "@type": "State",
+                      "name": "Karnataka"
+                    },
+                    {
+                      "@type": "Country",
+                      "name": "India"
+                    },
+                    {
+                      "@type": "Place",
+                      "name": "Global"
+                    }
+                  ],
+                  "serviceArea": [
+                    {
+                      "@type": "City",
+                      "name": "Bangalore"
+                    },
+                    {
+                      "@type": "State",
+                      "name": "Karnataka"
+                    },
+                    {
+                      "@type": "Country",
+                      "name": "India"
+                    }
+                  ],
+                  "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "Manufacturing Services",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Service",
+                          "name": "OEM Manufacturing",
+                          "description": "Custom OEM manufacturing solutions for automotive, aerospace, and electronics industries"
+                        }
+                      },
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Service",
+                          "name": "Precision Engineering",
+                          "description": "High-precision CNC machining and engineering services"
+                        }
+                      },
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Service",
+                          "name": "Rapid Prototyping",
+                          "description": "Fast prototyping services for product development"
+                        }
+                      },
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Service",
+                          "name": "AI Manufacturing Solutions",
+                          "description": "AI-powered manufacturing optimization and cost estimation"
+                        }
+                      }
+                    ]
+                  },
+                  "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "4.8",
+                    "reviewCount": "75",
+                    "bestRating": "5",
+                    "worstRating": "1"
+                  },
+                  "openingHoursSpecification": [
+                    {
+                      "@type": "OpeningHoursSpecification",
+                      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                      "opens": "09:00",
+                      "closes": "18:00"
+                    },
+                    {
+                      "@type": "OpeningHoursSpecification",
+                      "dayOfWeek": "Saturday",
+                      "opens": "09:00",
+                      "closes": "13:00"
+                    }
+                  ],
+                  "knowsAbout": [
+                    "Manufacturing",
+                    "Precision Engineering",
+                    "CNC Machining",
+                    "Rapid Prototyping",
+                    "Injection Molding",
+                    "Sheet Metal Fabrication",
+                    "Quality Assurance",
+                    "VAVE Methodology",
+                    "Cost Optimization",
+                    "Supply Chain Management",
+                    "AI Manufacturing",
+                    "Design for Manufacturing"
+                  ],
+                  "memberOf": [
+                    {
+                      "@type": "Organization",
+                      "name": "ISO 9001:2015 Certified"
+                    }
+                  ],
+                  "sameAs": [
+                    "https://www.linkedin.com/company/emuski",
+                    "https://twitter.com/emuski"
+                  ]
                 },
                 {
                   "@type": "WebSite",
@@ -130,6 +275,11 @@ export default function RootLayout({
                   "name": "EMUSKI Manufacturing Solutions",
                   "publisher": {
                     "@id": "https://www.emuski.com/#organization"
+                  },
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://www.emuski.com/search?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
                   }
                 }
               ]
