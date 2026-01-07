@@ -20,7 +20,7 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/emuski-social-logo.png",
+      "src": "/emuski-social-logo.jpg",
       "sizes": "1200x630",
       "type": "image/png",
       "purpose": "any"
@@ -40,7 +40,7 @@
   ],
   "screenshots": [
     {
-      "src": "/emuski-social-logo.png",
+      "src": "/emuski-social-logo.jpg",
       "sizes": "1200x630",
       "type": "image/png",
       "label": "EMUSKI Brand Guidelines Homepage"

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: 'https://www.emuski.com/logo.png',
+        url: 'https://www.emuski.com/logo.jpg',
         width: 1200,
         height: 1200,
         alt: 'EMUSKI Manufacturing Solutions - Precision Engineering and AI-Powered Production',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     creator: '@emuski',
     title: 'EMUSKI - Your One-Stop Partner for OEM Excellence',
     description: 'World-class OEM manufacturing, precision engineering, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing and rapid prototyping services.',
-    images: ['https://www.emuski.com/logo.png'],
+    images: ['https://www.emuski.com/logo.jpg'],
   },
   other: {
     'geo.region': 'IN-KA',
@@ -113,17 +113,14 @@ export default function RootLayout({
         <meta name="theme-color" content="#17B8BA" />
 
         {/* Explicit OG tags for social sharing verification */}
-        <meta property="og:image" content="https://www.emuski.com/logo.png" />
-        <meta property="og:image:secure_url" content="https://www.emuski.com/logo.png" />
+        <meta property="og:image" content="https://www.emuski.com/logo.jpg" />
+        <meta property="og:image:secure_url" content="https://www.emuski.com/logo.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="1200" />
         <meta property="og:image:alt" content="EMUSKI Manufacturing Solutions - Precision Engineering and AI-Powered Production" />
         <meta property="og:image:type" content="image/png" />
-        <meta name="twitter:image" content="https://www.emuski.com/logo.png" />
+        <meta name="twitter:image" content="https://www.emuski.com/logo.jpg" />
         <meta name="twitter:image:alt" content="EMUSKI - Your One-Stop Partner for OEM Excellence" />
-
-        {/* Mixpanel Verification */}
-        <meta name="mixpanel-token" content="34e275fbd2634ae7d2d952a814121c44" />
 
         <script
           type="application/ld+json"
@@ -140,12 +137,12 @@ export default function RootLayout({
                   "url": "https://www.emuski.com/",
                   "logo": {
                     "@type": "ImageObject",
-                    "url": "https://www.emuski.com/logo.png",
+                    "url": "https://www.emuski.com/logo.jpg",
                     "width": 1200,
                     "height": 1200
                   },
                   "image": [
-                    "https://www.emuski.com/logo.png"
+                    "https://www.emuski.com/logo.jpg"
                   ],
                   "description": "Leading OEM manufacturing company in Bangalore providing precision engineering, rapid prototyping, custom manufacturing, and AI-powered production solutions for automotive, aerospace, medical devices, and electronics industries.",
                   "foundingDate": "2008",
@@ -341,19 +338,6 @@ export default function RootLayout({
             `
           }}
         />
-
-        {/* Mixpanel SDK - Autocapture & Session Replay */}
-        <script type="text/javascript" dangerouslySetInnerHTML={{__html: `
-          (function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===f.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\\/\\//)?          "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";g=f.getElementsByTagName("script")[0];g.parentNode.insertBefore(e,g)}})(document,window.mixpanel||[]);
-
-          mixpanel.init('34e275fbd2634ae7d2d952a814121c44', {
-            debug: true,
-            track_pageview: true,
-            persistence: 'localStorage',
-            autocapture: true,
-            record_sessions_percent: 100,
-          });
-        `}} />
       </head>
       <body className={inter.className}>
         <GoogleTagManager gtmId="GTM-T5MDL48M" />

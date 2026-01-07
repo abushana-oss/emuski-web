@@ -87,8 +87,8 @@ export const metadata: Metadata = {
     description: 'ISO 9001:2015 certified manufacturers in Bangalore, Electronic City. Leading manufacturing company with 15+ years excellence. Serving 75+ global clients across automotive, aerospace, and medical device industries with precision engineering and AI-powered production in Bangalore, Karnataka. Top ISO certified manufacturers.',
     images: [
       {
-        url: 'https://www.emuski.com/logo.png',
-        secureUrl: 'https://www.emuski.com/logo.png',
+        url: 'https://www.emuski.com/logo.jpg',
+        secureUrl: 'https://www.emuski.com/logo.jpg',
         width: 1200,
         height: 1200,
         alt: 'EMUSKI Manufacturing Solutions - Precision Engineering Excellence',
@@ -106,7 +106,7 @@ export const metadata: Metadata = {
     description: 'ISO 9001:2015 certified manufacturers in Bangalore, Electronic City, Karnataka. Leading manufacturing company with 15+ years excellence. Precision engineering, CNC machining, AI-powered production. Top manufacturers in Bangalore. Contact: +91-86670-88060',
     images: [
       {
-        url: 'https://www.emuski.com/logo.png',
+        url: 'https://www.emuski.com/logo.jpg',
         alt: 'EMUSKI Manufacturing Excellence',
         width: 1200,
         height: 1200,
@@ -136,7 +136,7 @@ export default function Home() {
     '@id': 'https://www.emuski.com/#organization',
     name: 'EMUSKI Manufacturing Solutions',
     url: 'https://www.emuski.com',
-    logo: 'https://www.emuski.com/logo.png',
+    logo: 'https://www.emuski.com/logo.jpg',
     description: 'ISO 9001:2015 certified OEM manufacturing and precision engineering company with 15+ years of excellence in Bangalore, India',
     address: {
       '@type': 'PostalAddress',
@@ -174,7 +174,7 @@ export default function Home() {
     '@type': 'LocalBusiness',
     '@id': 'https://www.emuski.com/#localbusiness',
     name: 'EMUSKI Manufacturing Solutions',
-    image: 'https://www.emuski.com/logo.png',
+    image: 'https://www.emuski.com/logo.jpg',
     telephone: '+91-86670-88060',
     email: 'enquiries@emuski.com',
     address: {

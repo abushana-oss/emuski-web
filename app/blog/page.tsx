@@ -73,7 +73,7 @@ export default async function Blog() {
       url: 'https://www.emuski.com',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.emuski.com/logo.png',
+        url: 'https://www.emuski.com/logo.jpg',
       },
     },
   };

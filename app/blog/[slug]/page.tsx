@@ -202,7 +202,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       url: 'https://www.emuski.com',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.emuski.com/logo.png',
+        url: 'https://www.emuski.com/logo.jpg',
         width: 600,
         height: 60,
       },
@@ -282,7 +282,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     url: 'https://www.emuski.com',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://www.emuski.com/logo.png',
+      url: 'https://www.emuski.com/logo.jpg',
       width: 600,
       height: 60,
     },
