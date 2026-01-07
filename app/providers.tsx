@@ -8,7 +8,6 @@ import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { Analytics } from "@/components/analytics/Analytics"
 import { MixpanelProvider } from "@/components/providers/MixpanelProvider"
-import { MixpanelDebug } from "@/components/MixpanelDebug"
 
 // Lazy load WhatsApp widget - not critical for initial render
 const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), {
@@ -27,7 +26,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <Sonner />
           {children}
           <WhatsAppWidget phoneNumber="918344474556" />
-          <MixpanelDebug />
         </MixpanelProvider>
       </TooltipProvider>
     </QueryClientProvider>

@@ -17,23 +17,14 @@ if (isBrowser) {
     ignore_dnt: false,
     api_host: 'https://api.mixpanel.com',
     loaded: (mp) => {
-      console.log('✅ Mixpanel initialized successfully');
-      console.log('📊 Mixpanel Token:', MIXPANEL_TOKEN);
-      console.log('👤 Distinct ID:', mp.get_distinct_id());
-
-      // Send an initial event to test
+      // Send an initial event to verify tracking
       mp.track('Mixpanel Initialized', {
         url: window.location.href,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
       });
-
-      console.log('✅ Initial tracking event sent');
     },
   });
-
-  // Track library load
-  console.log('📦 Mixpanel library loaded');
 }
 
 export { mixpanel };
