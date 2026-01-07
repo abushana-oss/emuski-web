@@ -377,6 +377,13 @@ const nextConfig = {
 
     return configureWebpack(config, options);
   },
+
+  // Security: Request body size limits
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb', // Prevent large payload attacks
+    },
+  },
 };
 
 export default nextConfig;

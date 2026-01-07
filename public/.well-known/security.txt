@@ -1,0 +1,28 @@
+# Security Policy for EMUSKI Manufacturing Solutions
+# https://securitytxt.org/
+
+# Contact information for security researchers
+Contact: mailto:security@emuski.com
+Contact: mailto:enquiries@emuski.com
+Contact: https://www.emuski.com/contact
+
+# Preferred language for security reports
+Preferred-Languages: en
+
+# Canonical URL for this file
+Canonical: https://www.emuski.com/.well-known/security.txt
+
+# Expiration date (1 year from now - update annually)
+Expires: 2027-01-08T00:00:00.000Z
+
+# Acknowledgments page (optional - create this page if you want to thank security researchers)
+# Acknowledgments: https://www.emuski.com/security/acknowledgments
+
+# Encryption key for secure communication (optional - add PGP key if available)
+# Encryption: https://www.emuski.com/pgp-key.txt
+
+# Security policy and disclosure guidelines
+Policy: https://www.emuski.com/security-policy
+
+# Hiring information (optional)
+Hiring: https://www.emuski.com/careers

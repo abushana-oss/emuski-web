@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { checkRateLimit } from '@/lib/ratelimit';
+import { handleCorsPreflightRequest, addCorsHeaders } from '@/lib/cors';
 
 /**
  * Contact Form API Route
@@ -7,10 +9,10 @@ import { Resend } from 'resend';
  * Handles incoming contact form submissions and sends emails to enquiries@emuski.com
  * Uses Resend API for production-ready email delivery
  * Implements proper validation, error handling, and security measures
- * Protected with Google reCAPTCHA v2 verification
+ * Protected with Google reCAPTCHA v2 verification and rate limiting
  *
  * @author Senior Software Engineer
- * @version 3.0.0 - Production Ready with Resend API
+ * @version 4.0.0 - Production Ready with Rate Limiting
  */
 
 // Initialize Resend client
@@ -74,7 +76,7 @@ async function verifyRecaptchaV2(
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
   if (!secretKey) {
-    console.error('❌ RECAPTCHA_SECRET_KEY not configured');
+    console.error('RECAPTCHA_SECRET_KEY not configured');
     return { success: false, reasons: ['Secret key not configured'] };
   }
 
@@ -352,6 +354,12 @@ async function sendEmail(
  * POST handler for contact form submissions
  */
 export async function POST(request: NextRequest) {
+  // Rate limiting check (5 requests per 15 minutes)
+  const rateLimitResponse = await checkRateLimit(request, 'contact');
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   try {
     // Parse multipart form data
     const formData = await request.formData();
@@ -465,8 +473,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Return success response
-    return NextResponse.json(
+    // Return success response with CORS headers
+    const response = NextResponse.json(
       {
         success: true,
         message: 'Your message has been sent successfully. We will respond within 24 hours.',
@@ -474,27 +482,40 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
+    return addCorsHeaders(response, request);
+
   } catch (error) {
     console.error('Contact form API error:', error);
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       {
         success: false,
         error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        ...(process.env.NODE_ENV === 'development' && {
+          details: error instanceof Error ? error.message : 'Unknown error',
+        }),
       },
       { status: 500 }
     );
+
+    return addCorsHeaders(errorResponse, request);
   }
+}
+
+/**
+ * OPTIONS handler - CORS preflight
+ */
+export async function OPTIONS(request: NextRequest) {
+  return handleCorsPreflightRequest(request);
 }
 
 /**
  * GET handler - returns API information
  */
-export async function GET() {
-  return NextResponse.json(
+export async function GET(request: NextRequest) {
+  const response = NextResponse.json(
     {
       name: 'EMUSKI Contact Form API',
-      version: '1.0.0',
+      version: '4.0.0',
       status: 'operational',
       endpoint: '/api/contact',
       method: 'POST',
@@ -502,4 +523,6 @@ export async function GET() {
     },
     { status: 200 }
   );
+
+  return addCorsHeaders(response, request);
 }

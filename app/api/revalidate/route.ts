@@ -3,6 +3,7 @@
  *
  * Webhook endpoint for invalidating cache when new blog posts are published
  * Call this from Blogger webhooks or manually to force cache refresh
+ * Protected with secret token and rate limiting
  *
  * Usage:
  * POST /api/revalidate
@@ -15,8 +16,15 @@
 
 import { revalidateBlog } from '@/lib/api/blogger';
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit } from '@/lib/ratelimit';
 
 export async function POST(request: NextRequest) {
+  // Rate limiting check (10 requests per hour)
+  const rateLimitResponse = await checkRateLimit(request, 'revalidate');
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   try {
     const body = await request.json();
     const { secret, blogType } = body;
@@ -58,7 +66,12 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Revalidation error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Internal server error',
+        ...(process.env.NODE_ENV === 'development' && {
+          details: error instanceof Error ? error.message : 'Unknown error',
+        }),
+      },
       { status: 500 }
     );
   }
