@@ -9,17 +9,31 @@ const isBrowser = typeof window !== 'undefined';
 if (isBrowser) {
   mixpanel.init(MIXPANEL_TOKEN, {
     debug: process.env.NODE_ENV === 'development',
-    track_pageview: true,
+    track_pageview: 'full-url',
     persistence: 'localStorage',
     autocapture: true,
     record_sessions_percent: 100,
     // Additional recommended settings
     ignore_dnt: false,
     api_host: 'https://api.mixpanel.com',
-    loaded: (mixpanel) => {
-      console.log('Mixpanel initialized successfully');
+    loaded: (mp) => {
+      console.log('✅ Mixpanel initialized successfully');
+      console.log('📊 Mixpanel Token:', MIXPANEL_TOKEN);
+      console.log('👤 Distinct ID:', mp.get_distinct_id());
+
+      // Send an initial event to test
+      mp.track('Mixpanel Initialized', {
+        url: window.location.href,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+      });
+
+      console.log('✅ Initial tracking event sent');
     },
   });
+
+  // Track library load
+  console.log('📦 Mixpanel library loaded');
 }
 
 export { mixpanel };
