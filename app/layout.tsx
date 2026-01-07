@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 import '@/index.css'
 import { Providers } from './providers'
 
@@ -330,6 +330,7 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
+        <GoogleTagManager gtmId="GT-T5MDL48M" />
         <Providers>{children}</Providers>
         <GoogleAnalytics gaId="G-QFDFYZLZPK" />
       </body>

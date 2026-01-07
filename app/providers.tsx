@@ -4,8 +4,10 @@ import { Toaster } from "@/components/ui/toaster"
 import { Toaster as Sonner } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
+import { Analytics } from "@/components/analytics/Analytics"
+import "@/lib/mixpanel" // Initialize Mixpanel
 
 // Lazy load WhatsApp widget - not critical for initial render
 const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), {
@@ -17,7 +19,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>        <Toaster />
+      <TooltipProvider>
+        <Analytics />
+        <Toaster />
         <Sonner />
         {children}
         <WhatsAppWidget phoneNumber="918344474556" />

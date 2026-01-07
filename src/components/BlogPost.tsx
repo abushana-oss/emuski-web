@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, Twitter, Linkedin, Facebook, Mail, Menu, Share2, Bookmark, Clock, Calendar, ChevronRight } from "lucide-react";
 import { BlogPost } from "@/lib/api/blogger";
+import { useBlogTracking } from "@/lib/hooks/useAnalytics";
+import { trackClick, trackBlogEngagement } from "@/lib/analytics";
 import "../styles/blog-content.css";
 
 interface BlogPostComponentProps {
@@ -22,6 +24,9 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
   const articleRef = useRef<HTMLElement>(null);
   const tocNavRef = useRef<HTMLElement>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
+
+  // Track blog engagement - reading time, scroll depth
+  const { readingTime } = useBlogTracking(post.title, post.category);
 
   useEffect(() => {
     setIsMounted(true);
@@ -402,6 +407,16 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
   const handleShare = (platform: string) => {
     const url = window.location.href;
     const title = post.title;
+
+    // Track share event
+    trackBlogEngagement({
+      blog_title: post.title,
+      blog_category: post.category,
+      engagement_type: 'share',
+      value: 1,
+    });
+
+    trackClick(`Share on ${platform}`, 'blog_share_button');
 
     switch (platform) {
       case 'twitter':
