@@ -1,9 +1,5 @@
 // Centralized Mixpanel tracking utilities
-declare global {
-  interface Window {
-    mixpanel?: any;
-  }
-}
+// Note: Window.mixpanel types are declared in src/lib/analytics.ts
 
 export const trackError = (
   errorType: string,

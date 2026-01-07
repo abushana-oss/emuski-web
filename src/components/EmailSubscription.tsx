@@ -3,6 +3,8 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Recaptcha } from "./ui/recaptcha";
 import { Check, Mail, AlertCircle, Loader2 } from "lucide-react";
+import { supabase, type EmailSubscription as EmailSubscriptionType } from "@/lib/supabase";
+import { trackConversion, trackError } from "@/lib/mixpanelTracking";
 
 interface SubscriptionResponse {
   success: boolean;
@@ -74,47 +76,62 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
         setMessage(data.message || "Subscription failed. Please try again.");
       }
     } catch (error) {
-      // Send email notification for new subscription
-      const emailData = {
-        to: 'enquiries@emuski.com',
-        from: 'noreply@EMUSKI.com',
-        subject: 'New Email Subscription - EMUSKI',
-        html: `
-          <h2>New Email Subscription</h2>
-          <p><strong>Email:</strong> ${email.trim().toLowerCase()}</p>
-          <p><strong>Source:</strong> Blog/Website</p>
-          <p><strong>Interests:</strong> Manufacturing, Engineering, AI</p>
-          <p><strong>Subscribed:</strong> ${new Date().toLocaleString()}</p>
-        `
-      };
-      
-      console.log('📧 SUBSCRIPTION EMAIL TO SEND TO enquiries@emuski.com:', emailData);
-      
-      // Fallback: Store in localStorage for now (replace with proper backend)
-      const subscribers = JSON.parse(localStorage.getItem("emuski_subscribers") || "[]");
-      const existingSubscriber = subscribers.find((sub: any) => sub.email === email.trim().toLowerCase());
-      
-      if (existingSubscriber) {
-        setStatus("error");
-        setMessage("You're already subscribed to our newsletter!");
-      } else {
-        const newSubscriber = {
-          id: Date.now().toString(),
+      // API call failed, save to Supabase
+      try {
+        const subscriptionData: EmailSubscriptionType = {
           email: email.trim().toLowerCase(),
-          subscribeDate: new Date().toISOString(),
-          status: "active",
-          source: "blog",
-          interests: ["manufacturing", "engineering", "AI"],
-          recaptchaToken
+          status: 'active',
+          source: `website-${variant}`,
+          user_agent: navigator.userAgent
         };
-        
-        subscribers.push(newSubscriber);
-        localStorage.setItem("emuski_subscribers", JSON.stringify(subscribers));
 
-        setStatus("success");
-        setMessage("Successfully subscribed! You'll receive our daily manufacturing insights.");
-        setEmail("");
-        setRecaptchaToken(null);
+        const { error: supabaseError } = await supabase
+          .from('email_subscriptions')
+          .insert([subscriptionData]);
+
+        if (supabaseError) {
+          // Check if it's a duplicate email error
+          if (supabaseError.code === '23505') {
+            setStatus("error");
+            setMessage("You're already subscribed to our newsletter!");
+
+            // Track duplicate subscription attempt
+            trackError('Email Subscription', 'Duplicate email address', 'DUPLICATE_EMAIL');
+          } else {
+            console.error('Supabase error:', supabaseError);
+            setStatus("error");
+            setMessage("Subscription failed. Please try again later.");
+
+            // Track Supabase error
+            trackError('Email Subscription', supabaseError.message, supabaseError.code);
+          }
+        } else {
+          setStatus("success");
+          setMessage("Successfully subscribed! You'll receive our daily manufacturing insights.");
+          setEmail("");
+          setRecaptchaToken(null);
+
+          // Track successful subscription in Mixpanel
+          trackConversion('Email Subscription', undefined, {
+            'subscription_source': `website-${variant}`,
+            'subscription_type': 'newsletter'
+          });
+
+          // Track in Google Analytics
+          if (typeof window !== 'undefined' && (window as any).gtag) {
+            (window as any).gtag('event', 'subscribe', {
+              'event_category': 'engagement',
+              'event_label': 'email_newsletter'
+            });
+          }
+        }
+      } catch (supabaseErr) {
+        console.error('Failed to save to Supabase:', supabaseErr);
+        setStatus("error");
+        setMessage("Subscription failed. Please try again later.");
+
+        // Track error
+        trackError('Email Subscription', supabaseErr instanceof Error ? supabaseErr.message : 'Unknown error', 'SUPABASE_ERROR');
       }
     }
 

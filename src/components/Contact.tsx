@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { Recaptcha } from "./ui/recaptcha";
 import { PhoneInputComponent } from "./ui/phone-input";
 import { trackError, trackConversion } from "@/lib/mixpanelTracking";
+import { supabase, type ContactSubmission } from "@/lib/supabase";
 import {
   Mail,
   Phone,
@@ -173,6 +174,30 @@ export const Contact = () => {
 
       contacts.push(newContact);
       localStorage.setItem("emuski_contacts", JSON.stringify(contacts));
+
+      // Save to Supabase
+      try {
+        const contactData: ContactSubmission = {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          requirements: formData.requirements,
+          file_name: uploadedFile?.name || undefined,
+          recaptcha_token: recaptchaToken || undefined,
+          status: 'new',
+          user_agent: navigator.userAgent
+        };
+
+        const { error: supabaseError } = await supabase
+          .from('contact_submissions')
+          .insert([contactData]);
+
+        if (supabaseError) {
+          console.error('Supabase error:', supabaseError);
+        }
+      } catch (supabaseErr) {
+        console.error('Failed to save to Supabase:', supabaseErr);
+      }
 
       // Track conversion in Mixpanel
       trackConversion('Contact Form Submission', undefined, {
