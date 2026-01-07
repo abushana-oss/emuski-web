@@ -17,7 +17,7 @@ const FAQSection = dynamic(() => import("@/components/FAQSection").then(mod => (
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'EMUSKI - ISO Certified Manufacturers in Bangalore | Top OEM Manufacturing Karnataka',
+  title: 'EMUSKI - ISO Certified Manufacturer in Bangalore | One-Stop Solution for OEM',
   description: 'ISO 9001:2015 certified manufacturers in Bangalore, Karnataka. EMUSKI - Leading manufacturing company delivering world-class OEM manufacturing, precision engineering, CNC machining, injection molding in Electronic City. 15+ years of excellence serving 75+ global clients. Top ISO certified manufacturers in Bangalore for automotive, aerospace, and medical device industries. Contact: +91-86670-88060',
   keywords: [
     'manufacturers in bangalore',
@@ -83,16 +83,16 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://www.emuski.com/',
     siteName: 'EMUSKI - ISO Certified Manufacturers in Bangalore',
-    title: 'EMUSKI - ISO Certified Manufacturers in Bangalore | Top OEM Manufacturing Karnataka',
+    title: 'EMUSKI - ISO Certified Manufacturer in Bangalore | One-Stop Solution for OEM',
     description: 'ISO 9001:2015 certified manufacturers in Bangalore, Electronic City. Leading manufacturing company with 15+ years excellence. Serving 75+ global clients across automotive, aerospace, and medical device industries with precision engineering and AI-powered production in Bangalore, Karnataka. Top ISO certified manufacturers.',
     images: [
       {
-        url: 'https://www.emuski.com/og-image.jpg',
-        secureUrl: 'https://www.emuski.com/og-image.jpg',
+        url: 'https://www.emuski.com/logo.png',
+        secureUrl: 'https://www.emuski.com/logo.png',
         width: 1200,
-        height: 630,
+        height: 1200,
         alt: 'EMUSKI Manufacturing Solutions - Precision Engineering Excellence',
-        type: 'image/jpeg',
+        type: 'image/png',
       },
     ],
   },
@@ -106,10 +106,10 @@ export const metadata: Metadata = {
     description: 'ISO 9001:2015 certified manufacturers in Bangalore, Electronic City, Karnataka. Leading manufacturing company with 15+ years excellence. Precision engineering, CNC machining, AI-powered production. Top manufacturers in Bangalore. Contact: +91-86670-88060',
     images: [
       {
-        url: 'https://www.emuski.com/twitter-image.jpg',
+        url: 'https://www.emuski.com/logo.png',
         alt: 'EMUSKI Manufacturing Excellence',
         width: 1200,
-        height: 630,
+        height: 1200,
       },
     ],
   },
@@ -174,7 +174,7 @@ export default function Home() {
     '@type': 'LocalBusiness',
     '@id': 'https://www.emuski.com/#localbusiness',
     name: 'EMUSKI Manufacturing Solutions',
-    image: 'https://www.emuski.com/og-image.jpg',
+    image: 'https://www.emuski.com/logo.png',
     telephone: '+91-86670-88060',
     email: 'enquiries@emuski.com',
     address: {

@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: 'https://www.emuski.com/og-image.png',
-        width: 2000,
-        height: 1333,
+        url: 'https://www.emuski.com/logo.png',
+        width: 1200,
+        height: 1200,
         alt: 'EMUSKI Manufacturing Solutions - Precision Engineering and AI-Powered Production',
         type: 'image/png',
       },
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     creator: '@emuski',
     title: 'EMUSKI - Your One-Stop Partner for OEM Excellence',
     description: 'World-class OEM manufacturing, precision engineering, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing and rapid prototyping services.',
-    images: ['https://www.emuski.com/twitter-image.png'],
+    images: ['https://www.emuski.com/logo.png'],
   },
   other: {
     'geo.region': 'IN-KA',
@@ -113,13 +113,13 @@ export default function RootLayout({
         <meta name="theme-color" content="#17B8BA" />
 
         {/* Explicit OG tags for social sharing verification */}
-        <meta property="og:image" content="https://www.emuski.com/og-image.png" />
-        <meta property="og:image:secure_url" content="https://www.emuski.com/og-image.png" />
-        <meta property="og:image:width" content="2000" />
-        <meta property="og:image:height" content="1333" />
+        <meta property="og:image" content="https://www.emuski.com/logo.png" />
+        <meta property="og:image:secure_url" content="https://www.emuski.com/logo.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
         <meta property="og:image:alt" content="EMUSKI Manufacturing Solutions - Precision Engineering and AI-Powered Production" />
         <meta property="og:image:type" content="image/png" />
-        <meta name="twitter:image" content="https://www.emuski.com/twitter-image.png" />
+        <meta name="twitter:image" content="https://www.emuski.com/logo.png" />
         <meta name="twitter:image:alt" content="EMUSKI - Your One-Stop Partner for OEM Excellence" />
 
         {/* Mixpanel Verification */}
@@ -140,13 +140,12 @@ export default function RootLayout({
                   "url": "https://www.emuski.com/",
                   "logo": {
                     "@type": "ImageObject",
-                    "url": "https://www.emuski.com/logo.webp",
-                    "width": 3375,
-                    "height": 3375
+                    "url": "https://www.emuski.com/logo.png",
+                    "width": 1200,
+                    "height": 1200
                   },
                   "image": [
-                    "https://www.emuski.com/logo.webp",
-                    "https://www.emuski.com/og-image.png"
+                    "https://www.emuski.com/logo.png"
                   ],
                   "description": "Leading OEM manufacturing company in Bangalore providing precision engineering, rapid prototyping, custom manufacturing, and AI-powered production solutions for automotive, aerospace, medical devices, and electronics industries.",
                   "foundingDate": "2008",
@@ -357,7 +356,7 @@ export default function RootLayout({
         `}} />
       </head>
       <body className={inter.className}>
-        <GoogleTagManager gtmId="GT-T5MDL48M" />
+        <GoogleTagManager gtmId="GTM-T5MDL48M" />
         <Providers>{children}</Providers>
         <GoogleAnalytics gaId="G-QFDFYZLZPK" />
       </body>
