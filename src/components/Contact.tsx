@@ -5,6 +5,7 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Recaptcha } from "./ui/recaptcha";
 import { PhoneInputComponent } from "./ui/phone-input";
+import { trackError, trackConversion } from "@/lib/mixpanelTracking";
 import {
   Mail,
   Phone,
@@ -173,6 +174,12 @@ export const Contact = () => {
       contacts.push(newContact);
       localStorage.setItem("emuski_contacts", JSON.stringify(contacts));
 
+      // Track conversion in Mixpanel
+      trackConversion('Contact Form Submission', undefined, {
+        'form_type': 'contact',
+        'has_file': !!uploadedFile
+      });
+
       setSubmitStatus("success");
       setFormData({
         name: "",
@@ -189,6 +196,13 @@ export const Contact = () => {
         fileInput.value = '';
       }
     } catch (error) {
+      // Track error in Mixpanel
+      trackError(
+        'form_submission',
+        (error as Error).message || 'Contact form submission failed',
+        undefined,
+        window.location.href
+      );
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);

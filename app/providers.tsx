@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { Analytics } from "@/components/analytics/Analytics"
-import { MixpanelProvider } from "@/components/providers/MixpanelProvider"
+import { useMixpanelPageTracking } from "@/hooks/useMixpanelPageTracking"
 
 // Lazy load WhatsApp widget - not critical for initial render
 const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), {
@@ -17,16 +17,17 @@ const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), {
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient())
 
+  // Track page views in Mixpanel
+  useMixpanelPageTracking()
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <MixpanelProvider>
-          <Analytics />
-          <Toaster />
-          <Sonner />
-          {children}
-          <WhatsAppWidget phoneNumber="918344474556" />
-        </MixpanelProvider>
+        <Analytics />
+        <Toaster />
+        <Sonner />
+        {children}
+        <WhatsAppWidget phoneNumber="918344474556" />
       </TooltipProvider>
     </QueryClientProvider>
   )
