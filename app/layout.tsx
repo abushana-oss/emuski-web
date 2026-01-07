@@ -40,11 +40,6 @@ export const metadata: Metadata = {
     description: 'World-class OEM manufacturing, precision engineering, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing and rapid prototyping services.',
     images: ['https://www.emuski.com/twitter-image.png'],
   },
-  icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
-  },
   other: {
     'geo.region': 'IN-KA',
     'geo.placename': 'Bangalore, Karnataka, India',
@@ -87,6 +82,35 @@ export default function RootLayout({
           media="(min-width: 768px)"
           fetchPriority="high"
         />
+
+        {/* Favicon - Explicit links for best SEO and browser compatibility */}
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="48x48" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png" />
+
+        {/* Apple Touch Icons */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+
+        {/* Safari Pinned Tab */}
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#17B8BA" />
+
+        {/* Microsoft Tiles */}
+        <meta name="msapplication-TileColor" content="#17B8BA" />
+        <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+
+        {/* Web App Manifest */}
+        <link rel="manifest" href="/site.webmanifest" />
+
+        {/* Theme Color for browsers */}
+        <meta name="theme-color" content="#17B8BA" />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

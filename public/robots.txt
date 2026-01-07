@@ -21,15 +21,21 @@ Allow: /blog/*
 Allow: /contact
 Allow: /gallery
 
-# Allow important assets
+# Allow important assets and favicons
 Allow: /assets/
+Allow: /favicon.ico
 Allow: /favicon.svg
+Allow: /favicon*.png
+Allow: /apple-touch-icon*.png
+Allow: /site.webmanifest
 Allow: /manifest.json
+Allow: /browserconfig.xml
 Allow: /*.jpg
 Allow: /*.jpeg
 Allow: /*.png
 Allow: /*.svg
 Allow: /*.webp
+Allow: /*.ico
 
 # SEO optimized paths
 Allow: /oem-manufacturing*
