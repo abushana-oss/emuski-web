@@ -8,20 +8,44 @@
  * - Custom event tracking
  */
 
+'use client';
+
 import mixpanel from 'mixpanel-browser';
 
 // Initialize Mixpanel
 const MIXPANEL_TOKEN = '34e275fbd2634ae7d2d952a814121c44';
 
+let initialized = false;
+
+const initMixpanel = () => {
+  if (typeof window !== 'undefined' && !initialized) {
+    try {
+      mixpanel.init(MIXPANEL_TOKEN, {
+        autocapture: true,
+        record_sessions_percent: 100,
+        persistence: 'localStorage',
+        debug: false,
+        track_pageview: true,
+        ignore_dnt: false,
+        loaded: (mixpanel) => {
+          console.log('✓ Mixpanel loaded successfully');
+          // Send verification event
+          mixpanel.track('Mixpanel Initialized', {
+            platform: 'Web',
+            environment: process.env.NODE_ENV,
+          });
+        },
+      });
+      initialized = true;
+    } catch (error) {
+      console.error('Mixpanel initialization error:', error);
+    }
+  }
+};
+
+// Auto-initialize on import (client-side only)
 if (typeof window !== 'undefined') {
-  mixpanel.init(MIXPANEL_TOKEN, {
-    autocapture: true, // Auto-track clicks, form submissions, page changes
-    record_sessions_percent: 100, // Record 100% of sessions
-    persistence: 'localStorage', // Store user data in localStorage
-    loaded: (mixpanel) => {
-      console.log('Mixpanel loaded successfully');
-    },
-  });
+  initMixpanel();
 }
 
 // Helper functions for Mixpanel tracking

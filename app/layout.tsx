@@ -26,9 +26,10 @@ export const metadata: Metadata = {
     images: [
       {
         url: 'https://www.emuski.com/og-image.png',
-        width: 1050,
-        height: 600,
+        width: 2000,
+        height: 1333,
         alt: 'EMUSKI Manufacturing Solutions - Precision Engineering and AI-Powered Production',
+        type: 'image/png',
       },
     ],
   },
@@ -110,6 +111,19 @@ export default function RootLayout({
 
         {/* Theme Color for browsers */}
         <meta name="theme-color" content="#17B8BA" />
+
+        {/* Explicit OG tags for social sharing verification */}
+        <meta property="og:image" content="https://www.emuski.com/og-image.png" />
+        <meta property="og:image:secure_url" content="https://www.emuski.com/og-image.png" />
+        <meta property="og:image:width" content="2000" />
+        <meta property="og:image:height" content="1333" />
+        <meta property="og:image:alt" content="EMUSKI Manufacturing Solutions - Precision Engineering and AI-Powered Production" />
+        <meta property="og:image:type" content="image/png" />
+        <meta name="twitter:image" content="https://www.emuski.com/twitter-image.png" />
+        <meta name="twitter:image:alt" content="EMUSKI - Your One-Stop Partner for OEM Excellence" />
+
+        {/* Mixpanel Verification */}
+        <meta name="mixpanel-token" content="34e275fbd2634ae7d2d952a814121c44" />
 
         <script
           type="application/ld+json"
