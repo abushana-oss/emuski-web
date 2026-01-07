@@ -25,11 +25,11 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: 'https://www.emuski.com/logo.jpg',
-        width: 3375,
-        height: 3375,
-        alt: 'EMUSKI Manufacturing Solutions - Precision Engineering and AI-Powered Production',
-        type: 'image/jpeg',
+        url: 'https://www.emuski.com/og-image.png',
+        width: 2000,
+        height: 1333,
+        alt: 'EMUSKI - ISO Certified Manufacturer in Bangalore | Precision Engineering Excellence',
+        type: 'image/png',
       },
     ],
   },
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     creator: '@emuski',
     title: 'EMUSKI - Your One-Stop Partner for OEM Excellence',
     description: 'World-class OEM manufacturing, precision engineering, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing and rapid prototyping services.',
-    images: ['https://www.emuski.com/logo.jpg'],
+    images: ['https://www.emuski.com/og-image.png'],
   },
   other: {
     'geo.region': 'IN-KA',
@@ -118,12 +118,12 @@ export default function RootLayout({
         <meta property="og:site_name" content="EMUSKI" />
         <meta property="og:title" content="EMUSKI - ISO Certified Manufacturer in Bangalore | One-Stop Solution for OEM" />
         <meta property="og:description" content="ISO 9001:2015 certified OEM manufacturing and precision engineering company with 15+ years of excellence in Bangalore, India. Expert design-for-manufacturing, rapid prototyping, and cost optimization." />
-        <meta property="og:image" content="https://www.emuski.com/logo.jpg" />
-        <meta property="og:image:secure_url" content="https://www.emuski.com/logo.jpg" />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content="3375" />
-        <meta property="og:image:height" content="3375" />
-        <meta property="og:image:alt" content="EMUSKI Manufacturing Solutions - ISO Certified Manufacturer" />
+        <meta property="og:image" content="https://www.emuski.com/og-image.png" />
+        <meta property="og:image:secure_url" content="https://www.emuski.com/og-image.png" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="2000" />
+        <meta property="og:image:height" content="1333" />
+        <meta property="og:image:alt" content="EMUSKI - ISO Certified Manufacturer in Bangalore | Precision Engineering Excellence" />
         <meta property="og:locale" content="en_US" />
 
         {/* Twitter Card Meta Tags */}
@@ -132,8 +132,8 @@ export default function RootLayout({
         <meta name="twitter:creator" content="@emuski" />
         <meta name="twitter:title" content="EMUSKI - ISO Certified Manufacturer in Bangalore" />
         <meta name="twitter:description" content="ISO 9001:2015 certified OEM manufacturing and precision engineering company with 15+ years of excellence in Bangalore, India." />
-        <meta name="twitter:image" content="https://www.emuski.com/logo.jpg" />
-        <meta name="twitter:image:alt" content="EMUSKI Manufacturing Solutions" />
+        <meta name="twitter:image" content="https://www.emuski.com/og-image.png" />
+        <meta name="twitter:image:alt" content="EMUSKI - ISO Certified Manufacturer in Bangalore" />
 
         {/* Mixpanel Analytics */}
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: `
@@ -163,12 +163,12 @@ export default function RootLayout({
                   "url": "https://www.emuski.com/",
                   "logo": {
                     "@type": "ImageObject",
-                    "url": "https://www.emuski.com/logo.jpg",
-                    "width": 3375,
-                    "height": 3375
+                    "url": "https://www.emuski.com/og-image.png",
+                    "width": 2000,
+                    "height": 1333
                   },
                   "image": [
-                    "https://www.emuski.com/logo.jpg"
+                    "https://www.emuski.com/og-image.png"
                   ],
                   "description": "Leading OEM manufacturing company in Bangalore providing precision engineering, rapid prototyping, custom manufacturing, and AI-powered production solutions for automotive, aerospace, medical devices, and electronics industries.",
                   "foundingDate": "2008",
