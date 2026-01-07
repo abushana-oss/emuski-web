@@ -82,11 +82,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Fetch all blog posts dynamically
+  // Fetch all blog posts dynamically - now fetches ALL posts automatically
   let blogPages: MetadataRoute.Sitemap = [];
 
   try {
-    const { all: allPosts } = await fetchAllBlogs(100);
+    const { all: allPosts } = await fetchAllBlogs(true);
 
     blogPages = allPosts.map((post) => ({
       url: `${baseUrl}/blog/${post.slug}`,
@@ -95,7 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
-    console.log(`✓ Sitemap generated with ${blogPages.length} blog posts`);
+    console.log(`Sitemap generated with ${blogPages.length} blog posts`);
   } catch (error) {
     console.error('Error generating blog sitemap entries:', error);
     // Return static pages even if blog fetch fails

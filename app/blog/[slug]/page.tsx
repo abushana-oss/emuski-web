@@ -157,13 +157,20 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     notFound();
   }
 
-  // Fetch all posts for related articles
-  const { all: allPosts } = await fetchAllBlogs(50);
+  // Fetch all posts for related articles - now fetches ALL posts automatically
+  const { all: allPosts } = await fetchAllBlogs(true);
 
   // Check if this is a success story
   const isSuccessStory = post.category === 'Case Study' || post.category === 'Success Story';
 
-  // Generate JSON-LD structured data
+  // Calculate word count for enhanced schema
+  const textContent = post.fullContent
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const wordCount = textContent.split(/\s+/).length;
+
+  // Generate JSON-LD structured data with enhanced SEO properties
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -175,6 +182,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       url: post.image,
       width: 1200,
       height: 630,
+      caption: post.title,
     },
     datePublished: post.publishDate,
     dateModified: post.publishDate,
@@ -183,6 +191,9 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       name: post.author,
       ...(isSuccessStory && {
         url: 'https://www.emuski.com',
+      }),
+      ...(!isSuccessStory && {
+        jobTitle: 'Manufacturing Expert',
       }),
     },
     publisher: {
@@ -195,6 +206,17 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         width: 600,
         height: 60,
       },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        telephone: '+91-9875206877',
+        contactType: 'Customer Service',
+        areaServed: 'IN',
+        availableLanguage: ['en', 'hi'],
+      },
+      sameAs: [
+        'https://www.linkedin.com/company/emuski',
+        'https://twitter.com/emuski',
+      ],
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
@@ -202,6 +224,14 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     },
     articleSection: post.category,
     keywords: post.tags?.join(', '),
+    wordCount: wordCount,
+    timeRequired: post.readTime,
+    inLanguage: 'en-US',
+    isAccessibleForFree: true,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['.blog-title', '.blog-excerpt', '.blog-content'],
+    },
     ...(isSuccessStory && {
       about: {
         '@type': 'Thing',
@@ -231,14 +261,79 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       {
         '@type': 'ListItem',
         position: 3,
+        name: post.category,
+        item: `https://www.emuski.com/blog?category=${post.category}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
         name: post.title,
         item: `https://www.emuski.com/blog/${slug}`,
       },
     ],
   };
 
+  // Generate Organization structured data for brand recognition
+  const organizationData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': 'https://www.emuski.com/#organization',
+    name: 'EMUSKI Manufacturing Solutions',
+    url: 'https://www.emuski.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://www.emuski.com/logo.png',
+      width: 600,
+      height: 60,
+    },
+    description: 'Leading precision manufacturing and engineering solutions provider specializing in rapid prototyping, VAVE, and AI-powered manufacturing',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+91-9875206877',
+      contactType: 'Customer Service',
+      areaServed: 'IN',
+      availableLanguage: ['en', 'hi'],
+    },
+    sameAs: [
+      'https://www.linkedin.com/company/emuski',
+      'https://twitter.com/emuski',
+    ],
+  };
+
+  // Generate WebPage structured data
+  const webPageData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `https://www.emuski.com/blog/${slug}`,
+    url: `https://www.emuski.com/blog/${slug}`,
+    name: post.title,
+    description: post.excerpt,
+    inLanguage: 'en-US',
+    isPartOf: {
+      '@type': 'WebSite',
+      '@id': 'https://www.emuski.com/#website',
+      url: 'https://www.emuski.com',
+      name: 'EMUSKI Manufacturing Solutions',
+      publisher: {
+        '@id': 'https://www.emuski.com/#organization',
+      },
+    },
+    breadcrumb: {
+      '@id': `https://www.emuski.com/blog/${slug}#breadcrumb`,
+    },
+    potentialAction: {
+      '@type': 'ReadAction',
+      target: [`https://www.emuski.com/blog/${slug}`],
+    },
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: post.image,
+    },
+  };
+
   return (
     <>
+      {/* Enhanced Schema Markup for Maximum SEO Impact */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -246,6 +341,14 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageData) }}
       />
       <div className="min-h-screen bg-white">
         <Navbar />

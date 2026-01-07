@@ -190,11 +190,12 @@ function convertBloggerPostToLocalFormat(post: BloggerPost, defaultCategory: str
 }
 
 /**
- * Fetch posts from a single blog with caching
+ * Fetch posts from a single blog with caching and automatic pagination
  * Uses React cache() for request deduplication + unstable_cache for ISR
+ * Fetches ALL posts by following pageToken pagination automatically
  */
 export const fetchBlogPosts = cache(
-  async (blogType: BlogType, maxResults: number = 50): Promise<BlogPost[]> => {
+  async (blogType: BlogType, maxResults: number = 500, fetchAll: boolean = true): Promise<BlogPost[]> => {
     const blogId = BLOG_IDS[blogType];
 
     // Skip if blog ID not configured (silent for optional blogs)
@@ -214,42 +215,74 @@ export const fetchBlogPosts = cache(
     return unstable_cache(
       async () => {
         try {
-          const url = `${BLOGGER_BASE}/blogs/${blogId}/posts?key=${BLOGGER_API_KEY}&maxResults=${maxResults}`;
+          const allPosts: BlogPost[] = [];
+          let pageToken: string | undefined = undefined;
+          let pageCount = 0;
+          const maxPages = 10; // Safety limit to prevent infinite loops
 
-          const response = await fetch(url, {
-            next: {
-              revalidate: REVALIDATE_TIME,
-              tags: [`blog-${blogType}`],
+          // Fetch all pages using pagination
+          do {
+            const url = pageToken
+              ? `${BLOGGER_BASE}/blogs/${blogId}/posts?key=${BLOGGER_API_KEY}&maxResults=${maxResults}&pageToken=${pageToken}`
+              : `${BLOGGER_BASE}/blogs/${blogId}/posts?key=${BLOGGER_API_KEY}&maxResults=${maxResults}`;
+
+            const response = await fetch(url, {
+              next: {
+                revalidate: REVALIDATE_TIME,
+                tags: [`blog-${blogType}`],
+              }
+            });
+
+            if (!response.ok) {
+              if (response.status === 404) {
+                console.info(`Blog ${blogType} not found (404)`);
+                return [];
+              }
+              throw new Error(`Failed to fetch ${blogType} posts: ${response.status}`);
             }
-          });
 
-          if (!response.ok) {
-            if (response.status === 404) {
-              console.info(`Blog ${blogType} not found (404)`);
-              return [];
+            const data = await response.json();
+
+            if (!data.items || !Array.isArray(data.items)) {
+              break;
             }
-            throw new Error(`Failed to fetch ${blogType} posts: ${response.status}`);
-          }
 
-          const data = await response.json();
+            const defaultCategory = blogType === 'engineering' ? 'Engineering' :
+                                   blogType === 'successStories' ? 'Case Study' :
+                                   'Manufacturing';
 
-          if (!data.items || !Array.isArray(data.items)) {
-            return [];
-          }
+            const posts = data.items.map((item: BloggerPost) =>
+              convertBloggerPostToLocalFormat(item, defaultCategory)
+            );
 
-          const defaultCategory = blogType === 'engineering' ? 'Engineering' :
-                                 blogType === 'successStories' ? 'Case Study' :
-                                 'Manufacturing';
+            allPosts.push(...posts);
 
-          return data.items.map((item: BloggerPost) =>
-            convertBloggerPostToLocalFormat(item, defaultCategory)
-          );
+            // Get next page token if available
+            pageToken = data.nextPageToken;
+            pageCount++;
+
+            console.info(`Fetched page ${pageCount} for ${blogType}: ${posts.length} posts (Total: ${allPosts.length})`);
+
+            // If fetchAll is false, only get first page
+            if (!fetchAll) break;
+
+            // Safety check to prevent infinite loops
+            if (pageCount >= maxPages) {
+              console.warn(`Reached maximum page limit (${maxPages}) for ${blogType}`);
+              break;
+            }
+
+          } while (pageToken);
+
+          console.info(`Total posts fetched for ${blogType}: ${allPosts.length}`);
+          return allPosts;
+
         } catch (error) {
           console.error(`Error fetching ${blogType} posts:`, error);
           return [];
         }
       },
-      [`blog-${blogType}-${maxResults}`],
+      [`blog-${blogType}-all-v2`],
       {
         revalidate: REVALIDATE_TIME,
         tags: [`blog-${blogType}`, 'blog-posts'],
@@ -259,19 +292,20 @@ export const fetchBlogPosts = cache(
 );
 
 /**
- * Fetch ALL blogs efficiently in parallel
+ * Fetch ALL blogs efficiently in parallel with automatic pagination
  * Optimized from 3 sequential calls to 3 parallel calls
+ * Now fetches ALL posts from each blog automatically
  */
-export async function fetchAllBlogs(maxResults: number = 50): Promise<{
+export async function fetchAllBlogs(fetchAll: boolean = true): Promise<{
   manufacturing: BlogPost[];
   engineering: BlogPost[];
   successStories: BlogPost[];
   all: BlogPost[];
 }> {
   const [manufacturing, engineering, successStories] = await Promise.all([
-    fetchBlogPosts('manufacturing', maxResults),
-    fetchBlogPosts('engineering', maxResults),
-    fetchBlogPosts('successStories', maxResults),
+    fetchBlogPosts('manufacturing', 500, fetchAll),
+    fetchBlogPosts('engineering', 500, fetchAll),
+    fetchBlogPosts('successStories', 500, fetchAll),
   ]);
 
   return {
@@ -285,12 +319,13 @@ export async function fetchAllBlogs(maxResults: number = 50): Promise<{
 /**
  * Fetch single post by slug (optimized)
  * Searches across all blogs in parallel
+ * Now searches through ALL posts automatically
  */
 export const fetchPostBySlug = cache(
   async (slug: string): Promise<BlogPost | null> => {
     return unstable_cache(
       async () => {
-        const { all } = await fetchAllBlogs(100);
+        const { all } = await fetchAllBlogs(true);
         return all.find(post => post.slug === slug) || null;
       },
       [`post-${slug}`],
@@ -324,8 +359,10 @@ export async function revalidateBlog(blogType?: BlogType) {
 /**
  * Generate static params for all blog posts
  * Enables static generation at build time
+ * Now generates params for ALL posts automatically
  */
 export async function generateBlogStaticParams(): Promise<{ slug: string }[]> {
-  const { all } = await fetchAllBlogs(100);
+  const { all } = await fetchAllBlogs(true);
+  console.info(`Generating static params for ${all.length} blog posts`);
   return all.map(post => ({ slug: post.slug }));
 }
