@@ -22,9 +22,10 @@
   status = 301
   force = true
 
-# Scheduled function for automatic blog refresh
+# Functions configuration
 [functions]
   directory = "netlify/functions"
 
-[[functions."scheduled-refresh-blogs"]]
-  schedule = "* * * * *"  # Every minute
+# Scheduled function for automatic blog refresh (every 5 minutes)
+[functions.scheduled-refresh-blogs]
+  schedule = "@cron */5 * * * *"
