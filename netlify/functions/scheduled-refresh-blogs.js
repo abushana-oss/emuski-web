@@ -2,14 +2,12 @@
  * Netlify Scheduled Function for Automatic Blog Refresh
  *
  * This function automatically fetches new blogs from Blogger API
- * and refreshes the cache every minute.
+ * and refreshes the cache every 5 minutes.
  *
  * Netlify automatically runs this based on the schedule in netlify.toml
  */
 
-import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
-
-const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
+exports.handler = async (event, context) => {
   console.log('[Netlify Cron] Starting automatic blog refresh...');
 
   try {
@@ -55,5 +53,3 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     };
   }
 };
-
-export { handler };
