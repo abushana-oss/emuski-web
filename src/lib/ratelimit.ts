@@ -69,6 +69,13 @@ const rateLimitConfigs = {
     windowMs: 10 * 60 * 1000, // 10 minutes
     message: 'Too many subscription attempts. Please try again in 10 minutes.',
   },
+
+  // Blogger webhook: 20 requests per hour
+  'blogger-webhook': {
+    maxRequests: 20,
+    windowMs: 60 * 60 * 1000, // 1 hour
+    message: 'Too many webhook requests. Please try again later.',
+  },
 };
 
 // Initialize rate limiters
@@ -117,6 +124,16 @@ function initializeRateLimiters() {
         analytics: true,
         prefix: '@emuski/ratelimit/subscribe',
       }),
+
+      'blogger-webhook': new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(
+          rateLimitConfigs['blogger-webhook'].maxRequests,
+          `${rateLimitConfigs['blogger-webhook'].windowMs}ms`
+        ),
+        analytics: true,
+        prefix: '@emuski/ratelimit/blogger-webhook',
+      }),
     };
   } else {
     // Development: Use in-memory fallback
@@ -135,6 +152,10 @@ function initializeRateLimiters() {
       subscribe: new InMemoryRatelimit(
         rateLimitConfigs.subscribe.maxRequests,
         rateLimitConfigs.subscribe.windowMs
+      ),
+      'blogger-webhook': new InMemoryRatelimit(
+        rateLimitConfigs['blogger-webhook'].maxRequests,
+        rateLimitConfigs['blogger-webhook'].windowMs
       ),
     };
   }

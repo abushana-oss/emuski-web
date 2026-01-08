@@ -28,8 +28,10 @@ const BLOG_IDS = {
 
 type BlogType = keyof typeof BLOG_IDS;
 
-// Revalidation time (1 hour = 3600 seconds)
-const REVALIDATE_TIME = 3600;
+// Revalidation time (5 minutes = 300 seconds) for near real-time updates
+// This ensures new blog posts appear within 5 minutes maximum
+// Combined with webhook endpoint for instant updates
+const REVALIDATE_TIME = 300;
 
 /**
  * Blogger Post Interface

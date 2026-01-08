@@ -5,8 +5,9 @@ import { fetchPostBySlug, fetchAllBlogs, generateBlogStaticParams } from "@/lib/
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-// Enable ISR - Revalidate every hour
-export const revalidate = 3600
+// Enable ISR - Revalidate every 5 minutes for near real-time updates
+// Combined with webhook endpoint at /api/blogger-webhook for instant updates
+export const revalidate = 300
 
 // Generate static params for all blog posts at build time
 export async function generateStaticParams() {
@@ -171,9 +172,10 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   const wordCount = textContent.split(/\s+/).length;
 
   // Generate JSON-LD structured data with enhanced SEO properties
+  // Using BlogPosting type (more specific than Article) for better SEO in 2026
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     '@id': `https://www.emuski.com/blog/${slug}`,
     headline: post.title,
     description: post.excerpt,

@@ -432,61 +432,149 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
   );
 };
 
-// Independent Engineering Section (no state dependency)
-const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => (
-  <section className="bg-gray-50 py-16">
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-      <div className="flex items-center justify-between mb-10">
-        <div className="flex items-center gap-4">
-          <div className="w-1 h-12 bg-emuski-teal-dark rounded" />
-          <h2 className="text-3xl font-bold text-gray-900">Engineering Articles</h2>
-        </div>
-        <span className="text-sm text-gray-600">{posts.length} articles</span>
-      </div>
+// Independent Engineering Section with Featured Post (no state dependency)
+const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
+  if (posts.length === 0) return null;
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {posts.slice(0, 6).map((post) => (
-          <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
-            <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all h-full flex flex-col">
-              <div className="relative h-56 overflow-hidden">
-                <img 
-                  src={post.image} 
-                  alt={post.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                  loading="lazy" 
+  const featuredEngineeringPost = posts[0];
+  const regularEngineeringPosts = posts.slice(1, 7);
+
+  return (
+    <section className="bg-gray-50 py-16 border-t border-gray-200" aria-labelledby="precision-engineering-heading">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+        {/* Section Header */}
+        <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center gap-4">
+            <div className="w-1 h-16 bg-gradient-to-b from-emuski-teal-dark to-emuski-teal rounded-full" />
+            <div>
+              <h2 id="precision-engineering-heading" className="text-3xl md:text-4xl font-bold text-gray-900">
+                Precision Engineering Blogs
+              </h2>
+              <p className="text-gray-600 mt-2">Expert insights on cost optimization, VAVE, and engineering excellence</p>
+            </div>
+          </div>
+          <span className="hidden md:block text-sm font-semibold text-emuski-teal-dark px-4 py-2 bg-emuski-teal/10 rounded-full">
+            {posts.length} Articles
+          </span>
+        </div>
+
+        {/* Featured Engineering Post */}
+        <div className="mb-12">
+          <Link href={`/blog/${featuredEngineeringPost.slug}`} className="block group">
+            <article className="grid lg:grid-cols-2 gap-8 lg:gap-12 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-2xl transition-all duration-300 border border-gray-200">
+              <div className="relative h-64 lg:h-96 overflow-hidden">
+                <img
+                  src={featuredEngineeringPost.image}
+                  alt={featuredEngineeringPost.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
                 />
-                <span className="absolute top-4 left-4 px-3 py-1 bg-emuski-teal text-white text-xs font-bold rounded">
-                  Engineering
+                <span className="absolute top-4 left-4 px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold uppercase rounded-full shadow-lg">
+                  Featured Engineering
                 </span>
               </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emuski-teal-dark line-clamp-2">
-                  {post.title}
+
+              <div className="p-8 lg:p-12 flex flex-col justify-center">
+                <span className="inline-block px-4 py-1.5 bg-blue-100 text-blue-800 text-xs font-bold uppercase rounded mb-4 w-fit">
+                  {featuredEngineeringPost.category || 'Engineering'}
+                </span>
+                <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 group-hover:text-blue-700 transition-colors leading-tight">
+                  {featuredEngineeringPost.title}
                 </h3>
-                <p className="text-gray-600 text-sm mb-6 flex-1 line-clamp-3">
-                  {getFirstSentence(post.excerpt)}
+                <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+                  {getFirstSentence(featuredEngineeringPost.excerpt)}
                 </p>
-                <div className="flex justify-between text-xs text-gray-500 pt-4 border-t">
-                  <span className="font-medium text-gray-700">{post.author}</span>
-                  <span>{new Date(post.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+
+                <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-blue-600" />
+                    <span className="font-medium">{featuredEngineeringPost.author}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-blue-600" />
+                    <time dateTime={featuredEngineeringPost.publishDate}>
+                      {new Date(featuredEngineeringPost.publishDate).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </time>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-blue-600" />
+                    <span>{featuredEngineeringPost.readTime}</span>
+                  </div>
                 </div>
+
+                <span className="inline-flex items-center text-blue-700 font-bold text-lg group-hover:translate-x-2 transition-transform">
+                  Read Engineering Insights
+                  <ChevronRight className="h-6 w-6 ml-2" />
+                </span>
               </div>
             </article>
           </Link>
-        ))}
-      </div>
-
-      {posts.length > 6 && (
-        <div className="text-center mt-12">
-          <Link
-            href="/blog?category=Engineering" // You can handle this query param in BlogPage if needed
-            className="inline-flex items-center gap-2 px-8 py-4 bg-emuski-teal-dark hover:bg-emuski-teal-darker text-white font-bold rounded-lg transition-colors"
-          >
-            View All Engineering Articles
-            <ChevronRight className="h-5 w-5" />
-          </Link>
         </div>
-      )}
-    </div>
-  </section>
-);
+
+        {/* Regular Engineering Posts Grid */}
+        {regularEngineeringPosts.length > 0 && (
+          <>
+            <h3 className="text-2xl font-bold text-gray-900 mb-8">More Precision Engineering Articles</h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {regularEngineeringPosts.map((post) => (
+                <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
+                  <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-blue-300 transition-all h-full flex flex-col">
+                    <div className="relative h-56 overflow-hidden">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <span className="absolute top-4 left-4 px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold rounded shadow-md">
+                        Engineering
+                      </span>
+                    </div>
+                    <div className="p-6 flex-1 flex flex-col">
+                      <h4 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors line-clamp-2 leading-tight">
+                        {post.title}
+                      </h4>
+                      <p className="text-gray-600 text-sm mb-6 flex-1 line-clamp-3 leading-relaxed">
+                        {getFirstSentence(post.excerpt)}
+                      </p>
+                      <div className="flex justify-between items-center text-xs text-gray-500 pt-4 border-t border-gray-100">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-gray-700">{post.author}</span>
+                          <span className="text-gray-400">•</span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3.5 w-3.5" />
+                            {post.readTime}
+                          </span>
+                        </div>
+                        <time dateTime={post.publishDate} className="text-gray-500">
+                          {new Date(post.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </time>
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* View All Button */}
+        {posts.length > 7 && (
+          <div className="text-center mt-12">
+            <Link
+              href="/blog?category=Engineering"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              View All {posts.length} Engineering Articles
+              <ChevronRight className="h-5 w-5" />
+            </Link>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
