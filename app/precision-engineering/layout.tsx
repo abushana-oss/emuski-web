@@ -120,6 +120,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.emuski.com/precision-engineering',
     languages: {
+      'x-default': 'https://www.emuski.com/precision-engineering', // Fallback for all unmatched languages
       'en-IN': 'https://www.emuski.com/precision-engineering', // Primary: India
       'en-US': 'https://www.emuski.com/precision-engineering',
       'en-GB': 'https://www.emuski.com/precision-engineering',

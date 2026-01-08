@@ -2,6 +2,70 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export default function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl
+
+  // SEO-friendly URL normalization for blog query parameters
+  if (pathname === '/blog' && search) {
+    const url = new URL(request.url)
+    let needsRedirect = false
+
+    // Normalize tag parameter: Convert spaces to hyphens and lowercase
+    // Example: /blog?tag=OEM%20supplier%20management → /blog?tag=oem-supplier-management
+    const tagParam = url.searchParams.get('tag')
+    if (tagParam) {
+      const hasSpaces = tagParam.includes(' ') || /%20|\+/.test(tagParam)
+      const hasUppercase = /[A-Z]/.test(tagParam)
+
+      if (hasSpaces || hasUppercase) {
+        const normalizedTag = tagParam
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '-')
+          .replace(/%20/g, '-')
+          .replace(/\+/g, '-')
+          .replace(/[^a-z0-9-]/g, '')
+          .replace(/-+/g, '-')
+          .replace(/^-+|-+$/g, '')
+
+        url.searchParams.set('tag', normalizedTag)
+        needsRedirect = true
+      }
+    }
+
+    // Normalize category parameter: Convert to lowercase and kebab-case
+    // Example: /blog?category=Success%20Story → /blog?category=success-story
+    const categoryParam = url.searchParams.get('category')
+    if (categoryParam) {
+      const hasSpaces = categoryParam.includes(' ') || /%20|\+/.test(categoryParam)
+      const hasUppercase = /[A-Z]/.test(categoryParam)
+
+      if (hasSpaces || hasUppercase) {
+        const normalizedCategory = categoryParam
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '-')
+          .replace(/%20/g, '-')
+          .replace(/\+/g, '-')
+          .replace(/[^a-z0-9-]/g, '')
+          .replace(/-+/g, '-')
+          .replace(/^-+|-+$/g, '')
+
+        url.searchParams.set('category', normalizedCategory)
+        needsRedirect = true
+      }
+    }
+
+    // Return 301 permanent redirect if any parameter was normalized
+    if (needsRedirect) {
+      return NextResponse.redirect(url, {
+        status: 301,
+        headers: {
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      })
+    }
+  }
+
   // Continue with security headers
   const response = NextResponse.next()
 

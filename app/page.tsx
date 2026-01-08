@@ -56,7 +56,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.emuski.com/',
     languages: {
+      'x-default': 'https://www.emuski.com/',
       'en-US': 'https://www.emuski.com/',
+      'en': 'https://www.emuski.com/',
     },
   },
 

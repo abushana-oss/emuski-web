@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   keywords: 'manufacturing blog, precision engineering blog, cost optimization, VAVE methodology, value engineering, rapid prototyping, strategic sourcing, DFM DFA, AI manufacturing, industrial engineering, OEM manufacturing, precision engineering India, manufacturing cost reduction, engineering excellence, cost estimation',
   alternates: {
     canonical: 'https://www.emuski.com/blog',
+    languages: {
+      'x-default': 'https://www.emuski.com/blog',
+      'en-US': 'https://www.emuski.com/blog',
+      'en': 'https://www.emuski.com/blog',
+    },
   },
   openGraph: {
     title: 'Manufacturing & Precision Engineering Blog | Expert Insights',
@@ -45,9 +50,14 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function Blog() {
+export default async function Blog({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string }>;
+}) {
   // Server-side data fetching with caching - now fetches ALL posts automatically
   const { manufacturing, engineering, all } = await fetchAllBlogs(true)
+  const { tag } = await searchParams
 
   // Generate enhanced Blog structured data for 2026 SEO best practices
   const blogSchema = {
@@ -212,6 +222,7 @@ export default async function Blog() {
       <BlogPage
         manufacturingPosts={manufacturing}
         engineeringPosts={engineering}
+        selectedTag={tag}
       />
       <Footer />
     </div>

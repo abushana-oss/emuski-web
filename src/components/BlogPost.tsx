@@ -6,6 +6,7 @@ import { ArrowLeft, Twitter, Linkedin, Facebook, Mail, Menu, Share2, Bookmark, C
 import { BlogPost } from "@/lib/api/blogger";
 import { useBlogTracking } from "@/lib/hooks/useAnalytics";
 import { trackClick, trackBlogEngagement } from "@/lib/analytics";
+import { tagToSlug } from "@/lib/utils/tags";
 import "../styles/blog-content.css";
 
 interface BlogPostComponentProps {
@@ -353,7 +354,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         "@type": "ListItem",
         "position": 3,
         "name": post.category,
-        "item": `https://www.emuski.com/blog?category=${encodeURIComponent(post.category)}`
+        "item": `https://www.emuski.com/blog?category=${post.category.toLowerCase().replace(/\s+/g, '-')}`
       },
       {
         "@type": "ListItem",
@@ -783,16 +784,26 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                             if (src.includes('blogger.googleusercontent.com') ||
                                 src.includes('blogspot.com') ||
                                 src.includes('bp.blogspot.com')) {
-                              // Remove any size restrictions from Blogger URLs
+                              // Handle two Blogger URL formats:
+                              // 1. Path format: /s16000/ → /s1600/
                               src = src.replace(/\/s\d+(-c)?\//, '/s1600/');
+                              // 2. Parameter format: =s16000 → =s1600
+                              // Large sizes like s16000 cause 5xx errors, so limit to s1600 max
+                              src = src.replace(/=s\d+$/i, '=s1600');
                             }
 
                             // Only remove first image if it matches the featured image URL
                             if (isFirstImage) {
                               isFirstImage = false;
-                              // Normalize URLs for comparison
-                              const normalizedSrc = src.replace(/^https?:\/\//i, '').replace(/\/s\d+(-c)?\//, '/');
-                              const normalizedFeatured = featuredImageUrl.replace(/^https?:\/\//i, '').replace(/\/s\d+(-c)?\//, '/');
+                              // Normalize URLs for comparison (remove protocol and size parameters)
+                              const normalizedSrc = src
+                                .replace(/^https?:\/\//i, '')
+                                .replace(/\/s\d+(-c)?\//, '/')
+                                .replace(/=s\d+$/i, '');
+                              const normalizedFeatured = featuredImageUrl
+                                .replace(/^https?:\/\//i, '')
+                                .replace(/\/s\d+(-c)?\//, '/')
+                                .replace(/=s\d+$/i, '');
 
                               if (normalizedSrc.includes(normalizedFeatured) || normalizedFeatured.includes(normalizedSrc)) {
                                 return ''; // Remove duplicate featured image
@@ -916,7 +927,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                         {post.tags.map((tag, index) => (
                           <a
                             key={index}
-                            href={`/blog?tag=${encodeURIComponent(tag)}`}
+                            href={`/blog?tag=${tagToSlug(tag)}`}
                             className="inline-block px-3 py-1 bg-teal-50 text-teal-700 text-sm font-medium rounded hover:bg-teal-100 transition-colors"
                             rel="tag"
                           >

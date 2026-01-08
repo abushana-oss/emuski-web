@@ -70,7 +70,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     alternates: {
       canonical: `https://www.emuski.com/blog/${slug}`,
       languages: {
+        'x-default': `https://www.emuski.com/blog/${slug}`,
         'en-US': `https://www.emuski.com/blog/${slug}`,
+        'en': `https://www.emuski.com/blog/${slug}`,
       },
     },
 
@@ -264,7 +266,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         '@type': 'ListItem',
         position: 3,
         name: post.category,
-        item: `https://www.emuski.com/blog?category=${post.category}`,
+        item: `https://www.emuski.com/blog?category=${post.category.toLowerCase().replace(/\s+/g, '-')}`,
       },
       {
         '@type': 'ListItem',

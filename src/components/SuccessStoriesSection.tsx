@@ -119,7 +119,7 @@ export function SuccessStoriesSection() {
 
           {displayPosts && displayPosts.length >= 6 && (
             <div className="text-center mt-10">
-              <Link href="/blog?category=Success Story">
+              <Link href="/blog?category=case-study">
                 <button className="bg-emuski-teal-dark text-white px-6 py-3 rounded-lg font-semibold hover:bg-emuski-teal-darker transition-colors">
                   View All Success Stories
                 </button>

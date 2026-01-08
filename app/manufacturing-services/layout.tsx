@@ -29,7 +29,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.emuski.com/manufacturing-services',
     languages: {
+      'x-default': 'https://www.emuski.com/manufacturing-services',
       'en-US': 'https://www.emuski.com/manufacturing-services',
+      'en': 'https://www.emuski.com/manufacturing-services',
     },
   },
 

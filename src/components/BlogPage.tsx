@@ -2,10 +2,11 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Filter, Calendar, User, Clock, ChevronRight } from "lucide-react";
+import { Filter, Calendar, User, Clock, ChevronRight, X } from "lucide-react";
 import { BlogPost } from "@/lib/api/blogger";
 import { EmailSubscription } from "./EmailSubscription";
 import { SuccessStoriesSection } from "./SuccessStoriesSection";
+import { tagMatchesSlug, slugToTag } from "@/lib/utils/tags";
 
 const getFirstSentence = (text: string): string => {
   if (!text) return '';
@@ -18,9 +19,10 @@ const POSTS_PER_PAGE = 6;
 interface BlogPageProps {
   manufacturingPosts: BlogPost[];
   engineeringPosts: BlogPost[];
+  selectedTag?: string | null;
 }
 
-export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps) => {
+export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: BlogPageProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,9 +39,22 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
   }, [allPosts]);
 
   const filteredPosts = useMemo(() => {
-    if (selectedCategory === "All") return allPosts;
-    return allPosts.filter(post => post.category === selectedCategory);
-  }, [allPosts, selectedCategory]);
+    let posts = allPosts;
+
+    // Apply category filter
+    if (selectedCategory !== "All") {
+      posts = posts.filter(post => post.category === selectedCategory);
+    }
+
+    // Apply tag filter if selectedTag is provided
+    if (selectedTag) {
+      posts = posts.filter(post =>
+        post.tags && post.tags.some(tag => tagMatchesSlug(tag, selectedTag))
+      );
+    }
+
+    return posts;
+  }, [allPosts, selectedCategory, selectedTag]);
 
   const featuredPost = filteredPosts[0];
   const regularPostsAll = filteredPosts.slice(1);
@@ -126,6 +141,24 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
       {/* Sticky Category Navigation */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          {/* Tag Filter Badge */}
+          {selectedTag && (
+            <div className="pt-4 pb-2">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg">
+                <span className="text-sm font-medium text-teal-900">
+                  Filtered by tag: <strong>{slugToTag(selectedTag)}</strong>
+                </span>
+                <Link
+                  href="/blog"
+                  className="p-1 hover:bg-teal-100 rounded transition-colors"
+                  aria-label="Clear tag filter"
+                >
+                  <X className="h-4 w-4 text-teal-700" />
+                </Link>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between py-5">
             <h2 className="text-2xl font-bold text-gray-900">Manufacturing Blog</h2>
 
@@ -651,7 +684,7 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
         {posts.length > 7 && (
           <div className="text-center mt-12">
             <Link
-              href="/blog?category=Engineering"
+              href="/blog?category=engineering"
               className="inline-flex items-center gap-2 px-8 py-4 bg-emuski-teal-darker hover:bg-emuski-teal-dark text-white font-bold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               View All {posts.length} Engineering Articles

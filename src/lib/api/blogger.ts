@@ -144,7 +144,14 @@ function extractSEODescription(content: string): string {
  */
 function convertBloggerPostToLocalFormat(post: BloggerPost, defaultCategory: string = 'Blog'): BlogPost {
   const imgMatch = post.content.match(/<img[^>]+src="([^">]+)"/);
-  const image = imgMatch ? imgMatch[1] : 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80';
+  let image = imgMatch ? imgMatch[1] : 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80';
+
+  // Fix Blogger image sizes to prevent 5xx errors
+  // Large sizes like s16000 cause server errors on Google's side
+  if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com')) {
+    image = image.replace(/\/s\d+(-c)?\//, '/s1600/');  // Path format: /s16000/ → /s1600/
+    image = image.replace(/=s\d+$/i, '=s1600');         // Parameter format: =s16000 → =s1600
+  }
 
   let excerpt = '';
   if (post.snippet) {
