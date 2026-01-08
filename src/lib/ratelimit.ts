@@ -151,18 +151,31 @@ function getIdentifier(request: NextRequest): string {
   // Try to get real IP from headers (for proxies/load balancers)
   const forwardedFor = request.headers.get('x-forwarded-for');
   const realIp = request.headers.get('x-real-ip');
+  const cfConnectingIp = request.headers.get('cf-connecting-ip'); // Cloudflare
+  const trueClientIp = request.headers.get('true-client-ip'); // Cloudflare Enterprise
 
+  // Check forwarded-for header (most common)
   if (forwardedFor) {
-    // x-forwarded-for can contain multiple IPs, take the first one
+    // x-forwarded-for can contain multiple IPs, take the first one (client IP)
     return forwardedFor.split(',')[0].trim();
   }
 
-  if (realIp) {
-    return realIp;
+  // Check Cloudflare headers
+  if (cfConnectingIp) {
+    return cfConnectingIp.trim();
   }
 
-  // Fallback to Next.js IP detection
-  return request.ip || '127.0.0.1';
+  if (trueClientIp) {
+    return trueClientIp.trim();
+  }
+
+  // Check real IP header
+  if (realIp) {
+    return realIp.trim();
+  }
+
+  // Fallback to localhost (development/unable to determine)
+  return '127.0.0.1';
 }
 
 /**
