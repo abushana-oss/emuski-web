@@ -1,3 +1,6 @@
+import Image from "next/image";
+import imagePlaceholders from "@/data/image-placeholders.json";
+
 export function ShouldCostingSection() {
   return (
     <section className="py-20 bg-background">
@@ -19,8 +22,32 @@ export function ShouldCostingSection() {
             </p>
           </div>
           <div className="grid grid-cols-1 gap-4">
-            <img src="/assets/engineering/cost360-platform-dashboard.png" alt="Costing 360" className="rounded-lg shadow-lg" />
-            <img src="/assets/engineering/cost360-crm-system.png" alt="Costing 360 CRM" className="rounded-lg shadow-lg" />
+            <div className="rounded-lg shadow-lg overflow-hidden">
+              <Image
+                src="/assets/engineering/cost360-platform-dashboard.webp"
+                alt="Costing 360 Platform Dashboard"
+                width={1056}
+                height={681}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="w-full h-auto"
+                loading="lazy"
+                placeholder="blur"
+                blurDataURL={imagePlaceholders["/assets/engineering/cost360-platform-dashboard.webp"]}
+              />
+            </div>
+            <div className="rounded-lg shadow-lg overflow-hidden">
+              <Image
+                src="/assets/engineering/cost360-crm-system.webp"
+                alt="Costing 360 CRM System"
+                width={830}
+                height={471}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="w-full h-auto"
+                loading="lazy"
+                placeholder="blur"
+                blurDataURL={imagePlaceholders["/assets/engineering/cost360-crm-system.webp"]}
+              />
+            </div>
           </div>
         </div>
       </div>

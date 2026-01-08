@@ -55,7 +55,7 @@ export const OnDemandManufacturingSection = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">Consistent Quality</h4>
-                    <p className="text-sm text-gray-600">ISO-certified processes for every batch</p>
+                    <p className="text-sm text-gray-600">ISO-Certified processes for every batch</p>
                   </div>
                 </div>
               </div>

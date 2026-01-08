@@ -87,7 +87,7 @@ export default function PrecisionEngineering() {
         "@type": "Service",
         "@id": "https://www.emuski.com/precision-engineering#service",
         "name": "Precision Engineering Services - India's Leading Provider",
-        "description": "India's premier precision engineering services with 15+ years proven experience. ISO 9001:2015 certified product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing from 500+ verified global suppliers. Serving 75+ clients across India (Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore) and globally (UK, USA, Germany). Reduce manufacturing costs by 15-25%.",
+        "description": "India's ISO-Certified precision engineering services with 15+ years proven experience. ISO 9001:2015 certified product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing from 500+ verified global suppliers. Serving 75+ clients across India (Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore) and globally (UK, USA, Germany). Reduce manufacturing costs by 15-25%.",
         "slogan": "15+ Years of Precision Engineering Excellence Across India",
         "provider": {
           "@type": "Organization",
@@ -311,7 +311,7 @@ export default function PrecisionEngineering() {
         "@id": "https://www.emuski.com/precision-engineering#webpage",
         "url": "https://www.emuski.com/precision-engineering",
         "name": "India's Leading Precision Engineering Services | 15+ Years Experience | Cost Estimation, VAVE & Strategic Sourcing",
-        "description": "India's premier precision engineering services with 15+ years proven experience serving all of India (Mumbai, Delhi, Pune, Chennai, Hyderabad) and globally. ISO 9001:2015 certified cost estimation, VAVE analysis, strategic sourcing. 75+ satisfied clients across automotive, aerospace, medical devices, electronics. Reduce manufacturing costs by 15-25%.",
+        "description": "India's ISO-Certified precision engineering services with 15+ years proven experience serving all of India (Mumbai, Delhi, Pune, Chennai, Hyderabad) and globally. ISO 9001:2015 certified cost estimation, VAVE analysis, strategic sourcing. 75+ satisfied clients across automotive, aerospace, medical devices, electronics. Reduce manufacturing costs by 15-25%.",
         "keywords": "precision engineering india, cost estimation india, VAVE analysis india, strategic sourcing india, manufacturing cost reduction india, precision engineering mumbai, precision engineering delhi, precision engineering pune, 15 years experience",
         "isPartOf": {
           "@type": "WebSite",

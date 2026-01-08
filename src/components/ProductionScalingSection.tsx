@@ -150,7 +150,7 @@ export const ProductionScalingSection = () => {
                   <CheckCircle className="w-6 h-6 text-emuski-teal-darker" />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-3">Global Standards</h4>
-                <p className="text-sm text-gray-600">ISO-certified processes ensure international quality compliance</p>
+                <p className="text-sm text-gray-600">ISO-Certified processes ensure international quality compliance</p>
               </div>
             </div>
           </div>

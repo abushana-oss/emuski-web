@@ -44,7 +44,7 @@ const servicesData = {
       { title: "Capacity Planning", desc: "Strategic scaling without quality compromise" },
       { title: "Process Optimization", desc: "Lean manufacturing principles" },
       { title: "Supply Chain", desc: "Integrated sourcing and logistics" },
-      { title: "Quality Systems", desc: "ISO-certified production standards" }
+      { title: "Quality Systems", desc: "ISO-Certified production standards" }
     ]
   }
 };
