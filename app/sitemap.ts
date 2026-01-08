@@ -19,65 +19,75 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fixed dates for static pages - only update when pages actually change
   // This prevents unnecessary crawling and crawl budget waste
-  const STATIC_PAGES_LASTMOD = '2025-12-15'; // Update this when you modify static pages
+  const STATIC_PAGES_LASTMOD = '2026-01-08'; // Update this when you modify static pages
   const LEGAL_PAGES_LASTMOD = '2024-11-01'; // Update this when legal pages change
   const currentDate = new Date().toISOString(); // Only for dynamic blog listing
 
   // Static pages with high priority (only include pages that actually exist)
+  // 2026 SEO Best Practice: Strategic priority and change frequency optimization
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'weekly',
-      priority: 1.0,
+      priority: 1.0, // Homepage - highest priority
     },
+    // Core service pages - very high priority (2026 focus on service pages)
     {
-      url: `${baseUrl}/manufacturing-in-bangalore`,
+      url: `${baseUrl}/services`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'weekly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/cost-engineering-services`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'weekly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/cost-engineering-uk`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'weekly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/cost-engineering-usa`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'weekly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/cost-engineering-germany`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'weekly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/manufacturing-services`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'monthly',
-      priority: 0.9,
+      priority: 0.98, // Main services hub - critical for conversions
     },
     {
       url: `${baseUrl}/precision-engineering`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'weekly',
-      priority: 0.9,
+      priority: 0.97, // Primary service page - optimized for indexing
     },
+    {
+      url: `${baseUrl}/manufacturing-services`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.96, // Primary service page
+    },
+    {
+      url: `${baseUrl}/cost-engineering-services`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.95, // Core service offering
+    },
+    // Geographic-specific service pages
+    {
+      url: `${baseUrl}/manufacturing-in-bangalore`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.94, // Local SEO focus
+    },
+    {
+      url: `${baseUrl}/cost-engineering-uk`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.93, // International market focus
+    },
+    {
+      url: `${baseUrl}/cost-engineering-usa`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.93, // International market focus
+    },
+    {
+      url: `${baseUrl}/cost-engineering-germany`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.93, // International market focus
+    },
+    // Innovation and technology pages
     {
       url: `${baseUrl}/solutions/ai`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
-      priority: 0.9,
+      priority: 0.90, // Technology showcase
     },
     {
       url: `${baseUrl}/contact`,

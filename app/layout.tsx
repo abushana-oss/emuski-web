@@ -68,6 +68,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+        {/* DNS Prefetch and Preconnect for Performance Optimization */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://cdn.mxpnl.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
         {/* Preload critical hero images for faster LCP */}
         <link
           rel="preload"
@@ -116,8 +125,8 @@ export default function RootLayout({
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.emuski.com/" />
         <meta property="og:site_name" content="EMUSKI" />
-        <meta property="og:title" content="EMUSKI - ISO Certified Manufacturer in Bangalore | One-Stop Solution for OEM" />
-        <meta property="og:description" content="ISO 9001:2015 certified OEM manufacturing and precision engineering company with 15+ years of excellence in Bangalore, India. Expert design-for-manufacturing, rapid prototyping, and cost optimization." />
+        <meta property="og:title" content="EMUSKI | ISO Certified OEM & Precision Engineering One-Stop Manufacturing Partner" />
+        <meta property="og:description" content="ISO 9001:2015 certified OEM manufacturing and precision engineering company with 15+ years of experience in Bangalore, India. Expertise in design-for-manufacturing, rapid prototyping, and cost optimization for global OEMs." />
         <meta property="og:image" content="https://www.emuski.com/og-image.png" />
         <meta property="og:image:secure_url" content="https://www.emuski.com/og-image.png" />
         <meta property="og:image:type" content="image/png" />

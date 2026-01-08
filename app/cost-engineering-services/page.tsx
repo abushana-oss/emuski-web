@@ -30,7 +30,23 @@ export const metadata: Metadata = {
     url: 'https://www.emuski.com/cost-engineering-services',
   },
   alternates: {
-    canonical: 'https://www.emuski.com/cost-engineering-services'
+    canonical: 'https://www.emuski.com/cost-engineering-services',
+    languages: {
+      'x-default': 'https://www.emuski.com/cost-engineering-services',
+      'en-GB': 'https://www.emuski.com/cost-engineering-uk',
+      'en-US': 'https://www.emuski.com/cost-engineering-usa',
+      'de-DE': 'https://www.emuski.com/cost-engineering-germany'
+    }
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   other: {
     'geo.region': 'IN-KA',
@@ -465,6 +481,38 @@ export default function CostEngineeringServicesPage() {
                     </div>
                   )
                 })}
+              </div>
+            </div>
+          </section>
+
+          {/* Call to Action - View Services & Contact */}
+          <section className="py-12 px-4 bg-gradient-to-r from-emuski-teal to-emuski-teal-light">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="text-center md:text-left">
+                  <h3 className="text-2xl md:text-3xl font-bold text-black mb-2">
+                    Ready to Optimize Your Product Costs?
+                  </h3>
+                  <p className="text-lg text-gray-800">
+                    Discover our complete range of cost engineering services or connect with our experts
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-4 justify-center">
+                  <Link
+                    href="/services"
+                    className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-black px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    View All Services
+                    <ArrowRight className="h-5 w-5" />
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center gap-2 bg-emuski-dark hover:bg-industrial-dark text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    <Mail className="h-5 w-5" />
+                    Contact Us
+                  </Link>
+                </div>
               </div>
             </div>
           </section>

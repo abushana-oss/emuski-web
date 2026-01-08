@@ -73,7 +73,7 @@ Disallow: /it/
 Disallow: /us/
 
 # Block old/redirected URLs (prevent duplicate indexing)
-Disallow: /services/
+# Note: /services is now an active page - DO NOT block
 Disallow: /platform/
 Disallow: /about/
 Disallow: /contact-us/

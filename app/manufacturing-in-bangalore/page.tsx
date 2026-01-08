@@ -18,12 +18,12 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'ISO Certified Manufacturers in Bangalore | Top Manufacturing Companies Karnataka',
+  title: 'ISO Certified Manufacturer in Bangalore | Top Manufacturing Companies Karnataka',
   description: 'ISO 9001:2015 certified manufacturers in Bangalore. Leading manufacturing company offering OEM manufacturing, precision engineering, rapid prototyping, and custom manufacturing solutions. 15+ years experience serving automotive, aerospace, electronics. Contact +91-86670-88060',
   keywords: 'manufacturers in bangalore, manufacturing in bangalore, ISO certified manufacturers bangalore, manufacturing companies in bangalore, manufacturers in bangalore list, top manufacturers in bangalore, ISO 9001:2015 certified manufacturing bangalore, OEM manufacturers bangalore, precision engineering manufacturers bangalore, custom manufacturers bangalore, manufacturing industries bangalore, wholesale manufacturers bangalore, top 100 manufacturers in bangalore, manufacturers in bangalore with contact details, best manufacturers in bangalore, manufacturers in electronic city bangalore, manufacturers in bangalore Karnataka',
   openGraph: {
     title: 'ISO 9001:2015 Certified Manufacturers in Bangalore | EMUSKI - Top OEM Manufacturing',
-    description: 'EMUSKI - ISO certified manufacturers in Electronic City, Bangalore. Leading manufacturing company specializing in OEM manufacturing, precision engineering, rapid prototyping for automotive, aerospace & electronics. 15+ years experience.',
+    description: 'EMUSKI - ISO certified manufacturer in Electronic City, Bangalore. Leading manufacturing company specializing in OEM manufacturing, precision engineering, rapid prototyping for automotive, aerospace & electronics. 15+ years experience.',
     type: 'website',
     url: 'https://www.emuski.com/manufacturing-in-bangalore',
   },
@@ -47,8 +47,8 @@ const faqData = [
     answer: "Bangalore is home to leading ISO certified manufacturers across various sectors. EMUSKI is a prominent ISO 9001:2015 certified manufacturer specializing in OEM manufacturing, precision engineering, rapid prototyping, and custom manufacturing solutions. We are located in Electronic City Phase 2 with 15+ years of experience serving automotive, aerospace, electronics, and medical device industries. Contact EMUSKI at +91-86670-88060 for reliable manufacturing services."
   },
   {
-    question: "Which are the ISO certified manufacturers in Bangalore?",
-    answer: "ISO certified manufacturers in Bangalore maintain international quality standards like ISO 9001:2015, ISO 14001, and ISO 45001. EMUSKI is an ISO 9001:2015 certified manufacturer in Electronic City, Bangalore, offering precision engineering, CNC machining, injection molding, and rapid prototyping services. We serve automotive, aerospace, medical devices, and electronics sectors with proven quality management systems and 75+ satisfied global clients."
+    question: "Which are the ISO certified manufacturer in Bangalore?",
+    answer: "ISO certified manufacturer in Bangalore maintain international quality standards like ISO 9001:2015, ISO 14001, and ISO 45001. EMUSKI is an ISO 9001:2015 certified manufacturer in Electronic City, Bangalore, offering precision engineering, CNC machining, injection molding, and rapid prototyping services. We serve automotive, aerospace, medical devices, and electronics sectors with proven quality management systems and 75+ satisfied global clients."
   },
   {
     question: "What are the top 5 manufacturing companies in Bangalore?",
@@ -60,7 +60,7 @@ const faqData = [
   },
   {
     question: "Where can I find list of manufacturers in Bangalore with contact details?",
-    answer: "To find reliable ISO certified manufacturers in Bangalore, look for manufacturers with proven track records and international certifications. EMUSKI Manufacturing Solutions is an ISO 9001:2015 certified manufacturer located at 126, RNS Plaza, KIADB Industrial Area, Electronic City Phase 2, Bangalore 560100. Contact: +91-86670-88060, Email: enquiries@emuski.com. We offer OEM manufacturing, precision engineering, rapid prototyping, and custom manufacturing services with transparent pricing and quality assurance."
+    answer: "To find reliable ISO certified manufacturer in Bangalore, look for manufacturers with proven track records and international certifications. EMUSKI Manufacturing Solutions is an ISO 9001:2015 certified manufacturer located at 126, RNS Plaza, KIADB Industrial Area, Electronic City Phase 2, Bangalore 560100. Contact: +91-86670-88060, Email: enquiries@emuski.com. We offer OEM manufacturing, precision engineering, rapid prototyping, and custom manufacturing services with transparent pricing and quality assurance."
   },
   {
     question: "What manufacturing services are available in Bangalore?",
@@ -295,6 +295,38 @@ export default function ManufacturingInBangalorePage() {
           </div>
         </section>
 
+        {/* Call to Action - View Services & Contact */}
+        <section className="py-12 px-4 bg-gradient-to-r from-emuski-teal to-emuski-teal-light">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl md:text-3xl font-bold text-black mb-2">
+                  Ready to Start Your Manufacturing Project?
+                </h3>
+                <p className="text-lg text-gray-800">
+                  Explore our comprehensive services or get in touch with our team today
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-4 justify-center">
+                <Link
+                  href="/services"
+                  className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-black px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  View All Services
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 bg-emuski-dark hover:bg-industrial-dark text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  <Mail className="h-5 w-5" />
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Industries Served */}
         <section className="py-16 px-4 bg-gray-50">
           <div className="max-w-7xl mx-auto">
@@ -316,7 +348,7 @@ export default function ManufacturingInBangalorePage() {
         <section className="py-16 px-4">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Why Choose EMUSKI - ISO Certified Manufacturers in Bangalore?
+              Why Choose EMUSKI - ISO Certified Manufacturer in Bangalore?
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {whyChooseUs.map((item, index) => (
@@ -393,7 +425,7 @@ export default function ManufacturingInBangalorePage() {
         {/* SEO Content Block */}
         <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto prose prose-lg">
-            <h2>ISO Certified Manufacturers in Bangalore</h2>
+            <h2>ISO Certified Manufacturer in Bangalore</h2>
             <p>
               Bangalore, also known as Bengaluru, is the manufacturing hub of Karnataka and home to leading ISO certified manufacturers.
               The city hosts numerous top manufacturers and manufacturing companies specializing in automotive, aerospace, electronics, medical devices,
@@ -401,9 +433,9 @@ export default function ManufacturingInBangalorePage() {
               Bangalore has emerged as a preferred destination for ISO certified OEM manufacturers and custom manufacturing solutions.
             </p>
 
-            <h3>Top ISO Certified Manufacturers in Bangalore</h3>
+            <h3>Top ISO Certified Manufacturer in Bangalore</h3>
             <p>
-              EMUSKI stands among the top ISO certified manufacturers in Bangalore, offering comprehensive OEM manufacturing services with
+              EMUSKI stands among the top ISO certified manufacturer in Bangalore, offering comprehensive OEM manufacturing services with
               ISO 9001:2015, ISO 14001:2015, and ISO 45001:2018 certifications. As a leading manufacturer located in Electronic City Phase 2,
               we specialize in precision engineering, rapid prototyping, CNC machining, injection molding, and sheet metal fabrication.
               Our ISO certified state-of-the-art manufacturing facility serves industries including automotive, aerospace, medical devices,
@@ -420,9 +452,9 @@ export default function ManufacturingInBangalorePage() {
               production with consistent quality assurance meeting international standards.
             </p>
 
-            <h3>Contact ISO Certified Manufacturers in Bangalore with Details</h3>
+            <h3>Contact ISO Certified Manufacturer in Bangalore with Details</h3>
             <p>
-              For reliable ISO certified manufacturers in Bangalore with proven track records and contact details, reach EMUSKI at +91-86670-88060 or
+              For reliable ISO certified manufacturer in Bangalore with proven track records and contact details, reach EMUSKI at +91-86670-88060 or
               email enquiries@emuski.com. As a leading ISO 9001:2015 certified manufacturer, we offer transparent pricing, quality assurance,
               and comprehensive manufacturing solutions tailored to your specific requirements. Visit our ISO certified manufacturing facility
               at Electronic City Phase 2, Bangalore 560100 to discuss your manufacturing needs and see our certifications.
