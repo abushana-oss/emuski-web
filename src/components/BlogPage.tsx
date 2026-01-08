@@ -24,6 +24,8 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<'pagination' | 'loadmore'>('pagination');
+  const [loadedCount, setLoadedCount] = useState(POSTS_PER_PAGE);
 
   // Primary blog posts (manufacturing-focused)
   const allPosts = useMemo(() => [...manufacturingPosts], [manufacturingPosts]);
@@ -39,9 +41,21 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
     return allPosts.filter(post => post.category === selectedCategory);
   }, [allPosts, selectedCategory]);
 
-  // Reset page when category changes
+  const featuredPost = filteredPosts[0];
+  const regularPostsAll = filteredPosts.slice(1);
+  const totalPages = Math.ceil(regularPostsAll.length / POSTS_PER_PAGE);
+
+  // Posts to display based on view mode
+  const displayPosts = viewMode === 'pagination'
+    ? regularPostsAll.slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE)
+    : regularPostsAll.slice(0, loadedCount);
+
+  const hasMoreToLoad = loadedCount < regularPostsAll.length;
+
+  // Reset page/loaded count when category changes
   useEffect(() => {
     setCurrentPage(1);
+    setLoadedCount(POSTS_PER_PAGE);
   }, [selectedCategory]);
 
   // Smooth scroll to articles on pagination
@@ -52,19 +66,17 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
     }
   }, []);
 
+  // Load more posts handler
+  const handleLoadMore = useCallback(() => {
+    setLoadedCount(prev => Math.min(prev + POSTS_PER_PAGE, regularPostsAll.length));
+    setTimeout(() => scrollToArticles(), 100);
+  }, [regularPostsAll.length, scrollToArticles]);
+
   useEffect(() => {
     if (currentPage > 1) {
       scrollToArticles();
     }
   }, [currentPage, scrollToArticles]);
-
-  const featuredPost = filteredPosts[0];
-  const regularPostsAll = filteredPosts.slice(1);
-  const totalPages = Math.ceil(regularPostsAll.length / POSTS_PER_PAGE);
-  const paginatedPosts = regularPostsAll.slice(
-    (currentPage - 1) * POSTS_PER_PAGE,
-    currentPage * POSTS_PER_PAGE
-  );
 
   const hasPosts = allPosts.length > 0;
 
@@ -85,23 +97,25 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Header */}
-      <section className="relative py-16 lg:py-24 overflow-hidden" style={{ backgroundColor: 'rgb(18, 26, 33)' }}>
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4fd3d4_1px,transparent_1px),linear-gradient(to_bottom,#4fd3d4_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+      {/* Hero Header - Following EMUSKI Brand Guidelines */}
+      <section className="relative py-16 lg:py-24 overflow-hidden" style={{ backgroundColor: 'rgb(26, 34, 45)' }}>
+        {/* Grid Pattern Overlay - Brand Style */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#17B8BA_1px,transparent_1px),linear-gradient(to_bottom,#17B8BA_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         </div>
+
         <div className="relative z-10 container mx-auto px-6 lg:px-12">
           <div className="max-w-4xl mx-auto text-center space-y-6">
-            <span className="text-emuski-teal text-sm font-semibold uppercase tracking-wider">Engineering Blog</span>
+            <span className="text-emuski-teal-light text-sm font-semibold uppercase tracking-wider">Manufacturing & Engineering Blog</span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
               Expert Insights for Modern Manufacturing and Engineering
             </h1>
-            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Practical strategies to reduce costs, improve quality, and implement intelligent manufacturing solutions.
             </p>
             <a
               href="#latest-articles"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-emuski-teal-darker hover:bg-emuski-teal-dark text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-emuski-teal-darker hover:bg-emuski-teal-dark text-white font-bold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Explore Articles
             </a>
@@ -226,18 +240,14 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
       {/* Latest Articles */}
       <section id="latest-articles" className="bg-gray-50 py-12 lg:py-16">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between mb-10">
+          <div className="mb-10">
             <h2 className="text-3xl font-bold text-gray-900">Latest Articles</h2>
-            {regularPostsAll.length > 0 && (
-              <p className="text-sm text-gray-600">
-                Showing {(currentPage - 1) * POSTS_PER_PAGE + 1}–{Math.min(currentPage * POSTS_PER_PAGE, regularPostsAll.length)} of {regularPostsAll.length}
-              </p>
-            )}
+            <p className="text-sm text-gray-500 mt-2">Discover expert insights and industry best practices</p>
           </div>
 
-          {paginatedPosts.length > 0 ? (
+          {displayPosts.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {paginatedPosts.map((post) => (
+              {displayPosts.map((post) => (
                 <article key={post.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-emuski-teal/30 transition-all duration-300 flex flex-col">
                   <Link href={`/blog/${post.slug}`} className="block">
                     <div className="relative h-56 overflow-hidden">
@@ -291,45 +301,123 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts }: BlogPageProps
             </div>
           )}
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <nav className="mt-16 flex justify-center items-center gap-3" aria-label="Pagination">
+          {/* Load More Button */}
+          {viewMode === 'loadmore' && hasMoreToLoad && (
+            <div className="mt-16 text-center">
+              <button
+                onClick={handleLoadMore}
+                className="group inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-emuski-teal to-emuski-teal-dark hover:from-emuski-teal-dark hover:to-emuski-teal text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <span>Load More Articles</span>
+                <svg className="w-6 h-6 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <p className="mt-4 text-sm text-gray-600">
+                Showing <span className="font-bold text-emuski-teal-dark">{displayPosts.length}</span> of <span className="font-bold">{regularPostsAll.length}</span> articles
+                {' '}• <span className="font-bold text-emuski-teal-dark">{regularPostsAll.length - displayPosts.length}</span> more to load
+              </p>
+            </div>
+          )}
+
+          {/* Enhanced Pagination with Smart Page Numbers */}
+          {viewMode === 'pagination' && totalPages > 1 && (
+            <nav className="mt-16 flex flex-col sm:flex-row justify-center items-center gap-6" aria-label="Pagination">
+              {/* Previous Button */}
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="px-5 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 aria-label="Previous page"
               >
-                Previous
+                ← Previous
               </button>
 
-              <div className="flex gap-2">
-                {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-                  const page = i + 1;
-                  return (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-12 h-12 rounded-lg font-medium transition-colors ${
-                        currentPage === page
-                          ? 'bg-emuski-teal text-white'
-                          : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                      }`}
-                      aria-current={currentPage === page ? 'page' : undefined}
-                    >
-                      {page}
-                    </button>
-                  );
-                })}
+              {/* Page Numbers - Smart Display */}
+              <div className="flex items-center gap-2">
+                {(() => {
+                  const pages: (number | string)[] = [];
+                  const showEllipsis = totalPages > 7;
+
+                  if (!showEllipsis) {
+                    // Show all pages if 7 or fewer
+                    for (let i = 1; i <= totalPages; i++) {
+                      pages.push(i);
+                    }
+                  } else {
+                    // Smart pagination: Always show first, last, current, and nearby pages
+                    // Pattern: 1 ... 4 5 [6] 7 8 ... 20
+
+                    // Always show first page
+                    pages.push(1);
+
+                    if (currentPage > 3) {
+                      pages.push('ellipsis-start');
+                    }
+
+                    // Show pages around current page
+                    const startPage = Math.max(2, currentPage - 1);
+                    const endPage = Math.min(totalPages - 1, currentPage + 1);
+
+                    for (let i = startPage; i <= endPage; i++) {
+                      pages.push(i);
+                    }
+
+                    if (currentPage < totalPages - 2) {
+                      pages.push('ellipsis-end');
+                    }
+
+                    // Always show last page
+                    if (totalPages > 1) {
+                      pages.push(totalPages);
+                    }
+                  }
+
+                  return pages.map((page, index) => {
+                    if (typeof page === 'string') {
+                      // Ellipsis
+                      return (
+                        <span
+                          key={`${page}-${index}`}
+                          className="w-12 h-12 flex items-center justify-center text-gray-400 font-medium"
+                          aria-hidden="true"
+                        >
+                          •••
+                        </span>
+                      );
+                    }
+
+                    // Page number button
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`relative w-12 h-12 rounded-lg font-bold transition-all ${
+                          currentPage === page
+                            ? 'bg-gradient-to-br from-emuski-teal to-emuski-teal-dark text-white shadow-lg scale-110'
+                            : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-emuski-teal hover:text-emuski-teal-dark hover:scale-105'
+                        }`}
+                        aria-current={currentPage === page ? 'page' : undefined}
+                        aria-label={`Page ${page}`}
+                      >
+                        {page}
+                        {currentPage === page && (
+                          <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-white rounded-full opacity-80" />
+                        )}
+                      </button>
+                    );
+                  });
+                })()}
               </div>
 
+              {/* Next Button */}
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="px-5 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 aria-label="Next page"
               >
-                Next
+                Next →
               </button>
             </nav>
           )}
@@ -443,7 +531,7 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
     <section className="bg-gray-50 py-16 border-t border-gray-200" aria-labelledby="precision-engineering-heading">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="mb-12">
           <div className="flex items-center gap-4">
             <div className="w-1 h-16 bg-gradient-to-b from-emuski-teal-dark to-emuski-teal rounded-full" />
             <div>
@@ -453,15 +541,12 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
               <p className="text-gray-600 mt-2">Expert insights on cost optimization, VAVE, and engineering excellence</p>
             </div>
           </div>
-          <span className="hidden md:block text-sm font-semibold text-emuski-teal-dark px-4 py-2 bg-emuski-teal/10 rounded-full">
-            {posts.length} Articles
-          </span>
         </div>
 
         {/* Featured Engineering Post */}
         <div className="mb-12">
           <Link href={`/blog/${featuredEngineeringPost.slug}`} className="block group">
-            <article className="grid lg:grid-cols-2 gap-8 lg:gap-12 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-2xl transition-all duration-300 border border-gray-200">
+            <article className="grid lg:grid-cols-2 gap-8 lg:gap-12 rounded-2xl overflow-hidden bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 hover:shadow-2xl transition-all duration-300 border border-gray-200">
               <div className="relative h-64 lg:h-96 overflow-hidden">
                 <img
                   src={featuredEngineeringPost.image}
@@ -469,16 +554,16 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
                 />
-                <span className="absolute top-4 left-4 px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold uppercase rounded-full shadow-lg">
+                <span className="absolute top-4 left-4 px-4 py-1.5 bg-emuski-teal-darker text-white text-xs font-bold uppercase rounded-full shadow-lg">
                   Featured Engineering
                 </span>
               </div>
 
               <div className="p-8 lg:p-12 flex flex-col justify-center">
-                <span className="inline-block px-4 py-1.5 bg-blue-100 text-blue-800 text-xs font-bold uppercase rounded mb-4 w-fit">
+                <span className="inline-block px-4 py-1.5 bg-emuski-teal/10 text-emuski-teal-dark text-xs font-bold uppercase rounded mb-4 w-fit">
                   {featuredEngineeringPost.category || 'Engineering'}
                 </span>
-                <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 group-hover:text-blue-700 transition-colors leading-tight">
+                <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 group-hover:text-emuski-teal-dark transition-colors leading-tight">
                   {featuredEngineeringPost.title}
                 </h3>
                 <p className="text-lg text-gray-700 mb-8 leading-relaxed">
@@ -487,11 +572,11 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
 
                 <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
                   <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-blue-600" />
+                    <User className="h-4 w-4 text-emuski-teal-dark" />
                     <span className="font-medium">{featuredEngineeringPost.author}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-blue-600" />
+                    <Calendar className="h-4 w-4 text-emuski-teal-dark" />
                     <time dateTime={featuredEngineeringPost.publishDate}>
                       {new Date(featuredEngineeringPost.publishDate).toLocaleDateString('en-US', {
                         month: 'long',
@@ -501,12 +586,12 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
                     </time>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-blue-600" />
+                    <Clock className="h-4 w-4 text-emuski-teal-dark" />
                     <span>{featuredEngineeringPost.readTime}</span>
                   </div>
                 </div>
 
-                <span className="inline-flex items-center text-blue-700 font-bold text-lg group-hover:translate-x-2 transition-transform">
+                <span className="inline-flex items-center text-emuski-teal-dark font-bold text-lg group-hover:translate-x-2 transition-transform">
                   Read Engineering Insights
                   <ChevronRight className="h-6 w-6 ml-2" />
                 </span>
@@ -522,7 +607,7 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {regularEngineeringPosts.map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
-                  <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-blue-300 transition-all h-full flex flex-col">
+                  <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-emuski-teal/30 transition-all h-full flex flex-col">
                     <div className="relative h-56 overflow-hidden">
                       <img
                         src={post.image}
@@ -530,12 +615,12 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />
-                      <span className="absolute top-4 left-4 px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold rounded shadow-md">
+                      <span className="absolute top-4 left-4 px-3 py-1.5 bg-emuski-teal-darker text-white text-xs font-bold rounded shadow-md">
                         Engineering
                       </span>
                     </div>
                     <div className="p-6 flex-1 flex flex-col">
-                      <h4 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors line-clamp-2 leading-tight">
+                      <h4 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emuski-teal-dark transition-colors line-clamp-2 leading-tight">
                         {post.title}
                       </h4>
                       <p className="text-gray-600 text-sm mb-6 flex-1 line-clamp-3 leading-relaxed">
@@ -567,7 +652,7 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
           <div className="text-center mt-12">
             <Link
               href="/blog?category=Engineering"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-emuski-teal-darker hover:bg-emuski-teal-dark text-white font-bold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               View All {posts.length} Engineering Articles
               <ChevronRight className="h-5 w-5" />
