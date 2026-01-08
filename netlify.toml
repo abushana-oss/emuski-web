@@ -21,3 +21,10 @@
   to = "https://www.emuski.com/:splat"
   status = 301
   force = true
+
+# Scheduled function for automatic blog refresh
+[functions]
+  directory = "netlify/functions"
+
+[[functions."scheduled-refresh-blogs"]]
+  schedule = "* * * * *"  # Every minute
