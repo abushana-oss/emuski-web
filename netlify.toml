@@ -28,4 +28,4 @@
 
 # Scheduled function for automatic blog refresh (every 5 minutes)
 [functions.scheduled-refresh-blogs]
-  schedule = "@cron */5 * * * *"
+  schedule = "*/5 * * * *"
