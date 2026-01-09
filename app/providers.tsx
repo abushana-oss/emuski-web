@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { Analytics } from "@/components/analytics/Analytics"
+import { UserEngagementTracker } from "@/components/analytics/UserEngagementTracker"
 import { useMixpanelPageTracking } from "@/hooks/useMixpanelPageTracking"
 
 // Lazy load WhatsApp widget - not critical for initial render
@@ -24,6 +25,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Analytics />
+        <UserEngagementTracker />
         <Toaster />
         <Sonner />
         {children}

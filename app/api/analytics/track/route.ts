@@ -1,0 +1,147 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { headers } from 'next/headers'
+
+/**
+ * GA4 Measurement Protocol Server-Side Tracking
+ *
+ * This endpoint sends events directly to Google Analytics 4 from the server
+ * Benefits:
+ * - Works in China (bypasses Great Firewall)
+ * - Bypasses ad blockers
+ * - More accurate bot detection
+ * - Better for privacy compliance
+ */
+
+// GA4 Configuration
+const GA4_MEASUREMENT_ID = 'G-QFDFYZLZPK'
+const GA4_API_SECRET = process.env.GA4_API_SECRET || '' // Add this to your .env
+
+// GA4 Measurement Protocol endpoint
+const GA4_ENDPOINT = `https://www.google-analytics.com/mp/collect?measurement_id=${GA4_MEASUREMENT_ID}&api_secret=${GA4_API_SECRET}`
+
+// Generate or retrieve client ID from cookie
+function getClientId(request: NextRequest): string {
+  const cookies = request.cookies
+  let clientId = cookies.get('_ga_client_id')?.value
+
+  if (!clientId) {
+    // Generate new client ID (format: timestamp.random)
+    clientId = `${Date.now()}.${Math.random().toString(36).substring(2, 11)}`
+  }
+
+  return clientId
+}
+
+// Get user's real IP address (handles proxies)
+function getClientIp(request: NextRequest): string {
+  const forwarded = request.headers.get('x-forwarded-for')
+  const realIp = request.headers.get('x-real-ip')
+
+  if (forwarded) {
+    return forwarded.split(',')[0].trim()
+  }
+
+  if (realIp) {
+    return realIp
+  }
+
+  return 'unknown'
+}
+
+// Get user agent
+function getUserAgent(request: NextRequest): string {
+  return request.headers.get('user-agent') || 'unknown'
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { eventName, eventParams, clientId: providedClientId } = body
+
+    // Get or generate client ID
+    const clientId = providedClientId || getClientId(request)
+
+    // Get client info for better tracking
+    const clientIp = getClientIp(request)
+    const userAgent = getUserAgent(request)
+
+    // Build GA4 Measurement Protocol payload
+    const payload = {
+      client_id: clientId,
+      user_id: body.userId || undefined,
+      timestamp_micros: Date.now() * 1000,
+      non_personalized_ads: false,
+      events: [
+        {
+          name: eventName,
+          params: {
+            ...eventParams,
+
+            // Server-side tracking marker
+            tracking_method: 'server_side',
+
+            // Session info
+            session_id: eventParams.session_id || `${Date.now()}`,
+            engagement_time_msec: eventParams.engagement_time_msec || 100,
+
+            // Page info
+            page_location: eventParams.page_location || '',
+            page_referrer: eventParams.page_referrer || '',
+            page_title: eventParams.page_title || '',
+
+            // Traffic source (important for bot detection)
+            traffic_type: eventParams.traffic_type || 'organic',
+
+            // User properties for bot detection
+            user_agent: userAgent,
+            client_ip_country: eventParams.country || 'IN',
+          },
+        },
+      ],
+    }
+
+    // Send to GA4
+    const response = await fetch(GA4_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+
+    if (!response.ok) {
+      console.error('[GA4 Server] Failed to send event:', response.statusText)
+      return NextResponse.json(
+        { success: false, error: 'GA4 API error' },
+        { status: 500 }
+      )
+    }
+
+    // Set cookie with client ID for future requests
+    const res = NextResponse.json({ success: true, clientId })
+    res.cookies.set('_ga_client_id', clientId, {
+      maxAge: 60 * 60 * 24 * 365 * 2, // 2 years
+      httpOnly: false, // Allow client access
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    })
+
+    return res
+  } catch (error) {
+    console.error('[GA4 Server] Error:', error)
+    return NextResponse.json(
+      { success: false, error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+// Health check endpoint
+export async function GET() {
+  return NextResponse.json({
+    status: 'ok',
+    endpoint: 'GA4 Server-Side Tracking',
+    configured: !!GA4_API_SECRET,
+  })
+}

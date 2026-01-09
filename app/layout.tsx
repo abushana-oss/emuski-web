@@ -189,11 +189,40 @@ export default function RootLayout({
                 'wait_for_update': 500
               });
 
-              // Enable Google Signals for benchmarking
+              // Enhanced GA4 Configuration with Bot Filtering
               gtag('config', 'G-QFDFYZLZPK', {
+                // Bot Filtering & Traffic Quality
+                'send_page_view': true,
+                'ignore_referrer': false,
                 'allow_google_signals': true,
                 'allow_ad_personalization_signals': true,
-                'cookie_flags': 'SameSite=None;Secure'
+                'cookie_flags': 'SameSite=None;Secure',
+
+                // Enhanced measurement for bot detection
+                'enhanced_measurement': true,
+                'engagement_time_msec': 1000, // Only count sessions with 1+ second engagement
+
+                // Custom parameters for traffic quality analysis
+                'custom_map': {
+                  'dimension1': 'traffic_source',
+                  'dimension2': 'user_engagement_level',
+                  'dimension3': 'has_interaction'
+                },
+
+                // Debug mode (set to false in production)
+                'debug_mode': false
+              });
+
+              // Track page metadata for bot analysis
+              gtag('event', 'page_metadata', {
+                'event_category': 'technical',
+                'screen_resolution': window.screen.width + 'x' + window.screen.height,
+                'viewport_size': window.innerWidth + 'x' + window.innerHeight,
+                'color_depth': window.screen.colorDepth,
+                'browser_language': navigator.language,
+                'has_touch': 'ontouchstart' in window,
+                'connection_type': navigator.connection ? navigator.connection.effectiveType : 'unknown',
+                'non_interaction': true
               });
             `,
           }}
