@@ -5,7 +5,7 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Recaptcha } from "./ui/recaptcha";
 import { PhoneInputComponent } from "./ui/phone-input";
-import { trackError, trackConversion } from "@/lib/mixpanelTracking";
+import { trackError, trackConversion, identifyUser } from "@/lib/mixpanelTracking";
 import { supabase, type ContactSubmission } from "@/lib/supabase";
 import {
   Mail,
@@ -198,6 +198,15 @@ export const Contact = () => {
       } catch (supabaseErr) {
         console.error('Failed to save to Supabase:', supabaseErr);
       }
+
+      // Identify user in Mixpanel and create profile
+      identifyUser(formData.email, {
+        name: formData.name,
+        phone: formData.phone,
+        'Contact Method': 'Contact Form',
+        'Has File Attachment': !!uploadedFile,
+        'Contacted At': new Date().toISOString()
+      });
 
       // Track conversion in Mixpanel
       trackConversion('Contact Form Submission', undefined, {

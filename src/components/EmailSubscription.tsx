@@ -4,7 +4,7 @@ import { Card } from "./ui/card";
 import { Recaptcha } from "./ui/recaptcha";
 import { Check, Mail, AlertCircle, Loader2 } from "lucide-react";
 import { supabase, type EmailSubscription as EmailSubscriptionType } from "@/lib/supabase";
-import { trackConversion, trackError } from "@/lib/mixpanelTracking";
+import { trackConversion, trackError, identifyUser } from "@/lib/mixpanelTracking";
 
 interface SubscriptionResponse {
   success: boolean;
@@ -76,7 +76,7 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
         setMessage(data.message || "Subscription failed. Please try again.");
       }
     } catch (error) {
-      // API call failed, save to Supabase
+      // API call failed, save to Supabase as fallback
       try {
         const subscriptionData: EmailSubscriptionType = {
           email: email.trim().toLowerCase(),
@@ -108,8 +108,17 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
         } else {
           setStatus("success");
           setMessage("Successfully subscribed! You'll receive our daily manufacturing insights.");
+
+          const subscribedEmail = email.trim().toLowerCase();
           setEmail("");
           setRecaptchaToken(null);
+
+          // Identify user in Mixpanel and create profile
+          identifyUser(subscribedEmail, {
+            'Subscription Source': `website-${variant}`,
+            'Subscription Type': 'newsletter',
+            'Subscribed At': new Date().toISOString()
+          });
 
           // Track successful subscription in Mixpanel
           trackConversion('Email Subscription', undefined, {

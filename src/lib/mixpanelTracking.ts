@@ -44,3 +44,48 @@ export const trackConversion = (
     });
   }
 };
+
+/**
+ * Identify a user by email and set their profile properties
+ * Use this when users provide their email (subscriptions, contact forms)
+ */
+export const identifyUser = (
+  email: string,
+  properties?: {
+    name?: string;
+    phone?: string;
+    [key: string]: any;
+  }
+) => {
+  if (typeof window !== 'undefined' && window.mixpanel) {
+    // Identify user by email
+    window.mixpanel.identify(email);
+
+    // Set user profile properties
+    const profileData: Record<string, any> = {
+      '$email': email,
+      'User Type': 'Lead',
+      'Last Seen': new Date().toISOString(),
+    };
+
+    if (properties?.name) {
+      profileData['$name'] = properties.name;
+    }
+
+    if (properties?.phone) {
+      profileData['$phone'] = properties.phone;
+    }
+
+    // Add any additional properties
+    if (properties) {
+      Object.keys(properties).forEach(key => {
+        if (key !== 'name' && key !== 'phone') {
+          profileData[key] = properties[key];
+        }
+      });
+    }
+
+    // Set the profile
+    window.mixpanel.people.set(profileData);
+  }
+};
