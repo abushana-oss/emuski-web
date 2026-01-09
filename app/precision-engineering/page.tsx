@@ -271,11 +271,12 @@ export default function PrecisionEngineering() {
             "position": 1,
             "item": {
               "@type": "Service",
+              "@id": "https://www.emuski.com/precision-engineering#cost-estimation-service",
               "name": "Product Cost Estimation",
+              "url": "https://www.emuski.com/precision-engineering#cost-estimation",
               "description": "Comprehensive should-cost analysis with detailed breakdowns of materials, labor, and overhead. Achieve ±5% accuracy level with 15-25% average savings.",
-              "offers": {
-                "@type": "Offer",
-                "availability": "https://schema.org/InStock"
+              "provider": {
+                "@id": "https://www.emuski.com/#organization"
               }
             }
           },
@@ -284,11 +285,12 @@ export default function PrecisionEngineering() {
             "position": 2,
             "item": {
               "@type": "Service",
+              "@id": "https://www.emuski.com/precision-engineering#vave-service",
               "name": "VAVE - Teardown & Benchmarking",
+              "url": "https://www.emuski.com/precision-engineering#vave",
               "description": "Value Analysis and Value Engineering through systematic product teardowns and competitive benchmarking. Achieve 20-30% cost reduction with 5-10x ROI.",
-              "offers": {
-                "@type": "Offer",
-                "availability": "https://schema.org/InStock"
+              "provider": {
+                "@id": "https://www.emuski.com/#organization"
               }
             }
           },
@@ -297,11 +299,12 @@ export default function PrecisionEngineering() {
             "position": 3,
             "item": {
               "@type": "Service",
+              "@id": "https://www.emuski.com/precision-engineering#sourcing-service",
               "name": "Strategic Sourcing",
+              "url": "https://www.emuski.com/precision-engineering#sourcing",
               "description": "Global supplier network of 500+ verified suppliers with quality assurance, negotiation support, and risk mitigation. Achieve 15-20% cost savings with 95% success rate.",
-              "offers": {
-                "@type": "Offer",
-                "availability": "https://schema.org/InStock"
+              "provider": {
+                "@id": "https://www.emuski.com/#organization"
               }
             }
           },
@@ -310,11 +313,12 @@ export default function PrecisionEngineering() {
             "position": 4,
             "item": {
               "@type": "Service",
+              "@id": "https://www.emuski.com/precision-engineering#expert-support-service",
               "name": "Expert Engineer Support",
+              "url": "https://www.emuski.com/precision-engineering#expert-support",
               "description": "Specialized engineering talent on-demand for cost engineering, value engineering, sourcing, and manufacturing engineering with 98% client satisfaction.",
-              "offers": {
-                "@type": "Offer",
-                "availability": "https://schema.org/InStock"
+              "provider": {
+                "@id": "https://www.emuski.com/#organization"
               }
             }
           }
