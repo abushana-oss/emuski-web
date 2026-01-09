@@ -182,7 +182,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@graph": [
                 {
-                  "@type": ["Organization", "LocalBusiness", "Manufacturer"],
+                  "@type": ["Organization", "LocalBusiness"],
                   "@id": "https://www.emuski.com/#organization",
                   "name": "EMUSKI",
                   "legalName": "EMUSKI Manufacturing Solutions Private Limited",

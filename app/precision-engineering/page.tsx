@@ -125,36 +125,6 @@ export default function PrecisionEngineering() {
             "name": "India"
           },
           {
-            "@type": "City",
-            "name": "Mumbai",
-            "containedIn": {"@type": "Country", "name": "India"}
-          },
-          {
-            "@type": "City",
-            "name": "Delhi",
-            "containedIn": {"@type": "Country", "name": "India"}
-          },
-          {
-            "@type": "City",
-            "name": "Pune",
-            "containedIn": {"@type": "Country", "name": "India"}
-          },
-          {
-            "@type": "City",
-            "name": "Chennai",
-            "containedIn": {"@type": "Country", "name": "India"}
-          },
-          {
-            "@type": "City",
-            "name": "Hyderabad",
-            "containedIn": {"@type": "Country", "name": "India"}
-          },
-          {
-            "@type": "City",
-            "name": "Bangalore",
-            "containedIn": {"@type": "Country", "name": "India"}
-          },
-          {
             "@type": "Country",
             "name": "United Kingdom"
           },
@@ -165,10 +135,6 @@ export default function PrecisionEngineering() {
           {
             "@type": "Country",
             "name": "Germany"
-          },
-          {
-            "@type": "Place",
-            "name": "Global"
           }
         ],
         "serviceArea": {
@@ -275,8 +241,19 @@ export default function PrecisionEngineering() {
               "name": "Product Cost Estimation",
               "url": "https://www.emuski.com/precision-engineering#cost-estimation",
               "description": "Comprehensive should-cost analysis with detailed breakdowns of materials, labor, and overhead. Achieve ±5% accuracy level with 15-25% average savings.",
+              "serviceType": "Product Cost Estimation",
               "provider": {
                 "@id": "https://www.emuski.com/#organization"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "India"
+              },
+              "offers": {
+                "@type": "Offer",
+                "availability": "https://schema.org/InStock",
+                "price": "0",
+                "priceCurrency": "INR"
               }
             }
           },
@@ -289,8 +266,19 @@ export default function PrecisionEngineering() {
               "name": "VAVE - Teardown & Benchmarking",
               "url": "https://www.emuski.com/precision-engineering#vave",
               "description": "Value Analysis and Value Engineering through systematic product teardowns and competitive benchmarking. Achieve 20-30% cost reduction with 5-10x ROI.",
+              "serviceType": "VAVE Analysis",
               "provider": {
                 "@id": "https://www.emuski.com/#organization"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "India"
+              },
+              "offers": {
+                "@type": "Offer",
+                "availability": "https://schema.org/InStock",
+                "price": "0",
+                "priceCurrency": "INR"
               }
             }
           },
@@ -303,8 +291,19 @@ export default function PrecisionEngineering() {
               "name": "Strategic Sourcing",
               "url": "https://www.emuski.com/precision-engineering#sourcing",
               "description": "Global supplier network of 500+ verified suppliers with quality assurance, negotiation support, and risk mitigation. Achieve 15-20% cost savings with 95% success rate.",
+              "serviceType": "Strategic Sourcing",
               "provider": {
                 "@id": "https://www.emuski.com/#organization"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "India"
+              },
+              "offers": {
+                "@type": "Offer",
+                "availability": "https://schema.org/InStock",
+                "price": "0",
+                "priceCurrency": "INR"
               }
             }
           },
@@ -317,8 +316,19 @@ export default function PrecisionEngineering() {
               "name": "Expert Engineer Support",
               "url": "https://www.emuski.com/precision-engineering#expert-support",
               "description": "Specialized engineering talent on-demand for cost engineering, value engineering, sourcing, and manufacturing engineering with 98% client satisfaction.",
+              "serviceType": "Engineering Consulting",
               "provider": {
                 "@id": "https://www.emuski.com/#organization"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "India"
+              },
+              "offers": {
+                "@type": "Offer",
+                "availability": "https://schema.org/InStock",
+                "price": "0",
+                "priceCurrency": "INR"
               }
             }
           }
@@ -348,7 +358,6 @@ export default function PrecisionEngineering() {
         "url": "https://www.emuski.com/precision-engineering",
         "name": "India's Leading Precision Engineering Services | 15+ Years Experience | Cost Estimation, VAVE & Strategic Sourcing",
         "description": "India's ISO-Certified precision engineering services with 15+ years proven experience serving all of India (Mumbai, Delhi, Pune, Chennai, Hyderabad) and globally. ISO 9001:2015 certified cost estimation, VAVE analysis, strategic sourcing. 75+ satisfied clients across automotive, aerospace, medical devices, electronics. Reduce manufacturing costs by 15-25%.",
-        "keywords": "precision engineering india, cost estimation india, VAVE analysis india, strategic sourcing india, manufacturing cost reduction india, precision engineering mumbai, precision engineering delhi, precision engineering pune, 15 years experience",
         "isPartOf": {
           "@type": "WebSite",
           "@id": "https://www.emuski.com/#website"
@@ -356,7 +365,10 @@ export default function PrecisionEngineering() {
         "breadcrumb": {
           "@id": "https://www.emuski.com/precision-engineering#breadcrumb"
         },
-        "inLanguage": "en-US"
+        "inLanguage": "en-US",
+        "about": {
+          "@id": "https://www.emuski.com/precision-engineering#service"
+        }
       }
     ]
   }
