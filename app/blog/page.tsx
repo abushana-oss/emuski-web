@@ -59,6 +59,36 @@ export default async function Blog({
   const { manufacturing, engineering, all } = await fetchAllBlogs(true)
   const { tag } = await searchParams
 
+  // Organization schema - defined first for proper referencing
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': 'https://www.emuski.com/#organization',
+    name: 'EMUSKI Manufacturing Solutions',
+    url: 'https://www.emuski.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://www.emuski.com/og-image.png',
+      width: 2000,
+      height: 1333,
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+91-86670-88060',
+      contactType: 'Customer Service',
+      areaServed: 'IN',
+      availableLanguage: ['en', 'hi'],
+    },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '126, RNS Plaza, KIADB Industrial Area, Electronic City Phase 2',
+      addressLocality: 'Bengaluru',
+      addressRegion: 'Karnataka',
+      postalCode: '560100',
+      addressCountry: 'IN',
+    },
+  };
+
   // Generate enhanced Blog structured data for 2026 SEO best practices
   const blogSchema = {
     '@context': 'https://schema.org',
@@ -69,23 +99,7 @@ export default async function Blog({
     description: 'Expert insights on manufacturing excellence, precision engineering, cost optimization, VAVE methodology, rapid prototyping, and AI-powered solutions. Industry-leading content on manufacturing processes and engineering innovations.',
     inLanguage: 'en-US',
     publisher: {
-      '@type': 'Organization',
       '@id': 'https://www.emuski.com/#organization',
-      name: 'EMUSKI Manufacturing Solutions',
-      url: 'https://www.emuski.com',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://www.emuski.com/logo.jpg',
-        width: 600,
-        height: 60,
-      },
-      contactPoint: {
-        '@type': 'ContactPoint',
-        telephone: '+91-9875206877',
-        contactType: 'Customer Service',
-        areaServed: 'IN',
-        availableLanguage: ['en', 'hi'],
-      },
     },
     blogPost: all.slice(0, 20).map((post) => ({
       '@type': 'BlogPosting',
@@ -93,7 +107,12 @@ export default async function Blog({
       url: `https://www.emuski.com/blog/${post.slug}`,
       headline: post.title,
       description: post.excerpt,
-      image: post.image,
+      image: {
+        '@type': 'ImageObject',
+        url: post.image,
+        width: 1200,
+        height: 630,
+      },
       datePublished: post.publishDate,
       dateModified: post.publishDate,
       author: {
@@ -196,8 +215,20 @@ export default async function Blog({
           '@id': `https://www.emuski.com/blog/${post.slug}`,
           headline: post.title,
           description: post.excerpt,
-          image: post.image,
+          image: {
+            '@type': 'ImageObject',
+            url: post.image,
+            width: 1200,
+            height: 630,
+          },
           datePublished: post.publishDate,
+          author: {
+            '@type': 'Person',
+            name: post.author,
+          },
+          publisher: {
+            '@id': 'https://www.emuski.com/#organization',
+          },
         },
       })),
     },
@@ -206,6 +237,10 @@ export default async function Blog({
   return (
     <div className="min-h-screen bg-background">
       {/* Enhanced Schema Markup for Blog Listing - 2026 SEO Best Practices */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}

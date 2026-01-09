@@ -32,7 +32,7 @@ export default async (request, context) => {
     }
 
     const data = await response.json();
-    console.log('[Netlify Cron] ✅ Successfully refreshed all blogs:', data);
+    console.log('[Netlify Cron] Successfully refreshed all blogs:', data);
 
     return new Response(JSON.stringify({
       success: true,
