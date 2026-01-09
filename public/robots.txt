@@ -14,6 +14,8 @@ Crawl-delay: 1
 # Priority crawling for manufacturing content
 Allow: /manufacturing-services
 Allow: /precision-engineering
+Allow: /manufacturing-engineering-solutions
+Allow: /manufacturing-in-bangalore
 Allow: /solutions/ai
 Allow: /industries
 Allow: /blog
