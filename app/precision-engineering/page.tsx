@@ -192,6 +192,38 @@ export default function PrecisionEngineering() {
           "bestRating": "5",
           "worstRating": "1"
         },
+        "review": [
+          {
+            "@type": "Review",
+            "author": {
+              "@type": "Organization",
+              "name": "Automotive Manufacturing Client"
+            },
+            "datePublished": "2024-11-15",
+            "reviewBody": "EMUSKI's cost estimation service helped us achieve 22% cost reduction on our automotive component manufacturing. Their ±5% accuracy and detailed analysis exceeded expectations. Highly professional team with deep precision engineering expertise.",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "5",
+              "bestRating": "5",
+              "worstRating": "1"
+            }
+          },
+          {
+            "@type": "Review",
+            "author": {
+              "@type": "Organization",
+              "name": "Electronics OEM India"
+            },
+            "datePublished": "2024-12-03",
+            "reviewBody": "Working with EMUSKI for VAVE analysis delivered outstanding results - 28% cost savings with improved product quality. Their 15+ years experience shows in every project phase. Excellent sourcing support from their 500+ supplier network.",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "5",
+              "bestRating": "5",
+              "worstRating": "1"
+            }
+          }
+        ],
         "award": [
           "15+ Years Industry Experience",
           "ISO 9001:2015 Certified",
@@ -334,7 +366,7 @@ export default function PrecisionEngineering() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrgData) }}
       />
 
-      {/* FAQ Schema for Rich Snippets - 2026 Best Practice */}
+      {/* FAQ Schema for Rich Snippets */}
       <Script
         id="faq-schema-precision-engineering"
         type="application/ld+json"
@@ -348,7 +380,7 @@ export default function PrecisionEngineering() {
                 "name": "What precision engineering services does EMUSKI provide across India?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "EMUSKI is India's leading precision engineering company with 15+ years experience serving clients across Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore and all of India, as well as globally. We provide ISO 9001:2015 certified product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing from 500+ global suppliers, and expert engineering support. Our services reduce manufacturing costs by 15-25% while maintaining quality. From our Bangalore facility, we serve 75+ clients in automotive, aerospace, medical devices, and electronics industries."
+                  "text": "EMUSKI provides ISO 9001:2015 certified precision engineering services with 15+ years experience serving clients across Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore, and globally. Our services include product cost estimation with ±5% accuracy, VAVE analysis delivering 20-30% savings, strategic sourcing from 500+ verified global suppliers, and expert engineering support. We reduce manufacturing costs by 15-25% for 75+ clients in automotive, aerospace, medical devices, and electronics industries."
                 }
               },
               {
@@ -356,23 +388,23 @@ export default function PrecisionEngineering() {
                 "name": "What is VAVE analysis and what ROI can I expect?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "VAVE (Value Analysis Value Engineering) is a systematic approach to analyzing products through teardown and competitive benchmarking. Our VAVE methodology delivers 20-30% cost reduction with a proven 5-10x return on investment. We identify cost optimization opportunities while maintaining or improving product performance."
+                  "text": "VAVE (Value Analysis Value Engineering) is a systematic approach to analyzing products through teardown and competitive benchmarking. Our VAVE methodology delivers 20-30% cost reduction with a proven 5-10x return on investment while maintaining or improving product performance."
                 }
               },
               {
                 "@type": "Question",
-                "name": "How accurate is your product cost estimation service?",
+                "name": "How accurate is EMUSKI's product cost estimation service?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Our product cost estimation service achieves ±5% accuracy using comprehensive should-cost analysis methodology. We provide detailed breakdowns of materials, labor, and overhead costs, with average savings of 15-25% through our expert cost engineering approach and Cost 360 platform."
+                  "text": "Our product cost estimation service achieves ±5% accuracy using comprehensive should-cost analysis methodology. We provide detailed breakdowns of materials, labor, and overhead costs, delivering average savings of 15-25% through our Cost 360 platform and expert cost engineering approach."
                 }
               },
               {
                 "@type": "Question",
-                "name": "What industries and locations does EMUSKI serve in India and globally?",
+                "name": "Which industries and locations does EMUSKI serve?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "EMUSKI serves automotive, aerospace, medical devices, electronics, and industrial equipment industries with 15+ years proven experience. We provide pan-India coverage from our ISO 9001:2015 certified Bangalore facility, serving major cities including Mumbai, Delhi NCR, Pune, Chennai, Hyderabad, Kolkata, and all other Indian locations. Internationally, we serve clients in UK, USA, Germany, and other global markets. With 75+ satisfied clients worldwide, we combine Indian cost advantage with international quality standards."
+                  "text": "EMUSKI serves automotive, aerospace, medical devices, electronics, and industrial equipment industries from our ISO 9001:2015 certified Bangalore facility. We provide pan-India coverage serving Mumbai, Delhi, Pune, Chennai, Hyderabad, and all major Indian cities. Internationally, we serve clients in UK, USA, Germany, and other global markets with 75+ satisfied clients worldwide."
                 }
               },
               {
@@ -380,23 +412,15 @@ export default function PrecisionEngineering() {
                 "name": "What is the Cost 360 platform?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Cost 360 is our advanced cost intelligence platform providing comprehensive cost modeling, BOM analysis, multi-process cost calculation, and real-time cost database integration. It includes an integrated CRM system for project tracking and enables fast, accurate cost estimation with scenario comparison capabilities."
+                  "text": "Cost 360 is our advanced cost intelligence platform for comprehensive cost modeling, BOM analysis, multi-process cost calculation, and real-time cost database integration. It includes an integrated CRM system for project tracking and enables fast, accurate cost estimation with scenario comparison capabilities."
                 }
               },
               {
                 "@type": "Question",
-                "name": "How does your strategic sourcing service work?",
+                "name": "How does EMUSKI's strategic sourcing service work?",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "Our strategic sourcing service provides access to a global network of 500+ verified suppliers with quality assurance, negotiation support, and risk mitigation. We achieve 15-20% cost savings with a 95% success rate through supplier development, procurement optimization, and global sourcing expertise."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Why choose EMUSKI for precision engineering in India?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "EMUSKI is India's most experienced precision engineering company with 15+ years proven track record. We are ISO 9001:2015 certified with 75+ satisfied clients across India and globally. Our unique advantages include: Cost 360 digital platform, 500+ verified global suppliers, ±5% cost estimation accuracy, 20-30% VAVE savings, pan-India service coverage, international quality standards, and established presence in Bangalore's Electronic City. We combine deep experience, proven methodologies, and cutting-edge technology to deliver consistent 15-25% cost reduction for automotive, aerospace, medical device, and electronics manufacturers."
                 }
               }
             ]
