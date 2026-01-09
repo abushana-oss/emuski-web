@@ -8,8 +8,8 @@ import { analyticsConfig, consentConfig } from './config';
 // Type definitions for gtag
 declare global {
   interface Window {
-    gtag: (...args: any[]) => void;
-    dataLayer: any[];
+    gtag?: (...args: any[]) => void;
+    dataLayer?: any[];
   }
 }
 
@@ -36,7 +36,7 @@ export const initializeGA = () => {
   // Initialize GA4 with configuration
   window.gtag('js', new Date());
   window.gtag('config', measurementId, {
-    ...config.config,
+    ...config,
     // User properties for segmentation
     custom_map: {
       ...analyticsConfig.customDimensions,
