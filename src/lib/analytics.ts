@@ -3,13 +3,17 @@
  * Comprehensive tracking for Google Analytics, Tag Manager & Mixpanel
  *
  * Features:
- * - Page view tracking
+ * - Page view tracking with enhanced parameters
  * - Event tracking (clicks, form submissions, etc.)
+ * - Enhanced conversion tracking
  * - E-commerce tracking
  * - User engagement tracking (scroll depth, time on page)
  * - Blog-specific metrics (reading time, content engagement)
- * - Unified tracking across GA, GTM, and Mixpanel
+ * - Unified tracking across GA4, GTM, and Mixpanel
+ * - Google Signals enabled for benchmarking
  */
+
+import { analyticsConfig, conversionEvents } from './analytics/config';
 
 // Type definitions for analytics events
 export interface AnalyticsEvent {
@@ -17,6 +21,7 @@ export interface AnalyticsEvent {
   category: string;
   label?: string;
   value?: number;
+  customParams?: Record<string, any>;
 }
 
 export interface PageViewEvent {
@@ -32,32 +37,48 @@ export interface BlogEngagementEvent {
   value?: number;
 }
 
-// Declare mixpanel function for TypeScript (gtag and dataLayer from @next/third-parties)
+export interface ConversionData {
+  email?: string;
+  phone?: string;
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  value?: number;
+}
+
+// Declare window functions for TypeScript
 declare global {
   interface Window {
+    gtag?: (...args: any[]) => void;
+    dataLayer?: any[];
     mixpanel?: {
       track: (eventName: string, properties?: Record<string, any>) => void;
       identify: (userId: string) => void;
       people: { set: (properties: Record<string, any>) => void };
+      register: (properties: Record<string, any>) => void;
+      track_links: (selector: string, eventName: string, properties?: Record<string, any>) => void;
     };
   }
 }
 
 /**
  * Send custom event to Google Analytics, GTM, and Mixpanel
+ * Enhanced with custom parameters support
  */
 export const trackEvent = ({
   action,
   category,
   label,
   value,
+  customParams = {},
 }: AnalyticsEvent): void => {
-  // Google Analytics
+  // Google Analytics 4
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', action, {
       event_category: category,
       event_label: label,
       value: value,
+      ...customParams,
     });
   }
 
@@ -69,6 +90,7 @@ export const trackEvent = ({
       eventCategory: category,
       eventLabel: label,
       eventValue: value,
+      ...customParams,
     });
   }
 
@@ -78,6 +100,7 @@ export const trackEvent = ({
       category,
       label,
       value,
+      ...customParams,
     });
   }
 };
@@ -305,23 +328,51 @@ export const trackLead = (leadSource: string, leadValue?: number): void => {
 
 /**
  * Enhanced E-commerce tracking for manufacturing quotes
+ * Tracks as a conversion with proper value
  */
 export const trackQuoteRequest = (quoteData: {
   service: string;
   quantity?: number;
   estimatedValue?: number;
+  userEmail?: string;
+  userPhone?: string;
+  userName?: string;
 }): void => {
+  const value = quoteData.estimatedValue || conversionEvents.quote_request.value;
+
+  // Google Analytics 4 - Track as conversion
   if (typeof window !== 'undefined' && window.gtag) {
+    // Track the conversion event
+    window.gtag('event', 'generate_lead', {
+      currency: 'USD',
+      value: value,
+      lead_source: 'quote_request',
+      service_name: quoteData.service,
+      quantity: quoteData.quantity || 1,
+    });
+
+    // Also track as begin_checkout for ecommerce funnel
     window.gtag('event', 'begin_checkout', {
       currency: 'USD',
-      value: quoteData.estimatedValue || 0,
+      value: value,
       items: [
         {
+          item_id: quoteData.service.toLowerCase().replace(/\s+/g, '_'),
           item_name: quoteData.service,
+          item_category: 'manufacturing_service',
           quantity: quoteData.quantity || 1,
+          price: value,
         },
       ],
     });
+
+    // Set enhanced conversion data if available
+    if (quoteData.userEmail || quoteData.userPhone) {
+      window.gtag('set', 'user_data', {
+        email: quoteData.userEmail,
+        phone_number: quoteData.userPhone,
+      });
+    }
   }
 
   // GTM dataLayer
@@ -330,7 +381,157 @@ export const trackQuoteRequest = (quoteData: {
       event: 'quote_request',
       service: quoteData.service,
       quantity: quoteData.quantity,
-      estimatedValue: quoteData.estimatedValue,
+      estimatedValue: value,
+      userEmail: quoteData.userEmail,
+      userPhone: quoteData.userPhone,
+    });
+  }
+
+  // Mixpanel
+  if (typeof window !== 'undefined' && window.mixpanel) {
+    window.mixpanel.track('Quote Request', {
+      service: quoteData.service,
+      quantity: quoteData.quantity,
+      estimated_value: value,
+      currency: 'USD',
+    });
+
+    // Identify user if email provided
+    if (quoteData.userEmail) {
+      window.mixpanel.identify(quoteData.userEmail);
+      if (quoteData.userName) {
+        window.mixpanel.people.set({
+          $name: quoteData.userName,
+          $email: quoteData.userEmail,
+          $phone: quoteData.userPhone,
+        });
+      }
+    }
+  }
+};
+
+/**
+ * Track enhanced conversion with user data
+ * Use this when users submit forms with personal information
+ */
+export const trackEnhancedConversion = (
+  eventName: string,
+  conversionData: ConversionData
+): void => {
+  if (typeof window === 'undefined' || !window.gtag) return;
+
+  const eventConfig = conversionEvents[eventName as keyof typeof conversionEvents];
+
+  // Set enhanced conversion data
+  window.gtag('set', 'user_data', {
+    email: conversionData.email,
+    phone_number: conversionData.phone,
+    address: {
+      first_name: conversionData.firstName,
+      last_name: conversionData.lastName,
+    },
+  });
+
+  // Track the conversion
+  window.gtag('event', eventConfig?.event || eventName, {
+    value: conversionData.value || eventConfig?.value || 0,
+    currency: eventConfig?.currency || 'USD',
+    transaction_id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+  });
+
+  // GTM dataLayer
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: eventName,
+      conversionValue: conversionData.value,
+      userEmail: conversionData.email,
+      company: conversionData.company,
+    });
+  }
+
+  // Mixpanel
+  if (window.mixpanel && conversionData.email) {
+    window.mixpanel.identify(conversionData.email);
+    window.mixpanel.people.set({
+      $email: conversionData.email,
+      $phone: conversionData.phone,
+      $first_name: conversionData.firstName,
+      $last_name: conversionData.lastName,
+      company: conversionData.company,
+    });
+  }
+};
+
+/**
+ * Track user identification for cross-session tracking
+ */
+export const identifyUser = (userId: string, properties?: Record<string, any>): void => {
+  // GA4 - Set user ID
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('config', analyticsConfig.ga4.measurementId, {
+      user_id: userId,
+    });
+
+    if (properties) {
+      window.gtag('set', 'user_properties', properties);
+    }
+  }
+
+  // GTM dataLayer
+  if (typeof window !== 'undefined' && window.dataLayer) {
+    window.dataLayer.push({
+      event: 'user_identified',
+      userId: userId,
+      ...properties,
+    });
+  }
+
+  // Mixpanel
+  if (typeof window !== 'undefined' && window.mixpanel) {
+    window.mixpanel.identify(userId);
+    if (properties) {
+      window.mixpanel.people.set(properties);
+      window.mixpanel.register(properties);
+    }
+  }
+};
+
+/**
+ * Track exception/error for monitoring
+ */
+export const trackException = (description: string, fatal: boolean = false): void => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'exception', {
+      description: description,
+      fatal: fatal,
+    });
+  }
+
+  // Mixpanel
+  if (typeof window !== 'undefined' && window.mixpanel) {
+    window.mixpanel.track('Error', {
+      description: description,
+      fatal: fatal,
+      url: window.location.href,
+    });
+  }
+};
+
+/**
+ * Track timing/performance metrics
+ */
+export const trackTiming = (
+  category: string,
+  variable: string,
+  value: number,
+  label?: string
+): void => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'timing_complete', {
+      name: variable,
+      value: value,
+      event_category: category,
+      event_label: label,
     });
   }
 };
