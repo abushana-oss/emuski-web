@@ -5,7 +5,6 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Recaptcha } from "./ui/recaptcha";
 import { PhoneInputComponent } from "./ui/phone-input";
-import { trackError, trackConversion, identifyUser } from "@/lib/mixpanelTracking";
 import { supabase, type ContactSubmission } from "@/lib/supabase";
 import {
   Mail,
@@ -199,20 +198,15 @@ export const Contact = () => {
         console.error('Failed to save to Supabase:', supabaseErr);
       }
 
-      // Identify user in Mixpanel and create profile
-      identifyUser(formData.email, {
-        name: formData.name,
-        phone: formData.phone,
-        'Contact Method': 'Contact Form',
-        'Has File Attachment': !!uploadedFile,
-        'Contacted At': new Date().toISOString()
-      });
-
-      // Track conversion in Mixpanel
-      trackConversion('Contact Form Submission', undefined, {
-        'form_type': 'contact',
-        'has_file': !!uploadedFile
-      });
+      // Track contact form submission in Google Analytics
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'generate_lead', {
+          event_category: 'contact',
+          event_label: 'contact_form',
+          value: 100, // Estimated lead value
+          has_file: !!uploadedFile
+        });
+      }
 
       setSubmitStatus("success");
       setFormData({
@@ -230,13 +224,13 @@ export const Contact = () => {
         fileInput.value = '';
       }
     } catch (error) {
-      // Track error in Mixpanel
-      trackError(
-        'form_submission',
-        (error as Error).message || 'Contact form submission failed',
-        undefined,
-        window.location.href
-      );
+      // Track error in Google Analytics
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'exception', {
+          description: 'Contact form error: ' + ((error as Error).message || 'Unknown error'),
+          fatal: false
+        });
+      }
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);

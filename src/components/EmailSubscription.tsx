@@ -4,7 +4,6 @@ import { Card } from "./ui/card";
 import { Recaptcha } from "./ui/recaptcha";
 import { Check, Mail, AlertCircle, Loader2 } from "lucide-react";
 import { supabase, type EmailSubscription as EmailSubscriptionType } from "@/lib/supabase";
-import { trackConversion, trackError, identifyUser } from "@/lib/mixpanelTracking";
 
 interface SubscriptionResponse {
   success: boolean;
@@ -95,15 +94,25 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
             setStatus("error");
             setMessage("You're already subscribed to our newsletter!");
 
-            // Track duplicate subscription attempt
-            trackError('Email Subscription', 'Duplicate email address', 'DUPLICATE_EMAIL');
+            // Track duplicate subscription in Google Analytics
+            if (typeof window !== 'undefined' && (window as any).gtag) {
+              (window as any).gtag('event', 'exception', {
+                description: 'Duplicate email subscription',
+                fatal: false
+              });
+            }
           } else {
             console.error('Supabase error:', supabaseError);
             setStatus("error");
             setMessage("Subscription failed. Please try again later.");
 
-            // Track Supabase error
-            trackError('Email Subscription', supabaseError.message, supabaseError.code);
+            // Track error in Google Analytics
+            if (typeof window !== 'undefined' && (window as any).gtag) {
+              (window as any).gtag('event', 'exception', {
+                description: 'Email subscription error: ' + supabaseError.message,
+                fatal: false
+              });
+            }
           }
         } else {
           setStatus("success");
@@ -113,20 +122,7 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
           setEmail("");
           setRecaptchaToken(null);
 
-          // Identify user in Mixpanel and create profile
-          identifyUser(subscribedEmail, {
-            'Subscription Source': `website-${variant}`,
-            'Subscription Type': 'newsletter',
-            'Subscribed At': new Date().toISOString()
-          });
-
-          // Track successful subscription in Mixpanel
-          trackConversion('Email Subscription', undefined, {
-            'subscription_source': `website-${variant}`,
-            'subscription_type': 'newsletter'
-          });
-
-          // Track in Google Analytics
+          // Track successful subscription in Google Analytics
           if (typeof window !== 'undefined' && (window as any).gtag) {
             (window as any).gtag('event', 'subscribe', {
               'event_category': 'engagement',
@@ -139,8 +135,13 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
         setStatus("error");
         setMessage("Subscription failed. Please try again later.");
 
-        // Track error
-        trackError('Email Subscription', supabaseErr instanceof Error ? supabaseErr.message : 'Unknown error', 'SUPABASE_ERROR');
+        // Track error in Google Analytics
+        if (typeof window !== 'undefined' && (window as any).gtag) {
+          (window as any).gtag('event', 'exception', {
+            description: 'Email subscription error: ' + (supabaseErr instanceof Error ? supabaseErr.message : 'Unknown error'),
+            fatal: false
+          });
+        }
       }
     }
 

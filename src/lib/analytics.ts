@@ -51,18 +51,11 @@ declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
     dataLayer?: any[];
-    mixpanel?: {
-      track: (eventName: string, properties?: Record<string, any>) => void;
-      identify: (userId: string) => void;
-      people: { set: (properties: Record<string, any>) => void };
-      register: (properties: Record<string, any>) => void;
-      track_links: (selector: string, eventName: string, properties?: Record<string, any>) => void;
-    };
   }
 }
 
 /**
- * Send custom event to Google Analytics, GTM, and Mixpanel
+ * Send custom event to Google Analytics and GTM
  * Enhanced with custom parameters support
  */
 export const trackEvent = ({
@@ -93,20 +86,10 @@ export const trackEvent = ({
       ...customParams,
     });
   }
-
-  // Mixpanel
-  if (typeof window !== 'undefined' && window.mixpanel) {
-    window.mixpanel.track(action, {
-      category,
-      label,
-      value,
-      ...customParams,
-    });
-  }
 };
 
 /**
- * Track page views on GA, GTM, and Mixpanel
+ * Track page views on GA and GTM
  */
 export const trackPageView = (url: string, title?: string): void => {
   const pageTitle = title || (typeof window !== 'undefined' ? document.title : '');
@@ -130,15 +113,6 @@ export const trackPageView = (url: string, title?: string): void => {
         title: pageTitle,
         location: pageLocation,
       },
-    });
-  }
-
-  // Mixpanel
-  if (typeof window !== 'undefined' && window.mixpanel) {
-    window.mixpanel.track('Page View', {
-      page: url,
-      title: pageTitle,
-      location: pageLocation,
     });
   }
 };
@@ -485,15 +459,6 @@ export const identifyUser = (userId: string, properties?: Record<string, any>): 
       ...properties,
     });
   }
-
-  // Mixpanel
-  if (typeof window !== 'undefined' && window.mixpanel) {
-    window.mixpanel.identify(userId);
-    if (properties) {
-      window.mixpanel.people.set(properties);
-      window.mixpanel.register(properties);
-    }
-  }
 };
 
 /**
@@ -504,15 +469,6 @@ export const trackException = (description: string, fatal: boolean = false): voi
     window.gtag('event', 'exception', {
       description: description,
       fatal: fatal,
-    });
-  }
-
-  // Mixpanel
-  if (typeof window !== 'undefined' && window.mixpanel) {
-    window.mixpanel.track('Error', {
-      description: description,
-      fatal: fatal,
-      url: window.location.href,
     });
   }
 };

@@ -1,6 +1,6 @@
 /**
  * Analytics Configuration
- * Professional-grade GA4, GTM, and Mixpanel setup
+ * Professional-grade GA4 and GTM setup
  */
 
 export const analyticsConfig = {
@@ -40,29 +40,6 @@ export const analyticsConfig = {
     dataLayerName: 'dataLayer',
     // Enable preview mode in development
     preview: process.env.NODE_ENV === 'development' ? 'true' : undefined,
-  },
-
-  // Mixpanel
-  mixpanel: {
-    token: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN || '34e275fbd2634ae7d2d952a814121c44',
-    config: {
-      debug: process.env.NODE_ENV === 'development',
-      track_pageview: 'full-url',
-      persistence: 'localStorage',
-      autocapture: {
-        dom_event_allowlist: ['click', 'submit', 'change'],
-        element_allowlist: ['a', 'button', 'form', 'input', 'select', 'textarea'],
-        css_selector_allowlist: ['[data-track]'],
-      },
-      // Session recording
-      record_sessions_percent: process.env.NODE_ENV === 'production' ? 10 : 100,
-      // Cross-subdomain tracking
-      cross_subdomain_cookie: true,
-      // Secure cookie in production
-      secure_cookie: process.env.NODE_ENV === 'production',
-      // IP geolocation
-      ip: true,
-    },
   },
 
   // Custom dimensions and metrics

@@ -3,7 +3,13 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "22"
+  # Use the latest Ubuntu 22.04 (Jammy) build image instead of deprecated Focal
+  AWS_LAMBDA_JS_RUNTIME = "nodejs22.x"
+
+# Use Ubuntu 22.04 (Jammy) build image
+[build.processing]
+  skip_processing = false
 
 # Next.js specific settings
 [[plugins]]

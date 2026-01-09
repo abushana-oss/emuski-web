@@ -9,9 +9,9 @@
  */
 export function yieldToMain(): Promise<void> {
   return new Promise(resolve => {
-    if ('scheduler' in window && 'yield' in (window.scheduler as any)) {
+    if ('scheduler' in window && 'yield' in (window as any).scheduler) {
       // Use Scheduler API if available (Chrome 94+)
-      (window.scheduler as any).yield().then(resolve);
+      (window as any).scheduler.yield().then(resolve);
     } else if ('requestIdleCallback' in window) {
       // Fall back to requestIdleCallback
       requestIdleCallback(() => resolve(), { timeout: 50 });
@@ -58,16 +58,16 @@ export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null;
+  let timer: ReturnType<typeof setTimeout> | null = null;
 
-  return function executedFunction(...args: Parameters<T>) {
-    const later = () => {
-      timeout = null;
+  return (...args: Parameters<T>) => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
       func(...args);
-    };
-
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+    }, wait);
   };
 }
 
@@ -79,13 +79,16 @@ export function throttle<T extends (...args: any[]) => any>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
-  let inThrottle: boolean;
+  let inThrottle = false;
 
-  return function executedFunction(...args: Parameters<T>) {
+  return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args);
       inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
+
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
     }
   };
 }
