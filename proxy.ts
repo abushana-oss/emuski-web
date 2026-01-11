@@ -58,9 +58,10 @@ async function sendGA4Event(payload: any) {
 }
 
 export default function middleware(request: NextRequest) {
-  const { pathname, search, searchParams, origin } = request.nextUrl
-  const host = request.headers.get('host') || ''
-  const protocol = request.headers.get('x-forwarded-proto') || 'https'
+  try {
+    const { pathname, search, searchParams, origin } = request.nextUrl
+    const host = request.headers.get('host') || ''
+    const protocol = request.headers.get('x-forwarded-proto') || 'https'
 
   // === CANONICAL DOMAIN ENFORCEMENT (TEMPORARILY DISABLED) ===
   // TODO: Re-enable after fixing redirect loop issue
@@ -270,10 +271,26 @@ export default function middleware(request: NextRequest) {
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
   response.headers.set('X-DNS-Prefetch-Control', 'on')
 
-  return response
+    return response
+  } catch (error) {
+    // Production error handling: log and continue without blocking
+    console.error('[Middleware Error]', error)
+    // Return basic response to prevent site outage
+    return NextResponse.next()
+  }
 }
 
 export const config = {
-  // Apply security headers to all routes and assets
-  matcher: '/:path*',
+  // Production-ready matcher: exclude static assets and Next.js internals
+  // This prevents middleware from running on every asset request (images, fonts, etc.)
+  matcher: [
+    /*
+     * Match all request paths EXCEPT:
+     * - _next/static (static files)
+     * - _next/image (image optimization)
+     * - favicon.ico, robots.txt, sitemap.xml
+     * - Static file extensions (images, fonts, etc.)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:jpg|jpeg|gif|png|svg|ico|webp|avif|woff|woff2|ttf|eot|otf|css|js|map)$).*)',
+  ],
 }
