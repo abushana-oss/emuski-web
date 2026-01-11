@@ -239,6 +239,21 @@ const nextConfig = {
         destination: '/gallery',
         permanent: true,
       },
+      {
+        source: '/precision-engineering/',
+        destination: '/precision-engineering',
+        permanent: true,
+      },
+      {
+        source: '/manufacturing-services/',
+        destination: '/manufacturing-services',
+        permanent: true,
+      },
+      {
+        source: '/contact/',
+        destination: '/contact',
+        permanent: true,
+      },
 
       // Old service URLs to current pages
       {

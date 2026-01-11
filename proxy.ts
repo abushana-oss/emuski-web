@@ -59,6 +59,41 @@ async function sendGA4Event(payload: any) {
 
 export default function middleware(request: NextRequest) {
   const { pathname, search, searchParams, origin } = request.nextUrl
+  const host = request.headers.get('host') || ''
+  const protocol = request.headers.get('x-forwarded-proto') || 'https'
+
+  // === CANONICAL DOMAIN ENFORCEMENT (SEO CRITICAL) ===
+  // Force HTTPS + WWW to prevent duplicate indexing
+  const CANONICAL_DOMAIN = 'www.emuski.com'
+
+  // Skip enforcement for:
+  // - Next.js internals (_next, api)
+  // - Static files (images, fonts, etc.)
+  // - Local development
+  const isLocalDev = host.includes('localhost') || host.includes('127.0.0.1')
+  const skipCanonicalEnforcement =
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.includes('.') ||
+    isLocalDev
+
+  if (!skipCanonicalEnforcement) {
+    const needsCanonicalRedirect =
+      protocol !== 'https' || // Force HTTPS
+      host !== CANONICAL_DOMAIN // Force www.emuski.com
+
+    if (needsCanonicalRedirect) {
+      const canonicalUrl = `https://${CANONICAL_DOMAIN}${pathname}${search}`
+      console.log(`[SEO Canonical Redirect] ${protocol}://${host}${pathname} → ${canonicalUrl}`)
+
+      return NextResponse.redirect(canonicalUrl, {
+        status: 301, // Permanent redirect for SEO
+        headers: {
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      })
+    }
+  }
 
   // SEO-friendly URL normalization for blog query parameters
   if (pathname === '/blog' && search) {
