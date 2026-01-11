@@ -32,24 +32,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 1.0, // Homepage - highest priority
     },
-    // Core service pages - very high priority (2026 focus on service pages)
+    // Core service pages - Prioritized indexing order
+    // 1. Manufacturing Services (highest priority)
+    // 2. Precision Engineering (second priority)
+    // Note: /services redirects to /manufacturing-services, so removed from sitemap
     {
-      url: `${baseUrl}/services`,
+      url: `${baseUrl}/manufacturing-services`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'weekly',
-      priority: 0.98, // Main services hub - critical for conversions
+      priority: 0.99, // HIGHEST - Primary OEM manufacturing service page
     },
     {
       url: `${baseUrl}/precision-engineering`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'weekly',
-      priority: 0.97, // Primary service page - optimized for indexing
-    },
-    {
-      url: `${baseUrl}/manufacturing-services`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'weekly',
-      priority: 0.96, // Primary service page
+      priority: 0.97, // SECOND - Cost engineering and VAVE services
     },
     {
       url: `${baseUrl}/cost-engineering-services`,
@@ -82,12 +79,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.93, // International market focus
     },
-    // Innovation and technology pages
+    // Innovation and technology pages - Lower priority than core services
     {
       url: `${baseUrl}/solutions/ai`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
-      priority: 0.90, // Technology showcase
+      priority: 0.75, // AI showcase - indexed after manufacturing and precision engineering
     },
     {
       url: `${baseUrl}/contact`,
