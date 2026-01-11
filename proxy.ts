@@ -62,14 +62,14 @@ export default function middleware(request: NextRequest) {
   const host = request.headers.get('host') || ''
   const protocol = request.headers.get('x-forwarded-proto') || 'https'
 
-  // === CANONICAL DOMAIN ENFORCEMENT (SEO CRITICAL) ===
-  // Force HTTPS + WWW to prevent duplicate indexing
-  const CANONICAL_DOMAIN = 'www.emuski.com'
+  // === CANONICAL DOMAIN ENFORCEMENT (TEMPORARILY DISABLED) ===
+  // TODO: Re-enable after fixing redirect loop issue
+  // Note: Canonical tags in metadata are still enforcing canonical URLs
+  // This middleware enforcement is disabled to prevent site timeout issues
 
-  // Skip enforcement for:
-  // - Next.js internals (_next, api)
-  // - Static files (images, fonts, etc.)
-  // - Local development
+  // DISABLED - Uncomment to re-enable canonical enforcement
+  /*
+  const CANONICAL_DOMAIN = 'www.emuski.com'
   const isLocalDev = host.includes('localhost') || host.includes('127.0.0.1')
   const skipCanonicalEnforcement =
     pathname.startsWith('/_next') ||
@@ -79,21 +79,22 @@ export default function middleware(request: NextRequest) {
 
   if (!skipCanonicalEnforcement) {
     const needsCanonicalRedirect =
-      protocol !== 'https' || // Force HTTPS
-      host !== CANONICAL_DOMAIN // Force www.emuski.com
+      protocol !== 'https' ||
+      host !== CANONICAL_DOMAIN
 
     if (needsCanonicalRedirect) {
       const canonicalUrl = `https://${CANONICAL_DOMAIN}${pathname}${search}`
       console.log(`[SEO Canonical Redirect] ${protocol}://${host}${pathname} → ${canonicalUrl}`)
 
       return NextResponse.redirect(canonicalUrl, {
-        status: 301, // Permanent redirect for SEO
+        status: 301,
         headers: {
           'Cache-Control': 'public, max-age=31536000, immutable',
         },
       })
     }
   }
+  */
 
   // SEO-friendly URL normalization for blog query parameters
   if (pathname === '/blog' && search) {
