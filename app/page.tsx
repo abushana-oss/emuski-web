@@ -17,7 +17,7 @@ const FAQSection = dynamic(() => import("@/components/FAQSection").then(mod => (
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'EMUSKI | ISO Certified OEM & Precision Engineering One-Stop Manufacturing Partner',
+  title: 'EMUSKI | ISO Certified OEM & Cost Engineering Partner',
   description: 'ISO 9001:2015 certified manufacturers in Bangalore, Karnataka. EMUSKI - Leading manufacturing company delivering world-class OEM manufacturing, precision engineering, CNC machining, injection molding in Electronic City. 15+ years of excellence serving 75+ global clients. Top ISO certified manufacturer in Bangalore for automotive, aerospace, and medical device industries. Contact: +91-86670-88060',
   keywords: [
     'manufacturers in bangalore',
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://www.emuski.com/',
     siteName: 'EMUSKI - ISO Certified Manufacturer in Bangalore',
-    title: 'EMUSKI | ISO Certified OEM & Precision Engineering One-Stop Manufacturing Partner',
+    title: 'EMUSKI | ISO Certified OEM & Cost Engineering Partner',
     description: 'ISO 9001:2015 certified manufacturers in Bangalore, Electronic City. Leading manufacturing company with 15+ years excellence. Serving 75+ global clients across automotive, aerospace, and medical device industries with precision engineering and AI-powered production in Bangalore, Karnataka. Top ISO certified manufacturers.',
     images: [
       {
@@ -243,32 +243,32 @@ export default function Home() {
           </h1>
           <HeroSection />
 
-        <LazyRender minHeight="500px">
-          <ServicesShowcase />
-        </LazyRender>
+          <LazyRender minHeight="500px">
+            <ServicesShowcase />
+          </LazyRender>
 
-        <LazyRender minHeight="300px">
-          <NewsCarousel />
-        </LazyRender>
+          <LazyRender minHeight="300px">
+            <NewsCarousel />
+          </LazyRender>
 
-        <LazyRender minHeight="400px">
-          <AboutSection />
-        </LazyRender>
+          <LazyRender minHeight="400px">
+            <AboutSection />
+          </LazyRender>
 
-        <LazyRender minHeight="300px">
-          <TechnicalSpecsSection focus="metrics" compact={true} />
-        </LazyRender>
+          <LazyRender minHeight="300px">
+            <TechnicalSpecsSection focus="metrics" compact={true} />
+          </LazyRender>
 
-        <LazyRender minHeight="400px">
-          <FeaturedTabs />
-        </LazyRender>
+          <LazyRender minHeight="400px">
+            <FeaturedTabs />
+          </LazyRender>
 
-        <LazyRender minHeight="300px">
-          <FAQSection compact={true} maxItems={6} usePageSpecific={true} />
-        </LazyRender>
-      </main>
-      <Footer />
-    </div>
+          <LazyRender minHeight="300px">
+            <FAQSection compact={true} maxItems={6} usePageSpecific={true} />
+          </LazyRender>
+        </main>
+        <Footer />
+      </div>
     </>
   )
 }

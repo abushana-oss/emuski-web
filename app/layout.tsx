@@ -149,7 +149,7 @@ export default function RootLayout({
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.emuski.com/" />
         <meta property="og:site_name" content="EMUSKI" />
-        <meta property="og:title" content="EMUSKI | ISO Certified OEM & Precision Engineering One-Stop Manufacturing Partner" />
+        <meta property="og:title" content="EMUSKI | ISO Certified OEM & Cost Engineering Partner" />
         <meta property="og:description" content="ISO 9001:2015 certified OEM manufacturing and precision engineering company with 15+ years of experience in Bangalore, India. Expertise in design-for-manufacturing, rapid prototyping, and cost optimization for global OEMs." />
         <meta property="og:image" content="https://www.emuski.com/og-image.png" />
         <meta property="og:image:secure_url" content="https://www.emuski.com/og-image.png" />
