@@ -17,7 +17,7 @@ export default function PrecisionEngineering() {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '')
       if (hash) {
-        const tabMap: { [key: string]: string} = {
+        const tabMap: { [key: string]: string } = {
           'cost-estimation': 'cost-estimation',
           'vave': 'vave',
           'sourcing': 'sourcing',
@@ -127,32 +127,32 @@ export default function PrecisionEngineering() {
           {
             "@type": "City",
             "name": "Mumbai",
-            "containedIn": {"@type": "Country", "name": "India"}
+            "containedIn": { "@type": "Country", "name": "India" }
           },
           {
             "@type": "City",
             "name": "Delhi",
-            "containedIn": {"@type": "Country", "name": "India"}
+            "containedIn": { "@type": "Country", "name": "India" }
           },
           {
             "@type": "City",
             "name": "Pune",
-            "containedIn": {"@type": "Country", "name": "India"}
+            "containedIn": { "@type": "Country", "name": "India" }
           },
           {
             "@type": "City",
             "name": "Chennai",
-            "containedIn": {"@type": "Country", "name": "India"}
+            "containedIn": { "@type": "Country", "name": "India" }
           },
           {
             "@type": "City",
             "name": "Hyderabad",
-            "containedIn": {"@type": "Country", "name": "India"}
+            "containedIn": { "@type": "Country", "name": "India" }
           },
           {
             "@type": "City",
             "name": "Bangalore",
-            "containedIn": {"@type": "Country", "name": "India"}
+            "containedIn": { "@type": "Country", "name": "India" }
           },
           {
             "@type": "Country",
@@ -184,13 +184,6 @@ export default function PrecisionEngineering() {
         "availableChannel": {
           "@type": "ServiceChannel",
           "serviceUrl": "https://www.emuski.com/precision-engineering"
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "reviewCount": "75",
-          "bestRating": "5",
-          "worstRating": "1"
         },
         "award": [
           "15+ Years Industry Experience",
@@ -325,10 +318,12 @@ export default function PrecisionEngineering() {
     ]
   }
 
+  // Combined FAQ Schema - Merging Precision Engineering + General Manufacturing FAQs
   const faqSchemaData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
+      // Precision Engineering Specific FAQs
       {
         "@type": "Question",
         "name": "What precision engineering services does EMUSKI provide across India?",
@@ -384,8 +379,223 @@ export default function PrecisionEngineering() {
           "@type": "Answer",
           "text": "EMUSKI is India's most experienced precision engineering company with 15+ years proven track record. We are ISO 9001:2015 certified with 75+ satisfied clients across India and globally. Our unique advantages include: Cost 360 digital platform, 500+ verified global suppliers, ±5% cost estimation accuracy, 20-30% VAVE savings, pan-India service coverage, international quality standards, and established presence in Bangalore's Electronic City. We combine deep experience, proven methodologies, and cutting-edge technology to deliver consistent 15-25% cost reduction for automotive, aerospace, medical device, and electronics manufacturers."
         }
+      },
+      // General Manufacturing FAQs
+      {
+        "@type": "Question",
+        "name": "What is OEM manufacturing and how does EMUSKI provide it?",
+        "keywords": "OEM manufacturing, original equipment manufacturer, custom manufacturing, private label manufacturing",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "OEM (Original Equipment Manufacturing) is when one company manufactures products or components that are sold by another company under their brand name. EMUSKI provides comprehensive OEM Manufacturing Excellences including design consultation, prototyping, production, quality control, and logistics. We handle everything from initial concept to final delivery, allowing you to focus on your core business while we manufacture your products to exact specifications.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What manufacturing capabilities does EMUSKI offer?",
+        "keywords": "CNC machining, injection molding, sheet metal, precision engineering, manufacturing capabilities",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMUSKI offers a complete range of manufacturing capabilities including CNC machining, injection molding, sheet metal fabrication, precision engineering, rapid prototyping, assembly services, quality testing, and packaging. Our state-of-the-art facility in Bangalore is equipped with advanced machinery and staffed by experienced engineers and technicians.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the minimum order quantity (MOQ) for manufacturing?",
+        "keywords": "minimum order quantity, MOQ, small batch manufacturing, production quantities",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our minimum order quantity varies depending on the product complexity, materials, and manufacturing process. For prototyping and small batches, we can work with quantities as low as 10-50 pieces. For full production runs, MOQs typically range from 100-1000 pieces. We work closely with each client to find the most cost-effective solution for their specific needs.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are typical lead times for manufacturing projects?",
+        "keywords": "lead times, delivery time, production schedule, manufacturing timeline",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Lead times depend on project complexity and quantity. Rapid prototyping: 3-7 days. Small batch production (100-500 pieces): 2-3 weeks. Medium production runs (500-5000 pieces): 3-6 weeks. Large volume production: 6-12 weeks. We provide detailed timelines during the quotation process and offer expedited services when needed.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What quality certifications does EMUSKI have?",
+        "keywords": "ISO certification, quality management, quality standards, Six Sigma, lean manufacturing",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMUSKI is ISO 9001:2015 certified for Quality Management Systems, ISO 14001:2015 for Environmental Management, and ISO 45001:2018 for Occupational Health and Safety. We also maintain industry-specific certifications and follow international quality standards including Six Sigma methodologies and lean manufacturing principles.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does EMUSKI ensure product quality?",
+        "keywords": "quality control, inspection process, quality assurance, testing procedures",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our quality control process includes incoming material inspection, in-process quality checks, final product inspection, and statistical process control (SPC). We use advanced measurement equipment, conduct dimensional analysis, material testing, and functional testing. Every product is traceable through our quality management system with complete documentation.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which industries does EMUSKI serve?",
+        "keywords": "automotive manufacturing, aerospace components, medical devices, electronics manufacturing, defense manufacturing",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMUSKI serves multiple industries including Automotive (components, assemblies), Aerospace (aircraft parts, defense systems), Medical Devices (surgical instruments, diagnostic equipment), Electronics (consumer and industrial), Defense (specialized components), Space Technology (satellite components), and Energy Sector (renewable energy components). Each industry receives specialized manufacturing solutions.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does EMUSKI manufacture automotive components?",
+        "keywords": "automotive components, automotive parts, IATF 16949, automotive OEM, car parts manufacturing",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, EMUSKI specializes in automotive component manufacturing including engine parts, transmission components, brake systems, suspension parts, electrical components, and custom automotive accessories. We follow automotive industry standards (IATF 16949) and work with both OEMs and Tier 1 suppliers globally.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much can companies save by manufacturing with EMUSKI?",
+        "keywords": "cost savings, manufacturing costs, competitive pricing, ROI, cost optimization",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Companies typically save 30-60% compared to manufacturing in Western countries while maintaining the same quality standards. Savings come from competitive labor costs, efficient processes, economies of scale, and our optimized supply chain. We provide detailed cost breakdowns and ROI analysis for each project.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are EMUSKI's payment terms and accepted currencies?",
+        "keywords": "payment terms, currencies accepted, payment methods, pricing, international payments",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We offer flexible payment terms including 30% advance with 70% on delivery for new clients, and extended terms for established partnerships. We accept payments in USD, EUR, GBP, and INR through bank transfers, letters of credit, and other secure payment methods. All pricing is transparent with no hidden costs.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does EMUSKI provide design and engineering support?",
+        "keywords": "design for manufacturing, DFM, CAD design, engineering support, design optimization",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our experienced engineering team provides comprehensive design support including Design for Manufacturing (DFM), CAD modeling, prototyping, material selection, and design optimization. We use advanced software tools and work collaboratively with clients to optimize designs for manufacturability, cost, and performance.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What materials can EMUSKI work with?",
+        "keywords": "materials, metals, plastics, composites, material selection, engineering materials",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We work with a wide range of materials including metals (aluminum, steel, stainless steel, titanium, brass, copper), plastics (ABS, PC, PP, PE, POM, PEEK), composites (carbon fiber, fiberglass), ceramics, and specialty materials. Our material selection expertise helps optimize performance while controlling costs.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does EMUSKI handle international shipping and logistics?",
+        "keywords": "international shipping, logistics, export, customs clearance, freight forwarding",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We have established partnerships with major logistics providers (DHL, FedEx, UPS) and freight forwarders for seamless international shipping. We handle all export documentation, customs clearance, and compliance requirements. Our logistics team tracks shipments and provides real-time updates to ensure timely delivery.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does EMUSKI provide support for international clients?",
+        "keywords": "international support, global clients, English communication, international standards",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, we provide comprehensive support for international clients including English-speaking project managers, timezone-flexible communication, cultural business understanding, compliance with international standards, and local representation in key markets. Our team is experienced in working with clients from USA, UK, Europe, and Asia-Pacific.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does EMUSKI use AI in manufacturing?",
+        "keywords": "AI manufacturing, Industry 4.0, smart manufacturing, automation, predictive maintenance",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMUSKI leverages AI and Industry 4.0 technologies for predictive maintenance, quality control automation, production optimization, supply chain management, and real-time monitoring. Our AI-powered systems help reduce defects, optimize production schedules, and improve overall efficiency while maintaining consistent quality.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What rapid prototyping services does EMUSKI offer?",
+        "keywords": "rapid prototyping, 3D printing, CNC prototyping, product development, prototyping services",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We offer comprehensive rapid prototyping services including 3D printing (SLA, SLS, FDM), CNC prototyping, vacuum casting, sheet metal prototyping, and functional testing. Our rapid prototyping helps validate designs quickly, test functionality, and accelerate time-to-market for new products.",
+          "author": {
+            "@type": "Organization",
+            "name": "EMUSKI Manufacturing Solutions"
+          }
+        }
       }
-    ]
+    ],
+    "inLanguage": "en-US",
+    "publisher": {
+      "@type": "Organization",
+      "name": "EMUSKI Manufacturing Solutions",
+      "url": "https://www.emuski.com/"
+    }
   }
 
   return (
@@ -424,7 +634,7 @@ export default function PrecisionEngineering() {
         </div>
       </nav>
 
-      <header className="relative py-12 sm:py-14 md:py-16 lg:py-20 border-b border-border/30 overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>
+      <header className="relative py-12 sm:py-14 md:py-16 lg:py-20 border-b border-border/30 overflow-hidden" style={{ backgroundColor: 'rgb(18, 26, 33)' }}>
         <div className="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4fd3d4_1px,transparent_1px),linear-gradient(to_bottom,#4fd3d4_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
         </div>
@@ -620,7 +830,7 @@ export default function PrecisionEngineering() {
           </div>
         </section>
 
-        <FAQSection />
+        <FAQSection skipSchema={true} />
       </main>
 
       <Footer />

@@ -153,15 +153,17 @@ interface FAQSectionProps {
   title?: string;
   description?: string;
   usePageSpecific?: boolean; // New prop to enable page-specific FAQs
+  skipSchema?: boolean; // Skip rendering schema (if page has its own combined schema)
 }
 
-export const FAQSection: React.FC<FAQSectionProps> = ({ 
-  compact = false, 
+export const FAQSection: React.FC<FAQSectionProps> = ({
+  compact = false,
   showCategories = true,
   maxItems,
   title,
   description,
-  usePageSpecific = false
+  usePageSpecific = false,
+  skipSchema = false
 }) => {
   const pathname = usePathname();
   const [searchTerm, setSearchTerm] = useState('');
@@ -200,13 +202,13 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
   const displayDescription = description || (usePageSpecific ? pageMetaData.description : "Get answers to common questions about EMUSKI's Manufacturing Excellences, quality processes, and how we can help your business succeed.");
 
   let filteredFAQs = currentFAQs.filter(faq => {
-    const matchesSearch = searchTerm === '' || 
+    const matchesSearch = searchTerm === '' ||
       faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+
     const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory;
-    
+
     return matchesSearch && matchesCategory;
   });
 
@@ -230,40 +232,42 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
 
   return (
     <>
-      {/* Enhanced Structured Data for SEO and AI Chatbots */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "about": {
-              "@type": "Organization",
-              "name": "EMUSKI Manufacturing Solutions",
-              "description": "Leading manufacturing company in Bangalore, India providing OEM manufacturing, precision engineering, and custom Manufacturing Excellences"
-            },
-            "mainEntity": currentFAQs.map(faq => ({
-              "@type": "Question",
-              "name": faq.question,
-              "keywords": faq.keywords.join(", "),
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": faq.answer,
-                "author": {
-                  "@type": "Organization",
-                  "name": "EMUSKI Manufacturing Solutions"
+      {/* Enhanced Structured Data for SEO and AI Chatbots - Only render if not skipped */}
+      {!skipSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "about": {
+                "@type": "Organization",
+                "name": "EMUSKI Manufacturing Solutions",
+                "description": "Leading manufacturing company in Bangalore, India providing OEM manufacturing, precision engineering, and custom Manufacturing Excellences"
+              },
+              "mainEntity": currentFAQs.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "keywords": faq.keywords.join(", "),
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.answer,
+                  "author": {
+                    "@type": "Organization",
+                    "name": "EMUSKI Manufacturing Solutions"
+                  }
                 }
+              })),
+              "inLanguage": "en-US",
+              "publisher": {
+                "@type": "Organization",
+                "name": "EMUSKI Manufacturing Solutions",
+                "url": "https://www.emuski.com"
               }
-            })),
-            "inLanguage": "en-US",
-            "publisher": {
-              "@type": "Organization",
-              "name": "EMUSKI Manufacturing Solutions",
-              "url": "https://www.emuski.com"
-            }
-          })
-        }}
-      />
+            })
+          }}
+        />
+      )}
 
       <section className={`${compact ? 'py-12' : 'py-20'} bg-gradient-to-br from-slate-50 to-blue-50`}>
         <div className="w-full px-4 sm:px-6">
@@ -299,11 +303,10 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
                       <button
                         key={category}
                         onClick={() => setSelectedCategory(category)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                          selectedCategory === category
-                            ? 'bg-emuski-teal-dark text-white shadow-lg'
-                            : 'bg-white text-gray-600 hover:bg-emuski-teal/10 hover:text-emuski-teal-dark border border-gray-200'
-                        }`}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === category
+                          ? 'bg-emuski-teal-dark text-white shadow-lg'
+                          : 'bg-white text-gray-600 hover:bg-emuski-teal/10 hover:text-emuski-teal-dark border border-gray-200'
+                          }`}
                       >
                         {category}
                       </button>
@@ -356,7 +359,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
                       onClick={() => toggleItem(faq.id)}
                       className="w-full px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-emuski-teal focus:ring-inset"
                       aria-expanded={openItems.has(faq.id)}
-                      itemScope 
+                      itemScope
                       itemType="https://schema.org/Question"
                     >
                       <div className="flex items-center justify-between">
@@ -371,23 +374,22 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
                           )}
                         </div>
                         <ChevronDown
-                          className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
-                            openItems.has(faq.id) ? 'rotate-180' : ''
-                          }`}
+                          className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${openItems.has(faq.id) ? 'rotate-180' : ''
+                            }`}
                         />
                       </div>
                     </button>
 
                     {openItems.has(faq.id) && (
                       <div className="px-6 pb-4 pt-2 border-t border-gray-100 bg-gray-50" itemScope itemType="https://schema.org/Answer">
-                        <div 
+                        <div
                           className={`text-gray-700 leading-relaxed ${compact ? 'text-sm' : 'text-base'}`}
                           data-translate="faq_answer"
                           itemProp="text"
                         >
                           {faq.answer}
                         </div>
-                        
+
                         {/* Keywords for SEO - Only show in full version */}
                         {!compact && (
                           <div className="mt-3 pt-3 border-t border-gray-200">
@@ -426,7 +428,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
                   Still have questions?
                 </h3>
                 <p className="text-gray-600 mb-6 max-w-xl mx-auto">
-                  Our manufacturing experts are here to help. Get personalized answers to your specific 
+                  Our manufacturing experts are here to help. Get personalized answers to your specific
                   manufacturing requirements.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
