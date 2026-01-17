@@ -96,7 +96,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/blog`,
       lastModified: currentDate, // Dynamic - changes when new posts are added
       changeFrequency: 'daily',
-      priority: 0.8,
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/gallery`,

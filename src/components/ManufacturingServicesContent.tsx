@@ -2,8 +2,36 @@ import { CheckCircle, Zap, Layers, Cog, TrendingUp, Clock, Target, Award } from 
 import Image from "next/image";
 
 export const ManufacturingServicesContent = () => {
+  const videoSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "On-Demand Manufacturing Services",
+      "description": "EMUSKI On-Demand Manufacturing - No minimum order quantities, 24-48h turnaround. Ideal for prototyping and production.",
+      "thumbnailUrl": "https://www.emuski.com/assets/industry-components/aerospace-engineering-manufacturing/aerospace-component-6.jpeg",
+      "contentUrl": "https://www.emuski.com/video/manufacturing-video/ondemandmanufaturing.mp4",
+      "uploadDate": "2025-01-01T08:00:00+05:30",
+      "duration": "PT1M" // Estimate
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "Custom Manufacturing & Precision Engineering",
+      "description": "Precision engineering for complex components. VMC, Grinding, EDM capabilities for aerospace and medical industries.",
+      "thumbnailUrl": "https://www.emuski.com/assets/industry-components/aerospace-engineering-manufacturing/aerospace-component-1.jpeg",
+      "contentUrl": "https://www.emuski.com/video/manufacturing-video/custummanufaturing.mp4",
+      "uploadDate": "2025-01-01T08:00:00+05:30",
+      "duration": "PT1M" // Estimate
+    }
+  ];
+
   return (
     <div className="space-y-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchemas) }}
+      />
+
       {/* On-Demand Manufacturing */}
       <section id="on-demand-details" className="py-16 md:py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
@@ -122,30 +150,30 @@ export const ManufacturingServicesContent = () => {
                   From Concept to Reality in Days, Not Months
                 </h2>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                Fast and efficient prototyping services from concept to completion with precision and cost optimization.                </p>
+                  Fast and efficient prototyping services from concept to completion with precision and cost optimization.                </p>
 
                 {/* Technologies */}
                 <div className="bg-gradient-to-br from-emuski-teal-darker to-emuski-teal-dark rounded-xl p-6 text-white">
-  <h4 className="font-bold mb-4">Multi-Technology Approach</h4>
-  <div className="grid grid-cols-2 gap-4">
-    <div className="flex items-center gap-2">
-      <CheckCircle className="w-5 h-5 flex-shrink-0" />
-      <span className="text-sm">Precision Machining</span>
-    </div>
-    <div className="flex items-center gap-2">
-      <CheckCircle className="w-5 h-5 flex-shrink-0" />
-      <span className="text-sm">3D Printing (SLA / SLS / FDM)</span>
-    </div>
-    <div className="flex items-center gap-2">
-      <CheckCircle className="w-5 h-5 flex-shrink-0" />
-      <span className="text-sm">Vacuum Casting</span>
-    </div>
-    <div className="flex items-center gap-2">
-      <CheckCircle className="w-5 h-5 flex-shrink-0" />
-      <span className="text-sm">Sheet Metal Fabrication</span>
-    </div>
-  </div>
-</div>
+                  <h4 className="font-bold mb-4">Multi-Technology Approach</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                      <span className="text-sm">Precision Machining</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                      <span className="text-sm">3D Printing (SLA / SLS / FDM)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                      <span className="text-sm">Vacuum Casting</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                      <span className="text-sm">Sheet Metal Fabrication</span>
+                    </div>
+                  </div>
+                </div>
 
 
                 {/* Process */}
@@ -289,7 +317,7 @@ export const ManufacturingServicesContent = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Production Scaling */}
       <section id="scaling-details" className="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4 sm:px-6">
