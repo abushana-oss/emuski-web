@@ -63,213 +63,210 @@ export default function middleware(request: NextRequest) {
     const host = request.headers.get('host') || ''
     const protocol = request.headers.get('x-forwarded-proto') || 'https'
 
-  // === CANONICAL DOMAIN ENFORCEMENT (TEMPORARILY DISABLED) ===
-  // TODO: Re-enable after fixing redirect loop issue
-  // Note: Canonical tags in metadata are still enforcing canonical URLs
-  // This middleware enforcement is disabled to prevent site timeout issues
+    // === CANONICAL DOMAIN ENFORCEMENT (TEMPORARILY DISABLED) ===
+    // TODO: Re-enable after fixing redirect loop issue
+    // Note: Canonical tags in metadata are still enforcing canonical URLs
+    // This middleware enforcement is disabled to prevent site timeout issues
 
-  // DISABLED - Uncomment to re-enable canonical enforcement
-  /*
-  const CANONICAL_DOMAIN = 'www.emuski.com'
-  const isLocalDev = host.includes('localhost') || host.includes('127.0.0.1')
-  const skipCanonicalEnforcement =
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/api') ||
-    pathname.includes('.') ||
-    isLocalDev
+    const CANONICAL_DOMAIN = 'www.emuski.com'
+    const isLocalDev = host.includes('localhost') || host.includes('127.0.0.1')
+    const skipCanonicalEnforcement =
+      pathname.startsWith('/_next') ||
+      pathname.startsWith('/api') ||
+      pathname.includes('.') ||
+      isLocalDev
 
-  if (!skipCanonicalEnforcement) {
-    const needsCanonicalRedirect =
-      protocol !== 'https' ||
-      host !== CANONICAL_DOMAIN
+    if (!skipCanonicalEnforcement) {
+      const needsCanonicalRedirect =
+        host !== CANONICAL_DOMAIN
 
-    if (needsCanonicalRedirect) {
-      const canonicalUrl = `https://${CANONICAL_DOMAIN}${pathname}${search}`
-      console.log(`[SEO Canonical Redirect] ${protocol}://${host}${pathname} → ${canonicalUrl}`)
+      // Only redirect if incorrect host (ignore protocol to avoid loops with TLS termination)
+      if (needsCanonicalRedirect) {
+        const canonicalUrl = `https://${CANONICAL_DOMAIN}${pathname}${search}`
+        console.log(`[SEO Canonical Redirect] ${protocol}://${host}${pathname} -> ${canonicalUrl}`)
 
-      return NextResponse.redirect(canonicalUrl, {
-        status: 301,
-        headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable',
-        },
-      })
-    }
-  }
-  */
-
-  // SEO-friendly URL normalization for blog query parameters
-  if (pathname === '/blog' && search) {
-    const url = new URL(request.url)
-    let needsRedirect = false
-
-    // Normalize tag parameter: Convert spaces to hyphens and lowercase
-    // Example: /blog?tag=OEM%20supplier%20management → /blog?tag=oem-supplier-management
-    const tagParam = url.searchParams.get('tag')
-    if (tagParam) {
-      const hasSpaces = tagParam.includes(' ') || /%20|\+/.test(tagParam)
-      const hasUppercase = /[A-Z]/.test(tagParam)
-
-      if (hasSpaces || hasUppercase) {
-        const normalizedTag = tagParam
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/%20/g, '-')
-          .replace(/\+/g, '-')
-          .replace(/[^a-z0-9-]/g, '')
-          .replace(/-+/g, '-')
-          .replace(/^-+|-+$/g, '')
-
-        url.searchParams.set('tag', normalizedTag)
-        needsRedirect = true
+        return NextResponse.redirect(canonicalUrl, {
+          status: 301,
+          headers: {
+            'Cache-Control': 'public, max-age=31536000, immutable',
+          },
+        })
       }
     }
 
-    // Normalize category parameter: Convert to lowercase and kebab-case
-    // Example: /blog?category=Success%20Story → /blog?category=success-story
-    const categoryParam = url.searchParams.get('category')
-    if (categoryParam) {
-      const hasSpaces = categoryParam.includes(' ') || /%20|\+/.test(categoryParam)
-      const hasUppercase = /[A-Z]/.test(categoryParam)
+    // SEO-friendly URL normalization for blog query parameters
+    if (pathname === '/blog' && search) {
+      const url = new URL(request.url)
+      let needsRedirect = false
 
-      if (hasSpaces || hasUppercase) {
-        const normalizedCategory = categoryParam
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/%20/g, '-')
-          .replace(/\+/g, '-')
-          .replace(/[^a-z0-9-]/g, '')
-          .replace(/-+/g, '-')
-          .replace(/^-+|-+$/g, '')
+      // Normalize tag parameter: Convert spaces to hyphens and lowercase
+      // Example: /blog?tag=OEM%20supplier%20management → /blog?tag=oem-supplier-management
+      const tagParam = url.searchParams.get('tag')
+      if (tagParam) {
+        const hasSpaces = tagParam.includes(' ') || /%20|\+/.test(tagParam)
+        const hasUppercase = /[A-Z]/.test(tagParam)
 
-        url.searchParams.set('category', normalizedCategory)
-        needsRedirect = true
+        if (hasSpaces || hasUppercase) {
+          const normalizedTag = tagParam
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/%20/g, '-')
+            .replace(/\+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '')
+
+          url.searchParams.set('tag', normalizedTag)
+          needsRedirect = true
+        }
+      }
+
+      // Normalize category parameter: Convert to lowercase and kebab-case
+      // Example: /blog?category=Success%20Story → /blog?category=success-story
+      const categoryParam = url.searchParams.get('category')
+      if (categoryParam) {
+        const hasSpaces = categoryParam.includes(' ') || /%20|\+/.test(categoryParam)
+        const hasUppercase = /[A-Z]/.test(categoryParam)
+
+        if (hasSpaces || hasUppercase) {
+          const normalizedCategory = categoryParam
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/%20/g, '-')
+            .replace(/\+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '')
+
+          url.searchParams.set('category', normalizedCategory)
+          needsRedirect = true
+        }
+      }
+
+      // Return 301 permanent redirect if any parameter was normalized
+      if (needsRedirect) {
+        return NextResponse.redirect(url, {
+          status: 301,
+          headers: {
+            'Cache-Control': 'public, max-age=31536000, immutable',
+          },
+        })
       }
     }
 
-    // Return 301 permanent redirect if any parameter was normalized
-    if (needsRedirect) {
-      return NextResponse.redirect(url, {
-        status: 301,
-        headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable',
-        },
+    // Continue with response
+    const response = NextResponse.next()
+
+    // === GA4 Server-Side Tracking ===
+    if (shouldTrackAnalytics(pathname) && GA4_API_SECRET) {
+      const clientId = getClientId(request)
+      const sessionId = getSessionId(request)
+      const isFirstVisit = !request.cookies.has('_ga_client_id')
+      const isNewSession = !request.cookies.has('_ga_session_id')
+
+      // Set cookies for tracking
+      response.cookies.set('_ga_client_id', clientId, {
+        maxAge: 60 * 60 * 24 * 365 * 2, // 2 years
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
       })
-    }
-  }
 
-  // Continue with response
-  const response = NextResponse.next()
+      response.cookies.set('_ga_session_id', sessionId, {
+        maxAge: 60 * 30, // 30 minutes
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+      })
 
-  // === GA4 Server-Side Tracking ===
-  if (shouldTrackAnalytics(pathname) && GA4_API_SECRET) {
-    const clientId = getClientId(request)
-    const sessionId = getSessionId(request)
-    const isFirstVisit = !request.cookies.has('_ga_client_id')
-    const isNewSession = !request.cookies.has('_ga_session_id')
+      // Prepare events
+      const events = []
+      const pageLocation = origin + pathname + (searchParams.toString() ? '?' + searchParams.toString() : '')
+      const pageReferrer = request.headers.get('referer') || ''
 
-    // Set cookies for tracking
-    response.cookies.set('_ga_client_id', clientId, {
-      maxAge: 60 * 60 * 24 * 365 * 2, // 2 years
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-    })
+      // First visit event
+      if (isFirstVisit) {
+        events.push({
+          name: 'first_visit',
+          params: {
+            page_location: pageLocation,
+            page_referrer: pageReferrer,
+            session_id: sessionId,
+            engagement_time_msec: 100,
+            tracking_method: 'server_side',
+          },
+        })
+      }
 
-    response.cookies.set('_ga_session_id', sessionId, {
-      maxAge: 60 * 30, // 30 minutes
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-    })
+      // Session start event
+      if (isNewSession) {
+        events.push({
+          name: 'session_start',
+          params: {
+            page_location: pageLocation,
+            page_referrer: pageReferrer,
+            session_id: sessionId,
+            engagement_time_msec: 100,
+            tracking_method: 'server_side',
+          },
+        })
+      }
 
-    // Prepare events
-    const events = []
-    const pageLocation = origin + pathname + (searchParams.toString() ? '?' + searchParams.toString() : '')
-    const pageReferrer = request.headers.get('referer') || ''
-
-    // First visit event
-    if (isFirstVisit) {
+      // Page view event (always)
       events.push({
-        name: 'first_visit',
+        name: 'page_view',
         params: {
           page_location: pageLocation,
           page_referrer: pageReferrer,
+          page_title: pathname,
           session_id: sessionId,
           engagement_time_msec: 100,
           tracking_method: 'server_side',
         },
       })
+
+      // Send events to GA4 (non-blocking)
+      const payload = {
+        client_id: clientId,
+        timestamp_micros: Date.now() * 1000,
+        non_personalized_ads: false,
+        events,
+      }
+
+      sendGA4Event(payload)
     }
 
-    // Session start event
-    if (isNewSession) {
-      events.push({
-        name: 'session_start',
-        params: {
-          page_location: pageLocation,
-          page_referrer: pageReferrer,
-          session_id: sessionId,
-          engagement_time_msec: 100,
-          tracking_method: 'server_side',
-        },
-      })
-    }
+    // Content Security Policy - Updated to include all Google, Mixpanel, and reCAPTCHA domains
+    response.headers.set(
+      'Content-Security-Policy',
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com",
+        "script-src-elem 'self' 'unsafe-inline' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
+        "font-src 'self' data: https://fonts.gstatic.com",
+        "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://images.unsplash.com https://via.placeholder.com",
+        "connect-src 'self' https://*.google.com https://www.googleapis.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://*.googletagmanager.com https://*.blogger.com https://blogger.googleusercontent.com https://api.mixpanel.com https://api-js.mixpanel.com https://cdn.mxpnl.com https://*.supabase.co",
+        "frame-src 'self' https://*.google.com https://*.googletagmanager.com https://td.doubleclick.net",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-ancestors 'self'",
+        "upgrade-insecure-requests"
+      ].join('; ')
+    )
 
-    // Page view event (always)
-    events.push({
-      name: 'page_view',
-      params: {
-        page_location: pageLocation,
-        page_referrer: pageReferrer,
-        page_title: pathname,
-        session_id: sessionId,
-        engagement_time_msec: 100,
-        tracking_method: 'server_side',
-      },
-    })
-
-    // Send events to GA4 (non-blocking)
-    const payload = {
-      client_id: clientId,
-      timestamp_micros: Date.now() * 1000,
-      non_personalized_ads: false,
-      events,
-    }
-
-    sendGA4Event(payload)
-  }
-
-  // Content Security Policy - Updated to include all Google, Mixpanel, and reCAPTCHA domains
-  response.headers.set(
-    'Content-Security-Policy',
-    [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com",
-      "script-src-elem 'self' 'unsafe-inline' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
-      "font-src 'self' data: https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://images.unsplash.com https://via.placeholder.com",
-      "connect-src 'self' https://*.google.com https://www.googleapis.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://*.googletagmanager.com https://*.blogger.com https://blogger.googleusercontent.com https://api.mixpanel.com https://api-js.mixpanel.com https://cdn.mxpnl.com https://*.supabase.co",
-      "frame-src 'self' https://*.google.com https://*.googletagmanager.com https://td.doubleclick.net",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'self'",
-      "upgrade-insecure-requests"
-    ].join('; ')
-  )
-
-  // Additional security headers
-  response.headers.set('X-Frame-Options', 'SAMEORIGIN')
-  response.headers.set('X-Content-Type-Options', 'nosniff')
-  response.headers.set('X-XSS-Protection', '1; mode=block')
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
-  response.headers.set('X-DNS-Prefetch-Control', 'on')
+    // Additional security headers
+    response.headers.set('X-Frame-Options', 'SAMEORIGIN')
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+    response.headers.set('X-XSS-Protection', '1; mode=block')
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+    response.headers.set('X-DNS-Prefetch-Control', 'on')
 
     return response
   } catch (error) {
