@@ -63,36 +63,10 @@ export default function middleware(request: NextRequest) {
     const host = request.headers.get('host') || ''
     const protocol = request.headers.get('x-forwarded-proto') || 'https'
 
-    // === CANONICAL DOMAIN ENFORCEMENT (TEMPORARILY DISABLED) ===
-    // TODO: Re-enable after fixing redirect loop issue
-    // Note: Canonical tags in metadata are still enforcing canonical URLs
-    // This middleware enforcement is disabled to prevent site timeout issues
-
-    const CANONICAL_DOMAIN = 'www.emuski.com'
-    const isLocalDev = host.includes('localhost') || host.includes('127.0.0.1')
-    const skipCanonicalEnforcement =
-      pathname.startsWith('/_next') ||
-      pathname.startsWith('/api') ||
-      pathname.includes('.') ||
-      isLocalDev
-
-    if (!skipCanonicalEnforcement) {
-      const needsCanonicalRedirect =
-        host !== CANONICAL_DOMAIN
-
-      // Only redirect if incorrect host (ignore protocol to avoid loops with TLS termination)
-      if (needsCanonicalRedirect) {
-        const canonicalUrl = `https://${CANONICAL_DOMAIN}${pathname}${search}`
-        console.log(`[SEO Canonical Redirect] ${protocol}://${host}${pathname} -> ${canonicalUrl}`)
-
-        return NextResponse.redirect(canonicalUrl, {
-          status: 301,
-          headers: {
-            'Cache-Control': 'public, max-age=31536000, immutable',
-          },
-        })
-      }
-    }
+    // === CANONICAL DOMAIN ENFORCEMENT (DISABLED TO FIX ERROR 520) ===
+    // The canonical domain redirect was causing Error 520 due to redirect loops
+    // Cloudflare is already handling the www redirection via page rules
+    // Canonical tags in metadata are still enforcing canonical URLs for SEO
 
     // SEO-friendly URL normalization for blog query parameters
     if (pathname === '/blog' && search) {
