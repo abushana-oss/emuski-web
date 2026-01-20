@@ -15,8 +15,7 @@ import { handleCorsPreflightRequest, addCorsHeaders } from '@/lib/cors';
  * @version 4.0.0 - Production Ready with Rate Limiting
  */
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Resend client will be initialized lazily in the request handler
 
 // Type definitions for better type safety
 interface ContactFormData {
@@ -308,7 +307,8 @@ async function sendEmail(
   payload: EmailPayload
 ): Promise<{ success: boolean; error?: string }> {
   // Verify Resend API key is configured
-  if (!process.env.RESEND_API_KEY) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
     console.error('❌ RESEND_API_KEY not configured');
     return {
       success: false,
@@ -317,6 +317,9 @@ async function sendEmail(
   }
 
   try {
+    // Initialize Resend client inside the function to avoid build-time errors
+    const resend = new Resend(apiKey);
+    
     // Send email using Resend
     const { data, error } = await resend.emails.send({
       from: 'EMUSKI Contact Form <onboarding@resend.dev>',
