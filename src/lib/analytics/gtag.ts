@@ -169,9 +169,13 @@ export const trackEvent = (
   eventName: string,
   params?: Record<string, any>
 ) => {
-  if (typeof window === 'undefined' || !window.gtag) return;
+  try {
+    if (typeof window === 'undefined' || !window.gtag) return;
 
-  window.gtag('event', eventName, params);
+    window.gtag('event', eventName, params);
+  } catch (error) {
+    console.warn('[Analytics] Failed to track event:', eventName, error);
+  }
 };
 
 // Helper functions

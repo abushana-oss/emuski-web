@@ -65,26 +65,31 @@ export const trackEvent = ({
   value,
   customParams = {},
 }: AnalyticsEvent): void => {
-  // Google Analytics 4
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', action, {
-      event_category: category,
-      event_label: label,
-      value: value,
-      ...customParams,
-    });
-  }
+  try {
+    // Google Analytics 4
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', action, {
+        event_category: category,
+        event_label: label,
+        value: value,
+        ...customParams,
+      });
+    }
 
-  // GTM dataLayer
-  if (typeof window !== 'undefined' && window.dataLayer) {
-    window.dataLayer.push({
-      event: 'custom_event',
-      eventAction: action,
-      eventCategory: category,
-      eventLabel: label,
-      eventValue: value,
-      ...customParams,
-    });
+    // GTM dataLayer
+    if (typeof window !== 'undefined' && window.dataLayer) {
+      window.dataLayer.push({
+        event: 'custom_event',
+        eventAction: action,
+        eventCategory: category,
+        eventLabel: label,
+        eventValue: value,
+        ...customParams,
+      });
+    }
+  } catch (error) {
+    // Silently fail - don't let analytics break the app
+    console.warn('[Analytics] Event tracking failed:', error);
   }
 };
 

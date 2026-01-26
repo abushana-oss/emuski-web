@@ -15,14 +15,10 @@ All colors MUST be HSL.
 */
 
 @layer base {
-    /* Smooth scroll behavior for better UX - with performance optimization */
+    /* Simple scroll behavior - no complex optimizations */
     html {
         scroll-behavior: smooth;
-        scroll-padding-top: 120px; /* Increased to prevent navbar overlap */
-        /* Prevent scroll-snap which can cause glitching */
-        scroll-snap-type: none;
-        /* Optimize scroll performance */
-        overflow-anchor: auto;
+        scroll-padding-top: 120px;
     }
 
     /* Disable smooth scroll for users who prefer reduced motion */
@@ -191,29 +187,24 @@ All colors MUST be HSL.
     }
 
     html {
-        width: 100%;
-        overflow-x: hidden;
         margin: 0;
         padding: 0;
+        overflow-x: hidden;
+        /* Let browser handle scroll naturally - no forced constraints */
     }
 
     body {
+        margin: 0;
+        padding: 0;
         background-color: hsl(var(--background));
         color: hsl(var(--foreground));
         font-family: 'Inter Variable', 'Inter', sans-serif;
         font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
         font-variation-settings: normal;
         overflow-x: hidden;
-        overflow-y: scroll; /* Always show scrollbar to prevent layout shift */
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        font-size: 16px; /* Optimized for mobile readability */
+        /* Remove all height/overflow constraints that break scroll */
+        font-size: 16px;
         line-height: 1.6;
-        /* Improve scroll performance and prevent glitches */
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-y: contain; /* Prevent scroll chaining */
-        scroll-snap-type: none; /* Disable scroll snap */
     }
 
     @media (min-width: 640px) {

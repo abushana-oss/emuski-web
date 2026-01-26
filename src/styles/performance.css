@@ -10,8 +10,7 @@ section,
 article,
 .card,
 [class*="container"] {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 500px;
+  /* Removed content-visibility that can break scroll */
 }
 
 /* Reduce paint area for position: fixed elements */
@@ -33,7 +32,7 @@ footer {
 img,
 video,
 iframe {
-  content-visibility: auto;
+  /* Removed content-visibility that can interfere with scroll */
 }
 
 /* GPU acceleration for smooth animations */
@@ -52,11 +51,7 @@ iframe {
   transform: translateZ(0);
 }
 
-/* Optimize scroll performance */
-* {
-  scroll-behavior: smooth;
-}
-
+/* Remove problematic scroll optimizations */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -64,7 +59,6 @@ iframe {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }
 
