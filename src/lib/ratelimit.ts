@@ -87,7 +87,9 @@ function initializeRateLimiters() {
 
   if (upstashUrl && upstashToken) {
     // Production: Use Upstash Redis
-    console.log('✅ Rate limiting: Using Upstash Redis');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('✅ Rate limiting: Using Upstash Redis');
+    }
 
     const redis = new Redis({
       url: upstashUrl,
@@ -137,8 +139,10 @@ function initializeRateLimiters() {
     };
   } else {
     // Development: Use in-memory fallback
-    console.warn('⚠️  Rate limiting: Using in-memory fallback (development only)');
-    console.warn('⚠️  For production, configure UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN');
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('⚠️  Rate limiting: Using in-memory fallback (development only)');
+      console.warn('⚠️  For production, configure UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN');
+    }
 
     rateLimiters = {
       contact: new InMemoryRatelimit(

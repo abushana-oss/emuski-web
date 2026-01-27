@@ -121,7 +121,7 @@ const showcaseItems = [
     title: "Production Scaling",
     category: "Manufacturing Excellences",
     description: "Seamless scaling from prototype to full production with advanced assembly stations and workflow optimization.",
-    image: "/assets/industry-components/defense-technology-manufacturing/defense-component-22.svg",
+    image: "/assets/industry-components/defense-technology-manufacturing/production.jpg",
     link: "/manufacturing-services#scaling"
   },
   {
@@ -222,208 +222,208 @@ export const ServicesShowcase = () => {
       <div className="w-full px-4 sm:px-6 relative z-10">
         {/* Services Sections */}
         <div className="space-y-10">
-        {servicesData.map((service, serviceIndex) => {
-          const filteredProjects = getFilteredShowcaseItems(service.relatedCategories);
+          {servicesData.map((service, serviceIndex) => {
+            const filteredProjects = getFilteredShowcaseItems(service.relatedCategories);
 
-          return (
-            <div
-              key={service.id}
-              className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: `${serviceIndex * 200}ms` }}
-            >
-              {/* Section Navigation */}
-              <div className="flex items-center justify-end gap-2 mb-4">
-                <button
-                  onClick={() => scrollSection('left', service.id)}
-                  className="p-2.5 rounded-lg bg-emuski-teal-darker text-white shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
-                  aria-label="Scroll section left"
-                >
-                  <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
-                </button>
-                <button
-                  onClick={() => scrollSection('right', service.id)}
-                  className="p-2.5 rounded-lg bg-emuski-teal-darker text-white shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
-                  aria-label="Scroll section right"
-                >
-                  <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
-                </button>
-              </div>
+            return (
+              <div
+                key={service.id}
+                className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ transitionDelay: `${serviceIndex * 200}ms` }}
+              >
+                {/* Section Navigation */}
+                <div className="flex items-center justify-end gap-2 mb-4">
+                  <button
+                    onClick={() => scrollSection('left', service.id)}
+                    className="p-2.5 rounded-lg bg-emuski-teal-darker text-white shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
+                    aria-label="Scroll section left"
+                  >
+                    <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
+                  </button>
+                  <button
+                    onClick={() => scrollSection('right', service.id)}
+                    className="p-2.5 rounded-lg bg-emuski-teal-darker text-white shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
+                    aria-label="Scroll section right"
+                  >
+                    <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
+                  </button>
+                </div>
 
-              {/* Scrollable Section Wrapper */}
-              <div className="relative">
+                {/* Scrollable Section Wrapper */}
+                <div className="relative">
 
 
-                {/* Service Info - Mobile First */}
-                <div className="lg:hidden mb-6">
-                  <div className="flex-shrink-0 w-full">
-                    <div className="space-y-4">
-                      {/* Category Title */}
-                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
-                        {service.category}
-                      </h3>
-
-                      {/* Description */}
-                      <p className="text-base text-gray-600 leading-relaxed">
-                        {service.description}
-                      </p>
-
-                      {/* Quick Links */}
-                      <div className="pt-2">
-                        <h3
-                          className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2 cursor-pointer active:text-emuski-teal-darker transition-colors select-none"
-                          onClick={() => toggleQuickLinks(service.id)}
-                        >
-                          <ChevronRight className={`w-4 h-4 text-emuski-teal-darker transition-transform duration-200 ${expandedQuickLinks[service.id] ? 'rotate-90' : ''}`} />
-                          Quick Links
+                  {/* Service Info - Mobile First */}
+                  <div className="lg:hidden mb-6">
+                    <div className="flex-shrink-0 w-full">
+                      <div className="space-y-4">
+                        {/* Category Title */}
+                        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+                          {service.category}
                         </h3>
-                        <div className={`overflow-hidden transition-all duration-200 ease-in-out ${expandedQuickLinks[service.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                          <ul className="space-y-2 pb-2">
-                            {service.items.map((item, itemIndex) => (
-                              <li key={itemIndex}>
-                                <Link
-                                  href={item.link}
-                                  className="group flex items-center gap-2 text-gray-700 active:text-emuski-teal-darker transition-colors duration-200"
-                                >
-                                  <span className="w-1 h-1 rounded-full bg-gray-400 group-active:bg-emuski-teal-darker transition-colors"></span>
-                                  <span className="text-sm font-medium">{item.name}</span>
-                                  {item.beta && (
-                                    <span className="px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-600 rounded-full border border-slate-300">
-                                      BETA
-                                    </span>
-                                  )}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
+
+                        {/* Description */}
+                        <p className="text-base text-gray-600 leading-relaxed">
+                          {service.description}
+                        </p>
+
+                        {/* Quick Links */}
+                        <div className="pt-2">
+                          <h3
+                            className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2 cursor-pointer active:text-emuski-teal-darker transition-colors select-none"
+                            onClick={() => toggleQuickLinks(service.id)}
+                          >
+                            <ChevronRight className={`w-4 h-4 text-emuski-teal-darker transition-transform duration-200 ${expandedQuickLinks[service.id] ? 'rotate-90' : ''}`} />
+                            Quick Links
+                          </h3>
+                          <div className={`overflow-hidden transition-all duration-200 ease-in-out ${expandedQuickLinks[service.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                            <ul className="space-y-2 pb-2">
+                              {service.items.map((item, itemIndex) => (
+                                <li key={itemIndex}>
+                                  <Link
+                                    href={item.link}
+                                    className="group flex items-center gap-2 text-gray-700 active:text-emuski-teal-darker transition-colors duration-200"
+                                  >
+                                    <span className="w-1 h-1 rounded-full bg-gray-400 group-active:bg-emuski-teal-darker transition-colors"></span>
+                                    <span className="text-sm font-medium">{item.name}</span>
+                                    {item.beta && (
+                                      <span className="px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-600 rounded-full border border-slate-300">
+                                        BETA
+                                      </span>
+                                    )}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Horizontal Scroll Container */}
-                <div
-                  ref={(el) => { if (el) sectionScrollRefs.current[service.id] = el }}
-                  onScroll={() => handleScroll(service.id)}
-                  className="overflow-x-auto scrollbar-hide scroll-smooth pb-4"
-                  style={{ scrollbarWidth: 'none' }}
-                >
-                  {/* Service Section */}
-                  <div className="flex gap-8 items-start min-w-full">
+                  {/* Horizontal Scroll Container */}
+                  <div
+                    ref={(el) => { if (el) sectionScrollRefs.current[service.id] = el }}
+                    onScroll={() => handleScroll(service.id)}
+                    className="overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+                    style={{ scrollbarWidth: 'none' }}
+                  >
+                    {/* Service Section */}
+                    <div className="flex gap-8 items-start min-w-full">
 
-                    {/* Left Column - Service Info - Desktop Only */}
-                    <div className="hidden lg:block flex-shrink-0 w-full lg:w-[400px]">
-                  <div className="space-y-4">
-                    {/* Category Title */}
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
-                      {service.category}
-                    </h2>
+                      {/* Left Column - Service Info - Desktop Only */}
+                      <div className="hidden lg:block flex-shrink-0 w-full lg:w-[400px]">
+                        <div className="space-y-4">
+                          {/* Category Title */}
+                          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+                            {service.category}
+                          </h2>
 
-                    {/* Description */}
-                    <p className="text-base text-gray-600 leading-relaxed">
-                      {service.description}
-                    </p>
+                          {/* Description */}
+                          <p className="text-base text-gray-600 leading-relaxed">
+                            {service.description}
+                          </p>
 
-                    {/* Quick Links */}
-                    <div className="pt-2">
-                      <h3
-                        className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2 cursor-pointer hover:text-emuski-teal-darker transition-colors"
-                        onClick={() => toggleQuickLinks(service.id)}
-                        onMouseEnter={() => setExpandedQuickLinks(prev => ({ ...prev, [service.id]: true }))}
-                      >
-                        <ChevronRight className={`w-4 h-4 text-emuski-teal-darker transition-transform duration-300 ${expandedQuickLinks[service.id] ? 'rotate-90' : ''}`} />
-                        Quick Links
-                      </h3>
-                      <div className={`overflow-hidden transition-all duration-300 ${expandedQuickLinks[service.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                        <ul className="space-y-2">
-                          {service.items.map((item, itemIndex) => (
-                            <li key={itemIndex}>
-                              <Link
-                                href={item.link}
-                                className="group flex items-center gap-2 text-gray-700 hover:text-emuski-teal-darker transition-colors duration-200"
-                              >
-                                <span className="w-1 h-1 rounded-full bg-gray-400 group-hover:bg-emuski-teal-darker transition-colors"></span>
-                                <span className="text-sm font-medium">{item.name}</span>
-                                {item.beta && (
-                                  <span className="px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-600 rounded-full border border-slate-300">
-                                    BETA
-                                  </span>
-                                )}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column - Featured Projects */}
-                <div className="flex-shrink-0 w-full lg:w-auto">
-                  {filteredProjects.length > 0 && (
-                    <div className="space-y-4">
-                      {/* Projects Carousel */}
-                      <div className="flex gap-6">
-                        {filteredProjects.map((project, projectIndex) => (
-                          <Link
-                            key={projectIndex}
-                            href={project.link}
-                            className="flex-shrink-0 w-[340px] group"
-                          >
-                            <div className="relative h-full bg-white overflow-hidden border border-gray-200 hover:border-emuski-teal-darker/40 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">
-                              {/* Project Image */}
-                              <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10"></div>
-                                <Image
-                                  src={project.image}
-                                  alt={`${project.title} - ${project.category} Service`}
-                                  width={800}
-                                  height={450}
-                                  className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
-                                  loading="lazy"
-                                  sizes="(max-width: 768px) 100vw, 33vw"
-                                />
-
-
-                              </div>
-
-                              {/* Project Content */}
-                              <div className="p-6 flex-1">
-                                <h4 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-emuski-teal-darker transition-colors line-clamp-2">
-                                  {project.title}
-                                </h4>
-                                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 mb-4">
-                                  {project.description}
-                                </p>
-
-                                <div className="flex items-center gap-2 text-emuski-teal-darker font-semibold group-hover:gap-3 transition-all duration-300">
-                                  <span className="text-sm">Learn more</span>
-                                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                                </div>
-                              </div>
-
-                              {/* Bottom Accent */}
-                              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emuski-teal via-emuski-teal-dark to-emuski-teal-darker transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                          {/* Quick Links */}
+                          <div className="pt-2">
+                            <h3
+                              className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2 cursor-pointer hover:text-emuski-teal-darker transition-colors"
+                              onClick={() => toggleQuickLinks(service.id)}
+                              onMouseEnter={() => setExpandedQuickLinks(prev => ({ ...prev, [service.id]: true }))}
+                            >
+                              <ChevronRight className={`w-4 h-4 text-emuski-teal-darker transition-transform duration-300 ${expandedQuickLinks[service.id] ? 'rotate-90' : ''}`} />
+                              Quick Links
+                            </h3>
+                            <div className={`overflow-hidden transition-all duration-300 ${expandedQuickLinks[service.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                              <ul className="space-y-2">
+                                {service.items.map((item, itemIndex) => (
+                                  <li key={itemIndex}>
+                                    <Link
+                                      href={item.link}
+                                      className="group flex items-center gap-2 text-gray-700 hover:text-emuski-teal-darker transition-colors duration-200"
+                                    >
+                                      <span className="w-1 h-1 rounded-full bg-gray-400 group-hover:bg-emuski-teal-darker transition-colors"></span>
+                                      <span className="text-sm font-medium">{item.name}</span>
+                                      {item.beta && (
+                                        <span className="px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-600 rounded-full border border-slate-300">
+                                          BETA
+                                        </span>
+                                      )}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
-                          </Link>
-                        ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Column - Featured Projects */}
+                      <div className="flex-shrink-0 w-full lg:w-auto">
+                        {filteredProjects.length > 0 && (
+                          <div className="space-y-4">
+                            {/* Projects Carousel */}
+                            <div className="flex gap-6">
+                              {filteredProjects.map((project, projectIndex) => (
+                                <Link
+                                  key={projectIndex}
+                                  href={project.link}
+                                  className="flex-shrink-0 w-[340px] group"
+                                >
+                                  <div className="relative h-full bg-white overflow-hidden border border-gray-200 hover:border-emuski-teal-darker/40 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">
+                                    {/* Project Image */}
+                                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10"></div>
+                                      <Image
+                                        src={project.image}
+                                        alt={`${project.title} - ${project.category} Service`}
+                                        width={800}
+                                        height={450}
+                                        className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
+                                        loading="lazy"
+                                        sizes="(max-width: 768px) 100vw, 33vw"
+                                      />
+
+
+                                    </div>
+
+                                    {/* Project Content */}
+                                    <div className="p-6 flex-1">
+                                      <h4 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-emuski-teal-darker transition-colors line-clamp-2">
+                                        {project.title}
+                                      </h4>
+                                      <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 mb-4">
+                                        {project.description}
+                                      </p>
+
+                                      <div className="flex items-center gap-2 text-emuski-teal-darker font-semibold group-hover:gap-3 transition-all duration-300">
+                                        <span className="text-sm">Learn more</span>
+                                        <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                                      </div>
+                                    </div>
+
+                                    {/* Bottom Accent */}
+                                    <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emuski-teal via-emuski-teal-dark to-emuski-teal-darker transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
-                </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Section Divider */}
-              {serviceIndex < servicesData.length - 1 && (
-                <div className="mt-10">
-                  <div className="h-px bg-gradient-to-r from-emuski-teal via-emuski-teal-dark to-emuski-teal-darker opacity-20"></div>
-                </div>
-              )}
-            </div>
-          );
-        })}
+                {/* Section Divider */}
+                {serviceIndex < servicesData.length - 1 && (
+                  <div className="mt-10">
+                    <div className="h-px bg-gradient-to-r from-emuski-teal via-emuski-teal-dark to-emuski-teal-darker opacity-20"></div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

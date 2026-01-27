@@ -8,10 +8,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSuccessStoriesPosts } from "../hooks/useSuccessStoriesBlogger";
 
-const clientLogos = Array.from({ length: 16 }, (_, i) => ({
-  name: `Partner ${i + 1}`,
-  logo: `/assets/partners/manufacturing-partner-logo-${i + 1}.svg`
-}));
+// Include all partner logos - 6 priority partners + 16 manufacturing partners
+const clientLogos = [
+  { name: "EtherealX", logo: "/assets/partners/etherealx-partner-logo-1.svg" },
+  { name: "Tata Motors", logo: "/assets/partners/TATA-motors-logo-3.svg" },
+  { name: "Polarix Partner", logo: "/assets/partners/polarixpartner_logo.svg" },
+  { name: "Pixxel", logo: "/assets/partners/pixxel-partner-logo-4.svg" },
+  { name: "Roland Berger", logo: "/assets/partners/rorland-berger-company.logo.svg" },
+  { name: "CynLr", logo: "/assets/partners/cynLr-partner-logo-2.svg" },
+  ...Array.from({ length: 16 }, (_, i) => ({
+    name: `Partner ${i + 1}`,
+    logo: `/assets/partners/manufacturing-partner-logo-${i + 1}.svg`
+  }))
+];
 
 export const NewsCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,7 +39,7 @@ export const NewsCarousel = () => {
     <>
 
       {/* Trusted by Clients Section */}
-      <section className="py-8 border-b border-border/30 relative overflow-hidden" style={{backgroundColor: '#121A21'}}>
+      <section className="py-8 border-b border-border/30 relative overflow-hidden" style={{ backgroundColor: '#121A21' }}>
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div
             className="absolute top-0 left-0 w-full h-full"
@@ -40,40 +49,47 @@ export const NewsCarousel = () => {
             }}
           ></div>
         </div>
-        
+
         <div className="relative z-10">
           <div className="text-center mb-8">
             <h2 className="text-lg font-semibold text-white/80 mb-4">Trusted by Industry Leaders</h2>
           </div>
-          
-          <div className="relative overflow-hidden w-full">
-            <div className="flex animate-scroll-mobile sm:animate-scroll space-x-8 sm:space-x-12 md:space-x-16 items-center">
+
+          <div className="relative overflow-x-auto md:overflow-hidden w-full scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className="flex animate-scroll-mobile sm:animate-scroll space-x-8 sm:space-x-12 md:space-x-14 items-center">
+              {/* Quadruple the list for maximum smoothness - 88 total logos */}
               {[...clientLogos, ...clientLogos, ...clientLogos, ...clientLogos].map((client, index) => (
-                <div key={index} className="flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100 relative h-20 sm:h-24 md:h-24 lg:h-28 w-32 sm:w-36 md:w-36 lg:w-40">
-                  <Image
+                <div key={index} className="flex-shrink-0 grayscale opacity-70 h-16 sm:h-20 md:h-24 lg:h-28 w-28 sm:w-32 md:w-36 lg:w-40">
+                  <img
                     src={client.logo}
-                    alt={`${client.name} - Manufacturing Partner Logo`}
-                    fill
-                    className="object-contain filter brightness-0 invert"
+                    alt={`${client.name} - Partner Logo`}
+                    className="w-full h-full object-contain filter brightness-0 invert"
                     loading="eager"
-                    priority={index < 16}
-                    quality={75}
-                    sizes="(max-width: 640px) 128px, (max-width: 768px) 144px, (max-width: 1024px) 144px, 160px"
+                    decoding="async"
                   />
                 </div>
               ))}
             </div>
           </div>
         </div>
-        
+
         <style dangerouslySetInnerHTML={{
           __html: `
+          /* Hide scrollbar for Chrome, Safari and Opera */
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          /* Hide scrollbar for IE, Edge and Firefox */
+          .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+          }
           @keyframes scroll-mobile {
             0% {
               transform: translateX(0);
             }
             100% {
-              transform: translateX(-75%);
+              transform: translateX(-25%);
             }
           }
           @keyframes scroll {
@@ -81,29 +97,23 @@ export const NewsCarousel = () => {
               transform: translateX(0);
             }
             100% {
-              transform: translateX(-50%);
+              transform: translateX(-25%);
             }
           }
           .animate-scroll-mobile {
-            animation: scroll-mobile 50s linear infinite;
-          }
-          .animate-scroll-mobile:hover {
-            animation-play-state: paused;
+            animation: scroll-mobile 15s linear infinite;
           }
           .animate-scroll {
-            animation: scroll 35s linear infinite;
-          }
-          .animate-scroll:hover {
-            animation-play-state: paused;
+            animation: scroll 20s linear infinite;
           }
           @media (min-width: 640px) {
             .animate-scroll-mobile {
-              animation: scroll 35s linear infinite;
+              animation: scroll 20s linear infinite;
             }
           }
           @media (min-width: 1024px) {
             .animate-scroll {
-              animation: scroll 45s linear infinite;
+              animation: scroll 25s linear infinite;
             }
           }
           `

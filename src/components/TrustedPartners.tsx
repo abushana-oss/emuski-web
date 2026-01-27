@@ -1,7 +1,15 @@
 'use client'
 
 export const TrustedPartners = () => {
-  const partners = Array.from({ length: 16 }, (_, i) => i + 1);
+  const partners = [
+    "/assets/partners/etherealx-partner-logo-1.svg",
+    "/assets/partners/polarixpartner_logo.svg",
+    "/assets/partners/pixxel-partner-logo-4.svg",
+    "/assets/partners/TATA-motors-logo-3.svg",
+    "/assets/partners/rorland-berger-company.logo.svg",
+    "/assets/partners/cynLr-partner-logo-2.svg",
+    ...Array.from({ length: 16 }, (_, i) => `/assets/partners/manufacturing-partner-logo-${i + 1}.svg`)
+  ];
 
   return (
     <section className="py-10 sm:py-12 md:py-14 lg:py-16 border-b border-border/30 relative overflow-hidden" style={{ backgroundColor: 'rgb(18, 26, 33)' }}>
@@ -21,11 +29,11 @@ export const TrustedPartners = () => {
         </div>
         <div className="relative overflow-hidden py-4 sm:py-6 md:py-8">
           <div className="flex animate-scroll space-x-12 sm:space-x-16 md:space-x-20 lg:space-x-24 items-center">
-            {partners.concat(partners).map((num, idx) => (
-              <div key={idx} className="flex-shrink-0 grayscale transition-all duration-300 opacity-70 hover:opacity-100 hover:scale-110">
+            {partners.concat(partners).map((partner, idx) => (
+              <div key={idx} className="flex-shrink-0 grayscale transition-all duration-300 opacity-70 hover:opacity-100 hover:scale-110 flex items-center justify-center">
                 <img
-                  src={`/assets/partners/manufacturing-partner-logo-${num}.svg`}
-                  alt={`Manufacturing Partner ${num}`}
+                  src={partner}
+                  alt={`Partner Logo ${idx}`}
                   className="h-16 xs:h-20 sm:h-24 md:h-28 lg:h-32 xl:h-36 w-auto object-contain filter brightness-0 invert"
                 />
               </div>
