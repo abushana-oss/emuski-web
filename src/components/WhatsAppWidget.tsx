@@ -25,7 +25,7 @@ const WhatsAppWidget: React.FC<WhatsAppWidgetProps> = ({
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[9999] flex flex-col items-end gap-4 pointer-events-none" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[99999] flex flex-col items-end gap-4 pointer-events-none" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
 
       {/* Chat Window */}
       <div
