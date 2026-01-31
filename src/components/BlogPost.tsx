@@ -507,7 +507,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       </div>
 
       {/* Floating Action Buttons - Safe area aware */}
-      <div className="fixed right-4 md:right-8 bottom-6 md:bottom-8 z-[200] flex flex-col gap-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <div className="fixed left-4 md:left-8 bottom-6 md:bottom-8 z-[200] flex flex-col gap-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {/* Share Button */}
         <div className="relative">
           <button
@@ -519,7 +519,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
           </button>
           
           {showShareMenu && (
-            <div className="absolute bottom-16 right-0 md:right-auto bg-white rounded-2xl shadow-2xl border border-gray-200 p-3 min-w-[200px] animate-in fade-in slide-in-from-bottom-4 duration-200 z-[300]">
+            <div className="absolute bottom-16 left-0 bg-white rounded-2xl shadow-2xl border border-gray-200 p-3 min-w-[200px] animate-in fade-in slide-in-from-bottom-4 duration-200 z-[300]">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-2">Share Article</p>
               <button
                 onClick={() => handleShare('linkedin')}
