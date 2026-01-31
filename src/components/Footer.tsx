@@ -115,7 +115,7 @@ export const Footer = () => {
                   <Linkedin className="h-5 w-5" />
                 </a>
                 <a 
-                  href="https://www.instagram.com/emuski" 
+                  href="https://www.instagram.com/emuski_official/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-emuski-teal-darker transition-colors p-2 hover:bg-muted rounded-lg"
