@@ -251,6 +251,14 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+    /* WhatsApp Widget - Highest priority z-index */
+    .z-whatsapp-widget {
+        z-index: 999999 !important;
+        isolation: isolate;
+        transform: translateZ(0);
+        will-change: auto;
+    }
+
     /* Touch interaction improvements */
     .touch-manipulation {
         -webkit-tap-highlight-color: transparent;
