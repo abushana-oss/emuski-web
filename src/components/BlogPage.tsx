@@ -217,10 +217,10 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
 
       {/* Featured Post */}
       {featuredPost && (
-        <section className="bg-white py-12 lg:py-16">
+        <section className="bg-white py-8 lg:py-12">
           <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
             <Link href={`/blog/${featuredPost.slug}`} className="block group">
-              <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 rounded-2xl overflow-hidden bg-gradient-to-br from-emuski-teal/5 to-blue-50 hover:shadow-2xl transition-shadow">
+              <article className="grid lg:grid-cols-2 gap-8 lg:gap-12 rounded-2xl overflow-hidden bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 hover:shadow-2xl transition-all duration-300 border border-gray-200">
                 <div className="relative h-64 lg:h-96 overflow-hidden">
                   <img
                     src={featuredPost.image}
@@ -229,42 +229,49 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
                     loading="eager"
                     fetchPriority="high"
                   />
-                  <span className="absolute top-4 left-4 px-4 py-1.5 bg-emuski-teal text-white text-xs font-bold uppercase rounded-full">
+                  <span className="absolute top-4 left-4 px-4 py-1.5 bg-emuski-teal text-white text-xs font-bold uppercase rounded-full shadow-lg">
                     Featured
                   </span>
                 </div>
 
-                <div className="p-8 lg:p-12 flex flex-col justify-center">
-                  <span className="inline-block px-4 py-1.5 bg-emuski-teal/10 text-emuski-teal-dark text-xs font-bold uppercase rounded mb-4">
+                <div className="p-6 lg:p-8 flex flex-col justify-center">
+                  <span className="inline-block px-4 py-1.5 bg-emuski-teal/10 text-emuski-teal-dark text-xs font-bold uppercase rounded mb-4 w-fit">
                     {featuredPost.category}
                   </span>
-                  <h3 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6 group-hover:text-emuski-teal-dark transition-colors">
+                  <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 group-hover:text-emuski-teal-dark transition-colors leading-tight">
                     {featuredPost.title}
                   </h3>
-                  <p className="text-lg text-gray-600 mb-8">{getFirstSentence(featuredPost.excerpt)}</p>
+                  <p className="text-gray-700 mb-6 leading-relaxed">
+                    {getFirstSentence(featuredPost.excerpt)}
+                  </p>
 
-                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
                     <div className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
-                      <span>{featuredPost.author}</span>
+                      <User className="h-4 w-4 text-emuski-teal-dark" />
+                      <span className="font-medium">{featuredPost.author}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
+                      <Calendar className="h-4 w-4 text-emuski-teal-dark" />
                       <time dateTime={featuredPost.publishDate}>
-                        {new Date(featuredPost.publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        {new Date(featuredPost.publishDate).toLocaleDateString('en-US', {
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
                       </time>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
+                      <Clock className="h-4 w-4 text-emuski-teal-dark" />
                       <span>{featuredPost.readTime}</span>
                     </div>
                   </div>
 
-                  <span className="inline-flex items-center text-emuski-teal-dark font-semibold group-hover:translate-x-1 transition-transform">
-                    Read Article <ChevronRight className="h-5 w-5 ml-1" />
+                  <span className="inline-flex items-center text-emuski-teal-dark font-bold group-hover:translate-x-2 transition-transform">
+                    Read Article
+                    <ChevronRight className="h-5 w-5 ml-2" />
                   </span>
                 </div>
-              </div>
+              </article>
             </Link>
           </div>
         </section>
@@ -273,10 +280,6 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
       {/* Latest Articles */}
       <section id="latest-articles" className="bg-gray-50 py-12 lg:py-16">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="mb-10">
-            <h2 className="text-3xl font-bold text-gray-900">Latest Articles</h2>
-            <p className="text-sm text-gray-500 mt-2">Discover expert insights and industry best practices</p>
-          </div>
 
           {displayPosts.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -457,56 +460,11 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
         </div>
       </section>
 
-      {/* Related/Recommended Articles Section */}
-      {allPosts.length > 6 && (
-        <section className="bg-gradient-to-br from-gray-50 to-blue-50/30 py-16 border-t border-gray-200">
-          <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">You May Also Like</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Explore more insights on manufacturing excellence, cost optimization, and engineering innovations
-              </p>
-            </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {allPosts.slice(Math.min(6, allPosts.length - 4), Math.min(10, allPosts.length)).map((post) => (
-                <Link key={post.id} href={`/blog/${post.slug}`} className="group">
-                  <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-emuski-teal/30 transition-all duration-300 h-full flex flex-col">
-                    <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                      />
-                      <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold rounded">
-                        {post.category}
-                      </span>
-                    </div>
+      {/* Independent Engineering Articles Section */}
+      {engineeringPosts.length > 0 && <EngineeringSection posts={engineeringPosts} />}
 
-                    <div className="p-5 flex-1 flex flex-col">
-                      <h3 className="text-base font-bold text-gray-900 mb-2 group-hover:text-emuski-teal-dark transition-colors line-clamp-2 leading-tight">
-                        {post.title}
-                      </h3>
-                      <p className="text-xs text-gray-600 mb-4 flex-1 line-clamp-2 leading-relaxed">
-                        {getFirstSentence(post.excerpt)}
-                      </p>
-
-                      <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
-                        <span className="font-medium text-gray-700">{post.author}</span>
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {post.readTime}
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      <SuccessStoriesSection />
 
       {/* Topics + Newsletter */}
       <section className="bg-white py-12 border-t border-gray-100">
@@ -544,11 +502,6 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
           </div>
         </div>
       </section>
-
-      {/* Independent Engineering Articles Section */}
-      {engineeringPosts.length > 0 && <EngineeringSection posts={engineeringPosts} />}
-
-      <SuccessStoriesSection />
     </div>
   );
 };
@@ -563,17 +516,40 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
   return (
     <section className="bg-gray-50 py-16 border-t border-gray-200" aria-labelledby="precision-engineering-heading">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-        {/* Section Header */}
-        <div className="mb-12">
-          <div className="flex items-center gap-4">
-            <div className="w-1 h-16 bg-gradient-to-b from-emuski-teal-dark to-emuski-teal rounded-full" />
-            <div>
-              <h2 id="precision-engineering-heading" className="text-3xl md:text-4xl font-bold text-gray-900">
-                Precision Engineering Blogs
-              </h2>
-              <p className="text-gray-600 mt-2">Expert insights on cost optimization, VAVE, and engineering excellence</p>
-            </div>
+        {/* Navigation Header */}
+        <div className="flex items-center justify-between py-5 border-b border-gray-200 mb-8">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Precision Engineering Blogs</h2>
+            <p className="text-gray-600 mt-2">Expert insights on cost optimization, VAVE, and engineering excellence</p>
           </div>
+          <div className="hidden md:flex items-center gap-8">
+            <button className="relative text-sm font-medium transition-colors pb-1 text-emuski-teal-dark after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-emuski-teal-dark" aria-current="page">
+              All
+            </button>
+            <button className="relative text-sm font-medium transition-colors pb-1 text-gray-600 hover:text-emuski-teal-dark">
+              Cost Optimization
+            </button>
+            <button className="relative text-sm font-medium transition-colors pb-1 text-gray-600 hover:text-emuski-teal-dark">
+              VAVE
+            </button>
+            <button className="relative text-sm font-medium transition-colors pb-1 text-gray-600 hover:text-emuski-teal-dark">
+              DFM/DFA
+            </button>
+            <button className="relative text-sm font-medium transition-colors pb-1 text-gray-600 hover:text-emuski-teal-dark">
+              Supply Chain
+            </button>
+            <button className="relative text-sm font-medium transition-colors pb-1 text-gray-600 hover:text-emuski-teal-dark">
+              AI Integration
+            </button>
+            <button className="relative text-sm font-medium transition-colors pb-1 text-gray-600 hover:text-emuski-teal-dark">
+              Engineering Excellence
+            </button>
+          </div>
+          <button className="md:hidden p-3 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Filter by category" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-filter h-5 w-5 text-gray-700">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+          </button>
         </div>
 
         {/* Featured Engineering Post */}
@@ -678,6 +654,46 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
               ))}
             </div>
           </>
+        )}
+
+        {/* Engineering Pagination */}
+        {regularEngineeringPosts.length > 6 && (
+          <nav className="mt-16 flex flex-col sm:flex-row justify-center items-center gap-6" aria-label="Engineering Pagination">
+            {/* Previous Button */}
+            <button
+              disabled
+              className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              aria-label="Previous page"
+            >
+              ← Previous
+            </button>
+
+            {/* Page Numbers */}
+            <div className="flex items-center gap-2">
+              <button
+                className="relative w-12 h-12 rounded-lg font-bold transition-all bg-gradient-to-br from-emuski-teal to-emuski-teal-dark text-white shadow-lg scale-110"
+                aria-current="page"
+                aria-label="Page 1"
+              >
+                1
+                <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-white rounded-full opacity-80" />
+              </button>
+              <button
+                className="relative w-12 h-12 rounded-lg font-bold transition-all bg-white border-2 border-gray-200 text-gray-700 hover:border-emuski-teal hover:text-emuski-teal-dark hover:scale-105"
+                aria-label="Page 2"
+              >
+                2
+              </button>
+            </div>
+
+            {/* Next Button */}
+            <button
+              className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal transition-all"
+              aria-label="Next page"
+            >
+              Next →
+            </button>
+          </nav>
         )}
 
         {/* View All Button */}
