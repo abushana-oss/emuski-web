@@ -26,12 +26,12 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: 'https://www.emuski.com/og-image.png',
-        secureUrl: 'https://www.emuski.com/og-image.png',
-        width: 2000,
-        height: 1333,
+        url: 'https://www.emuski.com/social-banner.jpg',
+        secureUrl: 'https://www.emuski.com/social-banner.jpg',
+        width: 1200,
+        height: 630,
         alt: 'EMUSKI - ISO Certified Manufacturer in Bangalore | Precision Engineering Excellence',
-        type: 'image/png',
+        type: 'image/jpeg',
       },
     ],
   },
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     creator: '@emuski',
     title: 'EMUSKI - Your One-Stop Partner for OEM Excellence',
     description: 'World-class OEM manufacturing, precision engineering, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing and rapid prototyping services.',
-    images: ['https://www.emuski.com/og-image.png'],
+    images: ['https://www.emuski.com/social-banner.jpg'],
   },
   other: {
     'geo.region': 'IN-KA',
@@ -148,13 +148,13 @@ export default function RootLayout({
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.emuski.com/" />
         <meta property="og:site_name" content="EMUSKI" />
-        <meta property="og:title" content="EMUSKI | ISO Certified OEM Precision & Cost Engineering Partner" />
-        <meta property="og:description" content="ISO 9001:2015 certified OEM manufacturing and precision engineering company with 15+ years of experience in Bangalore, India. Expertise in design-for-manufacturing, rapid prototyping, and cost optimization for global OEMs." />
-        <meta property="og:image" content="https://www.emuski.com/og-image.png" />
-        <meta property="og:image:secure_url" content="https://www.emuski.com/og-image.png" />
-        <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:width" content="2000" />
-        <meta property="og:image:height" content="1333" />
+        <meta property="og:title" content="EMUSKI - Your One-Stop Solution for OEM in Bangalore, India" />
+        <meta property="og:description" content="EMUSKI delivers world-class OEM manufacturing solutions, precision Engineering Innovations, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing, rapid prototyping, cost optimization for automotive, electronics, medical devices, aerospace industries." />
+        <meta property="og:image" content="https://www.emuski.com/social-banner.jpg" />
+        <meta property="og:image:secure_url" content="https://www.emuski.com/social-banner.jpg" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="EMUSKI - ISO Certified Manufacturer in Bangalore | Precision Engineering Excellence" />
         <meta property="og:locale" content="en_US" />
         <meta property="og:updated_time" content="2026-02-07T00:00:00+00:00" />
@@ -165,7 +165,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         
         {/* Ensure proper image caching and display */}
-        <link rel="preload" href="https://www.emuski.com/og-image.png" as="image" type="image/png" />
+        <link rel="preload" href="https://www.emuski.com/social-banner.jpg" as="image" type="image/jpeg" />
         <link rel="canonical" href="https://www.emuski.com/" />
 
         {/* Twitter Card Meta Tags */}
@@ -174,7 +174,7 @@ export default function RootLayout({
         <meta name="twitter:creator" content="@emuski" />
         <meta name="twitter:title" content="EMUSKI - ISO Certified Manufacturer in Bangalore" />
         <meta name="twitter:description" content="ISO 9001:2015 certified OEM manufacturing and precision engineering company with 15+ years of excellence in Bangalore, India." />
-        <meta name="twitter:image" content="https://www.emuski.com/og-image.png" />
+        <meta name="twitter:image" content="https://www.emuski.com/social-banner.jpg" />
         <meta name="twitter:image:alt" content="EMUSKI - ISO Certified Manufacturer in Bangalore" />
 
         {/* Google Analytics 4 Consent Mode & Enhanced Configuration */}

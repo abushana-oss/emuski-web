@@ -208,7 +208,7 @@ const nextConfig = {
         headers: securityHeaders,
       },
       {
-        source: '/og-image.png',
+        source: '/social-banner.jpg',
         headers: [
           {
             key: 'Cache-Control',
@@ -216,7 +216,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Type',
-            value: 'image/png'
+            value: 'image/jpeg'
           },
           {
             key: 'Access-Control-Allow-Origin',
