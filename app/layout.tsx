@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: 'https://www.emuski.com/og-image.png',
+        secureUrl: 'https://www.emuski.com/og-image.png',
         width: 2000,
         height: 1333,
         alt: 'EMUSKI - ISO Certified Manufacturer in Bangalore | Precision Engineering Excellence',
@@ -156,6 +157,16 @@ export default function RootLayout({
         <meta property="og:image:height" content="1333" />
         <meta property="og:image:alt" content="EMUSKI - ISO Certified Manufacturer in Bangalore | Precision Engineering Excellence" />
         <meta property="og:locale" content="en_US" />
+        <meta property="og:updated_time" content="2026-02-07T00:00:00+00:00" />
+
+        {/* Additional WhatsApp-specific meta tags */}
+        <meta property="article:author" content="EMUSKI" />
+        <meta property="article:publisher" content="https://www.emuski.com" />
+        <meta name="format-detection" content="telephone=no" />
+        
+        {/* Ensure proper image caching and display */}
+        <link rel="preload" href="https://www.emuski.com/og-image.png" as="image" type="image/png" />
+        <link rel="canonical" href="https://www.emuski.com/" />
 
         {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
