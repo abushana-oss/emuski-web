@@ -12,7 +12,6 @@ import { useSuccessStoriesPosts } from "../hooks/useSuccessStoriesBlogger";
 const clientLogos = [
   { name: "EtherealX", logo: "/assets/partners/etherealx-partner-logo-1.svg" },
   { name: "Tata Motors", logo: "/assets/partners/TATA-motors-logo-3.svg" },
-  { name: "Polarix Partner", logo: "/assets/partners/polarixpartner_logo.svg" },
   { name: "Pixxel", logo: "/assets/partners/pixxel-partner-logo-4.svg" },
   { name: "Roland Berger", logo: "/assets/partners/rorland-berger-company.logo.svg" },
   { name: "CynLr", logo: "/assets/partners/cynLr-partner-logo-2.svg" },
