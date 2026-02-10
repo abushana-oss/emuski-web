@@ -3,7 +3,6 @@
 export const TrustedPartners = () => {
   const partners = [
     "/assets/partners/etherealx-partner-logo-1.svg",
-    "/assets/partners/polarixpartner_logo.svg",
     "/assets/partners/pixxel-partner-logo-4.svg",
     "/assets/partners/TATA-motors-logo-3.svg",
     "/assets/partners/rorland-berger-company.logo.svg",
