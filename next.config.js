@@ -477,9 +477,9 @@ const nextConfig = {
 
   // Compiler options
   compiler: {
-    // Remove console logs in production
-    removeConsole: isProduction ? {
-      exclude: ['error', 'warn'],
+    // Aggressively remove all console.* calls in production (keeps only errors for crash reports)
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error'],
     } : false,
   },
 
