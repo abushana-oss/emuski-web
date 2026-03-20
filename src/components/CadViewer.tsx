@@ -1755,7 +1755,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       </div>
 
       {/* ViewCube */}
-      <div className="absolute top-3 right-3 z-10 pointer-events-auto">
+      <div className="absolute top-3 right-3 z-0 pointer-events-auto">
         <canvas
           ref={viewCubeRef}
           width={VIEW_CUBE_SIZE}
