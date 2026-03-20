@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "api/cron/reset-credits": {
-      "maxDuration": 300
-    }
-  },
   "crons": [
     {
       "path": "/api/cron/reset-credits",
