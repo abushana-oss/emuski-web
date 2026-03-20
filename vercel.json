@@ -1,6 +1,6 @@
 {
   "functions": {
-    "app/api/cron/reset-credits/route.ts": {
+    "api/cron/reset-credits": {
       "maxDuration": 300
     }
   },
