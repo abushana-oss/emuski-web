@@ -313,25 +313,23 @@ export const Navbar = () => {
               {/* Dropdown Menu */}
               {isMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-[9998]" style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
-                  <div className="p-3 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 border-b border-gray-100">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Image
-                          src={emuskiLogo}
-                          alt="EMUSKI Manufacturing Solutions Logo"
-                          width={28}
-                          height={14}
-                          sizes="14px"
-                          className="h-3.5 w-auto object-contain [image-rendering:crisp-edges] contrast-[1.2] brightness-110 opacity-80"
-                          quality={75}
-                        />
-                        <div>
-                          <p className="text-[10px] text-gray-600 leading-tight">One-stop solution for OEMs</p>
-                        </div>
+                  <div className="p-4 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 border-b border-gray-100 flex flex-col space-y-4">
+                    <div className="flex items-center space-x-3">
+                      <Image
+                        src={emuskiLogo}
+                        alt="EMUSKI Manufacturing Solutions Logo"
+                        width={32}
+                        height={16}
+                        sizes="16px"
+                        className="h-4 w-auto object-contain [image-rendering:crisp-edges] contrast-[1.2] brightness-110 opacity-80"
+                        quality={75}
+                      />
+                      <div>
+                        <p className="text-xs font-semibold text-gray-700 leading-tight">One-stop solution for OEMs</p>
                       </div>
-                      <div className="md:hidden scale-75">
-                        <UserMenu />
-                      </div>
+                    </div>
+                    <div className="md:hidden w-full pt-3 flex items-center justify-center border-t border-emuski-teal/10">
+                      <UserMenu />
                     </div>
                   </div>
                   <div className="py-2 max-h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
