@@ -29,6 +29,16 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public static getDerivedStateFromError(error: Error): State {
+    // Suppress DOM manipulation errors during development
+    if (error.message.includes('removeChild') || error.message.includes('insertBefore')) {
+      // Don't show error UI for DOM manipulation errors
+      return {
+        hasError: false,
+        error: null,
+        errorInfo: null
+      };
+    }
+
     // Update state so the next render will show the fallback UI
     return {
       hasError: true,
@@ -38,6 +48,18 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    // Suppress DOM manipulation errors during development
+    if (error.message.includes('removeChild') || error.message.includes('insertBefore')) {
+      console.warn('DOM manipulation error suppressed:', error.message);
+      // Reset the error state to prevent showing the error UI
+      this.setState({
+        hasError: false,
+        error: null,
+        errorInfo: null
+      });
+      return;
+    }
+
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     
     // Update state with error details

@@ -155,8 +155,10 @@ export class PerformanceOptimizer {
 
   // Resource preloading
   static preloadCriticalResources() {
-    const resources = [
-      { href: '/api/credits/status', as: 'fetch' },
+    // Note: Removing API prefetch since it requires authentication
+    // and causes 401 errors without proper JWT tokens
+    const resources: Array<{ href: string; as: string }> = [
+      // Add other non-authenticated resources here if needed
     ];
 
     resources.forEach(({ href, as }) => {

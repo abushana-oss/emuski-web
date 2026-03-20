@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Service role client for rate limiting
-const supabaseServiceRole = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Service role client for rate limiting - with graceful fallback
+const supabaseServiceRole = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
+  : null;
 
 // In-memory rate limiting for development/fallback
 const memoryLimiter = new Map<string, { count: number; windowStart: number; blocked?: number }>();
@@ -72,6 +74,11 @@ export class RateLimiter {
     endpoint: string,
     limits: { minute: number; hour: number }
   ): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
+    // Industry standard: graceful degradation when external dependencies are unavailable
+    if (!supabaseServiceRole) {
+      throw new Error('Database rate limiting unavailable - falling back to memory');
+    }
+
     const { data: isAllowed, error } = await supabaseServiceRole.rpc('check_rate_limit_safe', {
       p_user_id: identifier.startsWith('ip_') ? null : identifier,
       p_endpoint: endpoint,

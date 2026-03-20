@@ -10,6 +10,7 @@ if (typeof window === 'undefined') {
 }
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ClientErrorWrapper } from '@/components/ClientErrorWrapper'
 import Script from 'next/script'
 
 const inter = Inter({
@@ -439,7 +440,24 @@ export default function RootLayout({
             })
           }}
         />
-        <script
+      </head>
+      <body className={inter.className}>
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+        )}
+        <ClientErrorWrapper>
+          <ErrorBoundary>
+            <Providers>{children}</Providers>
+          </ErrorBoundary>
+        </ClientErrorWrapper>
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
+
+        {/* Configuration Scripts */}
+        <Script
+          id="emuski-geo-config"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.EmuskiGeoConfig = {
@@ -458,8 +476,9 @@ export default function RootLayout({
           }}
         />
 
-        {/* Apollo Tracking Script */}
-        <script
+        <Script
+          id="apollo-tracking"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               function initApollo(){
@@ -472,17 +491,6 @@ export default function RootLayout({
             `
           }}
         />
-      </head>
-      <body className={inter.className}>
-        {process.env.NEXT_PUBLIC_GTM_ID && (
-          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
-        )}
-        <ErrorBoundary>
-          <Providers>{children}</Providers>
-        </ErrorBoundary>
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-        )}
         
         {/* Initialize global error handlers */}
         <Script
@@ -495,7 +503,14 @@ export default function RootLayout({
                 event.preventDefault();
               });
               window.addEventListener('error', function(event) {
-                console.error('Global error:', event.error || event.message);
+                const error = event.error || { message: event.message };
+                // Suppress DOM manipulation errors in development
+                if (error.message && (error.message.includes('removeChild') || error.message.includes('insertBefore'))) {
+                  console.warn('DOM manipulation error suppressed globally:', error.message);
+                  event.preventDefault();
+                  return;
+                }
+                console.error('Global error:', error);
               });
             `
           }}

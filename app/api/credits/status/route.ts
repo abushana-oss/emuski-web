@@ -6,9 +6,11 @@ import { withRateLimit } from '@/lib/rate-limiter';
 
 const SECURITY_HEADERS = getAPISecurityHeaders();
 
-// Add caching for performance (5 minutes)
+// Add caching for performance (1 minute for faster updates)
 const cache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 1 * 60 * 1000; // 1 minute
+const AUTH_CACHE = new Map<string, { userId: string; timestamp: number }>();
+const AUTH_CACHE_DURATION = 10 * 60 * 1000; // 10 minutes for auth
 
 async function handleGET(req: NextRequest) {
   const startTime = Date.now();
@@ -30,20 +32,32 @@ async function handleGET(req: NextRequest) {
       );
     }
     
-    const authResult = await authenticateRequest(authHeader);
+    // Check auth cache first to avoid repeated JWT verification
+    const token = authHeader.replace('Bearer ', '');
+    const cachedAuth = AUTH_CACHE.get(token);
     
-    if (!authResult.valid || !authResult.userId) {
-      return NextResponse.json(
-        { 
-          error: 'Authentication required',
-          details: authResult.error || 'Invalid JWT token',
-          code: 'UNAUTHORIZED'
-        },
-        { status: 401, headers }
-      );
+    let userId: string;
+    
+    if (cachedAuth && (Date.now() - cachedAuth.timestamp) < AUTH_CACHE_DURATION) {
+      userId = cachedAuth.userId;
+    } else {
+      const authResult = await authenticateRequest(authHeader);
+      
+      if (!authResult.valid || !authResult.userId) {
+        return NextResponse.json(
+          { 
+            error: 'Authentication required',
+            details: authResult.error || 'Invalid JWT token',
+            code: 'UNAUTHORIZED'
+          },
+          { status: 401, headers }
+        );
+      }
+      
+      userId = authResult.userId;
+      // Cache successful auth for 10 minutes
+      AUTH_CACHE.set(token, { userId, timestamp: Date.now() });
     }
-
-    const userId = authResult.userId;
     
     // Check cache first for performance
     const cacheKey = `credits_${userId}`;
@@ -95,6 +109,14 @@ async function handleGET(req: NextRequest) {
         ([key, value]) => (Date.now() - value.timestamp) > CACHE_DURATION
       );
       oldEntries.forEach(([key]) => cache.delete(key));
+    }
+    
+    // Clean up auth cache too
+    if (AUTH_CACHE.size > 500) {
+      const oldAuthEntries = Array.from(AUTH_CACHE.entries()).filter(
+        ([key, value]) => (Date.now() - value.timestamp) > AUTH_CACHE_DURATION
+      );
+      oldAuthEntries.forEach(([key]) => AUTH_CACHE.delete(key));
     }
 
     const totalDuration = Date.now() - startTime;
