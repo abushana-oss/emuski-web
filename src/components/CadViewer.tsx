@@ -1755,7 +1755,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       </div>
 
       {/* ViewCube */}
-      <div className="absolute top-3 right-3 z-50 pointer-events-auto">
+      <div className="absolute top-3 right-3 z-10 pointer-events-auto">
         <canvas
           ref={viewCubeRef}
           width={VIEW_CUBE_SIZE}
@@ -1783,7 +1783,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       )}
 
       {/* Zoom / Share Controls */}
-      <div className="absolute bottom-20 right-4 z-50">
+      <div className="absolute bottom-20 right-4 z-10">
         <div className="flex gap-1 bg-card/80 backdrop-blur-sm rounded-md p-1 border border-border/50">
           {[
             { title:'Zoom In', onClick:handleZoomIn, d:'M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0zm-6-3v6m-3-3h6' },
