@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import Link from "next/link";
 import Image from "next/image";
-import { useSuccessStoriesPosts } from "../hooks/useSuccessStoriesBlogger";
+import { useSuccessStoriesPosts } from "../hooks/useBlogData";
 
 // Include all partner logos - 6 priority partners + 16 manufacturing partners
 const clientLogos = [
@@ -25,7 +25,7 @@ export const NewsCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Fetch success stories from Blogger
-  const { posts: successStories, loading, error } = useSuccessStoriesPosts(10);
+  const { posts: successStories, loading, error } = useSuccessStoriesPosts({ maxResults: 10 });
 
   const scroll = (direction: "left" | "right") => {
     if (containerRef.current) {

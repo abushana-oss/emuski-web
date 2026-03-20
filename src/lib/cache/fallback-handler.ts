@@ -382,7 +382,9 @@ class CacheFallbackHandler {
    */
   private enterDegradedMode(): void {
     this.serviceState = ServiceState.DEGRADED
-    console.warn('🔶 Cache entering DEGRADED mode - prioritizing critical operations')
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('🔶 Cache entering DEGRADED mode - prioritizing critical operations')
+    }
     
     // Could implement additional logic like:
     // - Reduce cache TTLs
@@ -395,7 +397,9 @@ class CacheFallbackHandler {
    */
   private enterCriticalMode(): void {
     this.serviceState = ServiceState.CRITICAL
-    console.error('🔴 Cache entering CRITICAL mode - maximum fallback engaged')
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('🔴 Cache entering CRITICAL mode - maximum fallback engaged')
+    }
     
     // Implement critical mode logic:
     // - Force local cache usage
@@ -410,13 +414,17 @@ class CacheFallbackHandler {
     if (this.serviceState === ServiceState.NORMAL) return
     
     this.serviceState = ServiceState.RECOVERY
-    console.log('🟡 Cache entering RECOVERY mode')
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🟡 Cache entering RECOVERY mode')
+    }
     
     // Start recovery timer
     this.recoveryTimer = setTimeout(() => {
       this.serviceState = ServiceState.NORMAL
       this.errorCount = 0
-      console.log('✅ Cache returned to NORMAL mode')
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('✅ Cache returned to NORMAL mode')
+      }
     }, 60000) // 1 minute recovery period
   }
 

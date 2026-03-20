@@ -3,11 +3,11 @@ import { withSecurity, SECURITY_CONFIGS } from '@/lib/security-middleware';
 
 async function singlePostHandler(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  { params }: { params: Promise<{ postId: string }> }
 ): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
   const blogId = searchParams.get('blogId');
-  const { postId } = params;
+  const { postId } = await params;
   
   if (!blogId || !postId) {
     return NextResponse.json(

@@ -137,7 +137,9 @@ class CacheMonitor extends EventEmitter {
    */
   addAlertRule(rule: AlertRule): void {
     this.alertRules.set(rule.id, rule)
-    console.log(`✅ Alert rule added: ${rule.name}`)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`✅ Alert rule added: ${rule.name}`)
+    }
   }
 
   /**
@@ -153,10 +155,14 @@ class CacheMonitor extends EventEmitter {
     // Subscribe to health updates
     redisHealthCoordinator.subscribe((healthy: boolean) => {
       if (!healthy) {
-        console.warn('🔴 Redis health degraded')
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('🔴 Redis health degraded')
+        }
         this.emit('health-change', { redis: { connected: false } })
       } else {
-        console.log('🟢 Redis health recovered')
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('🟢 Redis health recovered')
+        }
         this.emit('health-change', { redis: { connected: true } })
       }
     })
@@ -171,7 +177,9 @@ class CacheMonitor extends EventEmitter {
       await this.performHealthCheck()
     }, 120000)
 
-    console.log('✅ Cache monitoring started with shared health coordinator')
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('✅ Cache monitoring started with shared health coordinator')
+    }
   }
 
   /**
@@ -339,7 +347,9 @@ class CacheMonitor extends EventEmitter {
       }
     }
 
-    console.warn(`🚨 CACHE ALERT [${rule.severity.toUpperCase()}]: ${rule.message}`)
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(`🚨 CACHE ALERT [${rule.severity.toUpperCase()}]: ${rule.message}`)
+    }
 
     // Emit alert event
     this.emit('alert', alert)
@@ -542,7 +552,9 @@ cache_availability_percent ${sla.availability}
     }
 
     this.removeAllListeners()
-    console.log('✅ Cache monitoring shutdown complete')
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('✅ Cache monitoring shutdown complete')
+    }
   }
 }
 

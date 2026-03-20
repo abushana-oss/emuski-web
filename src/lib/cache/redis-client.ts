@@ -167,7 +167,9 @@ class RedisClient {
                       process.env.REDIS_ENDPOINT
 
       if (!redisUrl) {
-        console.warn('⚠️ Redis not available - operating in fallback mode')
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('⚠️ Redis not available - operating in fallback mode')
+        }
         return
       }
 
@@ -242,7 +244,9 @@ class RedisClient {
     } catch (error) {
       // Quieter logging during build/production
       if (process.env.npm_lifecycle_event === 'build') {
-        console.log('⚠️ Redis not available - operating in fallback mode')
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('⚠️ Redis not available - operating in fallback mode')
+        }
       } else {
         console.error('❌ Redis initialization failed:', error)
       }

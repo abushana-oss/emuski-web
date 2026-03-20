@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { Clock, User, Loader2 } from "lucide-react";
 import { Card } from "./ui/card";
-import { useSuccessStoriesPosts } from "../hooks/useSuccessStoriesBlogger";
+import { useSuccessStoriesPosts } from "../hooks/useBlogData";
 
 export function SuccessStoriesSection() {
   // Fetch success stories from dedicated Blogger blog (emuski-stories.blogspot.com)
-  const { posts: displayPosts, loading: isLoading, error } = useSuccessStoriesPosts(6);
+  const { posts: displayPosts, loading: isLoading, error } = useSuccessStoriesPosts({ maxResults: 6 });
 
   if (isLoading) {
     return (

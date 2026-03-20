@@ -37,7 +37,9 @@ export class RedisHealthCoordinator {
 
   startMonitoring(pingFn: () => Promise<boolean>, intervalMs = 30_000): void {
     if (this.checkInterval) {
-      console.warn('[RedisHealthCoordinator] Already monitoring, stopping previous timer')
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[RedisHealthCoordinator] Already monitoring, stopping previous timer')
+      }
       this.stop()
     }
 
@@ -51,7 +53,9 @@ export class RedisHealthCoordinator {
       this.performHealthCheck()
     }, intervalMs)
 
-    console.log(`[RedisHealthCoordinator] Started monitoring with ${intervalMs}ms interval`)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[RedisHealthCoordinator] Started monitoring with ${intervalMs}ms interval`)
+    }
   }
 
   private async performHealthCheck(): Promise<void> {
@@ -63,7 +67,9 @@ export class RedisHealthCoordinator {
       
       // Log state changes
       if (wasHealthy !== this.isHealthy) {
-        console.log(`[RedisHealthCoordinator] Health changed: ${wasHealthy ? 'healthy' : 'unhealthy'} -> ${this.isHealthy ? 'healthy' : 'unhealthy'}`)
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`[RedisHealthCoordinator] Health changed: ${wasHealthy ? 'healthy' : 'unhealthy'} -> ${this.isHealthy ? 'healthy' : 'unhealthy'}`)
+        }
       }
 
       // Notify all subscribers
@@ -71,7 +77,9 @@ export class RedisHealthCoordinator {
         try {
           callback(this.isHealthy)
         } catch (error) {
-          console.error('[RedisHealthCoordinator] Subscriber callback error:', error)
+          if (process.env.NODE_ENV !== 'production') {
+            console.error('[RedisHealthCoordinator] Subscriber callback error:', error)
+          }
         }
       })
     } catch (error) {
@@ -79,7 +87,9 @@ export class RedisHealthCoordinator {
       this.isHealthy = false
       
       if (wasHealthy) {
-        console.error('[RedisHealthCoordinator] Health check failed:', error)
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('[RedisHealthCoordinator] Health check failed:', error)
+        }
       }
 
       // Notify subscribers of failure
@@ -87,7 +97,9 @@ export class RedisHealthCoordinator {
         try {
           callback(false)
         } catch (cbError) {
-          console.error('[RedisHealthCoordinator] Subscriber callback error:', cbError)
+          if (process.env.NODE_ENV !== 'production') {
+            console.error('[RedisHealthCoordinator] Subscriber callback error:', cbError)
+          }
         }
       })
     }
@@ -97,7 +109,9 @@ export class RedisHealthCoordinator {
     if (this.checkInterval) {
       clearInterval(this.checkInterval)
       this.checkInterval = null
-      console.log('[RedisHealthCoordinator] Stopped monitoring')
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[RedisHealthCoordinator] Stopped monitoring')
+      }
     }
   }
 
