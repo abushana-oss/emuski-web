@@ -211,7 +211,10 @@ export const Navbar = () => {
                           {service.name}
                         </span>
                         {'isNew' in service && service.isNew && (
-                          <span className="ml-1 px-1 py-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[8px] font-bold rounded-full border-0 shadow-sm animate-pulse">
+                          <span 
+                            className="ml-1 px-1.5 flex items-center justify-center h-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full border-0 shadow-sm animate-pulse"
+                            style={{ fontSize: '8px', lineHeight: '8px', paddingBottom: '1px' }}
+                          >
                             NEW
                           </span>
                         )}
@@ -354,7 +357,10 @@ export const Navbar = () => {
                               >
                                 <span>{section.title}</span>
                                 {section.title === "Tools" && (
-                                  <span className="ml-1 px-1 py-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[7px] font-bold rounded-full border-0 shadow-sm animate-pulse">
+                                  <span 
+                                    className="ml-1 px-1.5 flex items-center justify-center h-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full border-0 shadow-sm animate-pulse"
+                                    style={{ fontSize: '7px', lineHeight: '7px' }}
+                                  >
                                     NEW
                                   </span>
                                 )}
@@ -363,7 +369,10 @@ export const Navbar = () => {
                               <div className="flex items-center justify-between">
                                 <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3">{section.title}</h4>
                                 {section.title === "Tools" && (
-                                  <span className="ml-1 px-1 py-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[7px] font-bold rounded-full border-0 shadow-sm animate-pulse mr-3">
+                                  <span 
+                                    className="ml-1 mr-3 px-1.5 flex items-center justify-center h-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full border-0 shadow-sm animate-pulse"
+                                    style={{ fontSize: '7px', lineHeight: '7px' }}
+                                  >
                                     NEW
                                   </span>
                                 )}
