@@ -281,7 +281,7 @@ export const HeroSection = () => {
       })}
 
       {/* Bottom Navigation */}
-      <div className="absolute bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-t border-white/10">
+      <div className="absolute bottom-0 left-0 right-0 z-30 bg-black/80 backdrop-blur-sm border-t border-white/10">
         {/* Progress Bar */}
         <div className="relative h-1 bg-white/20 overflow-hidden">
           <div className="absolute inset-0 flex">
