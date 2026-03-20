@@ -803,8 +803,8 @@ function generateBOMFromEngine(
   surfaceArea: number
 ): { components: BOMComponent[]; totalComponents: number } {
   const { dfm_analysis, geometry_features, original_filename } = analysis;
-  const material = (dfm_analysis.ai_insights.material_recommendations as string[])[0] ?? 'Aluminum 6061-T6';
-  const complexity = Number(dfm_analysis.ai_insights.manufacturing_complexity ?? 0);
+  const material = (dfm_analysis.ai_insights?.material_recommendations as string[])?.[0] ?? 'Aluminum 6061-T6';
+  const complexity = Number(dfm_analysis.ai_insights?.manufacturing_complexity ?? 0);
 
   const main: BOMComponent = {
     id: 'cad_comp_001',
@@ -813,10 +813,10 @@ function generateBOMFromEngine(
     material,
     volume: geometry_features.volume_mm3,
     surfaceArea: geometry_features.surface_area_mm2,
-    manufacturingProcess: dfm_analysis.recommended_processes[0] ?? 'CNC Machining',
+    manufacturingProcess: dfm_analysis.recommended_processes?.[0] ?? 'CNC Machining',
     estimatedCost: round2((1.0) *
-      Math.max(dfm_analysis.ai_insights.lead_time_estimate_days ?? 5, 1) * 0.5 + 10),
-    dfmIssues: (dfm_analysis.ai_insights.dfm_warnings ?? []).map((w: any, idx: number) => ({
+      Math.max(dfm_analysis.ai_insights?.lead_time_estimate_days ?? 5, 1) * 0.5 + 10),
+    dfmIssues: (dfm_analysis.ai_insights?.dfm_warnings ?? []).map((w: any, idx: number) => ({
       id: `issue_${idx}`,
       type: mapWarningType(w.code ?? w.type ?? ''),
       severity: (w.severity ?? 'medium') as DFMSeverity,
@@ -828,11 +828,11 @@ function generateBOMFromEngine(
   const components: BOMComponent[] = [main];
 
   if (complexity > 70) {
-    const secondary = (dfm_analysis.ai_insights.material_recommendations as string[])[1] ?? 'Steel 4140';
+    const secondary = (dfm_analysis.ai_insights?.material_recommendations as string[])?.[1] ?? 'Steel 4140';
     components.push({
       id: 'cad_comp_002', name: 'Complex Feature', type: 'part',
       material: secondary, volume: volume * 0.2, surfaceArea: surfaceArea * 0.3,
-      manufacturingProcess: dfm_analysis.recommended_processes[1] ?? 'Precision Machining',
+      manufacturingProcess: dfm_analysis.recommended_processes?.[1] ?? 'Precision Machining',
       estimatedCost: round2(main.estimatedCost * 0.3),
       dfmIssues: [],
     });
