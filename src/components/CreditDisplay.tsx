@@ -26,11 +26,21 @@ export const CreditDisplay: React.FC<CreditDisplayProps> = ({
   const [timeDisplay, setTimeDisplay] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  // Safe date parser for Safari compatibility
+  const parseSafeDate = (dateStr?: string) => {
+    if (!dateStr) return new Date();
+    // Replace space with T for Safari ISO 8601 compatibility
+    const safeStr = dateStr.replace(' ', 'T');
+    const d = new Date(safeStr);
+    return isNaN(d.getTime()) ? new Date() : d;
+  };
+
   // Update time display every minute
   useEffect(() => {
     const updateTimeDisplay = () => {
+      if (!resetTime) return;
       const now = new Date();
-      const reset = new Date(resetTime);
+      const reset = parseSafeDate(resetTime);
       const diffMs = reset.getTime() - now.getTime();
       
       if (diffMs <= 0) {
@@ -63,7 +73,9 @@ export const CreditDisplay: React.FC<CreditDisplayProps> = ({
   };
 
   const formatResetTime = () => {
-    const reset = new Date(resetTime);
+    if (!resetTime) return 'soon';
+    
+    const reset = parseSafeDate(resetTime);
     const now = new Date();
     
     // Check if reset is today or tomorrow
@@ -80,13 +92,16 @@ export const CreditDisplay: React.FC<CreditDisplayProps> = ({
       dateLabel = reset.toLocaleDateString();
     }
     
-    const timeLabel = reset.toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: true 
-    });
-    
-    return `${dateLabel} at ${timeLabel}`;
+    try {
+      const timeLabel = reset.toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+      return `${dateLabel} at ${timeLabel}`;
+    } catch (e) {
+      return 'soon';
+    }
   };
 
   const percentUsed = ((limit - remaining) / limit) * 100;
@@ -94,7 +109,7 @@ export const CreditDisplay: React.FC<CreditDisplayProps> = ({
   const isEmpty = remaining === 0;
 
   // Show loading state
-  if (isLoading) {
+  if (isLoading || !resetTime) {
     return (
       <div className={`${className}`}>
         <div className="flex items-center justify-between">
