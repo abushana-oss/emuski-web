@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAPISecurityHeaders } from '@/lib/security-headers';
 
 const SECURITY_HEADERS = getAPISecurityHeaders();
-const CAD_ENGINE_URL = process.env.CAD_ENGINE_URL || process.env.NEXT_PUBLIC_CAD_ENGINE_URL || 'https://emuski-web-production.up.railway.app';
+const _raw_url = process.env.CAD_ENGINE_URL || process.env.NEXT_PUBLIC_CAD_ENGINE_URL || 'https://emuski-web-production.up.railway.app';
+const CAD_ENGINE_URL = _raw_url.endsWith('/') ? _raw_url.slice(0, -1) : _raw_url;
 
 export async function GET(req: NextRequest) {
   const headers = new Headers(SECURITY_HEADERS);
