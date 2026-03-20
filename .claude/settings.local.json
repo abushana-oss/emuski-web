@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:\\Users\\abush\\OneDrive\\Desktop\\emuski-web-1\")",
+      "Bash(npm run build)"
+    ],
+    "deny": []
+  }
+}

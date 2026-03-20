@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/auth-helpers-nextjs'
 
 /**
  * Next.js Proxy Middleware
@@ -7,12 +8,29 @@ import type { NextRequest } from 'next/server'
  * - Server-side GA4 analytics tracking
  * - SEO-friendly URL normalization
  * - Security headers
+ * - Basic security validation
  */
+
+// Security configuration
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'X-XSS-Protection': '1; mode=block',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; frame-ancestors 'none';",
+  'X-DNS-Prefetch-Control': 'off',
+  'Cross-Origin-Resource-Policy': 'same-origin'
+};
 
 // GA4 Configuration for Server-Side Tracking
 const GA4_MEASUREMENT_ID = 'G-QFDFYZLZPK'
 const GA4_API_SECRET = process.env.GA4_API_SECRET || ''
 const GA4_ENDPOINT = `https://www.google-analytics.com/mp/collect?measurement_id=${GA4_MEASUREMENT_ID}&api_secret=${GA4_API_SECRET}`
+
+// Admin route protection
+const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'abushan.a@emuski.com')
+  .split(',')
+  .map(email => email.trim())
 
 // Helper: Check if path should be tracked
 function shouldTrackAnalytics(pathname: string): boolean {
@@ -57,11 +75,83 @@ async function sendGA4Event(payload: any) {
   }
 }
 
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   try {
     const { pathname, search, searchParams, origin } = request.nextUrl
     const host = request.headers.get('host') || ''
     const protocol = request.headers.get('x-forwarded-proto') || 'https'
+
+    // Strip stale router state headers that cause parse failures
+    // This fixes the "router state header could not be parsed" 500 errors on /auth/register
+    // Known Turbopack/Next.js 15-16 issue with cached client headers
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.delete('Next-Router-State-Tree')
+    requestHeaders.delete('Next-Router-Prefetch')
+    requestHeaders.delete('Next-Url')
+
+    // Skip authentication checks for static assets and API routes (except protected ones)
+    if (
+      pathname.startsWith('/_next/') ||
+      pathname.startsWith('/favicon') ||
+      pathname.startsWith('/assets/') ||
+      pathname.startsWith('/images/') ||
+      pathname.endsWith('.ico') ||
+      pathname.endsWith('.png') ||
+      pathname.endsWith('.jpg') ||
+      pathname.endsWith('.jpeg') ||
+      pathname.endsWith('.svg') ||
+      pathname.endsWith('.webp') ||
+      pathname.endsWith('.gif') ||
+      pathname.endsWith('.css') ||
+      pathname.endsWith('.js') ||
+      pathname.startsWith('/api/') && !pathname.startsWith('/api/admin')
+    ) {
+      return NextResponse.next({
+        request: { headers: requestHeaders }
+      })
+    }
+
+    // === ADMIN ROUTE PROTECTION ===
+    // Server-side admin verification for admin routes
+    if (pathname.startsWith('/admin')) {
+      try {
+        const response = NextResponse.next({
+          request: { headers: requestHeaders }
+        })
+        
+        const supabase = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          {
+            cookies: {
+              get(name: string) {
+                return request.cookies.get(name)?.value
+              },
+              set(name: string, value: string, options: any) {
+                response.cookies.set(name, value, options)
+              },
+              remove(name: string, options: any) {
+                response.cookies.set(name, '', { ...options, maxAge: 0 })
+              },
+            },
+          }
+        )
+        
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (!session || !ADMIN_EMAILS.includes(session.user.email?.toLowerCase() ?? '')) {
+          return NextResponse.redirect(new URL('/auth/login?redirectTo=' + encodeURIComponent(pathname), request.url))
+        }
+      } catch (error) {
+        console.error('Admin auth middleware error:', error)
+        return NextResponse.redirect(new URL('/auth/login', request.url))
+      }
+    }
+
+    // === AUTHENTICATION NOTES ===
+    // General authentication is handled client-side using ProtectedRoute component
+    // Admin routes have server-side protection above
+    // This middleware focuses on analytics, SEO, and security headers
 
     // === CANONICAL DOMAIN ENFORCEMENT (DISABLED TO FIX ERROR 520) ===
     // The canonical domain redirect was causing Error 520 due to redirect loops
@@ -130,8 +220,10 @@ export default function middleware(request: NextRequest) {
       }
     }
 
-    // Continue with response
-    const response = NextResponse.next()
+    // Continue with response using cleaned headers
+    const response = NextResponse.next({
+      request: { headers: requestHeaders }
+    })
 
     // === GA4 Server-Side Tracking ===
     if (shouldTrackAnalytics(pathname) && GA4_API_SECRET) {
@@ -224,8 +316,8 @@ export default function middleware(request: NextRequest) {
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
         "font-src 'self' data: https://fonts.gstatic.com",
         "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://images.unsplash.com https://via.placeholder.com",
-        "connect-src 'self' https://*.google.com https://www.googleapis.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://*.googletagmanager.com https://*.blogger.com https://blogger.googleusercontent.com https://api.mixpanel.com https://api-js.mixpanel.com https://cdn.mxpnl.com https://*.supabase.co https://assets.apollo.io https://*.apollo.io",
-        "frame-src 'self' https://*.google.com https://*.googletagmanager.com https://td.doubleclick.net",
+        "connect-src 'self' https://*.google.com https://www.googleapis.com https://*.googleapis.com https://accounts.google.com https://oauth2.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://*.googletagmanager.com https://*.blogger.com https://blogger.googleusercontent.com https://api.mixpanel.com https://api-js.mixpanel.com https://cdn.mxpnl.com https://*.supabase.co https://assets.apollo.io https://*.apollo.io",
+        "frame-src 'self' https://*.google.com https://accounts.google.com https://*.googletagmanager.com https://td.doubleclick.net",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
@@ -234,20 +326,33 @@ export default function middleware(request: NextRequest) {
       ].join('; ')
     )
 
+    // Enhanced security headers for production
+    Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
+      response.headers.set(key, value)
+    })
+    
     // Additional security headers
-    response.headers.set('X-Frame-Options', 'SAMEORIGIN')
-    response.headers.set('X-Content-Type-Options', 'nosniff')
-    response.headers.set('X-XSS-Protection', '1; mode=block')
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
-    response.headers.set('X-DNS-Prefetch-Control', 'on')
+    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()')
+    response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
+    response.headers.set('X-Request-ID', crypto.randomUUID())
+    
+    // HTTPS enforcement in production
+    if (process.env.NODE_ENV === 'production') {
+      response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
+    }
 
     return response
   } catch (error) {
     // Production error handling: log and continue without blocking
     console.error('[Middleware Error]', error)
-    // Return basic response to prevent site outage
-    return NextResponse.next()
+    // Return basic response to prevent site outage with cleaned headers
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.delete('Next-Router-State-Tree')
+    requestHeaders.delete('Next-Router-Prefetch')
+    requestHeaders.delete('Next-Url')
+    return NextResponse.next({
+      request: { headers: requestHeaders }
+    })
   }
 }
 

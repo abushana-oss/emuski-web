@@ -29,13 +29,15 @@ export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify cron secret for security
+    // Verify cron secret for security - ALWAYS require authentication
     const authHeader = request.headers.get('authorization');
     const providedSecret = authHeader?.replace('Bearer ', '') || authHeader;
 
-    // Allow requests without secret in development, require in production
-    if (process.env.NODE_ENV === 'production' && providedSecret !== CRON_SECRET) {
-      console.warn('[Blog Cron] Unauthorized cron attempt');
+    // Security: Always require proper authentication (production standard)
+    if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
+      console.warn('[Blog Cron] Unauthorized cron attempt from IP:', 
+        request.headers.get('x-forwarded-for') || 'unknown'
+      );
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

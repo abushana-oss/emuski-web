@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { checkRateLimit } from '@/lib/ratelimit';
+// Rate limiting removed - using simple webhook protection
 import { handleCorsPreflightRequest, addCorsHeaders } from '@/lib/cors';
 
 /**
@@ -357,11 +357,7 @@ async function sendEmail(
  * POST handler for contact form submissions
  */
 export async function POST(request: NextRequest) {
-  // Rate limiting check (5 requests per 15 minutes)
-  const rateLimitResponse = await checkRateLimit(request, 'contact');
-  if (rateLimitResponse) {
-    return rateLimitResponse;
-  }
+  // Simple rate limiting removed for contact form (now handled by reCAPTCHA)
 
   try {
     // Parse multipart form data

@@ -22,24 +22,38 @@ export const useSuccessStoriesPosts = (maxResults: number = 10) => {
 
         // Check if blog ID is available
         if (!SUCCESS_STORIES_BLOG_ID) {
-          throw new Error('Success Stories blog ID not configured');
+          console.warn('Success Stories blog ID not configured, skipping fetch');
+          setPosts([]);
+          return;
+        }
+
+        // Check if API key is available
+        if (!process.env.NEXT_PUBLIC_BLOGGER_API_KEY) {
+          console.warn('Blogger API key not configured, skipping fetch');
+          setPosts([]);
+          return;
         }
 
         // Fetch posts directly using blog ID
         const response = await fetchBloggerPosts(SUCCESS_STORIES_BLOG_ID, maxResults);
 
         // Convert to local format and set category to "Success Story"
-        const convertedPosts = response.items.map(post => {
-          const converted = convertBloggerPostToLocalFormat(post);
-          return {
-            ...converted,
-            category: 'Success Story'
-          };
-        });
-        setPosts(convertedPosts);
+        if (response?.items && Array.isArray(response.items)) {
+          const convertedPosts = response.items.map(post => {
+            const converted = convertBloggerPostToLocalFormat(post);
+            return {
+              ...converted,
+              category: 'Success Story'
+            };
+          });
+          setPosts(convertedPosts);
+        } else {
+          setPosts([]);
+        }
       } catch (err: any) {
         console.error('Error fetching success stories:', err);
-        setError(err.message || 'Failed to fetch success stories');
+        // Don't show error to user, just log it and show empty state
+        setError(null);
         setPosts([]);
       } finally {
         setLoading(false);

@@ -2,7 +2,14 @@ import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 import '@/index.css'
+import { initializeCacheSystem } from '@/lib/cache'
+
+// Initialize cache system on app startup (server-side only)
+if (typeof window === 'undefined') {
+  initializeCacheSystem().catch(console.error)
+}
 import { Providers } from './providers'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Script from 'next/script'
 
 const inter = Inter({
@@ -88,21 +95,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Preload critical hero images for faster LCP */}
-        <link
-          rel="preload"
-          as="image"
-          href="/assets/hero-mobile/manufacturing-services-mobile-banner.webp"
-          media="(max-width: 767px)"
-          fetchPriority="high"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="/assets/hero/manufacturing-services-hero-banner.webp"
-          media="(min-width: 768px)"
-          fetchPriority="high"
-        />
+        {/* Critical resource preloads - page-specific images moved to individual pages */}
 
         {/* Favicon - Explicit links for best SEO and browser compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon-new.ico" sizes="48x48" />
@@ -164,8 +157,7 @@ export default function RootLayout({
         <meta property="article:publisher" content="https://www.emuski.com" />
         <meta name="format-detection" content="telephone=no" />
         
-        {/* Ensure proper image caching and display */}
-        <link rel="preload" href="https://www.emuski.com/social-banner.jpg" as="image" type="image/jpeg" />
+        {/* Social banner will load when needed for sharing - no preload required */}
         <link rel="canonical" href="https://www.emuski.com/" />
 
         {/* Twitter Card Meta Tags */}
@@ -482,9 +474,32 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <GoogleTagManager gtmId="GTM-T5MDL48M" />
-        <Providers>{children}</Providers>
-        <GoogleAnalytics gaId="G-QFDFYZLZPK" />
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+        )}
+        <ErrorBoundary>
+          <Providers>{children}</Providers>
+        </ErrorBoundary>
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
+        
+        {/* Initialize global error handlers */}
+        <Script
+          id="global-error-handlers"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('unhandledrejection', function(event) {
+                console.error('Unhandled promise rejection:', event.reason);
+                event.preventDefault();
+              });
+              window.addEventListener('error', function(event) {
+                console.error('Global error:', event.error || event.message);
+              });
+            `
+          }}
+        />
       </body>
     </html>
   )

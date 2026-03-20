@@ -9,6 +9,7 @@ import dynamic from "next/dynamic"
 import { Analytics } from "@/components/analytics/Analytics"
 import { UserEngagementTracker } from "@/components/analytics/UserEngagementTracker"
 import { useMixpanelPageTracking } from "@/hooks/useMixpanelPageTracking"
+import { AuthProvider } from "@/components/auth/AuthProvider"
 
 // Lazy load WhatsApp widget - not critical for initial render
 const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), {
@@ -24,12 +25,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Analytics />
-        <UserEngagementTracker />
-        <Toaster />
-        <Sonner />
-        {children}
-        <WhatsAppWidget phoneNumber="918344474556" />
+        <AuthProvider>
+          <Analytics />
+          <UserEngagementTracker />
+          <Toaster />
+          <Sonner />
+          {children}
+          <WhatsAppWidget phoneNumber="918344474556" />
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   )

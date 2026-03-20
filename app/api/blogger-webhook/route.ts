@@ -30,7 +30,29 @@
 
 import { revalidateBlog } from '@/lib/api/blogger';
 import { NextRequest, NextResponse } from 'next/server';
-import { checkRateLimit } from '@/lib/ratelimit';
+// Simple in-memory rate limiting for webhooks
+const lastRequests = new Map<string, number>();
+
+const checkSimpleRateLimit = (ip: string, limitPerHour: number = 20): boolean => {
+  const now = Date.now();
+  const lastRequest = lastRequests.get(ip) || 0;
+  const hourInMs = 60 * 60 * 1000;
+  
+  if (now - lastRequest < hourInMs / limitPerHour) {
+    return false; // Rate limited
+  }
+  
+  lastRequests.set(ip, now);
+  
+  // Cleanup old entries
+  for (const [key, time] of lastRequests.entries()) {
+    if (now - time > hourInMs) {
+      lastRequests.delete(key);
+    }
+  }
+  
+  return true; // Allowed
+};
 
 const WEBHOOK_SECRET = process.env.BLOGGER_WEBHOOK_SECRET || process.env.REVALIDATE_SECRET;
 
@@ -44,10 +66,15 @@ interface BloggerWebhookPayload {
 }
 
 export async function POST(request: NextRequest) {
-  // Rate limiting protection (20 requests per hour)
-  const rateLimitResponse = await checkRateLimit(request, 'blogger-webhook');
-  if (rateLimitResponse) {
-    return rateLimitResponse;
+  // Simple rate limiting protection (20 requests per hour)
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
+  const isAllowed = checkSimpleRateLimit(ip, 20);
+  
+  if (!isAllowed) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded' },
+      { status: 429 }
+    );
   }
 
   try {

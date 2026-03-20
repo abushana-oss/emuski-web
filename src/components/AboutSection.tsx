@@ -17,13 +17,6 @@ const growthStories = [
     location: "Bengaluru, Karnataka, India",
   },
   {
-    value: "75+ Clients | 15+ Industries",
-    label: "Strategic Partnerships",
-    category: "Our Reach",
-    description: "Trusted manufacturing partner for leading OEMs across automotive, aerospace, medical devices, and industrial sectors delivering critical project solutions with engineering excellence.",
-    image: "/assets/partners/manufacturing-partner-logo-all.svg",
-  },
-  {
     value: "4000+",
     label: "Components Manufactured",
     sublabel: "In Manufacturing Excellence",

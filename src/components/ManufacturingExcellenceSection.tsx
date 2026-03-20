@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
+import Image from 'next/image';
 
 const manufacturingExcellenceItems = [
   {
@@ -75,7 +76,13 @@ const ManufacturingExcellenceSection = () => {
             <div key={index} className="rounded-lg border text-card-foreground shadow-sm flex-shrink-0 w-72 sm:w-80 group overflow-hidden bg-card border-border hover:border-primary/50 transition-all duration-300 cursor-pointer">
               <a href={item.link} className="block h-full hover:no-underline">
                 <div className="relative h-48 overflow-hidden">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <Image 
+                    src={item.image} 
+                    alt={item.title} 
+                    width={320}
+                    height={192}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <div className="p-6">

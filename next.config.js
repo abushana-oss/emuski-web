@@ -8,12 +8,88 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Environment variables - consolidated
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Generate CSP sources dynamically
+const generateCSPConnectSrc = () => {
+  const baseDomains = ["'self'", 'blob:', 'data:'];
+  
+  if (isDevelopment) {
+    baseDomains.push('ws://localhost:*', 'wss://localhost:*', 'http://localhost:*', 'https://localhost:*', 'http://localhost:5000', 'https://localhost:5000');
+  }
+
+  // Add tracker domains for both dev and production
+  baseDomains.push(
+    // Google services
+    'https://*.google.com',
+    'https://www.googleapis.com',
+    'https://*.googleapis.com',
+    'https://*.google-analytics.com',
+    'https://*.analytics.google.com',
+    'https://*.doubleclick.net',
+    'https://*.googletagmanager.com',
+    'https://tagmanager.google.com',
+    // Apollo tracker (allowed in both dev and prod)
+    'https://assets.apollo.io',
+    'https://*.apollo.io',
+    'https://aplo-evnt.com',
+    'https://*.aplo-evnt.com',
+    'https://app.apollo.io',
+    'https://track.apollo.io',
+    // Mixpanel
+    'https://api.mixpanel.com',
+    'https://api-js.mixpanel.com',
+    'https://cdn.mxpnl.com',
+    // Blog content
+    'https://*.blogger.com',
+    'https://blogger.googleusercontent.com'
+  );
+
+  // Always allow Supabase and S3
+  baseDomains.push(
+    'https://*.supabase.co',
+    'https://upload-dev-s3.s3.eu-central-1.amazonaws.com',
+    'https://s3.eu-central-1.amazonaws.com'
+  );
+
+  return baseDomains;
+};
+
+const generateCSPScriptSrc = () => {
+  const baseSources = ["'self'", "'unsafe-inline'"];
+  
+  if (isDevelopment) {
+    baseSources.push("'unsafe-eval'", 'blob:', 'data:');
+  }
+
+  // Production script sources
+  baseSources.push(
+    'https://*.google.com',
+    'https://*.gstatic.com',
+    'https://*.googletagmanager.com',
+    'https://*.google-analytics.com',
+    'https://tagmanager.google.com'
+  );
+
+  if (isProduction) {
+    baseSources.push(
+      'https://*.apollo.io',
+      'https://assets.apollo.io',
+      'https://cdn.mxpnl.com',
+      'https://api-js.mixpanel.com'
+    );
+  }
+
+  return baseSources;
+};
+
 // ES Module compatibility: Recreate __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Environment variables
-const isProduction = process.env.NODE_ENV === 'production';
+// Environment variables moved to top
 
 /**
  * Security Headers Configuration
@@ -52,17 +128,20 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com",
-      "script-src-elem 'self' 'unsafe-inline' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
-      "font-src 'self' data: https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://images.unsplash.com https://via.placeholder.com",
-      "connect-src 'self' https://*.google.com https://www.googleapis.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://*.googletagmanager.com https://*.blogger.com https://blogger.googleusercontent.com https://api.mixpanel.com https://api-js.mixpanel.com https://cdn.mxpnl.com https://*.supabase.co",
+      `script-src ${generateCSPScriptSrc().join(' ')} 'wasm-unsafe-eval'`,
+      `script-src-elem ${generateCSPScriptSrc().join(' ')}`,
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com blob: data:",
+      "font-src 'self' data: https://fonts.gstatic.com blob:",
+      "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://lh3.googleusercontent.com https://images.unsplash.com https://via.placeholder.com https://upload-dev-s3.s3.eu-central-1.amazonaws.com",
+      `connect-src ${generateCSPConnectSrc().join(' ')}`,
+      "worker-src 'self' blob: data:",
+      "child-src 'self' blob: data:",
       "frame-src 'self' https://*.google.com https://*.googletagmanager.com https://td.doubleclick.net",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'self'",
+      "media-src 'self' data: blob: https://*.supabase.co https://upload-dev-s3.s3.eu-central-1.amazonaws.com",
       "upgrade-insecure-requests"
     ].join('; ')
   }
@@ -93,7 +172,7 @@ const imageConfig = {
   formats: ['image/webp', 'image/avif'],
   deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
   imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  qualities: [60, 75],
+  qualities: [40, 60, 75],
   minimumCacheTTL: 60,
 };
 
@@ -244,6 +323,16 @@ const nextConfig = {
     ];
   },
 
+  // Proxy CAD engine requests to avoid CORS issues
+  async rewrites() {
+    return [
+      {
+        source: '/api/cad-engine/:path*',
+        destination: 'http://localhost:5000/:path*',
+      },
+    ];
+  },
+
   // SEO-friendly redirects for old/incorrect URLs
   async redirects() {
     return [
@@ -380,6 +469,10 @@ const nextConfig = {
       '@radix-ui/react-popover',
       'react-phone-number-input',
     ],
+    // Server actions configuration
+    serverActions: {
+      bodySizeLimit: '2mb', // Prevent large payload attacks
+    },
   },
 
   // Compiler options
@@ -427,12 +520,6 @@ const nextConfig = {
     return configureWebpack(config, options);
   },
 
-  // Security: Request body size limits
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb', // Prevent large payload attacks
-    },
-  },
 };
 
 export default nextConfig;

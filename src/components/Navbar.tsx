@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import UserMenu from "./auth/UserMenu";
 const emuskiLogo = "/assets/emuski-logo-optimized.webp";
 
 interface NavItem {
@@ -34,6 +35,14 @@ const servicesDropdown = {
       { name: "Strategic Sourcing", path: "/precision-engineering#sourcing-details" },
       { name: "Expert Engineer Support", path: "/precision-engineering#expert-support-details" },
       { name: "Mithran AI", path: "/solutions/ai", beta: true }
+    ]
+  },
+  tools: {
+    name: "Tools",
+    path: "#",
+    isNew: true,
+    subItems: [
+      { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" }
     ]
   }
 };
@@ -67,11 +76,17 @@ const navigationConfig = {
       ]
     },
     {
+      title: "Tools",
+      items: [
+        { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" }
+      ]
+    },
+    {
       title: "Solutions",
       items: [
         { name: "Next-GenAI", path: "/solutions/ai" },
-        { name: "Gallery", path: "/gallery" },
         { name: "Blog", path: "/blog" },
+        { name: "Gallery", path: "/gallery" },
         { name: "Contact", path: "/contact" }
       ]
     }
@@ -86,7 +101,8 @@ const routeToPageName: Record<string, string> = {
   "/blog": "Blog",
   "/gallery": "Gallery",
   "/contact": "Contact",
-  "/solutions/ai": "Next-GenAI"
+  "/solutions/ai": "Next-GenAI",
+  "/tools": "Tools"
 };
 
 export const Navbar = () => {
@@ -124,7 +140,7 @@ export const Navbar = () => {
   };
 
   const getLinkClasses = (path: string) => {
-    const baseClasses = "transition-colors text-sm font-medium";
+    const baseClasses = "transition-colors text-lg font-medium";
     const activeClasses = "text-emuski-teal-darker";
     const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
     
@@ -132,7 +148,7 @@ export const Navbar = () => {
   };
 
   const getServicesButtonClasses = () => {
-    const baseClasses = "transition-colors text-sm font-medium flex items-center space-x-1";
+    const baseClasses = "transition-colors text-lg font-medium flex items-center space-x-1";
     const activeClasses = "text-emuski-teal-darker";
     const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
     
@@ -146,30 +162,30 @@ export const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="w-full px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-1.5 group">
+            <Link href="/" className="flex items-center space-x-2.5 group">
               <Image
                 src={emuskiLogo}
                 alt="EMUSKI Manufacturing Solutions Logo"
-                width={32}
-                height={16}
-                style={{ width: 'auto', height: 'auto' }}
-                className="h-4 sm:h-5 w-auto object-contain [image-rendering:crisp-edges] contrast-110 brightness-105"
+                width={56}
+                height={28}
+                sizes="(max-width: 768px) 28px, 32px"
+                className="h-7 sm:h-8 w-auto object-contain [image-rendering:crisp-edges] contrast-110 brightness-105"
                 quality={75}
                 priority
               />
-              <span className="text-base sm:text-lg font-bold text-foreground">EMUSKI</span>
+              <span className="text-xl sm:text-2xl font-bold text-foreground">EMUSKI</span>
             </Link>
 
+            {/* Navigation near logo */}
             <div className="hidden md:flex items-center space-x-6" ref={servicesRef}>
               <Link
                 href="/"
-                className={`${getLinkClasses("/")} flex items-center gap-1`}
+                className={getLinkClasses("/")}
                 title="Home"
               >
-                <Home className="h-4 w-4" />
-                <span className="sr-only">Home</span>
+                Home
               </Link>
 
               {/* Individual Service Dropdowns */}
@@ -181,13 +197,26 @@ export const Navbar = () => {
                   onMouseLeave={() => setActiveServiceDropdown(null)}
                 >
                   <div className="flex items-center">
-                    <Link
-                      href={service.path}
-                      className={getLinkClasses(service.path)}
-                      onClick={() => setActiveServiceDropdown(null)}
-                    >
-                      {service.name}
-                    </Link>
+                    {service.path !== "#" ? (
+                      <Link
+                        href={service.path}
+                        className={getLinkClasses(service.path)}
+                        onClick={() => setActiveServiceDropdown(null)}
+                      >
+                        {service.name}
+                      </Link>
+                    ) : (
+                      <div className="flex items-center">
+                        <span className={getLinkClasses("#")}>
+                          {service.name}
+                        </span>
+                        {'isNew' in service && service.isNew && (
+                          <span className="ml-1.5 px-1.5 py-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] font-bold rounded-full border-0 shadow-sm animate-pulse">
+                            NEW
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <button
                       onClick={(e) => {
                         e.preventDefault();
@@ -205,13 +234,15 @@ export const Navbar = () => {
                       style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
                     >
                       <div className="py-2">
-                        <Link
-                          href={service.path}
-                          className="block px-4 py-3 text-sm font-semibold text-emuski-teal-darker border-b border-gray-100 hover:bg-emuski-teal/5"
-                          onClick={() => setActiveServiceDropdown(null)}
-                        >
-                          {service.name} Overview
-                        </Link>
+                        {service.path !== "#" && (
+                          <Link
+                            href={service.path}
+                            className="block px-4 py-3 text-sm font-semibold text-emuski-teal-darker border-b border-gray-100 hover:bg-emuski-teal/5"
+                            onClick={() => setActiveServiceDropdown(null)}
+                          >
+                            {service.name} Overview
+                          </Link>
+                        )}
                         {service.subItems.map((subItem, index) => (
                           <Link
                             key={subItem.path}
@@ -244,11 +275,7 @@ export const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
-            </div>
-          </div>
 
-          <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-6">
               {navigationConfig.rightMenu.map((item) => (
                 <Link 
                   key={item.path}
@@ -259,8 +286,15 @@ export const Navbar = () => {
                 </Link>
               ))}
             </div>
+          </div>
 
-            <span className="sm:hidden transition-colors text-sm font-medium text-emuski-teal-darker">
+          <div className="flex items-center space-x-4">
+            {/* User Menu */}
+            <div className="hidden md:block">
+              <UserMenu />
+            </div>
+
+            <span className="sm:hidden transition-colors text-lg font-medium text-emuski-teal-darker">
               {getCurrentPageName()}
             </span>
 
@@ -277,18 +311,23 @@ export const Navbar = () => {
               {isMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-[9998]" style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
                   <div className="p-3 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 border-b border-gray-100">
-                    <div className="flex items-center space-x-2">
-                      <Image
-                        src={emuskiLogo}
-                        alt="EMUSKI Manufacturing Solutions Logo"
-                        width={28}
-                        height={14}
-                        style={{ width: 'auto', height: 'auto' }}
-                        className="h-3.5 w-auto object-contain [image-rendering:crisp-edges] contrast-[1.2] brightness-110 opacity-80"
-                        quality={75}
-                      />
-                      <div>
-                        <p className="text-[10px] text-gray-600 leading-tight">One-stop solution for OEMs</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Image
+                          src={emuskiLogo}
+                          alt="EMUSKI Manufacturing Solutions Logo"
+                          width={28}
+                          height={14}
+                          sizes="14px"
+                          className="h-3.5 w-auto object-contain [image-rendering:crisp-edges] contrast-[1.2] brightness-110 opacity-80"
+                          quality={75}
+                        />
+                        <div>
+                          <p className="text-[10px] text-gray-600 leading-tight">One-stop solution for OEMs</p>
+                        </div>
+                      </div>
+                      <div className="md:hidden scale-75">
+                        <UserMenu />
                       </div>
                     </div>
                   </div>
@@ -298,6 +337,7 @@ export const Navbar = () => {
                       const getSectionLink = (title: string) => {
                         if (title === "Manufacturing Excellence") return "/manufacturing-services";
                         if (title === "Engineering Innovation") return "/precision-engineering";
+                        if (title === "Tools") return "/tools";
                         return null;
                       };
 
@@ -309,13 +349,25 @@ export const Navbar = () => {
                             sectionLink ? (
                               <Link
                                 href={sectionLink}
-                                className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3 hover:text-emuski-teal-darker transition-colors"
+                                className="flex items-center justify-between text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3 hover:text-emuski-teal-darker transition-colors"
                                 onClick={() => setIsMenuOpen(false)}
                               >
-                                {section.title}
+                                <span>{section.title}</span>
+                                {section.title === "Tools" && (
+                                  <span className="ml-1 px-1 py-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[7px] font-bold rounded-full border-0 shadow-sm animate-pulse">
+                                    NEW
+                                  </span>
+                                )}
                               </Link>
                             ) : (
-                              <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3">{section.title}</h4>
+                              <div className="flex items-center justify-between">
+                                <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3">{section.title}</h4>
+                                {section.title === "Tools" && (
+                                  <span className="ml-1 px-1 py-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[7px] font-bold rounded-full border-0 shadow-sm animate-pulse mr-3">
+                                    NEW
+                                  </span>
+                                )}
+                              </div>
                             )
                           )}
                           <div className="space-y-0.5">

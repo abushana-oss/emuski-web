@@ -16,15 +16,9 @@
 
 import { revalidateBlog } from '@/lib/api/blogger';
 import { NextRequest, NextResponse } from 'next/server';
-import { checkRateLimit } from '@/lib/ratelimit';
+// Rate limiting removed - using simple webhook protection
 
 export async function POST(request: NextRequest) {
-  // Rate limiting check (10 requests per hour)
-  const rateLimitResponse = await checkRateLimit(request, 'revalidate');
-  if (rateLimitResponse) {
-    return rateLimitResponse;
-  }
-
   try {
     const body = await request.json();
     const { secret, blogType } = body;

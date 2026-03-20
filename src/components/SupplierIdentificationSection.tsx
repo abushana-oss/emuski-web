@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export function SupplierIdentificationSection() {
   return (
     <section className="py-20 bg-background">
@@ -16,35 +18,35 @@ export function SupplierIdentificationSection() {
             <p>We then engage potential suppliers to develop and localize the target parts, ensuring optimal results.</p>
             <ul className="space-y-4">
               <li className="flex items-start">
-                <img src="/assets/engineering/bullet.png" alt="bullet" className="w-6 h-6 mr-4 mt-1" />
+                <Image src="/assets/engineering/bullet.png" alt="bullet" width={24} height={24} className="w-6 h-6 mr-4 mt-1" />
                 <div>
                   <h4 className="font-semibold text-foreground">Extensive Supplier Network</h4>
                   <p>Access a network of suppliers across India, featuring top-tier facilities with industry-leading certifications.</p>
                 </div>
               </li>
               <li className="flex items-start">
-                <img src="/assets/engineering/bullet.png" alt="bullet" className="w-6 h-6 mr-4 mt-1" />
+                <Image src="/assets/engineering/bullet.png" alt="bullet" width={24} height={24} className="w-6 h-6 mr-4 mt-1" />
                 <div>
                   <h4 className="font-semibold text-foreground">Supplier Nomination & Negotiation</h4>
                   <p>EMUSKI supports technical evaluations, facility audits, and provides data to support vendor benchmarking and negotiation.</p>
                 </div>
               </li>
               <li className="flex items-start">
-                <img src="/assets/engineering/bullet.png" alt="bullet" className="w-6 h-6 mr-4 mt-1" />
+                <Image src="/assets/engineering/bullet.png" alt="bullet" width={24} height={24} className="w-6 h-6 mr-4 mt-1" />
                 <div>
                   <h4 className="font-semibold text-foreground">Multiple Quotations</h4>
                   <p>We gather competitive quotes from various suppliers and locations to ensure the best value and flexibility.</p>
                 </div>
               </li>
               <li className="flex items-start">
-                <img src="/assets/engineering/bullet.png" alt="bullet" className="w-6 h-6 mr-4 mt-1" />
+                <Image src="/assets/engineering/bullet.png" alt="bullet" width={24} height={24} className="w-6 h-6 mr-4 mt-1" />
                 <div>
                   <h4 className="font-semibold text-foreground">Vetted Supplier Access</h4>
                   <p>Customers benefit from a pool of pre-qualified, reliable suppliers with proven track records in quality and performance.</p>
                 </div>
               </li>
               <li className="flex items-start">
-                <img src="/assets/engineering/bullet.png" alt="bullet" className="w-6 h-6 mr-4 mt-1" />
+                <Image src="/assets/engineering/bullet.png" alt="bullet" width={24} height={24} className="w-6 h-6 mr-4 mt-1" />
                 <div>
                   <h4 className="font-semibold text-foreground">Flexible Supply Chain Solutions</h4>
                   <p>Scalable and adaptable supply chain options tailored to meet changing production needs with ease.</p>
@@ -53,8 +55,8 @@ export function SupplierIdentificationSection() {
             </ul>
           </div>
           <div className="grid grid-cols-1 gap-4">
-            <img src="/assets/engineering/supplier.png" alt="Supplier" className="rounded-lg shadow-lg" />
-            <img src="/assets/engineering/reduction.png" alt="Reduction" className="rounded-lg shadow-lg" />
+            <Image src="/assets/engineering/supplier.png" alt="Supplier" width={400} height={300} className="rounded-lg shadow-lg" />
+            <Image src="/assets/engineering/reduction.png" alt="Reduction" width={400} height={300} className="rounded-lg shadow-lg" />
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react';
+import Image from 'next/image';
 import {
   Accordion,
   AccordionContent,
@@ -49,7 +50,7 @@ export function PartManufacturingServices() {
             </Accordion>
           </div>
           <div>
-            <img src="/assets/manufacturing/services.svg" alt="Part Manufacturing Excellences" className="rounded-lg shadow-lg" />
+            <Image src="/assets/manufacturing/services.svg" alt="Part Manufacturing Excellences" width={500} height={400} className="rounded-lg shadow-lg" />
           </div>
         </div>
       </div>

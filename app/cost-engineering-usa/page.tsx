@@ -229,7 +229,7 @@ export default function CostEngineeringUSAPage() {
 
       <div className="min-h-screen bg-background">
         <Navbar />
-        <main className="pt-16">
+        <main className="pt-20">
           {/* Hero Section */}
           <section className="relative bg-gradient-to-r from-emuski-dark to-industrial-dark text-white py-20 px-4">
             <div className="max-w-7xl mx-auto">

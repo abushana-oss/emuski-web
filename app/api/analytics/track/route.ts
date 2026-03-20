@@ -12,9 +12,17 @@ import { headers } from 'next/headers'
  * - Better for privacy compliance
  */
 
-// GA4 Configuration
-const GA4_MEASUREMENT_ID = 'G-QFDFYZLZPK'
-const GA4_API_SECRET = process.env.GA4_API_SECRET || '' // Add this to your .env
+// GA4 Configuration - Secure environment variables
+const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''
+const GA4_API_SECRET = process.env.GA4_API_SECRET || ''
+
+// Security validation
+if (!GA4_MEASUREMENT_ID) {
+  console.warn('GA4_MEASUREMENT_ID not configured - analytics disabled')
+}
+if (!GA4_API_SECRET) {
+  console.warn('GA4_API_SECRET not configured - server-side analytics disabled')
+}
 
 // GA4 Measurement Protocol endpoint
 const GA4_ENDPOINT = `https://www.google-analytics.com/mp/collect?measurement_id=${GA4_MEASUREMENT_ID}&api_secret=${GA4_API_SECRET}`
@@ -55,6 +63,14 @@ function getUserAgent(request: NextRequest): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Security check - ensure analytics is properly configured
+    if (!GA4_MEASUREMENT_ID || !GA4_API_SECRET) {
+      return NextResponse.json(
+        { success: false, error: 'Analytics not configured' },
+        { status: 503 }
+      )
+    }
+
     const body = await request.json()
     const { eventName, eventParams, clientId: providedClientId } = body
 

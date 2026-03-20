@@ -23,14 +23,27 @@ export const useBloggerPosts = (maxResults: number = 10) => {
         setLoading(true);
         setError(null);
 
+        // Check if API key is available
+        if (!process.env.NEXT_PUBLIC_BLOGGER_API_KEY) {
+          console.warn('Blogger API key not configured, skipping fetch');
+          setPosts([]);
+          return;
+        }
+
         // Fetch posts directly using blog ID
         const response = await fetchBloggerPosts(BLOG_ID, maxResults);
 
         // Convert to local format
-        const convertedPosts = response.items.map(convertBloggerPostToLocalFormat);
-        setPosts(convertedPosts);
+        if (response?.items && Array.isArray(response.items)) {
+          const convertedPosts = response.items.map(convertBloggerPostToLocalFormat);
+          setPosts(convertedPosts);
+        } else {
+          setPosts([]);
+        }
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch blog posts');
+        console.error('Error fetching blog posts:', err);
+        // Don't show error to user, just log it and show empty state
+        setError(null);
         setPosts([]);
       } finally {
         setLoading(false);
@@ -54,6 +67,13 @@ export const useBloggerPost = (postId: string) => {
         setLoading(true);
         setError(null);
 
+        // Check if API key is available
+        if (!process.env.NEXT_PUBLIC_BLOGGER_API_KEY) {
+          console.warn('Blogger API key not configured, skipping fetch');
+          setPost(null);
+          return;
+        }
+
         // Fetch post directly using blog ID
         const bloggerPost = await fetchBloggerPost(BLOG_ID, postId);
 
@@ -61,7 +81,9 @@ export const useBloggerPost = (postId: string) => {
         const convertedPost = convertBloggerPostToLocalFormat(bloggerPost);
         setPost(convertedPost);
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch blog post');
+        console.error('Error fetching blog post:', err);
+        // Don't show error to user, just log it
+        setError(null);
         setPost(null);
       } finally {
         setLoading(false);
@@ -87,14 +109,27 @@ export const useBloggerPostsByLabel = (label: string, maxResults: number = 10) =
         setLoading(true);
         setError(null);
 
+        // Check if API key is available
+        if (!process.env.NEXT_PUBLIC_BLOGGER_API_KEY) {
+          console.warn('Blogger API key not configured, skipping fetch');
+          setPosts([]);
+          return;
+        }
+
         // Fetch posts by label directly using blog ID
         const response = await searchBloggerPostsByLabel(BLOG_ID, label, maxResults);
 
         // Convert to local format
-        const convertedPosts = response.items.map(convertBloggerPostToLocalFormat);
-        setPosts(convertedPosts);
+        if (response?.items && Array.isArray(response.items)) {
+          const convertedPosts = response.items.map(convertBloggerPostToLocalFormat);
+          setPosts(convertedPosts);
+        } else {
+          setPosts([]);
+        }
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch blog posts');
+        console.error('Error fetching blog posts by label:', err);
+        // Don't show error to user, just log it and show empty state
+        setError(null);
         setPosts([]);
       } finally {
         setLoading(false);

@@ -25,7 +25,7 @@ export default function AISolutions() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="pt-16">
+      <main className="pt-20">
         <section className="relative py-12 sm:py-14 md:py-16 lg:py-20 border-b border-border/30 overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>
           {/* Grid Pattern Overlay */}
           <div className="absolute inset-0 opacity-10 pointer-events-none">
