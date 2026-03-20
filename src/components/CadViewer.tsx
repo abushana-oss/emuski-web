@@ -1767,7 +1767,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
 
       {/* Analysis Badge */}
       {state.analysisData && (
-        <div className="absolute bottom-3 left-3 right-3 bg-card/95 backdrop-blur-sm rounded-lg p-3 border border-border/50 max-h-40 overflow-y-auto">
+        <div className="absolute bottom-3 left-3 right-3 z-10 bg-card/95 backdrop-blur-sm rounded-lg p-3 border border-border/50 max-h-40 overflow-y-auto">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-sm font-semibold text-foreground flex items-center">
               <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
@@ -1814,7 +1814,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
         )}
 
         {state.isChatOpen && (
-          <div className="absolute bottom-0 right-0 w-[400px] h-[75vh] max-h-[700px] bg-white border border-gray-200 rounded-xl shadow-2xl flex flex-col">
+          <div className="absolute bottom-0 right-0 w-[400px] h-[75vh] max-h-[700px] bg-white border border-gray-200 rounded-xl shadow-2xl flex flex-col z-[100]">
 
             {/* Header */}
             <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-gradient-to-r from-emuski-teal to-emuski-teal/90 rounded-t-xl">
