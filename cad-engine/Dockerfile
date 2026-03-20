@@ -33,11 +33,11 @@ RUN conda install -n cad-env -c conda-forge \
 # Install Google Generative AI SDK and requests (needed for AI DFM analysis)
 RUN conda run -n cad-env pip install google-generativeai requests --no-cache-dir
 
-# Copy application code — includes AI DFM analyzer
-COPY main.py config.py services.py validators.py exceptions.py memory_optimizer.py ai_dfm_analyzer.py ./
+# Copy application code
+COPY main.py config.py services.py validators.py exceptions.py memory_optimizer.py ./
 
-# Copy .env for default configuration (API key can be overridden by Docker -e flags)
-COPY .env .env
+# Environment variables will be provided by Railway at runtime
+# No need to copy .env file - use Railway's environment variable system
 
 # Create temp directory for CAD conversions
 RUN mkdir -p /tmp/cad-files
