@@ -328,7 +328,7 @@ const nextConfig = {
     return [
       {
         source: '/api/cad-engine/:path*',
-        destination: 'http://localhost:5000/:path*',
+        destination: `${process.env.CAD_ENGINE_URL || 'http://localhost:5000'}/:path*`,
       },
     ];
   },

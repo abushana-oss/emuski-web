@@ -106,6 +106,7 @@ export const LazyPDFViewer = ({
                 loading="lazy"
                 onLoad={() => setIsLoaded(true)}
                 allow="fullscreen"
+                sandbox="allow-scripts allow-popups allow-forms"
               />
             </div>
           )}

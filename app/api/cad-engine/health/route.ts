@@ -8,14 +8,14 @@ export async function GET(req: NextRequest) {
   const headers = new Headers(SECURITY_HEADERS);
   
   try {
-    // Proxy the health check to the CAD engine backend
+    // Proxy the health check to the CAD engine backend with shorter timeout
     const response = await fetch(`${CAD_ENGINE_URL}/health`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'User-Agent': 'EMUSKI-CAD-Client/1.0'
       },
-      signal: AbortSignal.timeout(10000) // 10 second timeout
+      signal: AbortSignal.timeout(5000) // 5 second timeout
     });
 
     if (!response.ok) {

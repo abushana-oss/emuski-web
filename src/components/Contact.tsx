@@ -536,6 +536,7 @@ export const Contact = () => {
                       referrerPolicy="no-referrer-when-downgrade"
                       title="EMUSKI Office Location - Rudhra Coworks, Electronic City Phase 2, Bangalore"
                       className="w-full h-full"
+                      sandbox="allow-scripts allow-popups allow-forms"
                     ></iframe>
                   </div>
                   <div className="mt-4 text-center">
