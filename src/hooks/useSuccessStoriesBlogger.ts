@@ -6,8 +6,8 @@ import {
   convertBloggerPostToLocalFormat,
 } from '../api/bloggerApi';
 
-// Success Stories Blogger blog ID from environment
-const SUCCESS_STORIES_BLOG_ID = process.env.NEXT_PUBLIC_SUCCESS_STORIES_BLOG_ID || '850833685312209325';
+// Success Stories Blogger blog ID
+const SUCCESS_STORIES_BLOG_ID = '850833685312209325';
 
 export const useSuccessStoriesPosts = (maxResults: number = 10) => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -27,19 +27,18 @@ export const useSuccessStoriesPosts = (maxResults: number = 10) => {
           return;
         }
 
-        // Check if API key is available
-        if (!process.env.NEXT_PUBLIC_BLOGGER_API_KEY) {
-          console.warn('Blogger API key not configured, skipping fetch');
-          setPosts([]);
-          return;
+        // Fetch posts using secure API route
+        const response = await fetch(`/api/blog?blogId=${SUCCESS_STORIES_BLOG_ID}&maxResults=${maxResults}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch success stories');
         }
-
-        // Fetch posts directly using blog ID
-        const response = await fetchBloggerPosts(SUCCESS_STORIES_BLOG_ID, maxResults);
+        
+        const data = await response.json();
 
         // Convert to local format and set category to "Success Story"
-        if (response?.items && Array.isArray(response.items)) {
-          const convertedPosts = response.items.map(post => {
+        if (data?.items && Array.isArray(data.items)) {
+          const convertedPosts = data.items.map(post => {
             const converted = convertBloggerPostToLocalFormat(post);
             return {
               ...converted,

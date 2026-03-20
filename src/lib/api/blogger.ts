@@ -15,8 +15,8 @@
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 
-// Environment Variables
-const BLOGGER_API_KEY = process.env.BLOGGER_API_KEY || process.env.NEXT_PUBLIC_BLOGGER_API_KEY || '';
+// Environment Variables (backend only)
+const BLOGGER_API_KEY = process.env.BLOGGER_API_KEY || '';
 const BLOGGER_BASE = 'https://www.googleapis.com/blogger/v3';
 
 // Check for API key during build but don't fail
@@ -24,10 +24,10 @@ if (!BLOGGER_API_KEY && process.env.NODE_ENV === 'production') {
   console.warn('BLOGGER_API_KEY not configured - blog features will be disabled');
 }
 
-// Blog IDs from environment variables
+// Blog IDs from environment variables (backend only)
 const BLOG_IDS = {
   manufacturing: process.env.MANUFACTURING_BLOG_ID || '3331639473149657933',
-  engineering: process.env.ENGINEERING_BLOG_ID || process.env.NEXT_PUBLIC_ENGINEERING_BLOG_ID || '',
+  engineering: process.env.ENGINEERING_BLOG_ID || '',
   successStories: process.env.SUCCESS_STORIES_BLOG_ID || '',
 } as const;
 

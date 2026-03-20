@@ -8,13 +8,11 @@
 import { useState, useEffect } from 'react';
 import { BlogPostSummary } from '../api/types';
 
-// Engineering Blog ID - Update this when blog is created
-// To find your Blog ID: Visit your Blogger dashboard > Settings > Basic > Blog ID
-const ENGINEERING_BLOG_ID = process.env.NEXT_PUBLIC_ENGINEERING_BLOG_ID || '';
-const API_KEY = process.env.NEXT_PUBLIC_BLOGGER_API_KEY;
+// Engineering Blog ID - Read from backend environment
+const ENGINEERING_BLOG_ID = '3127439607261561130';
 
 // Feature flag to enable/disable engineering blog
-const ENABLE_ENGINEERING_BLOG = process.env.NEXT_PUBLIC_ENABLE_ENGINEERING_BLOG === 'true';
+const ENABLE_ENGINEERING_BLOG = true;
 
 interface UseEngineeringPostsResult {
   posts: BlogPostSummary[];
@@ -42,18 +40,10 @@ export const useEngineeringPosts = (maxResults: number = 20): UseEngineeringPost
         return;
       }
 
-      if (!API_KEY) {
-        console.warn('NEXT_PUBLIC_BLOGGER_API_KEY is not set');
-        setPosts([]);
-        setLoading(false);
-        return;
-      }
-
       try {
         setLoading(true);
-        const url = `https://www.googleapis.com/blogger/v3/blogs/${ENGINEERING_BLOG_ID}/posts?key=${API_KEY}&maxResults=${maxResults}&fetchImages=true&fetchBodies=true`;
-
-        const response = await fetch(url);
+        // Use secure API route instead of direct Blogger API
+        const response = await fetch(`/api/blog?blogId=${ENGINEERING_BLOG_ID}&maxResults=${maxResults}`);
 
         // Handle 404 or other errors gracefully
         if (!response.ok) {
