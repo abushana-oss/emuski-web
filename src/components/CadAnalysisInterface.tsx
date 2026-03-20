@@ -133,16 +133,25 @@ export const CadAnalysisInterface = () => {
   } | null>(null);
   const { user, isAuthenticated } = useAuth();
 
-  // Load saved parts and credit info on component mount
+  // Load saved parts on component mount
   useEffect(() => {
     loadSavedParts();
-    loadCreditInfo();
     
     // Initialize performance optimizations
     PerformanceOptimizer.optimizeForCoreWebVitals();
     PerformanceOptimizer.preloadCriticalResources();
     PerformanceOptimizer.optimizeImages();
-  }, [user]);
+  }, []);
+
+  // Load credit info only when authentication is confirmed
+  useEffect(() => {
+    if (isAuthenticated && user?.id) {
+      loadCreditInfo();
+    } else if (isAuthenticated === false) {
+      // User is confirmed unauthenticated, clear credit info
+      setCreditInfo(null);
+    }
+  }, [isAuthenticated, user?.id]);
 
   // Load credit information - only for authenticated users
   const loadCreditInfo = useCallback(async () => {
@@ -658,25 +667,70 @@ export const CadAnalysisInterface = () => {
 
         setUploadProgress({ stage: 'Preparing 3D model...', progress: 80 });
         
-        // Store file data for persistence across page reloads - for ALL files
-        console.log('Storing file data for part:', newPart.id);
-        file.arrayBuffer().then(buffer => {
-          // Use FileReader for large files to avoid call stack issues
-          const uint8Array = new Uint8Array(buffer);
-          const chunks = [];
-          const chunkSize = 8192; // Process in 8KB chunks
+        // Store file data smartly - only for blob URLs, use cloud URLs for persistence
+        if (newPart.cadFileUrl.startsWith('blob:')) {
+          console.log('Storing file data for blob URL part:', newPart.id);
           
-          for (let i = 0; i < uint8Array.length; i += chunkSize) {
-            const chunk = uint8Array.slice(i, i + chunkSize);
-            chunks.push(String.fromCharCode.apply(null, Array.from(chunk)));
+          // Check file size first to avoid localStorage quota
+          const fileSizeMB = file.size / (1024 * 1024);
+          const maxSizeMB = 2; // Conservative limit to avoid quota issues
+          
+          if (fileSizeMB > maxSizeMB) {
+            console.warn(`File too large for localStorage (${fileSizeMB.toFixed(1)}MB > ${maxSizeMB}MB), using blob URL only`);
+            localStorage.setItem(`emuski_file_meta_${newPart.id}`, JSON.stringify({
+              size: file.size,
+              type: file.type,
+              name: file.name,
+              storedAsBlob: true,
+              reason: 'size_limit'
+            }));
+          } else {
+            // Store smaller files as base64
+            file.arrayBuffer().then(buffer => {
+              try {
+                const uint8Array = new Uint8Array(buffer);
+                const chunks = [];
+                const chunkSize = 8192;
+                
+                for (let i = 0; i < uint8Array.length; i += chunkSize) {
+                  const chunk = uint8Array.slice(i, i + chunkSize);
+                  chunks.push(String.fromCharCode.apply(null, Array.from(chunk)));
+                }
+                
+                const base64 = btoa(chunks.join(''));
+                
+                // Check localStorage quota before storing
+                try {
+                  localStorage.setItem(`emuski_file_${newPart.id}`, base64);
+                  console.log('Successfully stored file data for part:', newPart.id, 'Size:', base64.length);
+                } catch (quotaError) {
+                  console.warn('localStorage quota exceeded, storing metadata only:', quotaError);
+                  localStorage.setItem(`emuski_file_meta_${newPart.id}`, JSON.stringify({
+                    size: file.size,
+                    type: file.type,
+                    name: file.name,
+                    storedAsBlob: true,
+                    reason: 'quota_exceeded'
+                  }));
+                }
+              } catch (error) {
+                console.error('Failed to process file data:', error);
+              }
+            }).catch(error => {
+              console.error('Failed to read file buffer:', error);
+            });
           }
-          
-          const base64 = btoa(chunks.join(''));
-          localStorage.setItem(`emuski_file_${newPart.id}`, base64);
-          console.log('Successfully stored file data for part:', newPart.id, 'Size:', base64.length, 'URL type:', newPart.cadFileUrl.startsWith('blob:') ? 'blob' : 'cloud');
-        }).catch(error => {
-          console.error('Failed to store file data:', error);
-        });
+        } else {
+          console.log('Using cloud URL for persistence:', newPart.cadFileUrl);
+          // Store metadata for cloud files
+          localStorage.setItem(`emuski_file_meta_${newPart.id}`, JSON.stringify({
+            size: file.size,
+            type: file.type,
+            name: file.name,
+            cloudUrl: newPart.cadFileUrl,
+            storedAsBlob: false
+          }));
+        }
         
         setUploadProgress({ stage: 'Loading 3D model...', progress: 90 });
         

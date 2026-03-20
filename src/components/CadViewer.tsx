@@ -886,12 +886,21 @@ export const CadViewer: React.FC<CadViewerProps> = ({
 
     startRenderLoop();
     
-    // Use requestAnimationFrame to ensure DOM is fully ready
-    requestAnimationFrame(() => {
+    // Use requestAnimationFrame to ensure DOM is fully ready with retry logic
+    const initViewCubeWithRetry = (attempts = 0) => {
       requestAnimationFrame(() => {
-        initializeViewCube();
+        if (viewCubeRef.current) {
+          initializeViewCube();
+        } else if (attempts < 10) {
+          // Retry up to 10 times with exponential backoff
+          setTimeout(() => initViewCubeWithRetry(attempts + 1), Math.pow(2, attempts) * 10);
+        } else {
+          console.warn('ViewCube canvas still not available after retries');
+        }
       });
-    });
+    };
+    
+    initViewCubeWithRetry();
 
     const handleResize = () => {
       if (!container || !camera || !renderer) return;
