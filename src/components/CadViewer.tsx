@@ -814,7 +814,7 @@ function generateBOMFromEngine(
     volume: geometry_features.volume_mm3,
     surfaceArea: geometry_features.surface_area_mm2,
     manufacturingProcess: dfm_analysis.recommended_processes[0] ?? 'CNC Machining',
-    estimatedCost: round2((dfm_analysis.ai_insights.process_recommendations?.[0]?.cost_factor ?? 1) *
+    estimatedCost: round2((1.0) *
       Math.max(dfm_analysis.ai_insights.lead_time_estimate_days ?? 5, 1) * 0.5 + 10),
     dfmIssues: (dfm_analysis.ai_insights.dfm_warnings ?? []).map((w: any, idx: number) => ({
       id: `issue_${idx}`,
