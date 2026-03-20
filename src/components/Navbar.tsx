@@ -211,7 +211,7 @@ export const Navbar = () => {
                           {service.name}
                         </span>
                         {'isNew' in service && service.isNew && (
-                          <span className="ml-1.5 px-1.5 py-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] font-bold rounded-full border-0 shadow-sm animate-pulse">
+                          <span className="ml-1 px-1 py-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[8px] font-bold rounded-full border-0 shadow-sm animate-pulse">
                             NEW
                           </span>
                         )}

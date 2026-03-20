@@ -658,29 +658,25 @@ export const CadAnalysisInterface = () => {
 
         setUploadProgress({ stage: 'Preparing 3D model...', progress: 80 });
         
-        // Store file data for persistence across page reloads
-        if (newPart.cadFileUrl.startsWith('blob:')) {
-          console.log('Storing file data for part:', newPart.id);
-          file.arrayBuffer().then(buffer => {
-            // Use FileReader for large files to avoid call stack issues
-            const uint8Array = new Uint8Array(buffer);
-            const chunks = [];
-            const chunkSize = 8192; // Process in 8KB chunks
-            
-            for (let i = 0; i < uint8Array.length; i += chunkSize) {
-              const chunk = uint8Array.slice(i, i + chunkSize);
-              chunks.push(String.fromCharCode.apply(null, Array.from(chunk)));
-            }
-            
-            const base64 = btoa(chunks.join(''));
-            localStorage.setItem(`emuski_file_${newPart.id}`, base64);
-            console.log('Successfully stored file data for part:', newPart.id, 'Size:', base64.length);
-          }).catch(error => {
-            console.error('Failed to store file data:', error);
-          });
-        } else {
-          console.log('Not storing file data (using cloud URL):', newPart.cadFileUrl);
-        }
+        // Store file data for persistence across page reloads - for ALL files
+        console.log('Storing file data for part:', newPart.id);
+        file.arrayBuffer().then(buffer => {
+          // Use FileReader for large files to avoid call stack issues
+          const uint8Array = new Uint8Array(buffer);
+          const chunks = [];
+          const chunkSize = 8192; // Process in 8KB chunks
+          
+          for (let i = 0; i < uint8Array.length; i += chunkSize) {
+            const chunk = uint8Array.slice(i, i + chunkSize);
+            chunks.push(String.fromCharCode.apply(null, Array.from(chunk)));
+          }
+          
+          const base64 = btoa(chunks.join(''));
+          localStorage.setItem(`emuski_file_${newPart.id}`, base64);
+          console.log('Successfully stored file data for part:', newPart.id, 'Size:', base64.length, 'URL type:', newPart.cadFileUrl.startsWith('blob:') ? 'blob' : 'cloud');
+        }).catch(error => {
+          console.error('Failed to store file data:', error);
+        });
         
         setUploadProgress({ stage: 'Loading 3D model...', progress: 90 });
         

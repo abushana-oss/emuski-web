@@ -885,7 +885,13 @@ export const CadViewer: React.FC<CadViewerProps> = ({
     threeJSRef.current.axesHelper = axesHelper;
 
     startRenderLoop();
-    setTimeout(() => initializeViewCube(), 100);
+    
+    // Use requestAnimationFrame to ensure DOM is fully ready
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        initializeViewCube();
+      });
+    });
 
     const handleResize = () => {
       if (!container || !camera || !renderer) return;

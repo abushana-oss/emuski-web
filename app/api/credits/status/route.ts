@@ -18,13 +18,25 @@ async function handleGET(req: NextRequest) {
     // Industry Standard: JWT Bearer Token Authentication ONLY
     const authHeader = req.headers.get('authorization');
     
+    // Return 401 immediately if no auth header
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { 
+          error: 'Authentication required',
+          details: 'Valid JWT Bearer token required',
+          code: 'UNAUTHORIZED'
+        },
+        { status: 401, headers }
+      );
+    }
+    
     const authResult = await authenticateRequest(authHeader);
     
     if (!authResult.valid || !authResult.userId) {
       return NextResponse.json(
         { 
           error: 'Authentication required',
-          details: authResult.error || 'Valid JWT Bearer token required',
+          details: authResult.error || 'Invalid JWT token',
           code: 'UNAUTHORIZED'
         },
         { status: 401, headers }
