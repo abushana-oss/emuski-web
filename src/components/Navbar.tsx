@@ -104,7 +104,9 @@ const routeToPageName: Record<string, string> = {
   "/gallery": "Gallery",
   "/contact": "Contact",
   "/solutions/ai": "Next-GenAI",
-  "/tools": "Tools"
+  "/tools": "Tools",
+  "/tools/3d-cad-analysis": "3D CAD Analysis",
+  "/tools/2d-balloon-diagram": "2D Balloon Diagram"
 };
 
 export const Navbar = () => {

@@ -40,8 +40,8 @@ export const BalloonToolbar = ({
   onSizeChange
 }: BalloonToolbarProps) => {
   return (
-    <div className="bg-white border rounded-lg p-4 shadow-sm">
-      <div className="flex flex-wrap items-center gap-4">
+    <div className="bg-white border rounded-lg p-3 sm:p-4 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-4">
         {/* Annotation Toggle */}
         <div className="flex items-center gap-2">
           <Button
@@ -53,17 +53,17 @@ export const BalloonToolbar = ({
             {isAnnotating ? 'Stop Annotating' : 'Add Balloons'}
           </Button>
           {isAnnotating && (
-            <span className="text-sm text-gray-600">
+            <span className="text-xs sm:text-sm text-gray-600">
               Next: {balloonCounter}
             </span>
           )}
         </div>
 
-        <div className="h-6 border-l border-gray-300"></div>
+        <div className="hidden sm:block h-6 border-l border-gray-300"></div>
 
         {/* Balloon Style */}
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">Shape:</span>
+          <span className="text-xs sm:text-sm font-medium text-gray-700">Shape:</span>
           <div className="flex gap-1">
             <Button
               variant={selectedStyle === 'circle' ? "default" : "outline"}
@@ -92,11 +92,11 @@ export const BalloonToolbar = ({
           </div>
         </div>
 
-        <div className="h-6 border-l border-gray-300"></div>
+        <div className="hidden sm:block h-6 border-l border-gray-300"></div>
 
         {/* Color Picker */}
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">Color:</span>
+          <span className="text-xs sm:text-sm font-medium text-gray-700">Color:</span>
           <div className="flex items-center gap-1">
             {PRESET_COLORS.map((color) => (
               <button
@@ -128,11 +128,11 @@ export const BalloonToolbar = ({
           </div>
         </div>
 
-        <div className="h-6 border-l border-gray-300"></div>
+        <div className="hidden sm:block h-6 border-l border-gray-300"></div>
 
         {/* Size Control */}
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">Size:</span>
+          <span className="text-xs sm:text-sm font-medium text-gray-700">Size:</span>
           <div className="flex items-center gap-1">
             <Button
               variant="outline"
@@ -156,11 +156,11 @@ export const BalloonToolbar = ({
           </div>
         </div>
 
-        <div className="h-6 border-l border-gray-300"></div>
+        <div className="hidden sm:block h-6 border-l border-gray-300"></div>
 
         {/* Preview */}
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">Preview:</span>
+          <span className="text-xs sm:text-sm font-medium text-gray-700">Preview:</span>
           <div className="relative">
             <div
               className={`flex items-center justify-center text-white font-bold border-2 border-white shadow-lg transition-all ${
@@ -187,9 +187,10 @@ export const BalloonToolbar = ({
 
       {isAnnotating && (
         <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
+          <p className="text-xs sm:text-sm text-blue-800">
             <strong>Annotation Mode:</strong> Click anywhere on the PDF to add balloon #{balloonCounter}. 
-            Drag existing balloons to reposition them. Double-click balloons to remove them.
+            <span className="hidden sm:inline">Drag existing balloons to reposition them. Double-click balloons to remove them.</span>
+            <span className="sm:hidden">Tap and drag balloons to move them.</span>
           </p>
         </div>
       )}

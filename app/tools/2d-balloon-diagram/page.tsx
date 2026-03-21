@@ -133,15 +133,15 @@ export default function BalloonDiagramPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative mt-16 sm:mt-20 py-16 sm:py-20 md:py-24 lg:py-32 border-b border-border/30 overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>
+      <section className="relative mt-16 sm:mt-20 py-12 sm:py-16 md:py-20 lg:py-24 border-b border-border/30 overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>
         {/* Grid Pattern Overlay */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4fd3d4_1px,transparent_1px),linear-gradient(to_bottom,#4fd3d4_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4fd3d4_1px,transparent_1px),linear-gradient(to_bottom,#4fd3d4_1px,transparent_1px)] bg-[size:2rem_2rem] sm:bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
         </div>
 
         {/* Content */}
         <div className="relative z-10">
-          <div className="container mx-auto px-6 sm:px-8 lg:px-12 pt-4 sm:pt-5 md:pt-6">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-12 pt-2 sm:pt-4 md:pt-6">
             <div className="max-w-4xl mx-auto text-center">
               <div className="space-y-4 sm:space-y-5 md:space-y-6">
                 {/* Category Badge */}
@@ -163,15 +163,15 @@ export default function BalloonDiagramPage() {
                 </p>
                 
                 {/* Feature highlights */}
-                <div className="flex flex-wrap justify-center gap-4 mt-6">
-                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    PDF Upload & Visualization
+                <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-6">
+                  <span className="px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
+                    PDF Upload
                   </span>
-                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    Interactive Annotations
+                  <span className="px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
+                    Annotations
                   </span>
-                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    Custom Balloon Styles
+                  <span className="px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
+                    Custom Styles
                   </span>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export default function BalloonDiagramPage() {
       </section>
 
       {/* Main Content */}
-      <main className="pt-20">
+      <main className="pt-8 sm:pt-12 md:pt-16">
         <Suspense fallback={
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-center space-y-4">
@@ -194,23 +194,23 @@ export default function BalloonDiagramPage() {
         </Suspense>
         
         {/* Request for Quote CTA */}
-        <section className="py-16 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal-light/5 border-t border-border">
-          <div className="container mx-auto px-6 sm:px-8 lg:px-12">
+        <section className="py-12 sm:py-16 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal-light/5 border-t border-border">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-12">
             <div className="max-w-4xl mx-auto text-center">
               <div className="space-y-6">
 
                 {/* Content */}
                 <div className="space-y-4">
-                  <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
                     Professional Engineering Documentation
                   </h2>
-                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                  <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                     Need professional technical documentation services? Our expert team provides 
                     comprehensive engineering drawing services, technical documentation, and balloon diagram creation for complex projects.
                   </p>
                   
                   {/* Trust indicators */}
-                  <div className="flex flex-wrap justify-center gap-6 mt-6 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-6 text-xs sm:text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                       <span>ISO 9001 Certified</span>

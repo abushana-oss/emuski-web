@@ -373,230 +373,61 @@ export default function BalloonDiagramInterface() {
       setExportMessage('Generating high-quality diagram...');
       setLastExportTime(now);
       
-      // Try to render the actual PDF content to canvas using PDF.js
+      // Fallback: try to use getDisplayMedia API for screen capture
       try {
-        // Import PDF.js with correct worker setup
-        const pdfjsLib = await import('pdfjs-dist/build/pdf');
-        
-        // Use local worker to avoid version mismatch
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
-        
-        // Load the PDF
-        const loadingTask = pdfjsLib.getDocument(pdfUrl);
-        const pdfDoc = await loadingTask.promise;
-        const page = await pdfDoc.getPage(1);
-        
-        // Get overlay dimensions for proper scaling
-        const overlay = document.querySelector('[data-balloon-overlay="true"]') as HTMLElement;
-        if (!overlay) {
-          throw new Error('Cannot find overlay element');
-        }
-        
-        const overlayRect = overlay.getBoundingClientRect();
-        
-        // Create canvas with exact overlay dimensions
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        if (!ctx) {
-          throw new Error('Cannot get canvas context');
-        }
-        
-        // Set canvas to match overlay size with high resolution
-        const scaleFactor = 2;
-        canvas.width = overlayRect.width * scaleFactor;
-        canvas.height = overlayRect.height * scaleFactor;
-        
-        // Calculate the exact scaling to match what's shown in the viewer
-        const pdfPage = page.getViewport({ scale: 1 });
-        const pdfAspectRatio = pdfPage.width / pdfPage.height;
-        const viewerAspectRatio = overlayRect.width / overlayRect.height;
-        
-        let renderWidth, renderHeight, offsetX = 0, offsetY = 0;
-        
-        if (pdfAspectRatio > viewerAspectRatio) {
-          // PDF is wider than viewer - fit by width
-          renderWidth = canvas.width;
-          renderHeight = canvas.width / pdfAspectRatio;
-          offsetY = (canvas.height - renderHeight) / 2;
-        } else {
-          // PDF is taller than viewer - fit by height
-          renderHeight = canvas.height;
-          renderWidth = canvas.height * pdfAspectRatio;
-          offsetX = (canvas.width - renderWidth) / 2;
-        }
-        
-        const scale = renderWidth / pdfPage.width;
-        const viewport = page.getViewport({ scale });
-        
-        // Render PDF page to canvas with proper positioning
-        const renderTask = page.render({
-          canvasContext: ctx,
-          viewport: viewport,
-          transform: [1, 0, 0, 1, offsetX, offsetY]
+        // @ts-ignore - getDisplayMedia might not be fully typed
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: true
         });
         
-        await renderTask.promise;
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.play();
         
-        // Now overlay balloons with precise coordinate mapping
-        const sizeMap = {
-          1: { width: 16, height: 16, fontSize: 8 },
-          2: { width: 20, height: 20, fontSize: 10 },
-          3: { width: 24, height: 24, fontSize: 12 },
-          4: { width: 28, height: 28, fontSize: 14 },
-          5: { width: 32, height: 32, fontSize: 16 }
-        };
-        
-        const size = sizeMap[balloonSize as keyof typeof sizeMap] || sizeMap[3];
-        
-        // Draw balloons with exact coordinate mapping
-        balloons.forEach((balloon) => {
-          // Direct 1:1 mapping for exact positioning
-          const balloonX = (balloon.x / 100) * canvas.width;
-          const balloonY = (balloon.y / 100) * canvas.height;
+        video.addEventListener('loadedmetadata', () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
           
-          const balloonRadius = size.width * scaleFactor / 2;
-          const fontSize = size.fontSize * scaleFactor;
-          
-          // Draw balloon shadow
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-          ctx.beginPath();
-          ctx.arc(balloonX + 3, balloonY + 3, balloonRadius, 0, 2 * Math.PI);
-          ctx.fill();
-          
-          // Draw balloon circle
-          ctx.fillStyle = balloon.color;
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 4;
-          
-          ctx.beginPath();
-          ctx.arc(balloonX, balloonY, balloonRadius, 0, 2 * Math.PI);
-          ctx.fill();
-          ctx.stroke();
-          
-          // Draw number
-          ctx.fillStyle = '#ffffff';
-          ctx.strokeStyle = '#000000';
-          ctx.lineWidth = 2;
-          ctx.font = `bold ${fontSize}px Arial`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          
-          // Draw text outline for visibility
-          ctx.strokeText(balloon.label, balloonX, balloonY);
-          ctx.fillText(balloon.label, balloonX, balloonY);
-          
-          // Add highlighted note directly adjacent to balloon
-          if (balloon.note && balloon.note.trim()) {
-            const noteX = balloonX + balloonRadius;
-            const noteY = balloonY + balloonRadius + 8;
+          if (ctx) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
             
-            const noteText = balloon.note.length > 20 ? balloon.note.substring(0, 20) + '...' : balloon.note;
-            const noteFontSize = fontSize * 0.7;
+            ctx.drawImage(video, 0, 0);
             
-            // Measure text width for background
-            ctx.font = `${noteFontSize}px Arial`;
-            const textMetrics = ctx.measureText(noteText);
-            const textWidth = textMetrics.width;
+            // Stop the stream
+            stream.getTracks().forEach(track => track.stop());
             
-            // Draw highlight background
-            ctx.fillStyle = '#000000';
-            ctx.fillRect(noteX - 2, noteY - noteFontSize/2 - 2, textWidth + 4, noteFontSize + 4);
-            
-            // Draw note text with white color
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(noteText, noteX, noteY);
+            // Download
+            canvas.toBlob((blob: Blob | null) => {
+              if (blob) {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${uploadedFile.name.replace('.pdf', '')}_screen_capture.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                // Show success popup
+                setShowCelebration(true);
+                setExportMessage(null);
+                
+                // Hide celebration after 4 seconds
+                setTimeout(() => {
+                  setShowCelebration(false);
+                }, 4000);
+              } else {
+                throw new Error('Screen capture failed');
+              }
+            }, 'image/png');
           }
         });
         
-        // Download the result
-        canvas.toBlob((blob: Blob | null) => {
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${uploadedFile.name.replace('.pdf', '')}_with_balloons.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            
-            // Show success popup
-            setShowCelebration(true);
-            setExportMessage(null);
-            
-            // Hide celebration after 4 seconds
-            setTimeout(() => {
-              setShowCelebration(false);
-            }, 4000);
-          } else {
-            throw new Error('Failed to create blob');
-          }
-        }, 'image/png');
-        
-      } catch (pdfError) {
-        
-        // Fallback: try to use getDisplayMedia API for screen capture
-        try {
-          // @ts-ignore - getDisplayMedia might not be fully typed
-          const stream = await navigator.mediaDevices.getDisplayMedia({
-            video: { mediaSource: 'screen' }
-          });
-          
-          const video = document.createElement('video');
-          video.srcObject = stream;
-          video.play();
-          
-          video.addEventListener('loadedmetadata', () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            if (ctx) {
-              canvas.width = video.videoWidth;
-              canvas.height = video.videoHeight;
-              
-              ctx.drawImage(video, 0, 0);
-              
-              // Stop the stream
-              stream.getTracks().forEach(track => track.stop());
-              
-              // Download
-              canvas.toBlob((blob: Blob | null) => {
-                if (blob) {
-                  const url = URL.createObjectURL(blob);
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.download = `${uploadedFile.name.replace('.pdf', '')}_screen_capture.png`;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                  URL.revokeObjectURL(url);
-                  
-                  // Show success popup
-                  setShowCelebration(true);
-                  setExportMessage(null);
-                  
-                  // Hide celebration after 4 seconds
-                  setTimeout(() => {
-                    setShowCelebration(false);
-                  }, 4000);
-                } else {
-                  throw new Error('Screen capture failed');
-                }
-              }, 'image/png');
-            }
-          });
-          
-        } catch (screenCaptureError) {
-          
-          // Final fallback: simple instruction message
-          setExportMessage('Download failed. Please try again.');
-          setTimeout(() => setExportMessage(null), 3000);
-        } finally {
-          setIsExporting(false);
-        }
+      } catch (screenCaptureError) {
+        // Final fallback: simple instruction message
+        setExportMessage('Download failed. Please try again.');
+        setTimeout(() => setExportMessage(null), 3000);
       }
       
     } catch (error) {
@@ -652,7 +483,7 @@ export default function BalloonDiagramInterface() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-background">
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
           {!pdfUrl ? (
             <div className="max-w-2xl mx-auto">
               <div className="text-center mb-8">
@@ -698,9 +529,9 @@ export default function BalloonDiagramInterface() {
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <h3 className="text-xl font-semibold text-gray-800">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800 break-all">
                     {uploadedFile?.name}
                   </h3>
                   <Button
@@ -730,7 +561,7 @@ export default function BalloonDiagramInterface() {
                   </Button>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-600">
                       {balloons.length} balloon{balloons.length !== 1 ? 's' : ''}
@@ -771,8 +602,8 @@ export default function BalloonDiagramInterface() {
 
               {/* Success Popup Screen */}
               {showCelebration && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                  <div className="relative bg-white rounded-xl shadow-2xl p-8 max-w-md mx-4 text-center">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                  <div className="relative bg-white rounded-xl shadow-2xl p-6 sm:p-8 max-w-md w-full text-center">
                     {/* Close X button */}
                     <button
                       onClick={() => setShowCelebration(false)}
@@ -789,12 +620,12 @@ export default function BalloonDiagramInterface() {
                         </svg>
                       </div>
                       
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">Success!</h2>
+                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Success!</h2>
                       <p className="text-gray-600 mb-4">Your diagram has been downloaded successfully!</p>
                       
-                      <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
-                        <Download className="w-4 h-4" />
-                        <span>{uploadedFile?.name.replace('.pdf', '')}_with_balloons.png</span>
+                      <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-gray-500 mb-4 break-all">
+                        <Download className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">{uploadedFile?.name.replace('.pdf', '')}_with_balloons.png</span>
                       </div>
                       
                       <Button
@@ -838,7 +669,7 @@ export default function BalloonDiagramInterface() {
               {/* Download Section */}
               {balloons.length > 0 && (
                 <div className="mt-6 p-4 bg-gray-50 border rounded-lg">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <Download className="h-5 w-5 text-teal-600" />
                       <div>
@@ -848,7 +679,7 @@ export default function BalloonDiagramInterface() {
                     </div>
                     <Button
                       onClick={exportDiagram}
-                      className="bg-teal-600 hover:bg-teal-700 disabled:opacity-50"
+                      className="bg-teal-600 hover:bg-teal-700 disabled:opacity-50 w-full sm:w-auto"
                       disabled={balloons.length === 0 || isExporting}
                     >
                       {isExporting ? (
