@@ -1257,20 +1257,32 @@ export const CadViewer: React.FC<CadViewerProps> = ({
         set({ realTimeGeometry, currentGeometry: geometry, isLoading: false });
         onGeometryAnalyzed?.(realTimeGeometry);
 
-        return () => window.removeEventListener('resize', onResize);
+      } catch (modelError: any) {
+        // Model loading specific error handling
+        let errorMessage = 'Failed to load CAD model.';
+        
+        if (modelError.message?.includes('File') || modelError.message?.includes('format')) {
+          errorMessage = 'File format not supported or file is corrupted. Please try a different file.';
+        } else if (modelError.message?.includes('network') || modelError.message?.includes('fetch')) {
+          errorMessage = 'Network error loading file. Please check your connection and try again.';
+        } else if (modelError.message) {
+          errorMessage = modelError.message;
+        }
+        
+        set({ isLoading: false, error: errorMessage });
+        return;
+      }
+
+      return () => window.removeEventListener('resize', onResize);
 
     } catch (err: any) {
       // Enhanced error handling for mobile devices
-      let errorMessage = 'Failed to load CAD model.';
+      let errorMessage = 'Failed to initialize 3D viewer.';
       
       if (err.message?.includes('WebGL')) {
         errorMessage = 'WebGL is not supported on this device. Please try using a desktop computer or newer mobile device with WebGL support.';
       } else if (err.message?.includes('memory') || err.message?.includes('Memory')) {
         errorMessage = 'Device ran out of memory. Try closing other apps or using a smaller file.';
-      } else if (err.message?.includes('File') || err.message?.includes('format')) {
-        errorMessage = 'File format not supported or file is corrupted. Please try a different file.';
-      } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
-        errorMessage = 'Network error loading file. Please check your connection and try again.';
       } else if (err.message) {
         errorMessage = err.message;
       }
