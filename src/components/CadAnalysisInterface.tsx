@@ -15,6 +15,7 @@ import { CadViewer } from './CadViewer';
 import { CreditDisplay } from './CreditDisplay';
 import CommunityButton from './CommunityButton';
 import { useAuth } from './auth/AuthProvider';
+import { ErrorBoundary } from './ErrorBoundary';
 import { cadAnalysisApi, type CadPart, supabase } from '@/lib/supabase';
 import { PerformanceOptimizer } from '@/lib/performance-optimizer';
 import Link from 'next/link';
@@ -773,17 +774,43 @@ export const CadAnalysisInterface = () => {
                         <div className="w-full lg:flex-1 relative bg-gradient-to-b from-[#4a4a4a] to-[#2d2d2d]">
                           <div className="h-[50vh] md:h-[60vh] lg:h-[85vh] min-h-[300px] md:min-h-[400px] relative">
                             {part.cadFileUrl ? (
-                              <CadViewer
-                                fileUrl={part.cadFileUrl}
-                                fileName={part.fileName}
-                                fileType={part.fileExtension}
-                                rawFile={part.rawFile}
-                                creditInfo={creditInfo}
-                                onGeometryAnalyzed={(geometry) => handleGeometryAnalyzed(part.id, geometry)}
-                                onUnitChange={(newUnit) => handleUnitChange(part.id, newUnit)}
-                                selectedFeatureType={selectedFeatures[part.id]}
-                                className="h-full w-full"
-                              />
+                              <ErrorBoundary
+                                fallback={
+                                  <div className="h-full w-full flex items-center justify-center bg-gradient-to-b from-[#4a4a4a] to-[#2d2d2d]">
+                                    <div className="text-white text-center max-w-md mx-auto px-4">
+                                      <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-red-500/20 flex items-center justify-center">
+                                        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                        </svg>
+                                      </div>
+                                      <h3 className="text-lg font-medium mb-2">3D Viewer Unavailable</h3>
+                                      <p className="text-sm text-gray-300 mb-4">
+                                        The 3D viewer cannot run on this device. This may be due to:
+                                      </p>
+                                      <ul className="text-sm text-gray-400 text-left mb-4 space-y-1">
+                                        <li>• WebGL not supported</li>
+                                        <li>• Insufficient device memory</li>
+                                        <li>• Browser compatibility issues</li>
+                                      </ul>
+                                      <p className="text-xs text-gray-400">
+                                        For best experience, try using a desktop computer or newer mobile device.
+                                      </p>
+                                    </div>
+                                  </div>
+                                }
+                              >
+                                <CadViewer
+                                  fileUrl={part.cadFileUrl}
+                                  fileName={part.fileName}
+                                  fileType={part.fileExtension}
+                                  rawFile={part.rawFile}
+                                  creditInfo={creditInfo}
+                                  onGeometryAnalyzed={(geometry) => handleGeometryAnalyzed(part.id, geometry)}
+                                  onUnitChange={(newUnit) => handleUnitChange(part.id, newUnit)}
+                                  selectedFeatureType={selectedFeatures[part.id]}
+                                  className="h-full w-full"
+                                />
+                              </ErrorBoundary>
                             ) : (
                               <div className="h-full w-full flex items-center justify-center">
                                 <div className="text-white text-center">
