@@ -373,61 +373,60 @@ export default function BalloonDiagramInterface() {
       setExportMessage('Generating high-quality diagram...');
       setLastExportTime(now);
       
-      // Fallback: try to use getDisplayMedia API for screen capture
+      // Use HTML2Canvas to capture the PDF viewer container directly
       try {
-        // @ts-ignore - getDisplayMedia might not be fully typed
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: true
+        // Import html2canvas dynamically
+        const html2canvas = (await import('html2canvas')).default;
+        
+        // Find the PDF viewer container
+        const pdfContainer = containerRef.current;
+        if (!pdfContainer) {
+          throw new Error('PDF container not found');
+        }
+        
+        // Configure html2canvas for high quality capture
+        const canvas = await html2canvas(pdfContainer, {
+          backgroundColor: '#ffffff',
+          scale: 2, // High quality capture
+          useCORS: true,
+          allowTaint: true,
+          removeContainer: false,
+          logging: false,
+          width: pdfContainer.scrollWidth,
+          height: pdfContainer.scrollHeight,
+          scrollX: 0,
+          scrollY: 0
         });
         
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        video.play();
-        
-        video.addEventListener('loadedmetadata', () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
-          if (ctx) {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+        // Convert to blob and download
+        canvas.toBlob((blob: Blob | null) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${uploadedFile.name.replace('.pdf', '')}_with_balloons.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
             
-            ctx.drawImage(video, 0, 0);
+            // Show success popup
+            setShowCelebration(true);
+            setExportMessage(null);
             
-            // Stop the stream
-            stream.getTracks().forEach(track => track.stop());
-            
-            // Download
-            canvas.toBlob((blob: Blob | null) => {
-              if (blob) {
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `${uploadedFile.name.replace('.pdf', '')}_screen_capture.png`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                
-                // Show success popup
-                setShowCelebration(true);
-                setExportMessage(null);
-                
-                // Hide celebration after 4 seconds
-                setTimeout(() => {
-                  setShowCelebration(false);
-                }, 4000);
-              } else {
-                throw new Error('Screen capture failed');
-              }
-            }, 'image/png');
+            // Hide celebration after 4 seconds
+            setTimeout(() => {
+              setShowCelebration(false);
+            }, 4000);
+          } else {
+            throw new Error('Canvas to blob conversion failed');
           }
-        });
+        }, 'image/png', 0.95); // High quality PNG
         
-      } catch (screenCaptureError) {
-        // Final fallback: simple instruction message
-        setExportMessage('Download failed. Please try again.');
-        setTimeout(() => setExportMessage(null), 3000);
+      } catch (html2canvasError) {
+        // Fallback: try simple screenshot with better instructions
+        setExportMessage('Please manually screenshot the PDF area above. Automatic capture failed.');
+        setTimeout(() => setExportMessage(null), 5000);
       }
       
     } catch (error) {
