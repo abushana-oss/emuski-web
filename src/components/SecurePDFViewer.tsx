@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { FileText, ExternalLink } from 'lucide-react';
+import { setupPDFWorker } from '@/lib/pdf-config';
 
 interface BalloonAnnotation {
   id: string;
@@ -236,8 +237,6 @@ export const SecurePDFViewer = ({
   }, []);
 
   const renderBalloon = (balloon: BalloonAnnotation) => {
-    const baseClasses = "absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200 hover:scale-110 z-10";
-    
     // Dynamic sizing based on balloonSize (1-5)
     const sizeMap = {
       1: { width: 12, height: 12, fontSize: 6 },   // Very tiny
@@ -248,33 +247,56 @@ export const SecurePDFViewer = ({
     };
     
     const size = sizeMap[balloonSize as keyof typeof sizeMap] || sizeMap[3];
-    const sizeClasses = "flex items-center justify-center text-white font-bold border border-white shadow-md";
-    const fontSizeStyle = { fontSize: `${size.fontSize}px`, width: `${size.width}px`, height: `${size.height}px` };
     
-    let shapeClasses = "";
-    switch (balloon.style) {
-      case 'circle':
-        shapeClasses = "rounded-full";
-        break;
-      case 'square':
-        shapeClasses = "rounded-none";
-        break;
-      case 'diamond':
-        shapeClasses = "rounded-none transform rotate-45";
-        break;
-    }
+    // ✅ Fix transform conflicts - create proper transforms for each shape
+    const getTransformStyle = (style: string) => {
+      const baseTransform = 'translate(-50%, -50%)'; // Center the balloon
+      
+      switch (style) {
+        case 'circle':
+        case 'square':
+          return baseTransform;
+        case 'diamond':
+          return `${baseTransform} rotate(45deg)`; // Combine centering + rotation
+        default:
+          return baseTransform;
+      }
+    };
+
+    // ✅ Ensure text is ALWAYS upright (no rotation conflicts)
+    const getTextTransform = () => {
+      return 'none'; // Force no rotation on text elements
+    };
+
+    const getShapeClasses = (style: string) => {
+      switch (style) {
+        case 'circle':
+          return "rounded-full";
+        case 'square':
+          return "rounded-none";
+        case 'diamond':
+          return "rounded-none"; // No transform in class, handled by style
+        default:
+          return "rounded-full";
+      }
+    };
 
     const isEditing = editingBalloon === balloon.id;
 
     return (
       <div key={balloon.id}>
         <div
-          className={`${baseClasses} ${sizeClasses} ${shapeClasses} ${isEditing ? 'ring-2 ring-blue-400' : ''}`}
+          className={`absolute cursor-pointer transition-all duration-200 hover:scale-110 flex items-center justify-center text-white font-bold border border-white shadow-md ${getShapeClasses(balloon.style)} ${isEditing ? 'ring-2 ring-blue-400' : ''}`}
           style={{
             left: `${balloon.x}%`,
             top: `${balloon.y}%`,
             backgroundColor: balloon.color,
-            ...fontSizeStyle
+            width: `${size.width}px`,
+            height: `${size.height}px`,
+            fontSize: `${size.fontSize}px`,
+            zIndex: 20, // ✅ Ensure balloons are above PDF canvas
+            // ✅ Use clean transform without conflicts
+            transform: getTransformStyle(balloon.style)
           }}
           onMouseDown={(e) => !isEditing && handleBalloonMouseDown(e, balloon.id)}
           onContextMenu={(e) => handleBalloonRightClick(e, balloon.id)}
@@ -291,18 +313,39 @@ export const SecurePDFViewer = ({
                 if (e.key === 'Enter') saveEditedNumber();
                 if (e.key === 'Escape') cancelEditing();
               }}
-              className={`text-center border-0 bg-transparent text-white font-bold outline-none ${balloon.style === 'diamond' ? 'transform -rotate-45' : ''}`}
+              className="text-center border-0 bg-transparent text-white font-bold outline-none"
               style={{ 
                 fontSize: `${size.fontSize}px`, 
                 backgroundColor: 'transparent',
                 width: `${size.width}px`,
-                height: `${size.height}px`
+                height: `${size.height}px`,
+                // ✅ NO rotation on text - keep it always upright
+                transform: getTextTransform(),
+                position: 'relative',
+                zIndex: 1
               }}
               autoFocus
               onClick={(e) => e.stopPropagation()}
             />
           ) : (
-            <span className={balloon.style === 'diamond' ? 'transform -rotate-45' : ''}>
+            <span 
+              className="balloon-number"
+              style={{
+                // ✅ Perfect centering for balloon numbers
+                transform: getTextTransform(),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+                lineHeight: '1',
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                zIndex: 1,
+                textAlign: 'center'
+              }}
+            >
               {balloon.label}
             </span>
           )}
@@ -312,14 +355,13 @@ export const SecurePDFViewer = ({
             <div
               className="absolute text-xs font-bold text-white bg-black px-1 rounded"
               style={{
-                left: `calc(${balloon.x}% + ${size.width/2}px)`,
-                top: `calc(${balloon.y}% - ${size.height/2 + 2}px)`,
+                left: `${size.width/2 + 4}px`, // ✅ Simplified positioning relative to balloon
+                top: `${-size.height/2 - 2}px`,
                 maxWidth: '150px',
                 zIndex: 20,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                transform: 'translateX(0px) translateY(0px)'
+                textOverflow: 'ellipsis'
               }}
               title={`Full note: ${balloon.note}`}
             >
@@ -374,6 +416,118 @@ export const SecurePDFViewer = ({
     };
   }, [file, pdfUrl]);
 
+  // PDF.js rendering effect
+  useEffect(() => {
+    if (!localPdfUrl) return;
+
+    const renderPDF = async () => {
+      try {
+        // ✅ Setup PDF.js with local worker (Turbopack safe)
+        const pdfjsLib = await setupPDFWorker();
+
+        // Get canvas element
+        const canvas = document.getElementById('pdf-canvas') as HTMLCanvasElement;
+        const container = document.getElementById('pdf-container') as HTMLDivElement;
+        
+        if (!canvas || !container) return;
+
+        const context = canvas.getContext('2d');
+        if (!context) return;
+
+        // ✅ Load PDF with CORS enabled
+        const loadingTask = pdfjsLib.getDocument({
+          url: localPdfUrl,
+          withCredentials: false,
+          // ✅ Enable CORS headers to prevent canvas tainting
+          httpHeaders: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          // ✅ Disable range requests for better CORS compatibility
+          disableRange: true,
+          disableStream: true
+        });
+
+        const pdf = await loadingTask.promise;
+        const page = await pdf.getPage(1);
+
+        // Calculate scale to fit container
+        const containerRect = container.getBoundingClientRect();
+        const viewport = page.getViewport({ scale: 1.0 });
+        
+        // ✅ Calculate base scale for container fit
+        const scaleX = (containerRect.width - 10) / viewport.width;
+        const scaleY = (containerRect.height - 10) / viewport.height;
+        const baseScale = Math.min(scaleX, scaleY, 3.0);
+        
+        // ✅ Use normal resolution for proper export scaling
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        const scale = baseScale * devicePixelRatio; // Normal resolution for export compatibility
+        
+
+        const scaledViewport = page.getViewport({ scale });
+
+        // ✅ Set ultra-high resolution canvas dimensions
+        canvas.width = scaledViewport.width;
+        canvas.height = scaledViewport.height;
+        
+        // ✅ Scale down display size while keeping good internal resolution
+        const displayWidth = scaledViewport.width / devicePixelRatio;
+        const displayHeight = scaledViewport.height / devicePixelRatio;
+        
+        // ✅ Center the canvas properly within container
+        const containerWidth = containerRect.width;
+        const containerHeight = containerRect.height;
+        const canvasLeft = (containerWidth - displayWidth) / 2;
+        const canvasTop = (containerHeight - displayHeight) / 2;
+        
+        canvas.style.display = 'block';
+        canvas.style.position = 'absolute';
+        canvas.style.left = `${Math.max(0, canvasLeft)}px`;
+        canvas.style.top = `${Math.max(0, canvasTop)}px`;
+        canvas.style.width = `${displayWidth}px`; // ✅ Set display size
+        canvas.style.height = `${displayHeight}px`; // ✅ Set display size
+        canvas.style.zIndex = '1';
+        // ✅ CRITICAL: Use high-quality image rendering for zoom
+        canvas.style.imageRendering = 'high-quality';
+        canvas.style.imageRendering = '-webkit-optimize-contrast';
+        canvas.style.imageRendering = 'crisp-edges';
+        canvas.style.imageRendering = 'pixelated'; // Fallback
+
+        // ✅ Enable ULTRA high-quality canvas rendering for zoom
+        context.imageSmoothingEnabled = true; // Enable smoothing for high-res zoom
+        context.imageSmoothingQuality = 'high'; // Best quality smoothing
+        context.textRenderingOptimization = 'optimizeLegibility';
+        
+        
+        // ✅ Render PDF with high-quality settings
+        const renderContext = {
+          canvasContext: context,
+          viewport: scaledViewport,
+          // ✅ Enable high-quality rendering
+          intent: 'display', // Use display intent for better quality
+          renderInteractiveForms: false,
+          annotationMode: 0 // No annotations rendering conflicts
+        };
+
+        const renderTask = page.render(renderContext);
+        
+        // ✅ Wait for render completion before marking as loaded
+        await renderTask.promise;
+        
+        // ✅ Store render completion state for export timing
+        (canvas as any).pdfRenderComplete = true;
+        setIsLoaded(true);
+        
+
+      } catch (error) {
+        console.error('PDF rendering error:', error);
+        setIsLoaded(false);
+      }
+    };
+
+    renderPDF();
+  }, [localPdfUrl]);
+
   const minHeight = '80vh';
 
   // Don't render if no PDF URL is available
@@ -426,49 +580,29 @@ export const SecurePDFViewer = ({
       ) : (
         /* Desktop: Show PDF viewer with annotation overlay */
         <div className="relative w-full overflow-hidden" style={{ height: minHeight }}>
-          {/* Try object tag first, fallback to iframe */}
-          <object
-            data={`${localPdfUrl}#view=Fit&scrollbar=0&toolbar=0&navpanes=0&zoom=page-fit`}
-            type="application/pdf"
-            className="w-full h-full border-0 bg-white"
-            onLoad={() => setIsLoaded(true)}
-            style={{ 
-              minHeight, 
-              overflow: 'hidden',
-              outline: 'none',
-            }}
+          {/* PDF.js Canvas Renderer */}
+          <div 
+            id="pdf-container" 
+            className="relative w-full h-full bg-white flex items-center justify-center"
+            style={{ minHeight }}
           >
-            <iframe
-              ref={iframeRef}
-              src={`${localPdfUrl}#view=Fit&scrollbar=0&toolbar=0&navpanes=0&zoom=page-fit`}
-              className="w-full h-full border-0 bg-white"
-              title="PDF Technical Drawing"
-              loading="lazy"
-              onLoad={() => setIsLoaded(true)}
-              allow="fullscreen"
-              sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-downloads"
-              referrerPolicy="no-referrer-when-downgrade"
+            <canvas 
+              id="pdf-canvas"
+              className="max-w-full max-h-full object-contain"
               style={{ 
-                overflow: 'hidden',
-                outline: 'none'
+                display: 'block',
+                position: 'absolute',
+                zIndex: 1
+                // ✅ Position will be calculated dynamically for centering
               }}
-            >
-              <div className="flex flex-col items-center justify-center p-8">
-                <FileText className="w-16 h-16 text-gray-400 mb-4" />
-                <p className="text-gray-600 text-center mb-4">
-                  Your browser does not support PDF viewing or the PDF failed to load.
-                </p>
-                <a
-                  href={localPdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-                >
-                  Open PDF in New Tab
-                </a>
+            />
+            {!isLoaded && (
+              <div className="text-center">
+                <FileText className="w-16 h-16 text-teal-600 mx-auto mb-4 animate-pulse" />
+                <p className="text-gray-600 font-medium">Loading PDF...</p>
               </div>
-            </iframe>
-          </object>
+            )}
+          </div>
         
         {/* Annotation Overlay */}
         <div
@@ -480,7 +614,10 @@ export const SecurePDFViewer = ({
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          style={{ pointerEvents: isAnnotating || balloons.length > 0 ? 'auto' : 'none' }}
+          style={{ 
+            pointerEvents: isAnnotating || balloons.length > 0 ? 'auto' : 'none',
+            zIndex: 10 // ✅ Ensure balloons appear above PDF canvas
+          }}
           data-balloon-overlay="true"
         >
           {/* Render all balloons */}

@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 import '@/index.css'
 import { initializeCacheSystem } from '@/lib/cache'
+import '../src/app/globals' // Import PDF.js global config early
 
 // Initialize cache system on app startup (server-side only)
 if (typeof window === 'undefined') {
@@ -438,6 +439,18 @@ export default function RootLayout({
                 }
               ]
             })
+          }}
+        />
+
+        {/* PDF.js Configuration - Simple and Turbopack-safe */}
+        <Script
+          id="pdf-worker-config"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // ✅ Set PDF.js worker to local file (Turbopack safe)
+              window.pdfjsWorkerPath = '/pdf.worker.min.js';
+            `
           }}
         />
 

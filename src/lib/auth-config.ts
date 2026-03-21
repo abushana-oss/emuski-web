@@ -767,8 +767,6 @@ export const authService = {
       }, 10000) // 10 second timeout for faster feedback
       
       const redirectUrl = `${window.location.origin}/auth/callback${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`;
-      console.log('🔍 DEBUG: OAuth redirect URL:', redirectUrl);
-      console.log('🔍 DEBUG: Current origin:', window.location.origin);
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -782,7 +780,6 @@ export const authService = {
         }
       })
       
-      console.log('🔍 DEBUG: Supabase OAuth response:', { data, error });
       
       clearTimeout(timeoutId)
 

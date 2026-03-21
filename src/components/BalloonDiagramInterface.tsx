@@ -373,34 +373,98 @@ export default function BalloonDiagramInterface() {
       setExportMessage('Generating high-quality diagram...');
       setLastExportTime(now);
       
-      // Use HTML2Canvas to capture the PDF viewer container directly
+      // ✅ Take screenshot of PDF + balloons with proper CORS handling
       try {
-        // Import html2canvas dynamically
-        const html2canvas = (await import('html2canvas')).default;
+        setExportMessage('Capturing PDF with balloons...');
         
-        // Find the PDF viewer container
         const pdfContainer = containerRef.current;
         if (!pdfContainer) {
           throw new Error('PDF container not found');
         }
+
+        // ✅ Wait for PDF render completion (not just arbitrary timeout)
+        const pdfCanvas = document.getElementById('pdf-canvas') as HTMLCanvasElement;
+        if (!pdfCanvas) {
+          throw new Error('PDF canvas not found');
+        }
         
-        // Configure html2canvas for high quality capture
-        const canvas = await html2canvas(pdfContainer, {
-          backgroundColor: '#ffffff',
-          scale: 2, // High quality capture
+        // ✅ Check if PDF rendering is complete
+        let waitAttempts = 0;
+        while (!(pdfCanvas as any).pdfRenderComplete && waitAttempts < 20) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          waitAttempts++;
+        }
+        
+        if (!(pdfCanvas as any).pdfRenderComplete) {
+          console.warn('PDF may not be fully rendered, proceeding anyway');
+        }
+        
+        // ✅ Verify canvas is not tainted
+        try {
+          pdfCanvas.toDataURL(); // Test if canvas is readable
+        } catch (e) {
+          console.error('❌ PDF canvas is tainted - CORS issue detected');
+          throw new Error('PDF canvas is tainted due to CORS restrictions');
+        }
+
+        
+        setExportMessage('Capturing PDF with balloons...');
+        
+        // ✅ SIMPLE APPROACH: Use html2canvas to capture exactly what's visible
+        const html2canvas = (await import('html2canvas')).default;
+        
+        const finalCanvas = await html2canvas(pdfContainer, {
           useCORS: true,
-          allowTaint: true,
-          removeContainer: false,
+          allowTaint: false,
+          scale: 2, // ✅ 2x for crisp quality while maintaining proper size
+          backgroundColor: '#ffffff',
           logging: false,
-          width: pdfContainer.scrollWidth,
-          height: pdfContainer.scrollHeight,
+          width: pdfContainer.offsetWidth,
+          height: pdfContainer.offsetHeight,
           scrollX: 0,
-          scrollY: 0
+          scrollY: 0,
+          foreignObjectRendering: false,
+          removeContainer: false,
+          imageTimeout: 15000,
+          onclone: (clonedDoc) => {
+            // ✅ Fix balloon number positioning in export
+            const balloonNumbers = clonedDoc.querySelectorAll('.balloon-number, span');
+            balloonNumbers.forEach((span: any) => {
+              span.style.transform = 'none !important'; // Remove any transforms
+              span.style.position = 'relative';
+              span.style.display = 'inline-block';
+              span.style.lineHeight = '1';
+              span.style.verticalAlign = 'baseline';
+              span.style.textAlign = 'center';
+              span.style.width = '100%';
+              span.style.height = '100%';
+              span.style.alignItems = 'center';
+              span.style.justifyContent = 'center';
+            });
+            
+            // ✅ Fix balloon container positioning
+            const balloonContainers = clonedDoc.querySelectorAll('[data-balloon-overlay] > div > div');
+            balloonContainers.forEach((balloon: any) => {
+              balloon.style.display = 'flex';
+              balloon.style.alignItems = 'center';
+              balloon.style.justifyContent = 'center';
+              balloon.style.textAlign = 'center';
+            });
+            
+            // Ensure crisp rendering
+            const allElements = clonedDoc.querySelectorAll('*');
+            allElements.forEach((el: any) => {
+              el.style.imageRendering = 'auto';
+              el.style.textRendering = 'optimizeLegibility';
+              el.style.webkitFontSmoothing = 'antialiased';
+            });
+          }
         });
         
-        // Convert to blob and download
-        canvas.toBlob((blob: Blob | null) => {
+        // ✅ Convert to high-quality blob and download
+        finalCanvas.toBlob((blob: Blob | null) => {
           if (blob) {
+            // Download the image
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
@@ -418,14 +482,16 @@ export default function BalloonDiagramInterface() {
             setTimeout(() => {
               setShowCelebration(false);
             }, 4000);
+            
+            
           } else {
-            throw new Error('Canvas to blob conversion failed');
+            throw new Error('Failed to capture screenshot');
           }
-        }, 'image/png', 0.95); // High quality PNG
+        }, 'image/png', 1.0); // ✅ Maximum quality (1.0 instead of 0.95)
         
-      } catch (html2canvasError) {
-        // Fallback: try simple screenshot with better instructions
-        setExportMessage('Please manually screenshot the PDF area above. Automatic capture failed.');
+      } catch (screenshotError) {
+        console.error('Screenshot capture failed:', screenshotError);
+        setExportMessage('Screenshot failed. Please try again or manually take a screenshot.');
         setTimeout(() => setExportMessage(null), 5000);
       }
       
