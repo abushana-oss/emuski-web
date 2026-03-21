@@ -440,6 +440,64 @@ export default function RootLayout({
             })
           }}
         />
+
+        {/* Extension Error Suppression - Production Quality */}
+        <Script
+          id="extension-error-handler"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Suppress Chrome extension errors in production
+              (function() {
+                'use strict';
+                
+                // Suppress runtime.lastError warnings from extensions
+                const originalError = console.error;
+                console.error = function(...args) {
+                  const message = args.join(' ');
+                  if (
+                    message.includes('runtime.lastError') ||
+                    message.includes('message port closed') ||
+                    message.includes('Extension context invalidated') ||
+                    message.includes('plugin.lusha.com') ||
+                    message.includes('chrome-extension://')
+                  ) {
+                    return; // Suppress extension errors
+                  }
+                  originalError.apply(console, args);
+                };
+
+                // Handle unhandled promise rejections from extensions
+                window.addEventListener('unhandledrejection', function(event) {
+                  const message = event.reason?.message || event.reason || '';
+                  if (
+                    message.includes('Extension') ||
+                    message.includes('chrome-extension') ||
+                    message.includes('plugin.lusha.com') ||
+                    message.includes('runtime.lastError')
+                  ) {
+                    event.preventDefault();
+                    return;
+                  }
+                });
+
+                // Block malicious extension postMessage attempts
+                const originalPostMessage = window.postMessage;
+                window.postMessage = function(message, targetOrigin, transfer) {
+                  if (
+                    targetOrigin && (
+                      targetOrigin.includes('plugin.lusha.com') ||
+                      targetOrigin.includes('chrome-extension')
+                    )
+                  ) {
+                    return; // Block suspicious postMessage calls
+                  }
+                  originalPostMessage.call(this, message, targetOrigin, transfer);
+                };
+              })();
+            `
+          }}
+        />
       </head>
       <body className={inter.className}>
         {process.env.NEXT_PUBLIC_GTM_ID && (

@@ -140,7 +140,7 @@ const securityHeaders = [
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
-      "frame-ancestors 'self'",
+      "frame-ancestors 'none'",
       "media-src 'self' data: blob: https://*.supabase.co https://upload-dev-s3.s3.eu-central-1.amazonaws.com",
       "upgrade-insecure-requests"
     ].join('; ')

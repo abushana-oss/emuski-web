@@ -3,8 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 
 // Service role client for server-side operations (bypasses RLS)
 const supabaseServiceRole = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
 );
 
 export interface UserCredits {
@@ -43,6 +49,11 @@ export class CreditsManager {
    */
   static async getUserCredits(userId: string): Promise<UserCredits> {
     try {
+      // Check if environment variables are configured
+      if (!process.env.SUPABASE_SERVICE_ROLE_KEY || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        throw new Error('SUPABASE_SERVICE_ROLE_KEY_MISSING');
+      }
+
       // Single database query for maximum performance (Industry Standard)
       const { data: userCredits, error } = await supabaseServiceRole
         .from('user_credits')
