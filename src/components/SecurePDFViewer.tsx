@@ -496,7 +496,6 @@ export const SecurePDFViewer = ({
         // ✅ Enable ULTRA high-quality canvas rendering for zoom
         context.imageSmoothingEnabled = true; // Enable smoothing for high-res zoom
         context.imageSmoothingQuality = 'high'; // Best quality smoothing
-        context.textRenderingOptimization = 'optimizeLegibility';
         
         
         // ✅ Render PDF with high-quality settings
