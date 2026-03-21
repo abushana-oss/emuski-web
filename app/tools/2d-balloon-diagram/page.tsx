@@ -1,0 +1,290 @@
+import { Metadata } from 'next';
+import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
+import { Suspense } from 'react';
+import DynamicBalloonAnalysis from '@/components/DynamicBalloonAnalysis';
+
+export const metadata: Metadata = {
+  title: 'Free 2D Balloon Diagram Tool | Technical Drawing Annotations | EMUSKI',
+  description: 'Professional balloon diagram tool for technical drawings. Upload PDFs, add numbered annotations, customize styles, and export annotated diagrams. Corporate access only - designed for engineering teams.',
+  keywords: '2D balloon diagram, technical drawing annotation, PDF annotation tool, engineering diagrams, balloon numbering, technical documentation, drawing markup, CAD annotation, engineering tools',
+  openGraph: {
+    title: '2D Balloon Diagram Tool | EMUSKI Manufacturing',
+    description: 'Professional 2D balloon diagram tool for technical drawings. Upload PDFs, add interactive annotations, and create professional engineering documentation.',
+    type: 'website',
+    url: 'https://www.emuski.com/tools/2d-balloon-diagram',
+    images: [
+      {
+        url: 'https://www.emuski.com/social-banner-balloon-diagram.jpg',
+        width: 1200,
+        height: 630,
+        alt: '2D Balloon Diagram Tool by EMUSKI'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '2D Balloon Diagram Tool | EMUSKI',
+    description: 'Professional balloon annotation tool for technical drawings and engineering documentation.',
+    images: ['https://www.emuski.com/social-banner-balloon-diagram.jpg']
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
+  alternates: {
+    canonical: 'https://www.emuski.com/tools/2d-balloon-diagram'
+  }
+};
+
+export default function BalloonDiagramPage() {
+  const structuredData = [
+    // Main Software Application
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "EMUSKI 2D Balloon Diagram Tool",
+      "description": "Professional 2D balloon diagram tool for technical drawings. Upload PDFs, add interactive annotations, customize balloon styles, and export annotated diagrams.",
+      "applicationCategory": ["EngineeringApplication", "DesignApplication"],
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free 2D balloon diagram tool with annotation features",
+        "eligibleRegion": "Worldwide",
+        "availability": "https://schema.org/InStock"
+      },
+      "provider": {
+        "@type": "Organization",
+        "name": "EMUSKI Manufacturing Solutions",
+        "url": "https://emuski.com",
+        "@id": "https://emuski.com/#organization"
+      },
+      "featureList": [
+        "PDF Upload and Visualization",
+        "Interactive Balloon Placement",
+        "Drag-and-Drop Annotation Editing",
+        "Customizable Balloon Styles",
+        "Color Picker",
+        "Export Annotated Diagrams",
+        "Technical Drawing Markup",
+        "Engineering Documentation",
+        "Balloon Numbering System",
+        "Professional Annotation Tools"
+      ],
+      "screenshot": "https://emuski.com/screenshots/balloon-diagram-tool.webp",
+      "softwareVersion": "1.0",
+      "datePublished": "2024-01-01",
+      "dateModified": new Date().toISOString().split('T')[0]
+    },
+    // FAQ Schema
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question", 
+          "name": "What file formats are supported for balloon diagrams?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our tool supports PDF files for creating balloon diagrams. You can upload technical drawings, engineering drawings, and other PDF documents up to 50MB in size."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I customize the balloon styles and colors?", 
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can choose from circle, square, or diamond balloon shapes, select from preset colors or use a custom color picker, and all balloons are automatically numbered."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I export my annotated diagrams?",
+          "acceptedAnswer": {
+            "@type": "Answer", 
+            "text": "You can export your balloon diagrams as high-quality PNG images or as JSON data containing all annotation information for later editing."
+          }
+        }
+      ]
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      {structuredData.map((data, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+        />
+      ))}
+      <Navbar />
+      
+      {/* Hero Section */}
+      <section className="relative mt-16 sm:mt-20 py-16 sm:py-20 md:py-24 lg:py-32 border-b border-border/30 overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>
+        {/* Grid Pattern Overlay */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4fd3d4_1px,transparent_1px),linear-gradient(to_bottom,#4fd3d4_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10">
+          <div className="container mx-auto px-6 sm:px-8 lg:px-12 pt-4 sm:pt-5 md:pt-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="space-y-4 sm:space-y-5 md:space-y-6">
+                {/* Category Badge */}
+                <div className="flex justify-center">
+                  <span className="text-emuski-teal text-xs sm:text-sm font-semibold tracking-wider uppercase">
+                    Advanced Engineering Tools
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight px-2">
+                  2D Balloon Diagram Tool
+                </h1>
+
+                {/* Description */}
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto px-2">
+                  Create professional balloon diagrams for your technical drawings. Upload PDF documents, 
+                  add interactive numbered annotations, customize balloon styles, and export annotated diagrams.
+                </p>
+                
+                {/* Feature highlights */}
+                <div className="flex flex-wrap justify-center gap-4 mt-6">
+                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
+                    PDF Upload & Visualization
+                  </span>
+                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
+                    Interactive Annotations
+                  </span>
+                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
+                    Custom Balloon Styles
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <main className="pt-20">
+        <Suspense fallback={
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 border-4 border-emuski-teal border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p className="text-gray-600">Initializing 2D Balloon Diagram Tool...</p>
+            </div>
+          </div>
+        }>
+          <DynamicBalloonAnalysis />
+        </Suspense>
+        
+        {/* Request for Quote CTA */}
+        <section className="py-16 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal-light/5 border-t border-border">
+          <div className="container mx-auto px-6 sm:px-8 lg:px-12">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="space-y-6">
+
+                {/* Content */}
+                <div className="space-y-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                    Professional Engineering Documentation
+                  </h2>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                    Need professional technical documentation services? Our expert team provides 
+                    comprehensive engineering drawing services, technical documentation, and balloon diagram creation for complex projects.
+                  </p>
+                  
+                  {/* Trust indicators */}
+                  <div className="flex flex-wrap justify-center gap-6 mt-6 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>ISO 9001 Certified</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>Professional Documentation</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>Expert Engineering Support</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <a 
+                    href="/contact"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-emuski-teal text-white font-bold rounded-xl hover:bg-emuski-teal-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                  >
+                    Get Professional Documentation
+                  </a>
+                  
+                  <a 
+                    href="tel:+918667088060"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-card border border-border text-foreground font-semibold rounded-xl hover:border-emuski-teal hover:bg-emuski-teal/5 transition-all duration-300"
+                  >
+                    Call Expert: +91 86670 88060
+                  </a>
+                </div>
+
+                {/* Additional Info */}
+                <p className="text-sm text-muted-foreground mt-6">
+                  <strong>No commitment required.</strong> Free consultation for all technical documentation needs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
+      
+      {/* Additional SEO enhancements */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.emuski.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Tools",
+                "item": "https://www.emuski.com/tools"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "2D Balloon Diagram",
+                "item": "https://www.emuski.com/tools/2d-balloon-diagram"
+              }
+            ]
+          })
+        }}
+      />
+    </div>
+  );
+}

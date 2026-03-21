@@ -1,0 +1,597 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { FileText, ExternalLink } from 'lucide-react';
+
+interface BalloonAnnotation {
+  id: string;
+  x: number;
+  y: number;
+  number: number;
+  label: string;
+  style: 'circle' | 'square' | 'diamond';
+  color: string;
+  note?: string;
+}
+
+interface SecurePDFViewerProps {
+  file: File | null;
+  pdfUrl?: string;
+  balloons: BalloonAnnotation[];
+  isAnnotating: boolean;
+  onAddBalloon: (x: number, y: number) => void;
+  onRemoveBalloon: (id: string) => void;
+  onUpdateBalloon: (id: string, updates: Partial<BalloonAnnotation>) => void;
+  onUpdateBalloonNumber: (id: string, newNumber: number) => void;
+  onUpdateBalloonNote: (id: string, note: string) => void;
+  balloonSize: number;
+}
+
+export const SecurePDFViewer = ({
+  file,
+  pdfUrl,
+  balloons,
+  isAnnotating,
+  onAddBalloon,
+  onRemoveBalloon,
+  onUpdateBalloon,
+  onUpdateBalloonNumber,
+  onUpdateBalloonNote,
+  balloonSize
+}: SecurePDFViewerProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [draggedBalloon, setDraggedBalloon] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; balloonId: string } | null>(null);
+  const [editingBalloon, setEditingBalloon] = useState<string | null>(null);
+  const [editNumber, setEditNumber] = useState('');
+  const [editingNote, setEditingNote] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const [lastClickTime, setLastClickTime] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    // Don't add balloon if we just finished dragging, if not in annotating mode, or if context menu is open
+    if (!isAnnotating || !overlayRef.current || isDragging || contextMenu || editingBalloon) return;
+
+    const currentTime = Date.now();
+    const timeDiff = currentTime - lastClickTime;
+    
+    // Prevent multiple balloons from double-clicking (within 300ms)
+    if (timeDiff < 300) {
+      return;
+    }
+
+    // Clear any existing timeout
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+
+    // Store click position immediately to avoid stale event data
+    const rect = overlayRef.current.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+    // Debounce the click to prevent rapid-fire balloon creation
+    clickTimeoutRef.current = setTimeout(() => {
+      onAddBalloon(x, y);
+      setLastClickTime(currentTime);
+    }, 100);
+  };
+
+  const handleBalloonMouseDown = (event: React.MouseEvent, balloonId: string) => {
+    event.stopPropagation();
+    
+    // Cancel any pending balloon creation
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+    
+    const rect = overlayRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const balloon = balloons.find(b => b.id === balloonId);
+    if (!balloon) return;
+
+    setDraggedBalloon(balloonId);
+    setIsDragging(true);
+    setDragOffset({
+      x: event.clientX - rect.left - (balloon.x * rect.width / 100),
+      y: event.clientY - rect.top - (balloon.y * rect.height / 100)
+    });
+  };
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    if (!draggedBalloon || !overlayRef.current) return;
+
+    const rect = overlayRef.current.getBoundingClientRect();
+    const x = ((event.clientX - rect.left - dragOffset.x) / rect.width) * 100;
+    const y = ((event.clientY - rect.top - dragOffset.y) / rect.height) * 100;
+
+    const clampedX = Math.max(0, Math.min(100, x));
+    const clampedY = Math.max(0, Math.min(100, y));
+
+    onUpdateBalloon(draggedBalloon, { x: clampedX, y: clampedY });
+  };
+
+  const handleMouseUp = () => {
+    setDraggedBalloon(null);
+    setDragOffset({ x: 0, y: 0 });
+    
+    // Add a small delay before allowing new balloons to be added
+    // This prevents accidental balloon creation after drag
+    if (isDragging) {
+      setTimeout(() => {
+        setIsDragging(false);
+      }, 100);
+    }
+  };
+
+  const handleBalloonRightClick = (event: React.MouseEvent, balloonId: string) => {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const rect = overlayRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    // Smart positioning to keep menu on screen
+    const menuWidth = 140;
+    const menuHeight = 80;
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+
+    // Adjust if menu would go off right edge
+    if (x + menuWidth > rect.width) {
+      x = rect.width - menuWidth;
+    }
+
+    // Adjust if menu would go off bottom edge
+    if (y + menuHeight > rect.height) {
+      y = rect.height - menuHeight;
+    }
+
+    setContextMenu({
+      x: Math.max(0, x),
+      y: Math.max(0, y),
+      balloonId
+    });
+  };
+
+  const startEditingNumber = (balloonId: string) => {
+    const balloon = balloons.find(b => b.id === balloonId);
+    if (balloon) {
+      setEditingBalloon(balloonId);
+      setEditNumber(balloon.number.toString());
+      setContextMenu(null);
+    }
+  };
+
+  const saveEditedNumber = () => {
+    if (editingBalloon && editNumber) {
+      const newNumber = parseInt(editNumber);
+      if (!isNaN(newNumber) && newNumber > 0) {
+        onUpdateBalloonNumber(editingBalloon, newNumber);
+      }
+    }
+    setEditingBalloon(null);
+    setEditNumber('');
+  };
+
+  const cancelEditing = () => {
+    setEditingBalloon(null);
+    setEditNumber('');
+  };
+
+  const startEditingNote = (balloonId: string) => {
+    const balloon = balloons.find(b => b.id === balloonId);
+    if (balloon) {
+      setEditingNote(balloonId);
+      setNoteText(balloon.note || '');
+      setContextMenu(null);
+    }
+  };
+
+  const saveEditedNote = () => {
+    if (editingNote) {
+      onUpdateBalloonNote(editingNote, noteText);
+    }
+    setEditingNote(null);
+    setNoteText('');
+  };
+
+  const cancelNoteEditing = () => {
+    setEditingNote(null);
+    setNoteText('');
+  };
+
+  const closeContextMenu = () => {
+    setContextMenu(null);
+  };
+
+  // Close context menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setContextMenu(null);
+    };
+    
+    if (contextMenu) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [contextMenu]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const renderBalloon = (balloon: BalloonAnnotation) => {
+    const baseClasses = "absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200 hover:scale-110 z-10";
+    
+    // Dynamic sizing based on balloonSize (1-5)
+    const sizeMap = {
+      1: { width: 12, height: 12, fontSize: 6 },   // Very tiny
+      2: { width: 16, height: 16, fontSize: 8 },   // Tiny
+      3: { width: 20, height: 20, fontSize: 10 },  // Small
+      4: { width: 24, height: 24, fontSize: 12 },  // Medium
+      5: { width: 28, height: 28, fontSize: 14 }   // Large
+    };
+    
+    const size = sizeMap[balloonSize as keyof typeof sizeMap] || sizeMap[3];
+    const sizeClasses = "flex items-center justify-center text-white font-bold border border-white shadow-md";
+    const fontSizeStyle = { fontSize: `${size.fontSize}px`, width: `${size.width}px`, height: `${size.height}px` };
+    
+    let shapeClasses = "";
+    switch (balloon.style) {
+      case 'circle':
+        shapeClasses = "rounded-full";
+        break;
+      case 'square':
+        shapeClasses = "rounded-none";
+        break;
+      case 'diamond':
+        shapeClasses = "rounded-none transform rotate-45";
+        break;
+    }
+
+    const isEditing = editingBalloon === balloon.id;
+
+    return (
+      <div key={balloon.id}>
+        <div
+          className={`${baseClasses} ${sizeClasses} ${shapeClasses} ${isEditing ? 'ring-2 ring-blue-400' : ''}`}
+          style={{
+            left: `${balloon.x}%`,
+            top: `${balloon.y}%`,
+            backgroundColor: balloon.color,
+            ...fontSizeStyle
+          }}
+          onMouseDown={(e) => !isEditing && handleBalloonMouseDown(e, balloon.id)}
+          onContextMenu={(e) => handleBalloonRightClick(e, balloon.id)}
+          title={isEditing ? "Editing balloon number" : `Balloon ${balloon.number}${balloon.note ? ' (has note)' : ''} - Right-click for options`}
+        >
+          {isEditing ? (
+            <input
+              type="number"
+              min="1"
+              value={editNumber}
+              onChange={(e) => setEditNumber(e.target.value)}
+              onBlur={saveEditedNumber}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') saveEditedNumber();
+                if (e.key === 'Escape') cancelEditing();
+              }}
+              className={`text-center border-0 bg-transparent text-white font-bold outline-none ${balloon.style === 'diamond' ? 'transform -rotate-45' : ''}`}
+              style={{ 
+                fontSize: `${size.fontSize}px`, 
+                backgroundColor: 'transparent',
+                width: `${size.width}px`,
+                height: `${size.height}px`
+              }}
+              autoFocus
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <span className={balloon.style === 'diamond' ? 'transform -rotate-45' : ''}>
+              {balloon.label}
+            </span>
+          )}
+          
+          {/* Note text displayed directly adjacent to balloon */}
+          {balloon.note && balloon.note.trim() && !isEditing && (
+            <div
+              className="absolute text-xs font-bold text-white bg-black px-1 rounded"
+              style={{
+                left: `calc(${balloon.x}% + ${size.width/2}px)`,
+                top: `calc(${balloon.y}% - ${size.height/2 + 2}px)`,
+                maxWidth: '150px',
+                zIndex: 20,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                transform: 'translateX(0px) translateY(0px)'
+              }}
+              title={`Full note: ${balloon.note}`}
+            >
+              {balloon.note.length > 20 ? balloon.note.substring(0, 20) + '...' : balloon.note}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    const checkDevice = () => {
+      const mobile = window.innerWidth < 768;
+      const ios = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      setIsMobile(mobile);
+      setIsIOS(ios);
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
+  // Handle PDF URL - either from file or direct URL
+  const [localPdfUrl, setLocalPdfUrl] = useState<string | null>(null);
+  const [shouldCleanupUrl, setShouldCleanupUrl] = useState(false);
+
+  useEffect(() => {
+    if (pdfUrl) {
+      // Use the provided URL (from Supabase)
+      setLocalPdfUrl(pdfUrl);
+      setShouldCleanupUrl(false);
+    } else if (file) {
+      // Create blob URL from file
+      try {
+        const blobUrl = URL.createObjectURL(file);
+        setLocalPdfUrl(blobUrl);
+        setShouldCleanupUrl(true);
+      } catch (error) {
+        setLocalPdfUrl(null);
+      }
+    } else {
+      setLocalPdfUrl(null);
+    }
+
+    return () => {
+      if (shouldCleanupUrl && localPdfUrl) {
+        URL.revokeObjectURL(localPdfUrl);
+      }
+    };
+  }, [file, pdfUrl]);
+
+  const minHeight = '80vh';
+
+  // Don't render if no PDF URL is available
+  if (!localPdfUrl) {
+    return (
+      <div 
+        className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-8"
+        style={{ minHeight }}
+      >
+        <FileText className="w-20 h-20 text-gray-400 mb-6" />
+        <h3 className="text-xl font-medium text-gray-600 mb-2 text-center">
+          No PDF Available
+        </h3>
+        <p className="text-gray-500 text-center">
+          Please upload a PDF file to begin creating balloon diagrams.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      ref={containerRef} 
+      className="relative w-full bg-gray-50 overflow-hidden"
+      style={{ minHeight }}
+    >
+      {/* Mobile/iOS: Show download/open button instead of iframe */}
+      {isMobile || isIOS ? (
+        <div
+          className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-8"
+          style={{ minHeight }}
+        >
+          <FileText className="w-20 h-20 text-teal-600 mb-6" />
+          <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
+            PDF Technical Drawing
+          </h3>
+          <p className="text-gray-600 text-center mb-6 max-w-sm">
+            View this PDF in your device's native PDF viewer. Balloon annotations are not available on mobile devices.
+          </p>
+          <a
+            href={localPdfUrl || '#'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors max-w-sm w-full"
+          >
+            <ExternalLink className="w-5 h-5" />
+            Open PDF
+          </a>
+        </div>
+      ) : (
+        /* Desktop: Show PDF viewer with annotation overlay */
+        <div className="relative w-full overflow-hidden" style={{ height: minHeight }}>
+          {/* Try object tag first, fallback to iframe */}
+          <object
+            data={`${localPdfUrl}#view=Fit&scrollbar=0&toolbar=0&navpanes=0&zoom=page-fit`}
+            type="application/pdf"
+            className="w-full h-full border-0 bg-white"
+            onLoad={() => setIsLoaded(true)}
+            style={{ 
+              minHeight, 
+              overflow: 'hidden',
+              outline: 'none',
+            }}
+          >
+            <iframe
+              ref={iframeRef}
+              src={`${localPdfUrl}#view=Fit&scrollbar=0&toolbar=0&navpanes=0&zoom=page-fit`}
+              className="w-full h-full border-0 bg-white"
+              title="PDF Technical Drawing"
+              loading="lazy"
+              onLoad={() => setIsLoaded(true)}
+              allow="fullscreen"
+              sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-downloads"
+              referrerPolicy="no-referrer-when-downgrade"
+              style={{ 
+                overflow: 'hidden',
+                outline: 'none'
+              }}
+            >
+              <div className="flex flex-col items-center justify-center p-8">
+                <FileText className="w-16 h-16 text-gray-400 mb-4" />
+                <p className="text-gray-600 text-center mb-4">
+                  Your browser does not support PDF viewing or the PDF failed to load.
+                </p>
+                <a
+                  href={localPdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+                >
+                  Open PDF in New Tab
+                </a>
+              </div>
+            </iframe>
+          </object>
+        
+        {/* Annotation Overlay */}
+        <div
+          ref={overlayRef}
+          className={`absolute inset-0 w-full h-full ${
+            isAnnotating ? 'cursor-crosshair' : 'pointer-events-none'
+          }`}
+          onClick={handleContainerClick}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          style={{ pointerEvents: isAnnotating || balloons.length > 0 ? 'auto' : 'none' }}
+          data-balloon-overlay="true"
+        >
+          {/* Render all balloons */}
+          {balloons.map(renderBalloon)}
+          
+          {/* Context Menu */}
+          {contextMenu && (
+            <div
+              className="absolute bg-white border border-gray-300 rounded-lg shadow-xl py-1 z-[100] min-w-[140px]"
+              style={{
+                left: `${contextMenu.x}px`,
+                top: `${contextMenu.y}px`,
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => startEditingNumber(contextMenu.balloonId)}
+                className="w-full px-3 py-2 text-left text-sm hover:bg-blue-50 flex items-center gap-2 transition-colors"
+              >
+                <span className="text-blue-600 text-base">📝</span>
+                <span className="text-gray-700">Edit Number</span>
+              </button>
+              <button
+                onClick={() => startEditingNote(contextMenu.balloonId)}
+                className="w-full px-3 py-2 text-left text-sm hover:bg-green-50 flex items-center gap-2 transition-colors"
+              >
+                <span className="text-green-600 text-base">💬</span>
+                <span className="text-gray-700">Add Note</span>
+              </button>
+              <div className="border-t border-gray-100"></div>
+              <button
+                onClick={() => {
+                  const balloon = balloons.find(b => b.id === contextMenu.balloonId);
+                  const balloonNumber = balloon?.number || '';
+                  const confirmMessage = balloon?.note 
+                    ? `Delete Balloon ${balloonNumber} and its note?\n\nNote: "${balloon.note}"`
+                    : `Delete Balloon ${balloonNumber}?`;
+                  
+                  if (window.confirm(confirmMessage)) {
+                    onRemoveBalloon(contextMenu.balloonId);
+                  }
+                  closeContextMenu();
+                }}
+                className="w-full px-3 py-2 text-left text-sm hover:bg-red-50 flex items-center gap-2 text-red-600 transition-colors"
+              >
+                <span className="text-red-600 text-base">🗑️</span>
+                <span>Delete Balloon</span>
+              </button>
+            </div>
+          )}
+
+          {/* Note Editor Modal */}
+          {editingNote && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[110]">
+              <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Add Note for Balloon #{balloons.find(b => b.id === editingNote)?.number}
+                  </h3>
+                  <button
+                    onClick={cancelNoteEditing}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <textarea
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  placeholder="Enter your note or remarks here..."
+                  className="w-full h-32 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  autoFocus
+                />
+                <div className="flex justify-end gap-3 mt-4">
+                  <button
+                    onClick={cancelNoteEditing}
+                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={saveEditedNote}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Save Note
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Annotation hint */}
+          {isAnnotating && balloons.length === 0 && (
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-4 py-2 rounded-lg text-sm">
+              Click anywhere on the PDF to add a balloon annotation
+            </div>
+          )}
+        </div>
+        
+        {/* Loading overlay */}
+        {!isLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75">
+            <div className="text-center">
+              <FileText className="w-16 h-16 text-teal-600 mx-auto mb-4 animate-pulse" />
+              <p className="text-gray-600 font-medium">Loading PDF...</p>
+            </div>
+          </div>
+        )}
+        </div>
+      )}
+    </div>
+  );
+};

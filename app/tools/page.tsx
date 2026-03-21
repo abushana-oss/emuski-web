@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Box, Zap, Wrench } from 'lucide-react';
+import { Box, Zap, Wrench, FileText } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 
@@ -24,6 +24,21 @@ const tools = [
       'Design for manufacturing analysis'
     ],
     href: '/tools/3d-cad-analysis',
+    status: 'available'
+  },
+  {
+    id: '2d-balloon-diagram',
+    title: '2D Balloon Diagram',
+    description: 'Create interactive balloon diagrams for your 2D technical drawings and PDF documents with numbered annotations.',
+    icon: FileText,
+    features: [
+      'PDF upload and visualization',
+      'Drag-and-drop balloon placement',
+      'Customizable balloon styles and colors',
+      'Export annotated diagrams',
+      'Interactive annotation editing'
+    ],
+    href: '/tools/2d-balloon-diagram',
     status: 'available'
   },
   {

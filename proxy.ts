@@ -14,12 +14,12 @@ import { createServerClient } from '@supabase/ssr'
 // Security configuration
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
+  'X-Frame-Options': 'SAMEORIGIN',
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; frame-ancestors 'none';",
+  'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; frame-ancestors 'self';",
   'X-DNS-Prefetch-Control': 'off',
-  'Cross-Origin-Resource-Policy': 'same-origin'
+  'Cross-Origin-Resource-Policy': 'cross-origin'
 };
 
 // GA4 Configuration for Server-Side Tracking
@@ -306,7 +306,7 @@ export default async function middleware(request: NextRequest) {
       sendGA4Event(payload)
     }
 
-    // Content Security Policy - Updated to include all Google, Mixpanel, and reCAPTCHA domains
+    // Content Security Policy - Updated to include all Google, Mixpanel, reCAPTCHA, and PDF viewing domains
     response.headers.set(
       'Content-Security-Policy',
       [
@@ -315,10 +315,10 @@ export default async function middleware(request: NextRequest) {
         "script-src-elem 'self' 'unsafe-inline' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com https://assets.apollo.io",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
         "font-src 'self' data: https://fonts.gstatic.com",
-        "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://images.unsplash.com https://via.placeholder.com",
+        "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://images.unsplash.com https://via.placeholder.com https://*.supabase.co",
         "connect-src 'self' https://*.google.com https://www.googleapis.com https://*.googleapis.com https://accounts.google.com https://oauth2.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://*.googletagmanager.com https://*.blogger.com https://blogger.googleusercontent.com https://api.mixpanel.com https://api-js.mixpanel.com https://cdn.mxpnl.com https://*.supabase.co https://assets.apollo.io https://*.apollo.io",
-        "frame-src 'self' https://*.google.com https://accounts.google.com https://*.googletagmanager.com https://td.doubleclick.net",
-        "object-src 'none'",
+        "frame-src 'self' blob: data: https://*.google.com https://accounts.google.com https://*.googletagmanager.com https://td.doubleclick.net https://*.supabase.co",
+        "object-src 'self' blob: data: https://*.supabase.co",
         "base-uri 'self'",
         "form-action 'self'",
         "frame-ancestors 'self'",

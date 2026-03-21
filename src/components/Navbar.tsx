@@ -42,7 +42,8 @@ const servicesDropdown = {
     path: "#",
     isNew: true,
     subItems: [
-      { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" }
+      { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" },
+      { name: "2D Balloon Diagram", path: "/tools/2d-balloon-diagram" }
     ]
   }
 };
@@ -78,7 +79,8 @@ const navigationConfig = {
     {
       title: "Tools",
       items: [
-        { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" }
+        { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" },
+        { name: "2D Balloon Diagram", path: "/tools/2d-balloon-diagram" }
       ]
     },
     {
