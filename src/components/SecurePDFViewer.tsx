@@ -502,10 +502,7 @@ export const SecurePDFViewer = ({
         const renderContext = {
           canvasContext: context,
           viewport: scaledViewport,
-          // ✅ Enable high-quality rendering
-          intent: 'display', // Use display intent for better quality
-          renderInteractiveForms: false,
-          annotationMode: 0 // No annotations rendering conflicts
+          canvas: canvas
         };
 
         const renderTask = page.render(renderContext);
