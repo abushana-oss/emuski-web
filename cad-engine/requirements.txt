@@ -9,8 +9,8 @@ fastapi==0.109.0
 uvicorn[standard]==0.27.0
 pydantic==2.5.3
 
-# File handling
-python-multipart==0.0.6
+# File handling - Updated to secure version
+python-multipart==0.0.9
 aiofiles==23.2.1
 
 # HTTP client for callbacks
