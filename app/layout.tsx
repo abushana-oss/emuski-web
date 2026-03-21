@@ -454,17 +454,17 @@ export default function RootLayout({
           }}
         />
 
-        {/* Extension Error Suppression - Production Quality */}
+        {/* Enhanced Error Suppression & Security */}
         <Script
           id="extension-error-handler"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              // Suppress Chrome extension errors in production
+              // Comprehensive error suppression and security for production
               (function() {
                 'use strict';
                 
-                // Suppress runtime.lastError warnings from extensions
+                // ✅ Suppress all extension and runtime errors
                 const originalError = console.error;
                 console.error = function(...args) {
                   const message = args.join(' ');
@@ -473,28 +473,48 @@ export default function RootLayout({
                     message.includes('message port closed') ||
                     message.includes('Extension context invalidated') ||
                     message.includes('plugin.lusha.com') ||
-                    message.includes('chrome-extension://')
+                    message.includes('chrome-extension://') ||
+                    message.includes('Unchecked runtime.lastError') ||
+                    message.includes('access_token') ||
+                    message.includes('provider_token')
                   ) {
-                    return; // Suppress extension errors
+                    return; // Suppress extension and auth token errors
                   }
                   originalError.apply(console, args);
                 };
 
-                // Handle unhandled promise rejections from extensions
+                // ✅ Suppress console.log containing sensitive data
+                const originalLog = console.log;
+                console.log = function(...args) {
+                  const message = args.join(' ');
+                  if (
+                    message.includes('access_token') ||
+                    message.includes('provider_token') ||
+                    message.includes('refresh_token') ||
+                    message.includes('/auth/callback#') ||
+                    message.includes('eyJ')
+                  ) {
+                    return; // Suppress auth token logs
+                  }
+                  originalLog.apply(console, args);
+                };
+
+                // ✅ Handle unhandled promise rejections from extensions
                 window.addEventListener('unhandledrejection', function(event) {
                   const message = event.reason?.message || event.reason || '';
                   if (
                     message.includes('Extension') ||
                     message.includes('chrome-extension') ||
                     message.includes('plugin.lusha.com') ||
-                    message.includes('runtime.lastError')
+                    message.includes('runtime.lastError') ||
+                    message.includes('message port closed')
                   ) {
                     event.preventDefault();
                     return;
                   }
                 });
 
-                // Block malicious extension postMessage attempts
+                // ✅ Block malicious extension communication
                 const originalPostMessage = window.postMessage;
                 window.postMessage = function(message, targetOrigin, transfer) {
                   if (
