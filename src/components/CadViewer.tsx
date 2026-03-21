@@ -1144,7 +1144,8 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       controls.rotateSpeed = window.innerWidth <= 768 ? 0.5 : 1.0;
       controls.zoomSpeed = window.innerWidth <= 768 ? 0.8 : 1.2;
       controls.panSpeed = window.innerWidth <= 768 ? 0.8 : 1.0;
-      controls.enableKeys = false; // Disable keyboard controls on mobile
+      // Note: enableKeys was deprecated in newer Three.js versions
+      // Keyboard controls are automatically disabled on mobile devices
       
       // Touch-specific settings
       controls.touches = {
