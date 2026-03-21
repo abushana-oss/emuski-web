@@ -187,7 +187,7 @@ function LoginPageComponent() {
               <input
                 type="email"
                 name="email"
-                placeholder="Enter your email"
+                placeholder="Company email"
                 value={formData.email}
                 onChange={handleInputChange}
                 className="w-full h-12 pl-11 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emuski-teal focus:border-transparent outline-none"
@@ -200,7 +200,7 @@ function LoginPageComponent() {
               <input
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder="Password (minimum 8 characters)"
                 value={formData.password}
                 onChange={handleInputChange}
                 className="w-full h-12 pl-11 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emuski-teal focus:border-transparent outline-none"

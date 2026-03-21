@@ -119,7 +119,7 @@ export default function ForgotPasswordPage() {
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Company email"
                 value={email}
                 onChange={handleEmailChange}
                 className="w-full h-12 pl-11 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emuski-teal focus:border-transparent outline-none"

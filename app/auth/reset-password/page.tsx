@@ -220,7 +220,7 @@ function ResetPasswordPageComponent() {
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                placeholder="New password"
+                placeholder="New password (minimum 8 characters)"
                 value={formData.password}
                 onChange={handleInputChange}
                 className="w-full h-12 pl-11 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emuski-teal focus:border-transparent outline-none"
@@ -240,7 +240,7 @@ function ResetPasswordPageComponent() {
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
-                placeholder="Confirm new password"
+                placeholder="Confirm new password (minimum 8 characters)"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 className="w-full h-12 pl-11 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emuski-teal focus:border-transparent outline-none"

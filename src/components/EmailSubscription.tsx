@@ -165,7 +165,7 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
           type="email"
           id="email-compact"
           name="email"
-          placeholder="Enter your email"
+          placeholder="Company email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
@@ -219,7 +219,7 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
           type="email"
           id="email-sidebar"
           name="email"
-          placeholder="Enter your email"
+          placeholder="Company email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
@@ -297,7 +297,7 @@ export const EmailSubscription = ({ className = "", variant = "default" }: { cla
             type="email"
             id="email-default"
             name="email"
-            placeholder="Enter your professional email"
+            placeholder="Company email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
