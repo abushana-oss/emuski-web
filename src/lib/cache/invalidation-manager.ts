@@ -150,7 +150,6 @@ class CacheInvalidationManager extends EventEmitter {
     this.rules.set(rule.id, rule)
     this.on(rule.trigger.event, (data) => this.executeRule(rule, data))
     
-    console.log(`✅ Invalidation rule added: ${rule.name}`)
   }
 
   /**
@@ -161,7 +160,6 @@ class CacheInvalidationManager extends EventEmitter {
     if (rule) {
       this.rules.delete(ruleId)
       this.removeAllListeners(rule.trigger.event)
-      console.log(`✅ Invalidation rule removed: ${rule.name}`)
       return true
     }
     return false
@@ -215,7 +213,6 @@ class CacheInvalidationManager extends EventEmitter {
         }
       }
     } catch (error) {
-      console.error(`Failed to execute invalidation rule ${rule.name}:`, error)
     }
   }
 
@@ -266,7 +263,6 @@ class CacheInvalidationManager extends EventEmitter {
           break
       }
 
-      console.log(`✅ Invalidation completed: ${rule.name} (${invalidatedCount} items)`)
       
       // Emit completion event
       this.emit('invalidation:completed', {
@@ -277,7 +273,6 @@ class CacheInvalidationManager extends EventEmitter {
       })
 
     } catch (error) {
-      console.error(`Invalidation processing failed for rule ${rule.name}:`, error)
     }
   }
 
@@ -325,10 +320,8 @@ class CacheInvalidationManager extends EventEmitter {
         }
       }
 
-      console.log(`✅ Batch invalidation completed: ${events.length} events, ${totalInvalidated} items invalidated`)
 
     } catch (error) {
-      console.error('Batch invalidation failed:', error)
     }
   }
 
@@ -363,7 +356,6 @@ class CacheInvalidationManager extends EventEmitter {
           break
         case 'global':
           // Global invalidation - use with extreme caution
-          console.warn('Global cache invalidation triggered')
           invalidatedCount = await this.globalInvalidation()
           break
         default:
@@ -373,11 +365,9 @@ class CacheInvalidationManager extends EventEmitter {
 
       this.emit('manual:invalidation', event)
       
-      console.log(`✅ Manual invalidation: ${params.scope}:${params.target} (${invalidatedCount} items)`)
       return invalidatedCount
 
     } catch (error) {
-      console.error('Manual invalidation failed:', error)
       return 0
     }
   }
@@ -425,14 +415,12 @@ class CacheInvalidationManager extends EventEmitter {
   private async warmPopularCache(event: InvalidationEvent): Promise<void> {
     try {
       // This would integrate with your analytics to identify popular content
-      console.log('🔥 Cache warming initiated after invalidation')
       
       // Example: Warm popular DFM analyses
       // const popularFiles = await this.getPopularFiles()
       // await cadCache.warmCache(popularFiles)
       
     } catch (error) {
-      console.error('Cache warming failed:', error)
     }
   }
 
@@ -440,7 +428,6 @@ class CacheInvalidationManager extends EventEmitter {
    * Global cache invalidation (emergency use only)
    */
   private async globalInvalidation(): Promise<number> {
-    console.warn('🚨 GLOBAL CACHE INVALIDATION - This will impact performance')
     
     // In a real implementation, you would need to scan all keys
     // This is not efficient and should be avoided
@@ -491,7 +478,6 @@ class CacheInvalidationManager extends EventEmitter {
     }
 
     this.removeAllListeners()
-    console.log('✅ Cache invalidation manager shutdown complete')
   }
 }
 

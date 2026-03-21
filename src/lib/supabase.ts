@@ -146,7 +146,6 @@ export const S3_CONFIG = {
 export const cadAnalysisApi = {
   // Multi-tier storage with enterprise security and authentication
   async uploadCadFile(file: File): Promise<{ path: string; url: string; metadata: any }> {
-    console.log('Starting CAD file upload:', file.name, file.size);
     
     try {
       // Add timeout to prevent hanging
@@ -159,7 +158,6 @@ export const cadAnalysisApi = {
       const { data: { session }, error: sessionError } = await Promise.race([sessionCheck, timeout]);
       
       if (sessionError || !session?.user) {
-        console.warn('No authentication or timeout - using blob URL fallback for demo');
         // Fallback to blob URL for demo
         const blobUrl = URL.createObjectURL(file);
         return {
@@ -176,7 +174,6 @@ export const cadAnalysisApi = {
         };
       }
     } catch (error) {
-      console.warn('Authentication check failed, using fallback:', error);
       // Fallback to blob URL
       const blobUrl = URL.createObjectURL(file);
       return {
@@ -209,7 +206,6 @@ export const cadAnalysisApi = {
         throw new Error(`File validation failed: ${validationResult.reason}`);
       }
     } catch (error) {
-      console.warn('File validation timeout, proceeding with basic checks:', error);
       // Basic fallback validation
       if (file.size > 500 * 1024 * 1024) {
         throw new Error('File too large (max 500MB)');
@@ -233,7 +229,6 @@ export const cadAnalysisApi = {
         checksumTimeout
       ]);
     } catch (error) {
-      console.warn('Checksum calculation timeout, using fallback:', error);
       checksum = `fallback-${Date.now()}`;
     }
     
@@ -262,7 +257,6 @@ export const cadAnalysisApi = {
         });
 
       if (error) {
-        console.warn('Primary storage failed, initiating failover:', error);
         throw error;
       }
 
@@ -281,7 +275,6 @@ export const cadAnalysisApi = {
       };
     } catch (primaryError) {
       // Enterprise failover to AWS S3 with same security standards
-      console.log('Executing enterprise failover to AWS S3');
       return await this.uploadToS3Enterprise(file, filePath, metadata);
     }
   },
@@ -334,7 +327,6 @@ export const cadAnalysisApi = {
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     } catch (error) {
-      console.warn('Checksum calculation failed, using fallback:', error);
       // Fallback to simple hash
       return `fallback-${Date.now()}-${Math.random().toString(36).substring(2)}`;
     }
@@ -360,7 +352,7 @@ export const cadAnalysisApi = {
       // This would integrate with your enterprise backup solution
       console.log(`Backing up ${filePath} to secondary storage for disaster recovery`);
     } catch (error) {
-      console.warn('Secondary backup failed, logged for monitoring:', error);
+      // Secondary backup failed, logged for monitoring
     }
   },
 
@@ -379,13 +371,6 @@ export const cadAnalysisApi = {
       formData.append('x-amz-meta-classification', JSON.stringify(metadata.classification));
       
       // In production: Use presigned URLs with IAM policies
-      console.log('Enterprise S3 upload initiated:', {
-        bucket: S3_CONFIG.BUCKET_NAME,
-        region: S3_CONFIG.REGION,
-        file: file.name,
-        size: file.size,
-        security: 'IAM + S3 Bucket Policy + VPC Endpoint'
-      });
       
       // Fallback to blob URL for demo - in production this would be S3 URL
       const blobUrl = URL.createObjectURL(file);
@@ -401,7 +386,6 @@ export const cadAnalysisApi = {
         }
       };
     } catch (error) {
-      console.error('Enterprise S3 upload failed:', error);
       throw new Error('All storage systems unavailable');
     }
   },
@@ -432,7 +416,6 @@ export const cadAnalysisApi = {
     };
   }> {
     // Enterprise AI analysis pipeline
-    console.log('Initiating enterprise manufacturing analysis...');
     await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate AI processing
     
     // Use real geometry if available, otherwise simulate for demo
@@ -610,7 +593,6 @@ export const cadAnalysisApi = {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !session?.user) {
-        console.warn('No authentication - using localStorage fallback for demo');
         return this.createPartInLocalStorage(partData);
       }
 
@@ -628,9 +610,6 @@ export const cadAnalysisApi = {
         .single();
 
       if (error) {
-        console.error('Database insert failed:', error);
-        console.error('Error details:', JSON.stringify(error, null, 2));
-        console.error('Part data being inserted:', JSON.stringify(partWithUser, null, 2));
         // Fallback for development
         return this.createPartInLocalStorage(partData);
       }
@@ -641,7 +620,6 @@ export const cadAnalysisApi = {
       
       return data;
     } catch (error) {
-      console.error('Failed to create part:', error);
       // Development fallback
       return this.createPartInLocalStorage(partData);
     }
@@ -650,9 +628,7 @@ export const cadAnalysisApi = {
   // Recreate File object from localStorage file data
   recreateFileFromStorage(partId: string, fileName: string): { file: File | null; url: string | null } {
     try {
-      console.log('Trying to recreate file for part:', partId);
       const base64Data = localStorage.getItem(`emuski_file_${partId}`);
-      console.log('Found base64 data:', base64Data ? 'Yes' : 'No');
       
       if (base64Data) {
         const binaryString = atob(base64Data);
@@ -689,13 +665,11 @@ export const cadAnalysisApi = {
         // Create a proper File object
         const file = new File([bytes], fileName, { type: mimeType });
         const url = URL.createObjectURL(file);
-        console.log('Successfully recreated file and URL:', url);
         return { file, url };
       }
     } catch (error) {
-      console.error('Failed to recreate file:', error);
+      // Failed to recreate file
     }
-    console.log('No file recreated for part:', partId);
     return { file: null, url: null };
   },
 
@@ -722,7 +696,6 @@ export const cadAnalysisApi = {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !session) {
-        console.log('No authenticated session, falling back to localStorage');
         return this.getPartsFromLocalStorage();
       }
 
@@ -732,15 +705,12 @@ export const cadAnalysisApi = {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Database query failed:', error);
-        console.error('Query error details:', JSON.stringify(error, null, 2));
         // Fallback to localStorage for development
         return this.getPartsFromLocalStorage();
       }
       
       return data || [];
     } catch (error) {
-      console.error('Failed to get parts:', error);
       return this.getPartsFromLocalStorage();
     }
   },
@@ -753,7 +723,7 @@ export const cadAnalysisApi = {
         return JSON.parse(stored);
       }
     } catch (error) {
-      console.error('localStorage read failed:', error);
+      // localStorage read failed
     }
     return [];
   },
@@ -770,7 +740,7 @@ export const cadAnalysisApi = {
         });
       }
     } catch (error) {
-      console.error('localStorage save failed:', error);
+      // localStorage save failed
     }
   },
 

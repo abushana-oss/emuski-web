@@ -55,8 +55,6 @@ class EmailService {
       
       return data;
     } catch (error) {
-      console.error('Subscription error:', error);
-      
       // Fallback: Store locally
       return this.subscribeLocally(email, source);
     }
@@ -152,7 +150,7 @@ class EmailService {
         }),
       });
     } catch (error) {
-      console.error('Failed to send welcome email:', error);
+      // Failed to send welcome email - silently continue
     }
   }
 
@@ -208,7 +206,6 @@ class EmailService {
         errors
       };
     } catch (error) {
-      console.error('Failed to send daily newsletter:', error);
       return {
         success: false,
         sentCount: 0,
@@ -264,7 +261,7 @@ class EmailService {
       const limitedCampaigns = campaigns.slice(0, 50);
       localStorage.setItem('emuski_email_campaigns', JSON.stringify(limitedCampaigns));
     } catch (error) {
-      console.error('Failed to log campaign:', error);
+      // Failed to log campaign - silently continue
     }
   }
 
@@ -288,7 +285,7 @@ class EmailService {
         });
       }
     } catch (error) {
-      console.error('Failed to track email open:', error);
+      // Failed to track email open - silently continue
     }
   }
 
@@ -311,7 +308,7 @@ class EmailService {
         });
       }
     } catch (error) {
-      console.error('Failed to track email click:', error);
+      // Failed to track email click - silently continue
     }
   }
 
@@ -327,9 +324,9 @@ class EmailService {
       // Send at 8 AM local time
       if (hours === 8) {
         this.sendDailyNewsletter().then(result => {
-          console.log('Daily newsletter sent:', result);
+          // Daily newsletter sent successfully
         }).catch(error => {
-          console.error('Failed to send daily newsletter:', error);
+          // Failed to send daily newsletter - silently continue
         });
       }
     };

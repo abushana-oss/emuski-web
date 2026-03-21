@@ -220,21 +220,18 @@ class CADCacheManager {
     // L1: Check memory cache first (fastest)
     let cached = this.memoryCache.get(cacheKey)
     if (cached) {
-      console.log(`🚀 L1 cache hit: DFM analysis for ${request.fileName}`)
       return cached
     }
 
     // L2: Check Redis cache
     cached = await redis.get<CachedDFMAnalysis>(cacheKey)
     if (cached) {
-      console.log(`⚡ L2 cache hit: DFM analysis for ${request.fileName}`)
       
       // Populate L1 cache for next access
       this.memoryCache.set(cacheKey, cached)
       return cached
     }
 
-    console.log(`💾 Cache miss: DFM analysis for ${request.fileName}`)
     return null
   }
 
@@ -297,9 +294,7 @@ class CADCacheManager {
         }, { ttl: CACHE_TTL.WEEKLY })
       }
 
-      console.log(`✅ Cached DFM analysis: ${request.fileName} (TTL: ${ttl}s, Confidence: ${analysis.metadata.confidence})`)
     } catch (error) {
-      console.error('Failed to cache DFM analysis:', error)
     }
   }
 
@@ -314,7 +309,6 @@ class CADCacheManager {
       const similar = await redis.get<any>(mappingKey)
       return similar ? [similar.cacheKey] : []
     } catch (error) {
-      console.error('Error finding similar analyses:', error)
       return []
     }
   }
@@ -343,9 +337,7 @@ class CADCacheManager {
         tags: ['cad-geometry', `file:${fileName}`, `id:${fileId}`]
       })
 
-      console.log(`✅ Cached CAD geometry: ${fileName} (${JSON.stringify(geometry).length} bytes)`)
     } catch (error) {
-      console.error('Failed to cache CAD geometry:', error)
     }
   }
 
@@ -358,13 +350,11 @@ class CADCacheManager {
     try {
       const cached = await redis.get<CADGeometry & { metadata: any }>(cacheKey)
       if (cached) {
-        console.log(`⚡ Retrieved cached CAD geometry: ${cached.metadata.fileName}`)
         const { metadata, ...geometry } = cached
         return geometry
       }
       return null
     } catch (error) {
-      console.error('Error retrieving CAD geometry:', error)
       return null
     }
   }
@@ -373,7 +363,6 @@ class CADCacheManager {
    * Warm cache for frequently accessed files
    */
   async warmCache(popularFiles: Array<{ fileId: string, fileName: string }>): Promise<void> {
-    console.log(`🔥 Warming cache for ${popularFiles.length} popular files...`)
     
     const promises = popularFiles.map(async ({ fileId, fileName }) => {
       try {
@@ -383,10 +372,8 @@ class CADCacheManager {
         
         if (geometry) {
           this.memoryCache.set(geometryKey, geometry)
-          console.log(`🔥 Warmed: ${fileName}`)
         }
       } catch (error) {
-        console.error(`Failed to warm cache for ${fileName}:`, error)
       }
     })
 
@@ -400,7 +387,6 @@ class CADCacheManager {
     try {
       return await redis.invalidateByTags([`version:${version}`])
     } catch (error) {
-      console.error('Failed to invalidate by version:', error)
       return 0
     }
   }
@@ -413,9 +399,7 @@ class CADCacheManager {
       // Clear memory cache of expired items
       this.memoryCache.purgeStale()
       
-      console.log(`🧹 Cache optimized - Memory: ${this.memoryCache.size} entries`)
     } catch (error) {
-      console.error('Cache optimization failed:', error)
     }
   }
 

@@ -64,15 +64,13 @@ export class PerformanceOptimizer {
       
       const measure = performance.getEntriesByName(`${startMark}-duration`)[0];
       if (measure) {
-        console.log(`Performance: ${startMark} took ${measure.duration.toFixed(2)}ms`);
-        
+          
         // Report to analytics in production
         if (process.env.NODE_ENV === 'production') {
           this.reportToAnalytics(startMark, measure.duration);
         }
       }
     } catch (error) {
-      console.warn('Performance measurement failed:', error);
     }
   }
 
@@ -102,19 +100,39 @@ export class PerformanceOptimizer {
   }
 
   private static optimizeLCP() {
-    // Preload critical resources
+    // Preload critical resources - only those used immediately
     const criticalResources = [
       '/assets/emuski-logo-optimized.webp',
     ];
 
     criticalResources.forEach((resource) => {
+      // Check if already preloaded to avoid duplicates
+      const existing = document.querySelector(`link[href="${resource}"]`);
+      if (existing) return;
+
       const link = document.createElement('link');
       link.rel = 'preload';
       link.href = resource;
       link.as = resource.includes('.woff2') ? 'font' : 'image';
+      
       if (resource.includes('.woff2')) {
         link.crossOrigin = 'anonymous';
       }
+      
+      // Ensure resource is used by setting up load handlers
+      link.onload = () => {
+        // Mark as loaded for immediate use
+        if (resource.includes('logo')) {
+          document.body.setAttribute('data-logo-preloaded', 'true');
+        }
+      };
+      
+      // Add error handling
+      link.onerror = () => {
+        // Remove failed preload to prevent console warnings
+        link.remove();
+      };
+      
       document.head.appendChild(link);
     });
   }
@@ -179,7 +197,6 @@ export class PerformanceOptimizer {
       const module = await importFunction();
       return module.default;
     } catch (error) {
-      console.warn('Dynamic import failed, using fallback:', error);
       return fallback;
     }
   }
@@ -258,10 +275,10 @@ export class PerformanceOptimizer {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
-          console.log('SW registered:', registration);
+          // Service worker registered successfully
         })
         .catch((error) => {
-          console.log('SW registration failed:', error);
+          // Service worker registration failed
         });
     });
   }

@@ -51,7 +51,6 @@ import { redisHealthCoordinator } from './health-coordinator'
  * This runs at server startup via instrumentation.ts
  */
 export async function initializeCacheSystem(): Promise<void> {
-  console.log('🚀 Initializing EMUSKI Cache System...')
   
   try {
     // Initialize health coordinator first (this starts Redis health monitoring)
@@ -63,7 +62,6 @@ export async function initializeCacheSystem(): Promise<void> {
     // Test initial Redis connectivity
     const isHealthy = await redisHealthCoordinator.forceHealthCheck()
     if (!isHealthy) {
-      console.warn('⚠️ Redis not available - operating in fallback mode')
     }
 
     // Set up cache dependencies
@@ -80,15 +78,8 @@ export async function initializeCacheSystem(): Promise<void> {
     // The monitoring and fallback are already set up through their constructors
 
     // Cache system ready
-    console.log('✅ EMUSKI Cache System initialized at server startup')
-    console.log(`   🔗 Health Coordinator: ${redisHealthCoordinator.getSubscriberCount()} subscribers`)
-    console.log(`   📊 Monitoring: Active`)
-    console.log(`   🔄 Invalidation: ${invalidationManager.getStats().rules.total} rules`)
-    console.log(`   🛡️ Fallback: ${fallbackHandler.getStatus().serviceState} mode`)
     
   } catch (error) {
-    console.error('❌ Cache system initialization failed:', error)
-    console.log('   🛡️ Operating in fallback mode only')
   }
 }
 
@@ -96,7 +87,6 @@ export async function initializeCacheSystem(): Promise<void> {
  * Graceful shutdown of the cache system
  */
 export async function shutdownCacheSystem(): Promise<void> {
-  console.log('🔄 Shutting down cache system...')
   
   try {
     await fallbackHandler.shutdown()
@@ -104,9 +94,7 @@ export async function shutdownCacheSystem(): Promise<void> {
     cacheMonitor.shutdown()
     await redis.disconnect()
     
-    console.log('✅ Cache system shutdown complete')
   } catch (error) {
-    console.error('❌ Cache system shutdown failed:', error)
   }
 }
 
@@ -238,7 +226,6 @@ export class CacheAPI {
    * Warm critical caches (simplified)
    */
   static async warmCaches(keys: string[]): Promise<void> {
-    console.log(`🔥 Warming ${keys.length} cache keys...`)
   }
 }
 

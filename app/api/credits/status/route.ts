@@ -131,13 +131,27 @@ async function handleGET(req: NextRequest) {
 
   } catch (error: any) {
     const totalDuration = Date.now() - startTime;
-    console.error('Credit status error:', { error: error.message, duration: totalDuration });
     
-    // Return error instead of fallback to avoid confusion
+    // Check for specific error types and provide better error responses
+    let statusCode = 500;
+    let errorMessage = 'Unable to fetch credit status. Please refresh the page.';
+    
+    if (error.message?.includes('service role key') || error.code === 'SUPABASE_SERVICE_ROLE_KEY_MISSING') {
+      statusCode = 503;
+      errorMessage = 'Service temporarily unavailable. Please try again later.';
+    } else if (error.code === 'PGRST301') {
+      statusCode = 503;
+      errorMessage = 'Database connection error. Please try again later.';
+    } else if (error.message?.includes('timeout')) {
+      statusCode = 408;
+      errorMessage = 'Request timeout. Please try again.';
+    }
+    
     return NextResponse.json({
-      error: 'Unable to fetch credit status. Please refresh the page.',
+      error: errorMessage,
+      code: statusCode === 503 ? 'SERVICE_UNAVAILABLE' : 'INTERNAL_ERROR',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    }, { status: 500, headers });
+    }, { status: statusCode, headers });
   }
 }
 

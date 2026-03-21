@@ -168,7 +168,6 @@ export const CadAnalysisInterface = () => {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !session?.access_token) {
-        console.warn('Session authentication failed:', sessionError?.message || 'No access token');
         setCreditInfo(null);
         return;
       }
@@ -196,18 +195,15 @@ export const CadAnalysisInterface = () => {
         });
       } else {
         // Show specific error to user instead of retrying
-        console.error(`Credit system error: ${response.status} ${response.statusText}`);
         setCreditInfo(null);
       }
     } catch (error: any) {
       // Only log if not an abort error
       if (error.name !== 'AbortError') {
-        console.warn('Failed to load credit info:', error);
       }
       
       // Don't set fallback data if request was aborted
       if (!abortController.signal.aborted) {
-        console.warn('Credit system error, setting to null');
         setCreditInfo(null);
       }
     }
@@ -222,7 +218,6 @@ export const CadAnalysisInterface = () => {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'refreshCredits') {
-        console.log('📢 Received refresh credits message, reloading credit info');
         // Add small delay to ensure any auth token refresh is complete
         setTimeout(() => {
           loadCreditInfo();
@@ -241,7 +236,6 @@ export const CadAnalysisInterface = () => {
       setIsLoading(true);
       const savedParts = await cadAnalysisApi.getParts();
       
-      console.log('Loaded saved parts:', savedParts); // Debug log
       
       if (savedParts && savedParts.length > 0) {
         // Convert CadPart to PartData format following industry data mapping standards
@@ -250,21 +244,17 @@ export const CadAnalysisInterface = () => {
           let fileUrl = savedPart.file_url;
           let rawFile: File | undefined = undefined;
           
-          console.log('Processing part:', savedPart.name, 'URL:', fileUrl);
           
           // If the stored URL is a blob URL or doesn't exist, try to recreate from localStorage
           if (!fileUrl || fileUrl.startsWith('blob:')) {
-            console.log('Attempting to recreate file for part:', savedPart.id);
             const recreated = cadAnalysisApi.recreateFileFromStorage(savedPart.id, savedPart.name + savedPart.file_type);
             if (recreated.file && recreated.url) {
-              console.log('Successfully recreated file and URL:', recreated.url);
               fileUrl = recreated.url;
               rawFile = recreated.file;
               
               // Update the saved part with the new URL
               savedPart.file_url = fileUrl;
             } else {
-              console.log('Failed to recreate file for part:', savedPart.id, '- removing from display');
               // Remove this part from localStorage since it's invalid
               const currentParts = cadAnalysisApi.getPartsFromLocalStorage().filter(p => p.id !== savedPart.id);
               cadAnalysisApi.savePartsToLocalStorage(currentParts);
@@ -311,13 +301,11 @@ export const CadAnalysisInterface = () => {
           };
         });
         
-        console.log('Converted parts:', convertedParts); // Debug log
         setParts(convertedParts);
       } else {
         setParts([]);
       }
     } catch (error) {
-      console.error('Error loading saved parts:', error);
       // Industry practice: graceful degradation on data load failure
       setParts([]);
     } finally {
@@ -342,7 +330,6 @@ export const CadAnalysisInterface = () => {
         
         // Clean up localStorage file data
         localStorage.removeItem(`emuski_file_${partId}`);
-        console.log('Removed file data from localStorage for part:', partId);
         
         const remainingParts = prevParts.filter(p => p.id !== partId);
         
@@ -371,7 +358,6 @@ export const CadAnalysisInterface = () => {
         return remainingParts;
       });
     } catch (error) {
-      console.warn('Database deletion failed, removing locally:', error);
       // Still remove from UI even if database delete fails
       setParts(prevParts => {
         const partToRemove = prevParts.find(p => p.id === partId);
@@ -381,7 +367,6 @@ export const CadAnalysisInterface = () => {
         
         // Clean up localStorage file data
         localStorage.removeItem(`emuski_file_${partId}`);
-        console.log('Removed file data from localStorage for part:', partId);
         
         const remainingParts = prevParts.filter(p => p.id !== partId);
         
@@ -560,7 +545,6 @@ export const CadAnalysisInterface = () => {
     try {
       // Clear existing parts since we only allow one at a time
       if (parts.length > 0) {
-        console.log('Clearing existing parts:', parts.length);
         
         // Clean up blob URLs and localStorage for existing parts
         for (const part of parts) {
@@ -576,7 +560,6 @@ export const CadAnalysisInterface = () => {
             // Delete from database
             await cadAnalysisApi.deletePart(part.id);
           } catch (error) {
-            console.warn('Failed to delete existing part:', error);
           }
         }
         
@@ -658,7 +641,6 @@ export const CadAnalysisInterface = () => {
           // Update with database ID for persistence
           newPart.id = savedPart.id;
         } catch (dbError) {
-          console.warn('Database save failed, continuing with local storage:', dbError);
           // Keep the cloud URL if we have it, otherwise use blob URL
           if (!newPart.cadFileUrl || newPart.cadFileUrl.startsWith('blob:')) {
             newPart.cadFileUrl = URL.createObjectURL(file);
@@ -669,14 +651,12 @@ export const CadAnalysisInterface = () => {
         
         // Store file data smartly - only for blob URLs, use cloud URLs for persistence
         if (newPart.cadFileUrl.startsWith('blob:')) {
-          console.log('Storing file data for blob URL part:', newPart.id);
           
           // Check file size first to avoid localStorage quota
           const fileSizeMB = file.size / (1024 * 1024);
           const maxSizeMB = 2; // Conservative limit to avoid quota issues
           
           if (fileSizeMB > maxSizeMB) {
-            console.warn(`File too large for localStorage (${fileSizeMB.toFixed(1)}MB > ${maxSizeMB}MB), using blob URL only`);
             localStorage.setItem(`emuski_file_meta_${newPart.id}`, JSON.stringify({
               size: file.size,
               type: file.type,
@@ -702,9 +682,7 @@ export const CadAnalysisInterface = () => {
                 // Check localStorage quota before storing
                 try {
                   localStorage.setItem(`emuski_file_${newPart.id}`, base64);
-                  console.log('Successfully stored file data for part:', newPart.id, 'Size:', base64.length);
                 } catch (quotaError) {
-                  console.warn('localStorage quota exceeded, storing metadata only:', quotaError);
                   localStorage.setItem(`emuski_file_meta_${newPart.id}`, JSON.stringify({
                     size: file.size,
                     type: file.type,
@@ -714,14 +692,11 @@ export const CadAnalysisInterface = () => {
                   }));
                 }
               } catch (error) {
-                console.error('Failed to process file data:', error);
               }
             }).catch(error => {
-              console.error('Failed to read file buffer:', error);
             });
           }
         } else {
-          console.log('Using cloud URL for persistence:', newPart.cadFileUrl);
           // Store metadata for cloud files
           localStorage.setItem(`emuski_file_meta_${newPart.id}`, JSON.stringify({
             size: file.size,
@@ -743,7 +718,6 @@ export const CadAnalysisInterface = () => {
         setUploadProgress({ stage: 'Complete!', progress: 100 });
       
     } catch (error) {
-      console.error('Error uploading CAD files:', error);
     } finally {
       // Reset after a short delay to show completion
       setTimeout(() => {

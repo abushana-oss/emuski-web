@@ -15,17 +15,19 @@ function AuthCallbackComponent() {
   const [isProcessing, setIsProcessing] = useState(true)
 
   useEffect(() => {
+    let isCanceled = false
+
     const handleAuthCallback = async () => {
+      if (isCanceled) return
+
       try {
-        // Check if we have auth data in the URL hash
-        const hash = window.location.hash
+        // Handle the auth callback from URL hash/search params
+        const { data, error: sessionError } = await supabase.auth.getSession()
         
-        // Let Supabase handle the auth callback automatically
-        const { data, error: authError } = await supabase.auth.getSession()
-        
-        if (authError) {
-          console.error('Auth session error:', authError)
-          setError(authError.message || 'Authentication failed')
+        if (isCanceled) return
+
+        if (sessionError) {
+          setError(sessionError.message || 'Authentication failed')
           setIsProcessing(false)
           return
         }
@@ -44,37 +46,57 @@ function AuthCallbackComponent() {
 
           // Success - redirect immediately
           const redirectTo = searchParams.get('redirectTo') || '/'
-          console.log('Redirecting to:', redirectTo)
           router.replace(redirectTo)
           return
         }
 
-        // If no session yet, wait a bit for Supabase to process the callback
-        if (hash.includes('access_token') || hash.includes('code')) {
+        // Check for auth callback in URL and process it
+        const hashParams = new URLSearchParams(window.location.hash.substring(1))
+        const searchParamsFromURL = new URLSearchParams(window.location.search)
+        
+        if (hashParams.has('access_token') || searchParamsFromURL.has('code')) {
+          // Process the auth callback
+          const { error: callbackError } = await supabase.auth.getSession()
+          
+          if (isCanceled) return
+          
+          if (callbackError) {
+            setError(callbackError.message || 'Authentication callback failed')
+            setIsProcessing(false)
+            return
+          }
+
+          // Try again to get the session after processing
           setTimeout(() => {
-            // Try again after Supabase processes the callback
-            handleAuthCallback()
-          }, 1000)
+            if (!isCanceled) {
+              handleAuthCallback()
+            }
+          }, 500)
           return
         }
 
-        // No auth data found
+        // No auth data found - redirect to login
         setError('No authentication data received')
         setIsProcessing(false)
 
       } catch (error) {
-        console.error('Auth callback error:', error)
-        setError('An unexpected error occurred during authentication')
-        setIsProcessing(false)
+        if (!isCanceled) {
+          setError('An unexpected error occurred during authentication')
+          setIsProcessing(false)
+        }
       }
     }
 
-    // Small delay to ensure the page is fully loaded
     const timeoutId = setTimeout(() => {
-      handleAuthCallback()
+      if (!isCanceled) {
+        handleAuthCallback()
+      }
     }, 100)
 
-    return () => clearTimeout(timeoutId)
+    return () => {
+      isCanceled = true
+      clearTimeout(timeoutId)
+    }
   }, [router, searchParams])
 
   const handleRetry = () => {

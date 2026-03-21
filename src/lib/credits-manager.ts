@@ -68,7 +68,6 @@ export class CreditsManager {
 
       return userCredits;
     } catch (error) {
-      console.error('Error getting user credits:', error);
       throw new Error('Failed to retrieve user credits');
     }
   }
@@ -200,7 +199,6 @@ export class CreditsManager {
 
       return userCredits;
     } catch (error) {
-      console.error('Error deducting credits:', error);
       throw new Error('Failed to deduct credits');
     }
   }
@@ -227,7 +225,6 @@ export class CreditsManager {
           created_at: new Date().toISOString()
         });
     } catch (error) {
-      console.error('Error logging credit usage:', error);
       // Don't throw - logging failure shouldn't block the main request
     }
   }
@@ -251,7 +248,6 @@ export class CreditsManager {
       .gte('created_at', startDate.toISOString());
 
     if (error) {
-      console.error('Error getting usage stats:', error);
       return { totalTokensUsed: 0, totalCost: 0, requestCount: 0, averageTokensPerRequest: 0 };
     }
 
@@ -292,7 +288,6 @@ export class CreditsManager {
     }
     
     const totalTokens = basePromptTokens + messageTokens + geometryTokens + responseTokens;
-    console.log(`Token estimate: message=${messageTokens}, base=${basePromptTokens}, geometry=${geometryTokens}, response=${responseTokens}, total=${totalTokens}`);
     
     return totalTokens;
   }

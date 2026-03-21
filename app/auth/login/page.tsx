@@ -73,7 +73,6 @@ function LoginPageComponent() {
       // If successful, redirect should happen automatically
       // Timeout will handle cleanup if redirect fails
     } catch (err) {
-      console.error('Google sign-in error:', err)
       setError({
         message: 'An unexpected error occurred. Please try again.',
         type: 'network'
@@ -140,12 +139,10 @@ function LoginPageComponent() {
       }
 
       // Success - redirect to dashboard or intended page
-      console.log('Login successful, redirecting...')
       setTimeout(() => {
         window.location.href = redirectTo
       }, 100) // Small delay to ensure UI updates
     } catch (err) {
-      console.error('Login error:', err)
       setError({
         message: 'An unexpected error occurred. Please try again.',
         type: 'network'

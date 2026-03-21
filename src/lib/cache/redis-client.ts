@@ -167,16 +167,12 @@ class RedisClient {
                       process.env.REDIS_ENDPOINT
 
       if (!redisUrl) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn('⚠️ Redis not available - operating in fallback mode')
-        }
         return
       }
 
       // Skip Redis initialization during build/generation
       if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'production' || 
           process.env.npm_lifecycle_event === 'build') {
-        console.log('🔧 Skipping Redis during build process')
         return
       }
 
@@ -223,33 +219,22 @@ class RedisClient {
 
       this.client.on('error', (err) => {
         // Log but never throw — let fallback handler take over
-        console.error('[Redis] Connection error:', err.message)
         this.isConnected = false
       })
 
       this.client.on('connect', () => {
-        console.log('✅ Redis connected successfully')
         this.isConnected = true
       })
 
       this.client.on('ready', () => {
-        console.log('✅ Redis ready for operations')
         this.isConnected = true
       })
 
       // Test connection
       await this.healthCheck()
       
-      console.log('✅ Redis/Valkey client initialized successfully')
     } catch (error) {
       // Quieter logging during build/production
-      if (process.env.npm_lifecycle_event === 'build') {
-        if (process.env.NODE_ENV !== 'production') {
-          console.log('⚠️ Redis not available - operating in fallback mode')
-        }
-      } else {
-        console.error('❌ Redis initialization failed:', error)
-      }
       this.isConnected = false
     }
   }
@@ -301,10 +286,6 @@ class RedisClient {
         const backoffDelay = this.retryConfig.delay * Math.pow(2, attempt - 1)
         const jitteredDelay = backoffDelay + (Math.random() * 1000) // Add jitter
         
-        // Quieter retry logging during builds
-        if (process.env.npm_lifecycle_event !== 'build') {
-          console.warn(`Redis operation failed (attempt ${attempt}/${this.retryConfig.attempts}), retrying in ${jitteredDelay}ms:`, lastError.message)
-        }
         
         await new Promise(resolve => setTimeout(resolve, jitteredDelay))
       }
@@ -322,7 +303,6 @@ class RedisClient {
       })
       return true
     } catch (error) {
-      console.error('Redis health check failed:', error)
       return false
     }
   }
@@ -549,7 +529,6 @@ class RedisClient {
   async disconnect(): Promise<void> {
     if (this.client) {
       this.isConnected = false
-      console.log('Redis client disconnected')
     }
   }
 }

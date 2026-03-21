@@ -4,7 +4,7 @@
  */
 
 export const initNonCriticalFeatures = () => {
-  console.log('Initializing non-critical features during idle time...');
+  // Initializing non-critical features during idle time
   
   // Potential features to load:
   // - Analytics tracking

@@ -57,7 +57,7 @@ export const initializeGA = () => {
     device_category: getDeviceCategory(),
   });
 
-  console.log('[Analytics] GA4 initialized with Google Signals enabled');
+  // GA4 initialized with Google Signals enabled
 };
 
 /**
@@ -77,7 +77,7 @@ export const updateConsent = (consent: {
     analytics_storage: consent.analytics_storage,
   });
 
-  console.log('[Analytics] Consent updated:', consent);
+  // Consent updated
 };
 
 /**
@@ -118,7 +118,7 @@ export const trackEnhancedConversion = (userData: {
 
   window.gtag('set', 'user_data', enhancedConversionData);
 
-  console.log('[Analytics] Enhanced conversion data set');
+  // Enhanced conversion data set
 };
 
 /**
@@ -141,7 +141,7 @@ export const trackConversion = (
     ...params,
   });
 
-  console.log('[Analytics] Conversion tracked:', eventName, params);
+  // Conversion tracked
 };
 
 /**
@@ -174,7 +174,7 @@ export const trackEvent = (
 
     window.gtag('event', eventName, params);
   } catch (error) {
-    console.warn('[Analytics] Failed to track event:', eventName, error);
+    // Failed to track event - silently continue
   }
 };
 
@@ -212,5 +212,5 @@ export const enableDebugMode = () => {
     debug_mode: true,
   });
 
-  console.log('[Analytics] Debug mode enabled');
+  // Debug mode enabled
 };

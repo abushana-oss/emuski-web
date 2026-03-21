@@ -233,36 +233,40 @@ export const Navbar = () => {
 
                   {activeServiceDropdown === key && (
                     <div
-                      className="absolute top-full left-0 mt-0 w-64 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50"
-                      style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+                      className="absolute top-full left-0 pt-2 w-64 z-[60]"
                     >
-                      <div className="py-2">
-                        {service.path !== "#" && (
-                          <Link
-                            href={service.path}
-                            className="block px-4 py-3 text-sm font-semibold text-emuski-teal-darker border-b border-gray-100 hover:bg-emuski-teal/5"
-                            onClick={() => setActiveServiceDropdown(null)}
-                          >
-                            {service.name} Overview
-                          </Link>
-                        )}
-                        {service.subItems.map((subItem, index) => (
-                          <Link
-                            key={subItem.path}
-                            href={subItem.path}
-                            className="block px-4 py-3 text-sm text-gray-700 hover:bg-emuski-teal/5 hover:text-emuski-teal-darker transition-colors"
-                            onClick={() => setActiveServiceDropdown(null)}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span>{subItem.name}</span>
-                              {subItem.beta && (
-                                <span className="ml-2 px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-full border border-slate-300">
-                                  BETA
-                                </span>
-                              )}
-                            </div>
-                          </Link>
-                        ))}
+                      <div
+                        className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
+                        style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+                      >
+                        <div className="py-2">
+                          {service.path !== "#" && (
+                            <Link
+                              href={service.path}
+                              className="block px-4 py-3 text-sm font-semibold text-emuski-teal-darker border-b border-gray-100 hover:bg-emuski-teal/5"
+                              onClick={() => setActiveServiceDropdown(null)}
+                            >
+                              {service.name} Overview
+                            </Link>
+                          )}
+                          {service.subItems.map((subItem, index) => (
+                            <Link
+                              key={subItem.path}
+                              href={subItem.path}
+                              className="block px-4 py-3 text-sm text-gray-700 hover:bg-emuski-teal/5 hover:text-emuski-teal-darker transition-colors"
+                              onClick={() => setActiveServiceDropdown(null)}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span>{subItem.name}</span>
+                                {subItem.beta && (
+                                  <span className="ml-2 px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-full border border-slate-300">
+                                    BETA
+                                  </span>
+                                )}
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -312,7 +316,7 @@ export const Navbar = () => {
 
               {/* Dropdown Menu */}
               {isMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-[9998]" style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
+                <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-[70]" style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
                   <div className="relative z-20 p-4 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 border-b border-gray-100 flex flex-col space-y-4">
                     <div className="flex items-center space-x-3">
                       <Image

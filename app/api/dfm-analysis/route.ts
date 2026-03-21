@@ -69,7 +69,6 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
 
     // Check API key configuration
     if (!process.env.ANTHROPIC_API_KEY) {
-      console.error('ANTHROPIC_API_KEY not configured');
       return NextResponse.json(
         { error: 'AI service not configured. Please contact support.' },
         { status: 500 }
@@ -107,12 +106,8 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
           );
         }
       } catch (error) {
-        console.error('Credit check failed, proceeding without credit validation:', error);
         // Don't block the request - proceed with analysis but warn about credit system
         creditInfo = null; // Will proceed without credit tracking
-        
-        // Log the credit system failure for monitoring
-        console.warn('Credit system unavailable - allowing request to proceed for better UX');
       }
 
     // Check cache using new enterprise caching system
@@ -133,7 +128,6 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
 
     const cachedResponse = await CacheAPI.getDFMAnalysis(cacheKey);
     if (cachedResponse) {
-      console.log(`Cache hit: serving cached DFM analysis for ${fileName}`);
       return NextResponse.json({
         content: cachedResponse,
         metadata: {
@@ -172,7 +166,6 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
         if (queueError.message === 'Queue not available - process immediately') {
           // Fall through to immediate processing
         } else {
-          console.error('Queue error:', queueError);
           return NextResponse.json(
             { error: queueError.message },
             { status: 503 }
@@ -189,7 +182,6 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
       return await callClaudeWithRetry(DFM_SYSTEM_PROMPT, analysisPrompt);
     }, 'dfm_analysis');
 
-    console.log(`Processing DFM Analysis for: ${fileName} - User: ${userIdentifier}`);
     
     const startTime = Date.now();
     const response = await processAnalysis();
@@ -209,22 +201,16 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
           'dfm_analysis',
           fileName
         );
-        console.log(`✅ Credits deducted successfully for user: ${userIdentifier}`);
       } catch (error) {
-        console.error('Credit deduction failed:', error);
         // Continue - don't block successful response for credit issues
       }
     }
 
-    // Log successful analysis (for monitoring)
-    console.log(`DFM Analysis completed: ${fileName} (${response.length} chars, ${processingTime}ms)`);
 
     // Cache response using enterprise caching system
     try {
       await CacheAPI.cacheDFMAnalysis(cacheKey, response, 3600); // 1 hour TTL
-      console.log(`Cached DFM response for ${fileName}`);
     } catch (error) {
-      console.warn('Cache write failed:', error);
     }
 
     return NextResponse.json({
@@ -240,7 +226,6 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
       }
     });
   } catch (error: any) {
-    console.error('DFM Analysis error:', error);
 
     // Handle specific API errors
     if (error?.status === 401) {

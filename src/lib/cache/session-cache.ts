@@ -118,9 +118,7 @@ class SessionCacheManager {
         lastActivity: session.lastActivity
       }, { ttl: CACHE_TTL.DAILY })
 
-      console.log(`✅ Session stored for user: ${session.userId}`)
     } catch (error) {
-      console.error('Failed to store session:', error)
       throw error
     }
   }
@@ -139,7 +137,6 @@ class SessionCacheManager {
       }
       return session
     } catch (error) {
-      console.error('Failed to retrieve session:', error)
       return null
     }
   }
@@ -170,9 +167,7 @@ class SessionCacheManager {
         tags: ['user-session', `user:${userId}`, 'auth']
       })
 
-      console.log(`✅ Session updated for user: ${userId}`)
     } catch (error) {
-      console.error('Failed to update session:', error)
       throw error
     }
   }
@@ -190,7 +185,6 @@ class SessionCacheManager {
         await redis.set(sessionKey, session, { ttl: CACHE_TTL.DAILY })
       }
     } catch (error) {
-      console.error('Failed to update last activity:', error)
     }
   }
 
@@ -217,10 +211,8 @@ class SessionCacheManager {
           tags: ['auth-token', `user:${authData.userId}`, `type:${authData.type}`]
         })
 
-        console.log(`✅ Auth token stored: ${authData.type} for user ${authData.userId}`)
       }
     } catch (error) {
-      console.error('Failed to store auth token:', error)
       throw error
     }
   }
@@ -237,7 +229,6 @@ class SessionCacheManager {
       // Check if token is blacklisted
       const isBlacklisted = await redis.exists(blacklistKey)
       if (isBlacklisted) {
-        console.warn(`⚠️ Blocked blacklisted token attempt`)
         return null
       }
 
@@ -257,7 +248,6 @@ class SessionCacheManager {
 
       return tokenData
     } catch (error) {
-      console.error('Token validation error:', error)
       return null
     }
   }
@@ -291,9 +281,7 @@ class SessionCacheManager {
       // Remove from active tokens
       await redis.del(tokenKey)
       
-      console.log(`✅ Token revoked and blacklisted`)
     } catch (error) {
-      console.error('Failed to revoke token:', error)
       throw error
     }
   }
@@ -320,7 +308,6 @@ class SessionCacheManager {
         await this.updateSession(userId, { credits })
       }
     } catch (error) {
-      console.error('Failed to store user credits:', error)
       throw error
     }
   }
@@ -343,7 +330,6 @@ class SessionCacheManager {
       
       return credits
     } catch (error) {
-      console.error('Failed to get user credits:', error)
       return null
     }
   }
@@ -366,7 +352,6 @@ class SessionCacheManager {
       await redis.expire(counterKey, CACHE_TTL.DAILY)
 
     } catch (error) {
-      console.error('Failed to track activity:', error)
     }
   }
 
@@ -380,10 +365,8 @@ class SessionCacheManager {
     try {
       // This would require a more sophisticated query mechanism
       // For now, return empty array - implement with time-series data structure
-      console.warn('getUserActivity: Advanced querying not implemented with current Redis setup')
       return []
     } catch (error) {
-      console.error('Failed to get user activity:', error)
       return []
     }
   }
@@ -396,11 +379,9 @@ class SessionCacheManager {
       let cleaned = 0
       
       // Redis TTL handles automatic cleanup, but we can log cleanup events
-      console.log(`🧹 Session cleanup completed: ${cleaned} sessions cleaned`)
       
       return cleaned
     } catch (error) {
-      console.error('Session cleanup failed:', error)
       return 0
     }
   }
@@ -412,10 +393,8 @@ class SessionCacheManager {
     try {
       // This would require scanning, which is expensive
       // Instead, maintain counters or use Redis streams for monitoring
-      console.warn('getActiveSessionsCount: Scanning not recommended with Redis')
       return 0
     } catch (error) {
-      console.error('Failed to get active sessions count:', error)
       return 0
     }
   }
@@ -426,9 +405,7 @@ class SessionCacheManager {
   async invalidateUserSessions(userId: string): Promise<void> {
     try {
       await redis.invalidateByTags([`user:${userId}`])
-      console.log(`✅ All sessions invalidated for user: ${userId}`)
     } catch (error) {
-      console.error('Failed to invalidate user sessions:', error)
       throw error
     }
   }
@@ -453,7 +430,6 @@ class SessionCacheManager {
         })
       }
     } catch (error) {
-      console.error('Failed to update user preferences:', error)
       throw error
     }
   }

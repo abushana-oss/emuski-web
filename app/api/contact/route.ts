@@ -75,7 +75,6 @@ async function verifyRecaptchaV2(
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
   if (!secretKey) {
-    console.error('RECAPTCHA_SECRET_KEY not configured');
     return { success: false, reasons: ['Secret key not configured'] };
   }
 
@@ -309,7 +308,6 @@ async function sendEmail(
   // Verify Resend API key is configured
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.error('❌ RESEND_API_KEY not configured');
     return {
       success: false,
       error: 'Email service not configured. Please contact administrator.',
@@ -334,18 +332,15 @@ async function sendEmail(
     });
 
     if (error) {
-      console.error('❌ Resend API error:', error);
       return {
         success: false,
         error: error.message || 'Failed to send email',
       };
     }
 
-    console.log('✅ Email sent successfully via Resend:', data?.id);
     return { success: true };
 
   } catch (error: any) {
-    console.error('❌ Email sending error:', error);
     return {
       success: false,
       error: error.message || 'Failed to send email. Please try again.',
@@ -484,7 +479,6 @@ export async function POST(request: NextRequest) {
     return addCorsHeaders(response, request);
 
   } catch (error) {
-    console.error('Contact form API error:', error);
     const errorResponse = NextResponse.json(
       {
         success: false,

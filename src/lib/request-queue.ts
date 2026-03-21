@@ -223,7 +223,7 @@ export class RequestQueue {
         await this.redis.del(...expiredKeys);
       }
     } catch (error) {
-      console.error('Queue cleanup error:', error);
+      // Queue cleanup error - silently continue
     }
   }
 
@@ -257,14 +257,14 @@ export class QueueProcessor {
       }
     }, 1000); // Process every second
 
-    console.log('Queue processor started');
+    // Queue processor started
   }
 
   static stop(): void {
     if (this.processingInterval) {
       clearInterval(this.processingInterval);
       this.processingInterval = null;
-      console.log('Queue processor stopped');
+      // Queue processor stopped
     }
   }
 
@@ -284,7 +284,6 @@ export class QueueProcessor {
       await RequestQueue.markCompleted(request.id, result);
 
     } catch (error) {
-      console.error('Queue processing error:', error);
       // Handle error appropriately
     } finally {
       this.isProcessing = false;

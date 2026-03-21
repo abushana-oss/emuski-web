@@ -1814,7 +1814,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
         )}
 
         {state.isChatOpen && (
-          <div className="absolute bottom-0 right-0 w-[400px] h-[75vh] max-h-[700px] bg-white border border-gray-200 rounded-xl shadow-2xl flex flex-col z-[100]">
+          <div className="absolute bottom-0 right-0 w-[90vw] sm:w-[400px] h-[80vh] sm:h-[75vh] max-h-[700px] bg-white border border-gray-200 rounded-xl shadow-2xl flex flex-col z-[100] max-w-[calc(100vw-2rem)] origin-bottom-right animate-in fade-in slide-in-from-bottom-2">
 
             {/* Header */}
             <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-gradient-to-r from-emuski-teal to-emuski-teal/90 rounded-t-xl">

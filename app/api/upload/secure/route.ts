@@ -128,26 +128,30 @@ export async function POST(req: NextRequest) {
       });
 
     if (uploadError) {
-      console.error('Upload error:', uploadError);
       return NextResponse.json(
         { error: 'Upload failed. Please try again.' },
         { status: 500, headers }
       );
     }
 
-    // Log successful upload for monitoring
-    console.log(`Secure upload successful: ${secureFileName} by user ${userId}`);
 
-    // Get public URL
-    const { data: urlData } = supabase.storage
+    // Generate signed URL for private bucket access (valid for 1 hour)
+    const { data: urlData, error: urlError } = await supabase.storage
       .from('cad-files')
-      .getPublicUrl(secureFileName);
+      .createSignedUrl(secureFileName, 3600); // 1 hour expiry
+      
+    if (urlError) {
+      return NextResponse.json(
+        { error: 'Failed to generate file access URL. Please try again.' },
+        { status: 500, headers }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       fileName: secureFileName,
       originalName: file.name,
-      fileUrl: urlData.publicUrl,
+      fileUrl: urlData.signedUrl,
       securityScore: validationResult.securityScore,
       size: file.size,
       uploadedAt: new Date().toISOString(),
@@ -155,7 +159,6 @@ export async function POST(req: NextRequest) {
     }, { headers });
 
   } catch (error: any) {
-    console.error('Secure upload error:', error);
     
     logSecurityEvent({
       type: 'suspicious_activity',

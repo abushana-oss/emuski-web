@@ -27,11 +27,6 @@ export async function POST(req: NextRequest) {
     const expectedSecret = process.env.CRON_SECRET_KEY;
     
     if (!expectedSecret || cronSecret !== expectedSecret) {
-      console.error('Unauthorized cron job access attempt', {
-        timestamp: new Date().toISOString(),
-        headers: Object.fromEntries(req.headers.entries()),
-        ip: req.headers.get('x-forwarded-for') || 'unknown'
-      });
       
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -39,10 +34,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log('Starting daily credit reset job', {
-      timestamp: new Date().toISOString(),
-      resetTime: 'UTC 00:00'
-    });
 
     // Get yesterday's date for proper filtering
     const yesterday = new Date();
@@ -57,18 +48,11 @@ export async function POST(req: NextRequest) {
       });
 
     if (resetResult.error) {
-      console.error('Credit reset batch failed:', resetResult.error);
       throw new Error(`Database error: ${resetResult.error.message}`);
     }
 
     const resetCount = resetResult.data || 0;
 
-    // Log successful completion for monitoring
-    console.log('Daily credit reset completed', {
-      timestamp: new Date().toISOString(),
-      usersReset: resetCount,
-      status: 'success'
-    });
 
     // Return success response with metrics
     return NextResponse.json({
@@ -80,12 +64,6 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error: any) {
-    // Comprehensive error logging for monitoring
-    console.error('Daily credit reset failed:', {
-      timestamp: new Date().toISOString(),
-      error: error.message,
-      stack: error.stack
-    });
 
     return NextResponse.json({
       success: false,

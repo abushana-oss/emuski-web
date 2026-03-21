@@ -82,7 +82,6 @@ class CacheFallbackHandler {
     this.startHealthMonitoring()
     this.loadPersistedCache()
 
-    console.log('✅ Cache fallback handler initialized')
   }
 
   /**
@@ -112,7 +111,6 @@ class CacheFallbackHandler {
       return await this.executeWithFallback(operation, startTime)
 
     } catch (error) {
-      console.error(`Cache operation failed: ${operation.operation}:${operation.key}`, error)
       
       // Record failure
       this.recordError()
@@ -148,7 +146,6 @@ class CacheFallbackHandler {
       const hedgedPromise = new Promise<T | null>((resolve) => {
         setTimeout(async () => {
           if (this.hedgingOperations.has(hedgingId)) {
-            console.log(`🔄 Hedging operation: ${operation.key}`)
             try {
               const hedgedResult = await this.getFallbackValue(operation)
               resolve(hedgedResult)
@@ -216,7 +213,6 @@ class CacheFallbackHandler {
 
       } catch (error) {
         lastError = error as Error
-        console.warn(`Cache operation attempt ${attempt} failed: ${error}`)
         
         if (attempt < this.config.maxRetries) {
           // Exponential backoff
@@ -265,7 +261,6 @@ class CacheFallbackHandler {
     if (this.config.enableLocalBackup) {
       const backup = this.localBackup.get(operation.key)
       if (backup && this.isBackupValid(backup)) {
-        console.log(`📦 Local backup hit: ${operation.key}`)
         return backup.value as T
       }
     }
@@ -274,14 +269,12 @@ class CacheFallbackHandler {
     if (this.config.enablePersistence) {
       const persisted = this.persistence.get(operation.key)
       if (persisted && this.isBackupValid(persisted)) {
-        console.log(`💾 Persistence hit: ${operation.key}`)
         return persisted.value as T
       }
     }
 
     // Try fallback function
     if (operation.fallbackFn) {
-      console.log(`🔄 Executing fallback function: ${operation.key}`)
       try {
         const fallbackResult = await operation.fallbackFn()
         
@@ -292,7 +285,6 @@ class CacheFallbackHandler {
         
         return fallbackResult
       } catch (error) {
-        console.error('Fallback function failed:', error)
       }
     }
 
@@ -319,7 +311,6 @@ class CacheFallbackHandler {
       }
 
     } catch (error) {
-      console.error('Local backup failed:', error)
     }
   }
 
@@ -382,9 +373,6 @@ class CacheFallbackHandler {
    */
   private enterDegradedMode(): void {
     this.serviceState = ServiceState.DEGRADED
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn('🔶 Cache entering DEGRADED mode - prioritizing critical operations')
-    }
     
     // Could implement additional logic like:
     // - Reduce cache TTLs
@@ -397,9 +385,6 @@ class CacheFallbackHandler {
    */
   private enterCriticalMode(): void {
     this.serviceState = ServiceState.CRITICAL
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('🔴 Cache entering CRITICAL mode - maximum fallback engaged')
-    }
     
     // Implement critical mode logic:
     // - Force local cache usage
@@ -414,17 +399,11 @@ class CacheFallbackHandler {
     if (this.serviceState === ServiceState.NORMAL) return
     
     this.serviceState = ServiceState.RECOVERY
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('🟡 Cache entering RECOVERY mode')
-    }
     
     // Start recovery timer
     this.recoveryTimer = setTimeout(() => {
       this.serviceState = ServiceState.NORMAL
       this.errorCount = 0
-      if (process.env.NODE_ENV !== 'production') {
-        console.log('✅ Cache returned to NORMAL mode')
-      }
     }, 60000) // 1 minute recovery period
   }
 
@@ -441,11 +420,9 @@ class CacheFallbackHandler {
           this.enterRecoveryMode()
         }
       } catch (error) {
-        console.error('Health monitoring callback failed:', error)
       }
     })
     
-    console.log('🔗 Fallback handler subscribed to health coordinator')
   }
 
   /**
@@ -455,9 +432,7 @@ class CacheFallbackHandler {
     try {
       // In production, load from file system or database
       // For now, just initialize empty
-      console.log('📂 Persisted cache loaded')
     } catch (error) {
-      console.error('Failed to load persisted cache:', error)
     }
   }
 
@@ -468,9 +443,7 @@ class CacheFallbackHandler {
     try {
       // In production, save to file system or database
       const data = Array.from(this.persistence.entries())
-      console.log(`💾 Saved ${data.length} entries to persistence`)
     } catch (error) {
-      console.error('Failed to save to persistence:', error)
     }
   }
 
@@ -514,7 +487,6 @@ class CacheFallbackHandler {
     // Save current cache to persistence
     await this.saveToPersistence()
     
-    console.log('✅ Cache fallback handler shutdown complete')
   }
 }
 
