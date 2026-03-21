@@ -1128,7 +1128,8 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       // Performance optimizations for mobile
       if (window.innerWidth <= 768) {
         renderer.shadowMap.enabled = false;
-        renderer.physicallyCorrectLights = false;
+        // Note: physicallyCorrectLights was deprecated in newer Three.js versions
+        // renderer.useLegacyLights = true; // Use this if needed for older Three.js versions
       }
       
       container.appendChild(renderer.domElement);
