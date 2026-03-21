@@ -475,12 +475,10 @@ const nextConfig = {
     },
   },
 
-  // Compiler options
+  // Compiler options - Industry Standard: Zero console logs in production
   compiler: {
-    // Aggressively remove all console.* calls in production (keeps only errors for crash reports)
-    removeConsole: process.env.NODE_ENV === 'production' ? {
-      exclude: ['error'],
-    } : false,
+    // Remove ALL console statements in production for security and performance
+    removeConsole: process.env.NODE_ENV === 'production' ? true : false,
   },
 
   // Turbopack configuration (Next.js 15+)

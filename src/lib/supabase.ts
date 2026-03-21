@@ -350,7 +350,7 @@ export const cadAnalysisApi = {
     try {
       // Implement secondary backup following 3-2-1 backup strategy
       // This would integrate with your enterprise backup solution
-      console.log(`Backing up ${filePath} to secondary storage for disaster recovery`);
+      // Backup to secondary storage for disaster recovery (no logging in production)
     } catch (error) {
       // Secondary backup failed, logged for monitoring
     }

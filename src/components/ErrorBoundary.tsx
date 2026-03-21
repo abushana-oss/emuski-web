@@ -50,8 +50,7 @@ export class ErrorBoundary extends Component<Props, State> {
   public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Suppress DOM manipulation errors during development
     if (error.message.includes('removeChild') || error.message.includes('insertBefore')) {
-      console.warn('DOM manipulation error suppressed:', error.message);
-      // Reset the error state to prevent showing the error UI
+      // DOM manipulation error suppressed - reset error state
       this.setState({
         hasError: false,
         error: null,
@@ -59,8 +58,6 @@ export class ErrorBoundary extends Component<Props, State> {
       });
       return;
     }
-
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
     
     // Update state with error details
     this.setState({
@@ -97,7 +94,7 @@ export class ErrorBoundary extends Component<Props, State> {
       //   body: JSON.stringify(errorReport)
       // }).catch(console.error);
       
-      console.error('Error Report:', errorReport);
+      // Production error reporting would go here
     }
   };
 
@@ -224,8 +221,6 @@ export function withErrorBoundary<P extends object>(
  * Async error handler for Next.js app
  */
 export const handleAsyncError = (error: Error): void => {
-  console.error('Async error:', error);
-  
   // Report to error tracking service
   const errorReport = {
     type: 'async_error',
@@ -236,8 +231,7 @@ export const handleAsyncError = (error: Error): void => {
   };
 
   if (process.env.NODE_ENV === 'production') {
-    // Send to monitoring service
-    console.error('Async Error Report:', errorReport);
+    // Send to monitoring service in production
   }
 };
 
@@ -247,14 +241,12 @@ export const handleAsyncError = (error: Error): void => {
 export const setupGlobalErrorHandlers = (): void => {
   // Handle unhandled promise rejections
   window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason);
     handleAsyncError(new Error(`Unhandled Promise Rejection: ${event.reason}`));
     event.preventDefault(); // Prevent default browser error handling
   });
 
   // Handle global JavaScript errors
   window.addEventListener('error', (event) => {
-    console.error('Global error:', event.error);
     handleAsyncError(event.error || new Error(event.message));
   });
 };

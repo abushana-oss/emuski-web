@@ -1084,80 +1084,137 @@ export const CadViewer: React.FC<CadViewerProps> = ({
     if (!viewerRef.current || (!rawFile && !fileUrl)) return;
     set({ isLoading: true, error: null });
 
-    const container = viewerRef.current;
-    container.innerHTML = '';
+    try {
+      const container = viewerRef.current;
+      container.innerHTML = '';
 
-    // Scene
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf8f9fa);
-    three.current.scene = scene;
-
-    // Camera
-    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.copy(CAMERA_START);
-    camera.lookAt(0, 0, 0);
-    three.current.camera = camera;
-
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setClearColor(0xf8f9fa, 1);
-    container.appendChild(renderer.domElement);
-    three.current.renderer = renderer;
-
-    // Controls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
-    three.current.controls = controls;
-
-    // Lights
-    scene.add(new THREE.AmbientLight(0x404040, 1.0));
-    const d1 = new THREE.DirectionalLight(0xffffff, 0.6); d1.position.set(10,10,5); scene.add(d1);
-    const d2 = new THREE.DirectionalLight(0xffffff, 0.4); d2.position.set(-10,10,-5); scene.add(d2);
-    const d3 = new THREE.DirectionalLight(0xffffff, 0.3); d3.position.set(0,-10,0); scene.add(d3);
-
-    // Grid & Axes
-    const grid = new THREE.GridHelper(10, 10, 0x17b8ba, 0xcccccc);
-    scene.add(grid);
-    three.current.gridHelper = grid;
-    const axes = createAxesHelper();
-    scene.add(axes);
-    three.current.axesHelper = axes;
-
-    // Render loop
-    const animate = () => {
-      if (!three.current.renderer || !three.current.scene || !three.current.camera) return;
-      three.current.controls?.update();
-      if (three.current.viewCube.cube && three.current.viewCube.renderer) {
-        three.current.viewCube.cube.rotation.copy(camera.rotation);
-        three.current.viewCube.renderer.render(three.current.viewCube.scene!, three.current.viewCube.camera!);
+      // Check WebGL support
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) {
+        throw new Error('WebGL not supported on this device. Please try on a desktop computer or newer mobile device.');
       }
-      three.current.animationId = requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-    };
-    animate();
 
-    // ViewCube
-    const tryInitViewCube = (attempts = 0) => {
-      requestAnimationFrame(() => {
-        if (viewCubeRef.current) {
-          three.current.viewCube = initViewCube(viewCubeRef.current);
-          viewCubeRef.current.addEventListener('click', handleViewCubeClick);
-        } else if (attempts < 10) {
-          setTimeout(() => tryInitViewCube(attempts + 1), 2 ** attempts * 10);
-        }
+      // Scene
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf8f9fa);
+      three.current.scene = scene;
+
+      // Camera with mobile-friendly settings
+      const aspectRatio = container.clientWidth / container.clientHeight;
+      const camera = new THREE.PerspectiveCamera(
+        60, // Reduced FOV for mobile
+        aspectRatio, 
+        0.1, 
+        1000
+      );
+      camera.position.copy(CAMERA_START);
+      camera.lookAt(0, 0, 0);
+      three.current.camera = camera;
+
+      // Renderer with mobile optimizations
+      const renderer = new THREE.WebGLRenderer({ 
+        antialias: window.innerWidth > 768, // Disable antialiasing on mobile for performance
+        alpha: true,
+        powerPreference: 'high-performance',
+        preserveDrawingBuffer: false, // Better memory management
       });
-    };
-    tryInitViewCube();
-
-    // Resize handler
-    const onResize = () => {
-      camera.aspect = container.clientWidth / container.clientHeight;
-      camera.updateProjectionMatrix();
+      
+      // Mobile-specific renderer settings
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Cap pixel ratio for performance
       renderer.setSize(container.clientWidth, container.clientHeight);
-    };
-    window.addEventListener('resize', onResize);
+      renderer.setClearColor(0xf8f9fa, 1);
+      
+      // Performance optimizations for mobile
+      if (window.innerWidth <= 768) {
+        renderer.shadowMap.enabled = false;
+        renderer.physicallyCorrectLights = false;
+      }
+      
+      container.appendChild(renderer.domElement);
+      three.current.renderer = renderer;
+
+      // Controls with mobile-specific settings
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.25;
+      
+      // Mobile touch optimizations
+      controls.rotateSpeed = window.innerWidth <= 768 ? 0.5 : 1.0;
+      controls.zoomSpeed = window.innerWidth <= 768 ? 0.8 : 1.2;
+      controls.panSpeed = window.innerWidth <= 768 ? 0.8 : 1.0;
+      controls.enableKeys = false; // Disable keyboard controls on mobile
+      
+      // Touch-specific settings
+      controls.touches = {
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY_PAN
+      };
+      
+      three.current.controls = controls;
+
+      // Lights
+      scene.add(new THREE.AmbientLight(0x404040, 1.0));
+      const d1 = new THREE.DirectionalLight(0xffffff, 0.6); d1.position.set(10,10,5); scene.add(d1);
+      const d2 = new THREE.DirectionalLight(0xffffff, 0.4); d2.position.set(-10,10,-5); scene.add(d2);
+      const d3 = new THREE.DirectionalLight(0xffffff, 0.3); d3.position.set(0,-10,0); scene.add(d3);
+
+      // Grid & Axes  
+      const grid = new THREE.GridHelper(10, 10, 0x17b8ba, 0xcccccc);
+      scene.add(grid);
+      three.current.gridHelper = grid;
+      const axes = createAxesHelper();
+      scene.add(axes);
+      three.current.axesHelper = axes;
+
+      // Render loop with error handling
+      const animate = () => {
+        try {
+          if (!three.current.renderer || !three.current.scene || !three.current.camera) return;
+          three.current.controls?.update();
+          if (three.current.viewCube.cube && three.current.viewCube.renderer) {
+            three.current.viewCube.cube.rotation.copy(camera.rotation);
+            three.current.viewCube.renderer.render(three.current.viewCube.scene!, three.current.viewCube.camera!);
+          }
+          three.current.animationId = requestAnimationFrame(animate);
+          renderer.render(scene, camera);
+        } catch (animationError) {
+          // Silently handle render loop errors to prevent error boundary cascade
+          if (three.current.animationId) {
+            cancelAnimationFrame(three.current.animationId);
+          }
+        }
+      };
+      animate();
+
+      // ViewCube (disabled on mobile for performance)
+      if (window.innerWidth > 768) {
+        const tryInitViewCube = (attempts = 0) => {
+          requestAnimationFrame(() => {
+            if (viewCubeRef.current) {
+              three.current.viewCube = initViewCube(viewCubeRef.current);
+              viewCubeRef.current.addEventListener('click', handleViewCubeClick);
+            } else if (attempts < 10) {
+              setTimeout(() => tryInitViewCube(attempts + 1), 2 ** attempts * 10);
+            }
+          });
+        };
+        tryInitViewCube();
+      }
+
+      // Resize handler with throttling for mobile
+      let resizeTimeout: NodeJS.Timeout;
+      const onResize = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          if (camera && renderer && container) {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+          }
+        }, window.innerWidth <= 768 ? 150 : 50); // Throttle more on mobile
+      };
+      window.addEventListener('resize', onResize);
 
     // Load model
     try {
@@ -1196,14 +1253,30 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       scene.add(modelGroup);
       three.current.model = modelGroup;
 
-      const realTimeGeometry = await analyzeGeometry(geometry, rawFile, state.engineAvailable);
-      set({ realTimeGeometry, currentGeometry: geometry, isLoading: false });
-      onGeometryAnalyzed?.(realTimeGeometry);
-    } catch (err: any) {
-      set({ isLoading: false, error: err.message ?? 'Failed to load CAD model.' });
-    }
+        const realTimeGeometry = await analyzeGeometry(geometry, rawFile, state.engineAvailable);
+        set({ realTimeGeometry, currentGeometry: geometry, isLoading: false });
+        onGeometryAnalyzed?.(realTimeGeometry);
 
-    return () => window.removeEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+
+    } catch (err: any) {
+      // Enhanced error handling for mobile devices
+      let errorMessage = 'Failed to load CAD model.';
+      
+      if (err.message?.includes('WebGL')) {
+        errorMessage = 'WebGL is not supported on this device. Please try using a desktop computer or newer mobile device with WebGL support.';
+      } else if (err.message?.includes('memory') || err.message?.includes('Memory')) {
+        errorMessage = 'Device ran out of memory. Try closing other apps or using a smaller file.';
+      } else if (err.message?.includes('File') || err.message?.includes('format')) {
+        errorMessage = 'File format not supported or file is corrupted. Please try a different file.';
+      } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+        errorMessage = 'Network error loading file. Please check your connection and try again.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      set({ isLoading: false, error: errorMessage });
+    }
   }, [rawFile, fileUrl]);
 
   useEffect(() => { initViewer(); }, [rawFile, fileUrl]);
@@ -1662,6 +1735,46 @@ export const CadViewer: React.FC<CadViewerProps> = ({
         </div>
       )}
 
+      {/* Error Display */}
+      {state.error && (
+        <div className="absolute inset-0 bg-card/95 backdrop-blur-sm z-30 flex items-center justify-center p-6">
+          <div className="max-w-md text-center">
+            <AlertTriangle className="w-16 h-16 mx-auto mb-4 text-orange-500" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
+              3D Viewer Error
+            </h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              {state.error}
+            </p>
+            <div className="space-y-2">
+              <Button
+                onClick={() => set({ error: null, isLoading: false })}
+                className="w-full"
+                size="sm"
+              >
+                Try Again
+              </Button>
+              <Button
+                onClick={() => window.location.reload()}
+                variant="outline"
+                className="w-full"
+                size="sm"
+              >
+                Reload Page
+              </Button>
+            </div>
+            {window.innerWidth <= 768 && (
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p className="text-xs text-blue-700">
+                  <strong>Mobile Tip:</strong> Use two fingers to rotate, pinch to zoom. 
+                  For best experience, try desktop version.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* 3D Viewport */}
       <div
         ref={viewerRef}
@@ -1751,6 +1864,82 @@ export const CadViewer: React.FC<CadViewerProps> = ({
               <div className="mt-1 text-[10px] text-right text-slate-400 uppercase">{state.measureUnits}</div>
             </>
           ) : <div className="text-[11px] text-slate-400">Loading…</div>}
+        </div>
+      </div>
+
+      {/* Mobile Control Panel */}
+      <div className="absolute top-4 left-4 right-4 z-10 sm:hidden">
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/50 p-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => set({ measureMode: !state.measureMode })}
+                className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+                  state.measureMode 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                Measure
+              </button>
+              <select
+                value={state.measureUnits}
+                onChange={e => { 
+                  const u = e.target.value as MeasureUnit; 
+                  set({ measureUnits: u }); 
+                  onUnitChange?.(u); 
+                }}
+                className="text-xs bg-gray-100 border border-gray-200 rounded px-2 py-1"
+              >
+                {(['mm','cm','m','in'] as MeasureUnit[]).map(u => 
+                  <option key={u} value={u}>{u}</option>
+                )}
+              </select>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                onClick={takeScreenshot}
+                className="p-2 bg-gray-100 hover:bg-gray-200 rounded text-gray-600 transition-colors text-xs font-medium"
+                title="Screenshot"
+              >
+                Shot
+              </button>
+              <button
+                onClick={() => {
+                  const next = !state.isWireframe;
+                  set({ isWireframe: next });
+                }}
+                className={`p-2 rounded transition-colors text-xs font-medium ${
+                  state.isWireframe 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                }`}
+                title="Wireframe"
+              >
+                Wire
+              </button>
+              <button
+                onClick={() => {
+                  const next = !state.showGrid;
+                  if (three.current.gridHelper) three.current.gridHelper.visible = next;
+                  set({ showGrid: next });
+                }}
+                className={`p-2 rounded transition-colors text-xs font-medium ${
+                  state.showGrid 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                }`}
+                title="Grid"
+              >
+                Grid
+              </button>
+            </div>
+          </div>
+          
+          <div className="mt-2 text-xs text-gray-500 text-center">
+            Pinch to zoom • Two fingers to rotate • Drag to pan
+          </div>
         </div>
       </div>
 

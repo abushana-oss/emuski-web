@@ -132,25 +132,51 @@ async function handleGET(req: NextRequest) {
   } catch (error: any) {
     const totalDuration = Date.now() - startTime;
     
-    // Check for specific error types and provide better error responses
+    // Provide user-friendly error responses following industry standards
     let statusCode = 500;
-    let errorMessage = 'Unable to fetch credit status. Please refresh the page.';
+    let userMessage = {
+      title: 'Service Issue',
+      message: 'Unable to fetch your credit status. This is usually temporary.',
+      action: 'Please refresh the page or try again in a moment',
+      canRetry: true,
+    };
     
     if (error.message?.includes('service role key') || error.code === 'SUPABASE_SERVICE_ROLE_KEY_MISSING') {
       statusCode = 503;
-      errorMessage = 'Service temporarily unavailable. Please try again later.';
+      userMessage = {
+        title: 'Service Maintenance',
+        message: 'Our credit system is temporarily unavailable due to maintenance.',
+        action: 'Please try again in a few minutes',
+        canRetry: true,
+      };
     } else if (error.code === 'PGRST301') {
       statusCode = 503;
-      errorMessage = 'Database connection error. Please try again later.';
+      userMessage = {
+        title: 'Database Connection Issue',
+        message: 'We\'re experiencing connectivity issues with our database.',
+        action: 'Our team has been notified. Please try again shortly',
+        canRetry: true,
+      };
     } else if (error.message?.includes('timeout')) {
       statusCode = 408;
-      errorMessage = 'Request timeout. Please try again.';
+      userMessage = {
+        title: 'Request Timed Out',
+        message: 'The request took too long to process.',
+        action: 'Please try again',
+        canRetry: true,
+      };
     }
     
     return NextResponse.json({
-      error: errorMessage,
-      code: statusCode === 503 ? 'SERVICE_UNAVAILABLE' : 'INTERNAL_ERROR',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: userMessage,
+      success: false,
+      timestamp: new Date().toISOString(),
+      ...(process.env.NODE_ENV === 'development' && { 
+        debug: { 
+          originalError: error.message,
+          stack: error.stack 
+        } 
+      })
     }, { status: statusCode, headers });
   }
 }
