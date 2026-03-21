@@ -18,8 +18,7 @@
     "security:fix": "npm audit fix --force",
     "security:check": "npm audit --audit-level=high --dry-run",
     "security:update": "npm update && npm audit fix --force",
-    "preinstall": "npm config set audit-level moderate",
-    "postinstall": "npm run security:check"
+    "preinstall": "npm config set audit-level moderate"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",
@@ -103,17 +102,15 @@
     "zod": "^3.25.76"
   },
   "overrides": {
-    "fast-xml-parser": ">=6.1.0",
-    "minimatch": ">=9.0.5",
-    "@isaacs/brace-expansion": ">=0.5.2", 
-    "flatted": ">=4.0.0",
-    "svgo": ">=3.3.0",
-    "lodash": ">=4.17.21",
-    "ajv": ">=8.17.1"
-  },
-  "resolutions": {
-    "fast-xml-parser": ">=6.1.0",
-    "python-multipart": ">=0.0.12"
+    "fast-xml-parser": "^4.4.1",
+    "minimatch": "^3.1.2",
+    "flatted": "^3.3.2",
+    "svgo": "^3.3.2",
+    "lodash": "^4.17.21",
+    "ajv": "^8.17.1",
+    "@aws-sdk/xml-builder": {
+      "fast-xml-parser": "^4.4.1"
+    }
   },
   "devDependencies": {
     "@types/node": "^22.16.5",
