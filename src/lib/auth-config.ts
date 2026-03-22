@@ -251,11 +251,11 @@ export const authService = {
               }
             }
           } else if (rateLimitCheck && !rateLimitCheck.allowed) {
-            const waitMinutes = Math.ceil((rateLimitCheck.wait_seconds || 900) / 60)
+            const waitTimeStr = emailRateLimiter.formatWaitTime(rateLimitCheck.wait_seconds || 900)
             return {
               data: null,
               error: {
-                message: `Too many signup attempts. Please wait ${waitMinutes} minutes before trying again.`,
+                message: `Too many signup attempts. Please wait ${waitTimeStr} before trying again.`,
                 type: 'validation'
               }
             }
@@ -311,24 +311,14 @@ export const authService = {
 
       if (error) {
 
-        // In development, provide more helpful error messages for rate limiting
+        // In development or when rate limited, provide the exact error message
         if (error.message.includes('429') || error.message.includes('rate limit') ||
           error.message.includes('Too many requests')) {
-          if (isDevelopment) {
-            return {
-              data: null,
-              error: {
-                message: 'Supabase rate limit hit. Try: 1) Different email, 2) Incognito mode, 3) Mobile hotspot, or 4) Wait 15 minutes',
-                type: 'validation'
-              }
-            }
-          } else {
-            return {
-              data: null,
-              error: {
-                message: 'Too many signup attempts. Please wait 15 minutes before trying again.',
-                type: 'validation'
-              }
+          return {
+            data: null,
+            error: {
+              message: `Supabase Error: ${error.message} - Please try another IP or wait.`,
+              type: 'validation'
             }
           }
         }
