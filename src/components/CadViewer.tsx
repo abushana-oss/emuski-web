@@ -982,6 +982,13 @@ async function analyzeGeometry(
     bomComponents = generateBOMFallback(geo, dims, volume, surfaceArea);
   }
 
+  // Create hole analysis from recognized features
+  const holeAnalysis = {
+    count: recognizedFeatures.holes?.count || 0,
+    sizes: recognizedFeatures.holes?.features?.map(f => f.properties?.estimatedDiameter || 0).filter(d => d > 0) || [],
+    types: recognizedFeatures.holes?.features?.map(f => f.properties?.holeType || 'unknown') || []
+  };
+
   return {
     dimensions: dims,
     volume, surfaceArea, boundingBoxVolume,
@@ -989,6 +996,7 @@ async function analyzeGeometry(
     wallThickness,
     threadFeatures,
     recognizedFeatures,
+    holeAnalysis,
     bomComponents,
     cadEngineAnalysis,
   };

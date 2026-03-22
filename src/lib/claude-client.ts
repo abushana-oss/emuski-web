@@ -98,7 +98,7 @@ Use the CAD data to support your answer when relevant.
 **Manufacturing Features Detected:**
 ${geometryFeatures?.manufacturing_features?.length > 0 ? 
   geometryFeatures.manufacturing_features.map(feature => `- ${feature}`).join('\n') : 
-  `- Holes: ${features.holes?.count || 0} detected
+  `- Holes: ${geometryData?.holeAnalysis?.count || features.holes?.count || 0} detected${geometryData?.holeAnalysis?.count > 0 ? ` (${geometryData.holeAnalysis.types.join(', ')})` : ''}
 - Pockets: ${features.pockets?.count || 0} detected  
 - Walls: ${features.walls?.count || 0} detected
 - Fillets: ${features.fillets?.count || 0} detected
