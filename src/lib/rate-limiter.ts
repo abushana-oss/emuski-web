@@ -70,8 +70,13 @@ export class RateLimiter {
       // Try database rate limiting first, fallback to memory
       try {
         return await this.checkDatabaseRateLimit(identifier, endpointKey, limits);
-      } catch (error) {
-        console.warn('Database rate limiting failed, using memory fallback:', error);
+      } catch (error: any) {
+        // Check for specific function overloading error
+        if (error?.code === 'PGRST203' || error?.message?.includes('Could not choose the best candidate function')) {
+          console.warn('Database function overloading detected, using memory fallback for rate limiting');
+        } else {
+          console.warn('Database rate limiting failed, using memory fallback:', error);
+        }
         return this.checkMemoryRateLimit(identifier, endpointKey, limits);
       }
     } catch (error) {
@@ -94,9 +99,10 @@ export class RateLimiter {
       throw new Error('Database rate limiting unavailable - falling back to memory');
     }
 
+    // Call database function with type consistency
     const { data: isAllowed, error } = await supabaseServiceRole.rpc('check_rate_limit_safe', {
       p_user_id: identifier.startsWith('ip_') ? null : identifier,
-      p_endpoint: endpoint,
+      p_endpoint: endpoint, // Keep original typing
       p_requests_per_minute: limits.minute,
       p_requests_per_hour: limits.hour
     });
