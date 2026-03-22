@@ -313,11 +313,11 @@ export const authService = {
 
         // In development or when rate limited, provide the exact error message
         if (error.message.includes('429') || error.message.includes('rate limit') ||
-          error.message.includes('Too many requests')) {
+          error.message.includes('Too many requests') || error.message.includes('Too many signup attempts')) {
           return {
             data: null,
             error: {
-              message: `Supabase Error: ${error.message} - Please try another IP or wait.`,
+              message: `(SUPABASE CLOUD BLOCK): Your specific internet IP address or email quota has triggered Supabase's GoTrue security firewall. Even though the native error says '15 minutes', it may be a 1-hour spam limit. Please use a Mobile Hotspot right now to bypass the IP block or wait 1 hour. Native API Error: ${error.message}`,
               type: 'validation'
             }
           }
