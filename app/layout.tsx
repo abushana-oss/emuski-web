@@ -22,6 +22,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.emuski.com'),
   title: 'EMUSKI - Your One-Stop Solution for OEM in Bangalore, India',
   description: 'EMUSKI delivers world-class OEM manufacturing solutions, precision Engineering Innovations, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing, rapid prototyping, cost optimization, and intelligent manufacturing solutions for automotive, electronics, medical devices, and aerospace industries. ISO certified manufacturing partner with 15+ years experience.',
   keywords: 'OEM manufacturing, precision engineering, AI manufacturing, design for manufacturing, rapid prototyping, cost optimization, VAVE methodology, Manufacturing Excellences Bangalore, precision engineering India, automotive manufacturing, electronics manufacturing, medical device manufacturing, aerospace manufacturing, intelligent manufacturing, manufacturing automation, CNC machining, injection molding, sheet metal fabrication, quality assurance manufacturing, lean manufacturing, strategic sourcing, supply chain optimization, manufacturing consulting, industrial engineering, production optimization, smart manufacturing, Industry 4.0 solutions',

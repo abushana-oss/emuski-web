@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import React from 'react';
-import { Box, Zap, Wrench, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Box, Zap, Wrench, FileText } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import { FAQSection } from '@/components/FAQSection';
 
 export const metadata: Metadata = {
   title: 'Free DFM Tools Online | 3D DFM Analysis & 2D Balloon Diagrams | EMUSKI',
@@ -163,53 +163,6 @@ const tools = [
   }
 ];
 
-function FAQSection() {
-  const [openItems, setOpenItems] = React.useState<Record<number, boolean>>({});
-
-  const toggleItem = (index: number) => {
-    setOpenItems(prev => ({ ...prev, [index]: !prev[index] }));
-  };
-
-  return (
-    <section className="py-16 bg-muted/30">
-      <div className="container mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Everything you need to know about our engineering tools
-            </p>
-          </div>
-          
-          <div className="space-y-4">
-            {faqData.map((faq, index) => (
-              <div key={index} className="bg-card rounded-xl border border-border overflow-hidden">
-                <button
-                  onClick={() => toggleItem(index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-muted/50 transition-colors"
-                >
-                  <span className="font-semibold text-foreground pr-4">{faq.question}</span>
-                  {openItems[index] ? (
-                    <ChevronUp className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                  )}
-                </button>
-                {openItems[index] && (
-                  <div className="px-6 pb-4">
-                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export default function ToolsPage() {
   return (
@@ -492,7 +445,14 @@ export default function ToolsPage() {
         </div>
       </main>
       
-      <FAQSection />
+      <FAQSection 
+        compact={true}
+        showCategories={false}
+        maxItems={6}
+        title="Frequently Asked Questions"
+        description="Everything you need to know about our DFM tools"
+        skipSchema={true}
+      />
       
       <Footer />
     </div>

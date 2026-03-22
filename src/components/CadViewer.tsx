@@ -987,12 +987,12 @@ async function analyzeGeometry(
   const holeAnalysis = {
     count: recognizedFeatures.holes?.count || 0,
     holes: recognizedFeatures.holes?.features?.map(f => ({
-      diameter: f.properties?.estimatedDiameter || 0,
-      depth: f.properties?.estimatedDepth || 0,
+      diameter: f.properties?.estimatedDiameter || f.properties?.diameter || 0,
+      depth: f.properties?.depth || 0,
       location: {
-        x: f.geometry?.coordinates?.[0] || 0,
-        y: f.geometry?.coordinates?.[1] || 0,
-        z: f.geometry?.coordinates?.[2] || 0
+        x: f.geometry?.center?.x || 0,
+        y: f.geometry?.center?.y || 0,
+        z: f.geometry?.center?.z || 0
       },
       type: f.properties?.holeType || 'unknown'
     })) || []
