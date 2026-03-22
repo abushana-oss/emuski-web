@@ -242,7 +242,7 @@ const INITIAL_VIEWER_STATE: ViewerState = {
   selectedFeatureType: null, featureHighlights: null,
   chatMessages: [{
     id: 'welcome', type: 'bot', timestamp: Date.now(),
-    content: 'Ready to analyze your CAD model for manufacturability. Ask me about holes, tolerances, cost, machining challenges, or any DFM concerns.',
+    content: 'Hi! I\'m Mithran, your AI manufacturing assistant. I\'m here to help you analyze your CAD model for manufacturability. Ask me about holes, tolerances, cost estimates, machining challenges, or any design for manufacturing concerns. How can I help you today?',
   }],
   isChatOpen: false, isChatLoading: false, suggestionsHidden: false,
 };
@@ -1685,6 +1685,10 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       }
 
       const data = await res.json();
+      
+      // Immediately refresh credit info after successful API call
+      window.postMessage({ type: 'refreshCredits' }, '*');
+      
       if (data.queued) return await pollQueuedResult(data.requestId, data.estimatedWaitTime);
       return data.content ?? 'No analysis content received.';
     } finally {
@@ -1699,7 +1703,11 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       try {
         const res = await fetch(`/api/dfm-analysis/status/${requestId}`);
         const data = await res.json();
-        if (res.ok && data.content) return data.content;
+        if (res.ok && data.content) {
+          // Refresh credit info after queued analysis completes
+          window.postMessage({ type: 'refreshCredits' }, '*');
+          return data.content;
+        }
         if (data.error && !data.status) throw new Error(data.error);
       } catch { /* continue polling */ }
     }
@@ -1743,7 +1751,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
             <Loader2 className="w-12 h-12 mx-auto mb-4 text-emuski-teal animate-spin" />
             <p className="text-sm font-medium text-foreground">Processing CAD Model…</p>
             <p className="text-xs text-muted-foreground mt-1">
-              {state.engineAvailable ? 'Using OpenCascade engine' : 'Using local processing'}
+              Analyzing geometry and features
             </p>
           </div>
         </div>
@@ -1986,8 +1994,8 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       )}
 
       {/* Zoom / Share Controls */}
-      <div className="absolute bottom-20 right-4 z-10">
-        <div className="flex gap-1 bg-card/80 backdrop-blur-sm rounded-md p-1 border border-border/50">
+      <div className={`absolute bottom-4 right-4 transition-all duration-300 ${state.isChatOpen ? 'z-0' : 'z-10'}`}>
+        <div className="flex gap-1 bg-card rounded-md p-1 border border-border">
           {[
             { title:'Zoom In', onClick:handleZoomIn, d:'M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0zm-6-3v6m-3-3h6' },
             { title:'Zoom Out', onClick:handleZoomOut, d:'M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0zm-3-3H8' },
@@ -2004,29 +2012,72 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       </div>
 
       {/* Chat */}
-      <div className="absolute bottom-4 right-4 z-[60]">
+      <div className="absolute bottom-12 right-4 z-[60]">
         {!state.isChatOpen && (
-          <button
-            onClick={() => set({ isChatOpen: true })}
-            className="w-12 h-12 bg-emuski-teal hover:bg-emuski-teal/80 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 border-2 border-white/20"
-          >
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-          </button>
+          <div className="relative">
+            {!isAuthenticated && (
+              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-2 rounded-lg text-xs whitespace-nowrap animate-bounce z-[80]">
+                🔒 Sign in required
+              </div>
+            )}
+            {isAuthenticated && creditInfo && creditInfo.remaining <= 0 && (
+              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white px-3 py-2 rounded-lg text-xs whitespace-nowrap animate-bounce z-[80]">
+                💳 No credits left
+              </div>
+            )}
+            
+            {/* Chat button with nudge animation */}
+            <button
+              onClick={() => {
+                if (!isAuthenticated) {
+                  alert('Please sign in to use Mithran AI Assistant');
+                  return;
+                }
+                if (creditInfo && creditInfo.remaining <= 0) {
+                  alert(`No credits remaining. You have used all ${creditInfo.limit} daily credits. Credits reset in ${Math.ceil(creditInfo.timeUntilReset)} hours.`);
+                  return;
+                }
+                set({ isChatOpen: true });
+              }}
+              className={`transition-all hover:scale-105 relative ${
+                !isAuthenticated || (creditInfo && creditInfo.remaining <= 0) 
+                  ? 'opacity-50 cursor-not-allowed' 
+                  : 'animate-pulse hover:animate-none'
+              }`}
+              disabled={!isAuthenticated || (creditInfo && creditInfo.remaining <= 0)}
+            >
+              <div className="relative">
+                <img 
+                  src="/EMUSKI_founder.svg" 
+                  alt="Mithran - AI Assistant" 
+                  className="w-16 h-16 object-cover"
+                />
+                {/* Thinking dots animation */}
+                <div className="absolute -top-2 -right-1 flex space-x-1">
+                  {[0, 150, 300].map(delay => (
+                    <div 
+                      key={delay}
+                      className="w-1.5 h-1.5 bg-emuski-teal rounded-full animate-bounce"
+                      style={{ animationDelay: `${delay}ms`, animationDuration: '1s' }}
+                    />
+                  ))}
+                </div>
+              </div>
+              
+            </button>
+          </div>
         )}
 
         {state.isChatOpen && (
           <div className="absolute bottom-0 right-0 w-[90vw] sm:w-[400px] h-[80vh] sm:h-[75vh] max-h-[700px] bg-white border border-gray-200 rounded-xl shadow-2xl flex flex-col z-[100] max-w-[calc(100vw-2rem)] origin-bottom-right animate-in fade-in slide-in-from-bottom-2">
 
             {/* Header */}
-            <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-gradient-to-r from-emuski-teal to-emuski-teal/90 rounded-t-xl">
+            <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-emuski-teal rounded-t-xl">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-400 rounded-full" />
-                <h3 className="font-semibold text-base text-white">AI Manufacturing Assistant</h3>
-                <Badge variant="outline" className="text-xs bg-white/10 text-white border-white/20">{fileName}</Badge>
+                <h3 className="font-semibold text-base text-white">Mithran AI Assistant</h3>
+                <Badge variant="outline" className="text-xs bg-white text-emuski-teal border-white">{fileName}</Badge>
               </div>
-              <button onClick={() => set({ isChatOpen: false })} className="text-white/70 hover:text-white p-1 transition-colors">
+              <button onClick={() => set({ isChatOpen: false })} className="text-white hover:text-gray-200 p-1 transition-colors">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -2035,12 +2086,55 @@ export const CadViewer: React.FC<CadViewerProps> = ({
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
+              {/* Security Notice */}
+              {!isAuthenticated && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+                  <div className="flex items-center justify-center gap-2 text-red-600 mb-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    <span className="font-semibold">Authentication Required</span>
+                  </div>
+                  <p className="text-sm text-red-700">Please sign in to access Mithran AI Assistant and prevent unlimited token usage.</p>
+                </div>
+              )}
+              
+              {isAuthenticated && creditInfo && creditInfo.remaining <= 0 && (
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-center">
+                  <div className="flex items-center justify-center gap-2 text-orange-600 mb-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                    </svg>
+                    <span className="font-semibold">Credits Exhausted</span>
+                  </div>
+                  <p className="text-sm text-orange-700">
+                    You've used all {creditInfo.limit} daily credits. Credits reset in {Math.ceil(creditInfo.timeUntilReset)} hours.
+                  </p>
+                </div>
+              )}
+              
               {state.chatMessages.map(msg => (
                 <div key={msg.id} className={`flex items-start gap-2 ${msg.type === 'user' ? 'flex-row-reverse' : ''}`}>
-                  <div className="flex-shrink-0 w-10 h-10 bg-emuski-teal/10 rounded-full flex items-center justify-center mt-1">
+                  <div className="flex-shrink-0 w-10 h-10 overflow-hidden mt-1">
                     {msg.type === 'bot'
-                      ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-emuski-teal"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
-                      : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-emuski-teal"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      ? <img 
+                          src="/EMUSKI_founder (1).svg" 
+                          alt="Mithran - AI Assistant" 
+                          className="w-full h-full object-cover"
+                        />
+                      : <div className="w-full h-full bg-emuski-teal/10 rounded-full flex items-center justify-center">
+                          {user?.user_metadata?.avatar_url ? (
+                            <img 
+                              src={user.user_metadata.avatar_url} 
+                              alt={user.user_metadata?.full_name || user.email || 'User'} 
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          ) : (
+                            <span className="text-xs font-semibold text-emuski-teal">
+                              {(user?.user_metadata?.full_name || user?.email || 'U').charAt(0).toUpperCase()}
+                            </span>
+                          )}
+                        </div>
                     }
                   </div>
                   <div className={`max-w-[85%] rounded-lg shadow-sm border ${msg.type === 'user' ? 'bg-emuski-teal text-white border-emuski-teal/20' : 'bg-gray-50 text-gray-900 border-gray-200'}`}>
@@ -2059,8 +2153,13 @@ export const CadViewer: React.FC<CadViewerProps> = ({
 
               {state.isChatLoading && (
                 <div className="flex items-start gap-2">
-                  <div className="flex-shrink-0 w-10 h-10 bg-emuski-teal/10 rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-emuski-teal animate-pulse"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
+                  <div className="flex-shrink-0 w-10 h-10 overflow-hidden mt-1 relative">
+                    <img 
+                      src="/EMUSKI_founder (1).svg" 
+                      alt="Mithran - AI Assistant" 
+                      className="w-full h-full object-cover animate-pulse"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-ping"></div>
                   </div>
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center gap-2">

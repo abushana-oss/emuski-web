@@ -838,6 +838,39 @@ export const CadAnalysisInterface = () => {
                             </div>
                             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-800 p-2 space-y-3">
 
+                              {/* Volume & Physical Properties */}
+                              <div className="rounded-lg bg-[#505050] border border-[#666666] p-3">
+                                <h4 className="text-sm font-semibold text-white mb-3">Physical Properties</h4>
+                                <div className="space-y-2 text-xs">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-gray-400 text-xs">Volume ({part.units}³)</span>
+                                    <span className="text-white font-mono text-sm">
+                                      {part.volume === 0 ? (
+                                        <span className="text-yellow-400">Calculating...</span>
+                                      ) : (
+                                        convertVolume(part.volume, part.units)
+                                      )}
+                                    </span>
+                                  </div>
+                                  {part.surfaceArea && part.surfaceArea > 0 && (
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-gray-400 text-xs">Surface Area ({part.units}²)</span>
+                                      <span className="text-white font-mono text-sm">
+                                        {convertSurfaceArea(part.surfaceArea, part.units)}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {part.weight && part.weight > 0 && (
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-gray-400 text-xs">Weight (kg)</span>
+                                      <span className="text-white font-mono text-sm">
+                                        {part.weight.toFixed(3)}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
                               {/* Manufacturing Details */}
                               <div className="rounded-lg bg-[#505050] border border-[#666666] p-3">
                                 <h4 className="text-sm font-semibold text-white flex items-center gap-2 mb-3">
@@ -1001,39 +1034,6 @@ export const CadAnalysisInterface = () => {
                                         </span>
                                       </div>
                                     </>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Volume & Physical Properties */}
-                              <div className="rounded-lg bg-[#505050] border border-[#666666] p-3">
-                                <h4 className="text-sm font-semibold text-white mb-3">Physical Properties</h4>
-                                <div className="space-y-2 text-xs">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-gray-400 text-xs">Volume ({part.units}³)</span>
-                                    <span className="text-white font-mono text-sm">
-                                      {part.volume === 0 ? (
-                                        <span className="text-yellow-400">Calculating...</span>
-                                      ) : (
-                                        convertVolume(part.volume, part.units)
-                                      )}
-                                    </span>
-                                  </div>
-                                  {part.surfaceArea && part.surfaceArea > 0 && (
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-gray-400 text-xs">Surface Area ({part.units}²)</span>
-                                      <span className="text-white font-mono text-sm">
-                                        {convertSurfaceArea(part.surfaceArea, part.units)}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {part.weight && part.weight > 0 && (
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-gray-400 text-xs">Weight (kg)</span>
-                                      <span className="text-white font-mono text-sm">
-                                        {part.weight.toFixed(3)}
-                                      </span>
-                                    </div>
                                   )}
                                 </div>
                               </div>

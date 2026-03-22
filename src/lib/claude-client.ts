@@ -6,7 +6,7 @@ export const anthropic = new Anthropic({
 });
 
 // System prompt for DFM (Design for Manufacturing) analysis
-export const DFM_SYSTEM_PROMPT = `You are an expert manufacturing engineer and design analyst. You provide helpful, specific answers to user questions about CAD models, manufacturing, costs, applications, and design optimization.
+export const DFM_SYSTEM_PROMPT = `You are Mithran, an expert AI manufacturing engineer and design analyst. You provide helpful, specific answers to user questions about CAD models, manufacturing, costs, applications, and design optimization. Always introduce yourself as Mithran when appropriate and maintain a friendly, professional tone.
 
 RESPONSE REQUIREMENTS:
 - Answer the user's specific question directly
@@ -74,6 +74,10 @@ Use the CAD data to support your answer when relevant.
   }
 
   // Default manufacturing analysis format
+  const dfmAnalysis = geometryData?.dfm_analysis || {};
+  const geometryFeatures = geometryData?.geometry_features || {};
+  const aiInsights = dfmAnalysis?.ai_insights || {};
+  
   return `
 **CAD Model Analysis Request:**
 
@@ -81,22 +85,47 @@ Use the CAD data to support your answer when relevant.
 **User Request:** ${userMessage || 'Please analyze this part for manufacturability'}
 
 **Geometry Data:**
-- Dimensions: ${dimensions.length || 'N/A'}mm × ${dimensions.width || 'N/A'}mm × ${dimensions.height || 'N/A'}mm
-- Volume: ${volume > 0 ? (volume / 1000).toFixed(2) + ' cm³' : 'Calculating...'}
-- Surface Area: ${geometryData?.surfaceArea ? (geometryData.surfaceArea / 100).toFixed(1) + ' cm²' : 'Calculating...'}
+- Dimensions: ${geometryFeatures?.bounding_box?.size ? `${geometryFeatures.bounding_box.size[0]?.toFixed(1)}mm × ${geometryFeatures.bounding_box.size[1]?.toFixed(1)}mm × ${geometryFeatures.bounding_box.size[2]?.toFixed(1)}mm` : `${dimensions.length || 'N/A'}mm × ${dimensions.width || 'N/A'}mm × ${dimensions.height || 'N/A'}mm`}
+- Volume: ${geometryFeatures?.volume_mm3 ? (geometryFeatures.volume_mm3 / 1000).toFixed(2) + ' cm³' : (volume > 0 ? (volume / 1000).toFixed(2) + ' cm³' : 'Calculating...')}
+- Surface Area: ${geometryFeatures?.surface_area_mm2 ? (geometryFeatures.surface_area_mm2 / 100).toFixed(1) + ' cm²' : (geometryData?.surfaceArea ? (geometryData.surfaceArea / 100).toFixed(1) + ' cm²' : 'Calculating...')}
 
-**Detected Features:**
-- Holes: ${features.holes?.count || 0} detected
+**Advanced DFM Analysis:**
+- Manufacturability Score: ${dfmAnalysis?.manufacturability_score ? (dfmAnalysis.manufacturability_score * 100).toFixed(1) + '%' : 'Analyzing...'}
+- Difficulty Level: ${dfmAnalysis?.difficulty_level || 'Assessing...'}
+- Complexity Score: ${geometryFeatures?.complexity_score ? geometryFeatures.complexity_score.toFixed(1) : 'Calculating...'}
+- Feature Count: ${geometryFeatures?.feature_count || features.holes?.count + features.pockets?.count + features.walls?.count || 0}
+
+**Manufacturing Features Detected:**
+${geometryFeatures?.manufacturing_features?.length > 0 ? 
+  geometryFeatures.manufacturing_features.map(feature => `- ${feature}`).join('\n') : 
+  `- Holes: ${features.holes?.count || 0} detected
 - Pockets: ${features.pockets?.count || 0} detected  
 - Walls: ${features.walls?.count || 0} detected
 - Fillets: ${features.fillets?.count || 0} detected
-- Chamfers: ${features.chamfers?.count || 0} detected
+- Chamfers: ${features.chamfers?.count || 0} detected`}
+
+**AI Manufacturing Insights:**
+${aiInsights?.manufacturing_complexity ? `- Manufacturing Complexity: ${aiInsights.manufacturing_complexity}` : ''}
+${aiInsights?.process_recommendations?.length > 0 ? `- Recommended Processes: ${aiInsights.process_recommendations.join(', ')}` : ''}
+${dfmAnalysis?.recommended_processes?.length > 0 ? `- Suggested Manufacturing: ${dfmAnalysis.recommended_processes.join(', ')}` : ''}
+${aiInsights?.material_recommendations?.length > 0 ? `- Material Recommendations: ${aiInsights.material_recommendations.join(', ')}` : ''}
+${aiInsights?.lead_time_estimate_days ? `- Estimated Lead Time: ${aiInsights.lead_time_estimate_days} days` : ''}
+
+**DFM Warnings & Considerations:**
+${dfmAnalysis?.warnings?.length > 0 ? dfmAnalysis.warnings.map(warning => `⚠️ ${warning}`).join('\n') : ''}
+${aiInsights?.dfm_warnings?.length > 0 ? aiInsights.dfm_warnings.map(warning => `⚠️ ${warning}`).join('\n') : ''}
+${aiInsights?.quality_considerations?.length > 0 ? aiInsights.quality_considerations.map(consideration => `✓ ${consideration}`).join('\n') : ''}
+
+**Cost Optimization:**
+${dfmAnalysis?.estimated_cost_range ? `- Cost Range: ${dfmAnalysis.estimated_cost_range}` : ''}
+${aiInsights?.cost_optimization_suggestions?.length > 0 ? aiInsights.cost_optimization_suggestions.map(suggestion => `💡 ${suggestion}`).join('\n') : ''}
 
 **Manufacturing Context:**
-- Part appears to be a ${inferPartType(fileName)} based on filename
-- Complexity Level: ${assessComplexity(geometryData)}
+- Part Type: ${inferPartType(fileName)}
+- Analysis Confidence: ${dfmAnalysis?.confidence ? (dfmAnalysis.confidence * 100).toFixed(1) + '%' : 'High'}
+- AI Enhanced: ${dfmAnalysis?.ai_enhanced ? 'Yes' : 'Standard Analysis'}
 
-Please provide manufacturing analysis addressing the user's request while considering the geometric constraints and manufacturing implications.
+Please provide comprehensive manufacturing analysis addressing the user's request while leveraging all the detailed DFM insights and geometric data provided above.
 `;
 }
 
