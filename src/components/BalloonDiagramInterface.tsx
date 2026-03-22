@@ -443,12 +443,21 @@ export default function BalloonDiagramInterface() {
             });
             
             // ✅ Fix balloon container positioning
-            const balloonContainers = clonedDoc.querySelectorAll('[data-balloon-overlay] > div > div');
+            const balloonContainers = clonedDoc.querySelectorAll('.balloon-shape');
             balloonContainers.forEach((balloon: any) => {
               balloon.style.display = 'flex';
               balloon.style.alignItems = 'center';
               balloon.style.justifyContent = 'center';
               balloon.style.textAlign = 'center';
+            });
+            
+            // ✅ Fix note clipping in html2canvas by setting explicit pixel width
+            const noteDivs = clonedDoc.querySelectorAll('.balloon-note-text');
+            noteDivs.forEach((note: any) => {
+              // Convert max-content to explicit pixel width so html2canvas draws the text correctly
+              note.style.width = Math.ceil(note.scrollWidth) + 1 + 'px'; 
+              note.style.whiteSpace = 'nowrap';
+              note.style.maxWidth = 'none';
             });
             
             // Ensure crisp rendering

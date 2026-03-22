@@ -182,13 +182,13 @@ export default function CadAnalysisPage() {
 
                 {/* Title */}
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight px-2">
-                  AI-Powered 3D DFM Analysis Tool — Instant Design for Manufacturing Check
+                  AI-Powered 3D DFM Analysis Tool with Instant Design for Manufacturing Check
                 </h1>
 
                 {/* Description */}
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto px-2">
                   Upload your CAD file and get instant AI-powered 3D DFM analysis. Our artificial intelligence identifies manufacturing errors like wall thickness violations, 
-                  undercuts, and draft angle issues before production. Zero download required — AI runs in your browser.
+                  undercuts, and draft angle issues before production.
                 </p>
                 
                 {/* Feature highlights */}

@@ -284,17 +284,22 @@ export const SecurePDFViewer = ({
     const isEditing = editingBalloon === balloon.id;
 
     return (
-      <div key={balloon.id}>
+      <div 
+        key={balloon.id}
+        className="absolute"
+        style={{
+          left: `${balloon.x}%`,
+          top: `${balloon.y}%`,
+          zIndex: 20
+        }}
+      >
         <div
-          className={`absolute cursor-pointer transition-all duration-200 hover:scale-110 flex items-center justify-center text-white font-bold border border-white shadow-md ${getShapeClasses(balloon.style)} ${isEditing ? 'ring-2 ring-blue-400' : ''}`}
+          className={`balloon-shape cursor-pointer transition-all duration-200 hover:scale-110 flex items-center justify-center text-white font-bold border border-white shadow-md ${getShapeClasses(balloon.style)} ${isEditing ? 'ring-2 ring-blue-400' : ''}`}
           style={{
-            left: `${balloon.x}%`,
-            top: `${balloon.y}%`,
             backgroundColor: balloon.color,
             width: `${size.width}px`,
             height: `${size.height}px`,
             fontSize: `${size.fontSize}px`,
-            zIndex: 20, // ✅ Ensure balloons are above PDF canvas
             // ✅ Use clean transform without conflicts
             transform: getTransformStyle(balloon.style)
           }}
@@ -350,25 +355,24 @@ export const SecurePDFViewer = ({
             </span>
           )}
           
-          {/* Note text displayed directly adjacent to balloon */}
-          {balloon.note && balloon.note.trim() && !isEditing && (
-            <div
-              className="absolute text-xs font-bold text-white bg-black px-1 rounded"
-              style={{
-                left: `${size.width/2 + 4}px`, // ✅ Simplified positioning relative to balloon
-                top: `${-size.height/2 - 2}px`,
-                maxWidth: '150px',
-                zIndex: 20,
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-              title={`Full note: ${balloon.note}`}
-            >
-              {balloon.note.length > 20 ? balloon.note.substring(0, 20) + '...' : balloon.note}
-            </div>
-          )}
         </div>
+        
+        {/* Note text displayed directly adjacent to balloon */}
+        {balloon.note && balloon.note.trim() && !isEditing && (
+          <div
+            className="balloon-note-text absolute text-xs font-bold tracking-wide"
+            style={{
+              left: `${size.width/2 + 6}px`, // Slight margin
+              top: `${-size.height/2 - 2}px`,
+              zIndex: 30,
+              whiteSpace: 'nowrap',
+              width: 'max-content',
+              color: balloon.color
+            }}
+          >
+            {balloon.note}
+          </div>
+        )}
       </div>
     );
   };

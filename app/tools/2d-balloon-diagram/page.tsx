@@ -229,13 +229,13 @@ export default function BalloonDiagramPage() {
 
                 {/* Title */}
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight px-2">
-                  2D Balloon Diagram Tool — Annotate Engineering Drawings Online
+                  2D Balloon Diagram Tool with Annotate Engineering Drawings Online
                 </h1>
 
                 {/* Description */}
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto px-2">
                   Create balloon diagrams for engineering drawings and technical documentation. Perfect for First Article Inspection (FAI), 
-                  DFM review, and quality inspection. Upload PDF → add balloons → export annotated drawing.
+                  DFM review, and quality inspection.
                 </p>
                 
                 {/* Feature highlights */}
