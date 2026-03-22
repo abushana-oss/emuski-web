@@ -911,7 +911,23 @@ export const CadAnalysisInterface = () => {
                               </div>
 
                               {/* DFM Features */}
-                              {part.realTimeGeometry?.recognizedFeatures && (
+                              {(() => {
+                                const hasRecognized = !!part.realTimeGeometry?.recognizedFeatures;
+                                const hasHoles = !!(part.realTimeGeometry?.holeAnalysis && part.realTimeGeometry.holeAnalysis.count > 0);
+                                if (!hasRecognized && !hasHoles) return null;
+
+                                const combinedFeatures = [
+                                  ...Object.entries(part.realTimeGeometry?.recognizedFeatures || {}),
+                                ] as [string, { count: number }][];
+                                
+                                if (hasHoles && part.realTimeGeometry!.holeAnalysis) {
+                                  combinedFeatures.push(['holes', { count: part.realTimeGeometry!.holeAnalysis.count }]);
+                                }
+                                const featuresToDisplay = combinedFeatures.filter(f => f[1].count > 0);
+
+                                if (featuresToDisplay.length === 0) return null;
+
+                                return (
                                 <div className="rounded-lg bg-[#505050] border border-[#666666] p-1">
                                   <h4 className="text-[9px] font-semibold text-white flex items-center gap-0.5 mb-0.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-target h-2.5 w-2.5">
@@ -924,9 +940,7 @@ export const CadAnalysisInterface = () => {
                                   </h4>
                                   {/* Dynamic Color Legend - Only show detected features */}
                                   <div className="flex flex-wrap gap-0.5 mb-1">
-                                    {Object.entries(part.realTimeGeometry.recognizedFeatures)
-                                      .filter(([featureType, features]) => features.count > 0)
-                                      .map(([featureType, features]) => {
+                                    {featuresToDisplay.map(([featureType]) => {
                                         const featureConfig = getFeatureConfig(featureType);
                                         return (
                                           <span key={featureType} className="flex items-center gap-0.5 text-[7px] text-gray-300">
@@ -939,15 +953,9 @@ export const CadAnalysisInterface = () => {
                                         );
                                       })
                                     }
-                                    {Object.entries(part.realTimeGeometry.recognizedFeatures)
-                                      .filter(([featureType, features]) => features.count > 0).length === 0 && (
-                                      <span className="text-[7px] text-gray-400 italic">No features detected</span>
-                                    )}
                                   </div>
                                   <div className="space-y-0.5 max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700 pr-0.5">
-                                    {Object.entries(part.realTimeGeometry.recognizedFeatures).map(([featureType, features]) => {
-                                      if (features.count === 0) return null;
-                                      
+                                    {featuresToDisplay.map(([featureType]) => {
                                       const featureConfig = getFeatureConfig(featureType);
                                       const isSelected = selectedFeatures[part.id] === featureType;
                                       return (
@@ -1000,7 +1008,8 @@ export const CadAnalysisInterface = () => {
                                     })}
                                   </div>
                                 </div>
-                              )}
+                                );
+                              })()}
 
                               {/* Physical Properties */}
                               <div className="rounded-lg bg-[#505050] border border-[#666666] p-3">

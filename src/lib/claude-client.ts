@@ -39,47 +39,25 @@ export function buildDFMPrompt(
   fileName: string
 ): string {
   const dimensions = geometryData?.dimensions || {};
-  const features = geometryData?.features || {};
   const volume = geometryData?.volume || 0;
   
-  // Determine if this is a general analysis request or a specific question
-  const isSpecificQuestion = userMessage && 
-    (userMessage.toLowerCase().includes('what') || 
-     userMessage.toLowerCase().includes('how') || 
-     userMessage.toLowerCase().includes('why') ||
-     userMessage.toLowerCase().includes('cost') ||
-     userMessage.toLowerCase().includes('application') ||
-     userMessage.toLowerCase().includes('contact') ||
-     userMessage.toLowerCase().includes('emuski') ||
-     userMessage.trim() === 'hi');
-
-  if (isSpecificQuestion) {
-    return `
-**User Question:** ${userMessage}
-
-**CAD Model Context:**
-- File: ${fileName}
-- Dimensions: ${dimensions.length || 'N/A'}mm × ${dimensions.width || 'N/A'}mm × ${dimensions.height || 'N/A'}mm
-- Volume: ${volume > 0 ? (volume / 1000).toFixed(2) + ' cm³' : 'Unknown'}
-- Part Type: ${inferPartType(fileName)}
-
-Please answer the user's specific question. If they're asking about:
-- Applications: Suggest what this part might be used for based on its geometry
-- Costs: Provide realistic manufacturing cost estimates 
-- Emuski/Contact: Explain that Emuski is a manufacturing analysis platform
-- General greetings: Respond conversationally and offer help with manufacturing analysis
-
-Use the CAD data to support your answer when relevant.
-`;
-  }
-
-  // Default manufacturing analysis format
-  const dfmAnalysis = geometryData?.dfm_analysis || {};
-  const geometryFeatures = geometryData?.geometry_features || {};
-  const aiInsights = dfmAnalysis?.ai_insights || {};
+  // Fix object mapping to match CadViewer.tsx's RealTimeGeometry schema
+  const features = geometryData?.recognizedFeatures || {};
+  const holeAnalysis = geometryData?.holeAnalysis || { count: 0, holes: [] };
+  const threadFeatures = geometryData?.threadFeatures || { count: 0, specifications: [] };
   
+  const cadEngineAnalysis = geometryData?.cadEngineAnalysis || {};
+  const dfmAnalysis = cadEngineAnalysis.dfm_analysis || {};
+  const geometryFeatures = cadEngineAnalysis.geometry_features || {};
+  const aiInsights = dfmAnalysis.ai_insights || {};
+  
+  // Map holes nicely
+  const holeDetails = holeAnalysis.count > 0 
+    ? holeAnalysis.holes.map((h: any) => `${h.type} (∅${parseFloat(h.diameter || 0).toFixed(1)}mm x ${parseFloat(h.depth || 0).toFixed(1)}mm d)`).slice(0, 10).join(', ')
+    : '';
+
   return `
-**CAD Model Analysis Request:**
+**CAD Model Context & Analysis Request:**
 
 **File:** ${fileName}
 **User Request:** ${userMessage || 'Please analyze this part for manufacturability'}
@@ -88,44 +66,41 @@ Use the CAD data to support your answer when relevant.
 - Dimensions: ${geometryFeatures?.bounding_box?.size ? `${geometryFeatures.bounding_box.size[0]?.toFixed(1)}mm × ${geometryFeatures.bounding_box.size[1]?.toFixed(1)}mm × ${geometryFeatures.bounding_box.size[2]?.toFixed(1)}mm` : `${dimensions.length || 'N/A'}mm × ${dimensions.width || 'N/A'}mm × ${dimensions.height || 'N/A'}mm`}
 - Volume: ${geometryFeatures?.volume_mm3 ? (geometryFeatures.volume_mm3 / 1000).toFixed(2) + ' cm³' : (volume > 0 ? (volume / 1000).toFixed(2) + ' cm³' : 'Calculating...')}
 - Surface Area: ${geometryFeatures?.surface_area_mm2 ? (geometryFeatures.surface_area_mm2 / 100).toFixed(1) + ' cm²' : (geometryData?.surfaceArea ? (geometryData.surfaceArea / 100).toFixed(1) + ' cm²' : 'Calculating...')}
+- Part Type: ${inferPartType(fileName)}
+
+**Manufacturing Features Detected:**
+- Holes: ${holeAnalysis.count || features.holes?.count || 0} detected ${holeDetails ? `(${holeDetails})` : ''}
+- Pockets: ${features.pockets?.count || 0} detected  
+- Walls: ${features.walls?.count || 0} detected
+- Ribs: ${features.ribs?.count || 0} detected
+- Fillets: ${features.fillets?.count || 0} detected
+- Chamfers: ${features.chamfers?.count || 0} detected
+- Threads: ${threadFeatures.count || features.threads?.count || 0} detected ${threadFeatures.specifications?.length ? `(${threadFeatures.specifications.join(', ')})` : ''}
+- Draft Angles: ${features.drafts?.count || 0} detected
+- Undercuts: ${features.undercuts?.count || 0} detected
+- Text Engraving: ${features.textEngraving?.count || 0} detected
 
 **Advanced DFM Analysis:**
 - Manufacturability Score: ${dfmAnalysis?.manufacturability_score ? (dfmAnalysis.manufacturability_score * 100).toFixed(1) + '%' : 'Analyzing...'}
 - Difficulty Level: ${dfmAnalysis?.difficulty_level || 'Assessing...'}
-- Complexity Score: ${geometryFeatures?.complexity_score ? geometryFeatures.complexity_score.toFixed(1) : 'Calculating...'}
-- Feature Count: ${geometryFeatures?.feature_count || features.holes?.count + features.pockets?.count + features.walls?.count || 0}
-
-**Manufacturing Features Detected:**
-${geometryFeatures?.manufacturing_features?.length > 0 ? 
-  geometryFeatures.manufacturing_features.map(feature => `- ${feature}`).join('\n') : 
-  `- Holes: ${geometryData?.holeAnalysis?.count || features.holes?.count || 0} detected${geometryData?.holeAnalysis?.count > 0 ? ` (${geometryData.holeAnalysis.types.join(', ')})` : ''}
-- Pockets: ${features.pockets?.count || 0} detected  
-- Walls: ${features.walls?.count || 0} detected
-- Fillets: ${features.fillets?.count || 0} detected
-- Chamfers: ${features.chamfers?.count || 0} detected`}
+- Feature Count (Engine): ${geometryFeatures?.feature_count || 'N/A'}
 
 **AI Manufacturing Insights:**
 ${aiInsights?.manufacturing_complexity ? `- Manufacturing Complexity: ${aiInsights.manufacturing_complexity}` : ''}
-${aiInsights?.process_recommendations?.length > 0 ? `- Recommended Processes: ${aiInsights.process_recommendations.join(', ')}` : ''}
-${dfmAnalysis?.recommended_processes?.length > 0 ? `- Suggested Manufacturing: ${dfmAnalysis.recommended_processes.join(', ')}` : ''}
+${aiInsights?.process_recommendations?.length > 0 ? `- Recommended Processes: ${aiInsights.process_recommendations.join(', ')}` : dfmAnalysis?.recommended_processes?.length > 0 ? `- Suggested Manufacturing: ${dfmAnalysis.recommended_processes.join(', ')}` : ''}
 ${aiInsights?.material_recommendations?.length > 0 ? `- Material Recommendations: ${aiInsights.material_recommendations.join(', ')}` : ''}
 ${aiInsights?.lead_time_estimate_days ? `- Estimated Lead Time: ${aiInsights.lead_time_estimate_days} days` : ''}
 
 **DFM Warnings & Considerations:**
-${dfmAnalysis?.warnings?.length > 0 ? dfmAnalysis.warnings.map(warning => `⚠️ ${warning}`).join('\n') : ''}
-${aiInsights?.dfm_warnings?.length > 0 ? aiInsights.dfm_warnings.map(warning => `⚠️ ${warning}`).join('\n') : ''}
-${aiInsights?.quality_considerations?.length > 0 ? aiInsights.quality_considerations.map(consideration => `✓ ${consideration}`).join('\n') : ''}
+${dfmAnalysis?.warnings?.length > 0 ? dfmAnalysis.warnings.map((warning: any) => `⚠️ ${warning}`).join('\n') : ''}
+${aiInsights?.dfm_warnings?.length > 0 ? aiInsights.dfm_warnings.map((warning: any) => `⚠️ ${warning}`).join('\n') : ''}
+${aiInsights?.quality_considerations?.length > 0 ? aiInsights.quality_considerations.map((consideration: any) => `✓ ${consideration}`).join('\n') : ''}
 
 **Cost Optimization:**
 ${dfmAnalysis?.estimated_cost_range ? `- Cost Range: ${dfmAnalysis.estimated_cost_range}` : ''}
-${aiInsights?.cost_optimization_suggestions?.length > 0 ? aiInsights.cost_optimization_suggestions.map(suggestion => `💡 ${suggestion}`).join('\n') : ''}
+${aiInsights?.cost_optimization_suggestions?.length > 0 ? aiInsights.cost_optimization_suggestions.map((suggestion: any) => `💡 ${suggestion}`).join('\n') : ''}
 
-**Manufacturing Context:**
-- Part Type: ${inferPartType(fileName)}
-- Analysis Confidence: ${dfmAnalysis?.confidence ? (dfmAnalysis.confidence * 100).toFixed(1) + '%' : 'High'}
-- AI Enhanced: ${dfmAnalysis?.ai_enhanced ? 'Yes' : 'Standard Analysis'}
-
-Please provide comprehensive manufacturing analysis addressing the user's request while leveraging all the detailed DFM insights and geometric data provided above.
+Please answer the user's specific question. Use the geometric and DFM context above to support your accurate analysis. If the user asks specifically about geometric features (like holes, sizes, or counts), directly reference the 'Manufacturing Features Detected' data.
 `;
 }
 

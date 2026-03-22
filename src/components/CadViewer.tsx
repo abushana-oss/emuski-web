@@ -1330,9 +1330,29 @@ export const CadViewer: React.FC<CadViewerProps> = ({
   useEffect(() => {
     if (!three.current.scene || !three.current.model) return;
     clearFeatureHighlights();
-    if (selectedFeatureType && state.realTimeGeometry?.recognizedFeatures) {
-      const col = state.realTimeGeometry.recognizedFeatures[selectedFeatureType as FeatureType];
-      if (col?.features.length) highlightFeaturesOnMesh(selectedFeatureType as FeatureType, col.features);
+    if (selectedFeatureType && state.realTimeGeometry) {
+      if (selectedFeatureType === 'holes' && state.realTimeGeometry.holeAnalysis?.holes) {
+        // Map holeAnalysis to DetectedFeature format
+        const holeFeatures: DetectedFeature[] = state.realTimeGeometry.holeAnalysis.holes.map((h, i) => ({
+          id: `hole_${i}`,
+          type: 'holes',
+          confidence: 1,
+          faces: [],
+          vertices: [],
+          highlighted: false,
+          geometry: { 
+            center: new THREE.Vector3(h.location.x, h.location.y, h.location.z),
+            boundingBox: new THREE.Box3(),
+            volume: 0,
+            surfaceArea: 0 
+          },
+          properties: { diameter: h.diameter, depth: h.depth }
+        }));
+        if (holeFeatures.length) highlightFeaturesOnMesh('holes', holeFeatures);
+      } else if (state.realTimeGeometry.recognizedFeatures) {
+        const col = state.realTimeGeometry.recognizedFeatures[selectedFeatureType as keyof RecognizedFeatures];
+        if (col?.features?.length) highlightFeaturesOnMesh(selectedFeatureType as FeatureType, col.features);
+      }
     }
   }, [selectedFeatureType, state.realTimeGeometry]);
 
@@ -1524,6 +1544,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
     switch (f.type) {
       case 'pockets': return Math.max(Math.min(p.width??5, p.length??5)*0.8, 3);
       case 'bosses': return Math.max((p.diameter??5)*0.8, 3);
+      case 'holes': return Math.max((p.diameter??2)*1.2, 2);
       case 'ribs': return Math.max((p.thickness??2)*2.5, 3);
       case 'walls': return Math.max((p.thickness??2)*2, 3);
       case 'fillets': return Math.max((p.radius??1)*2.5, 2);
