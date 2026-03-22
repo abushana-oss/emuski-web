@@ -45,8 +45,7 @@ interface RealTimeGeometryProperties {
   threadAnalysis?: string;
   holeAnalysis?: {
     count: number;
-    sizes: number[];
-    types: string[];
+    holes: Array<{ diameter: number; depth: number; location: { x: number; y: number; z: number }; type: string }>;
   };
   threadFeatures?: {
     count: number;
