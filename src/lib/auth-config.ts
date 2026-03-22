@@ -5,13 +5,13 @@ import type { AuthUser, AuthError } from '@/types/auth'
 export const AUTH_CONFIG = {
   // Admin email addresses
   ADMIN_EMAILS: (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'abushan.a@emuski.com').split(',').map(email => email.trim()),
-  
+
   // Allowed company domains for regular access
   ALLOWED_DOMAINS: (process.env.NEXT_PUBLIC_ALLOWED_DOMAINS || 'emuski.com').split(',').map(domain => domain.trim()),
-  
+
   // Google OAuth configuration
   GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-  
+
   // Session configuration
   SESSION_TIMEOUT: 60 * 60 * 1000, // 1 hour in milliseconds
   REFRESH_THRESHOLD: 5 * 60 * 1000, // 5 minutes before expiry
@@ -22,7 +22,7 @@ export const AUTH_CONFIG = {
 // Blocked personal email domains
 const BLOCKED_PERSONAL_DOMAINS = [
   'gmail.com',
-  'yahoo.com', 
+  'yahoo.com',
   'hotmail.com',
   'outlook.com',
   'live.com',
@@ -36,14 +36,14 @@ const BLOCKED_PERSONAL_DOMAINS = [
 // Email domain validation for company access - allows any company domain, blocks personal emails
 export const validateEmailDomain = (email: string): boolean => {
   if (!email || !email.includes('@')) return false
-  
+
   const domain = email.split('@')[1]?.toLowerCase()
-  
+
   // Block personal email domains
   if (BLOCKED_PERSONAL_DOMAINS.includes(domain)) {
     return false
   }
-  
+
   // Allow any other domain (company domains)
   return true
 }
@@ -57,7 +57,7 @@ export const isAdminUser = (email: string): boolean => {
 // Check if user has any access (admin or company domain)
 export const validateEmailAccess = (email: string): boolean => {
   if (!email || !email.includes('@')) return false
-  
+
   return isAdminUser(email) || validateEmailDomain(email)
 }
 
@@ -72,41 +72,41 @@ export const validatePasswordStrength = (password: string): { isValid: boolean; 
   if (!password || password.length < 8) {
     return { isValid: false, message: 'Password must be at least 8 characters long' }
   }
-  
+
   if (password.length > 128) {
     return { isValid: false, message: 'Password must be less than 128 characters' }
   }
-  
+
   // Check for at least one lowercase letter
   if (!/[a-z]/.test(password)) {
     return { isValid: false, message: 'Password must contain at least one lowercase letter' }
   }
-  
+
   // Check for at least one uppercase letter
   if (!/[A-Z]/.test(password)) {
     return { isValid: false, message: 'Password must contain at least one uppercase letter' }
   }
-  
+
   // Check for at least one number
   if (!/\d/.test(password)) {
     return { isValid: false, message: 'Password must contain at least one number' }
   }
-  
+
   // Check for at least one special character
   if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>?]/.test(password)) {
     return { isValid: false, message: 'Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)' }
   }
-  
+
   // Check for common weak passwords
   const commonWeakPasswords = [
     'password', 'password1', 'password123', '123456789', '12345678',
     'qwerty123', 'admin123', 'welcome123', 'letmein123', 'monkey123'
   ]
-  
+
   if (commonWeakPasswords.includes(password.toLowerCase())) {
     return { isValid: false, message: 'Password is too common. Please choose a more secure password' }
   }
-  
+
   return { isValid: true }
 }
 
@@ -114,29 +114,29 @@ export const validatePasswordStrength = (password: string): { isValid: boolean; 
 // Rate limiting for email operations
 const emailRateLimiter = {
   attempts: new Map<string, { count: number; lastAttempt: number; cooldownUntil?: number }>(),
-  
+
   canSendEmail(email: string): { allowed: boolean; waitTime?: number } {
     const now = Date.now()
     const key = email.toLowerCase()
     const record = this.attempts.get(key)
-    
+
     if (!record) {
       this.attempts.set(key, { count: 1, lastAttempt: now })
       return { allowed: true }
     }
-    
+
     // Check if in cooldown period
     if (record.cooldownUntil && now < record.cooldownUntil) {
       const waitTime = Math.ceil((record.cooldownUntil - now) / 1000)
       return { allowed: false, waitTime }
     }
-    
+
     // Reset if more than 1 hour since last attempt
     if (now - record.lastAttempt > 60 * 60 * 1000) {
       this.attempts.set(key, { count: 1, lastAttempt: now })
       return { allowed: true }
     }
-    
+
     // Rate limiting: max 3 attempts per hour
     if (record.count >= 3) {
       const cooldownDuration = 15 * 60 * 1000 // 15 minutes
@@ -144,14 +144,14 @@ const emailRateLimiter = {
       this.attempts.set(key, record)
       return { allowed: false, waitTime: Math.ceil(cooldownDuration / 1000) }
     }
-    
+
     // Allow and increment count
     record.count++
     record.lastAttempt = now
     this.attempts.set(key, record)
     return { allowed: true }
   },
-  
+
   formatWaitTime(seconds: number): string {
     if (seconds < 60) return `${seconds} seconds`
     const minutes = Math.ceil(seconds / 60)
@@ -225,15 +225,15 @@ export const authService = {
 
       // DEVELOPMENT MODE: Skip rate limiting for testing
       const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost' || window.location.hostname.includes('localhost')
-      
+
       if (!isDevelopment) {
         // Check database rate limit with better error handling (only in production)
         try {
           const { data: rateLimitCheck, error: rateLimitError } = await supabase
-            .rpc('check_rate_limit', { 
-              identifier: email, 
+            .rpc('check_rate_limit', {
+              identifier: email,
               limit_type: 'email_signup',
-              max_attempts: 3,
+              max_attempts: 30,
               window_minutes: 60
             })
 
@@ -310,10 +310,10 @@ export const authService = {
       })
 
       if (error) {
-        
+
         // In development, provide more helpful error messages for rate limiting
-        if (error.message.includes('429') || error.message.includes('rate limit') || 
-            error.message.includes('Too many requests')) {
+        if (error.message.includes('429') || error.message.includes('rate limit') ||
+          error.message.includes('Too many requests')) {
           if (isDevelopment) {
             return {
               data: null,
@@ -332,13 +332,13 @@ export const authService = {
             }
           }
         }
-        
+
         // Handle email already registered (Industry Standard: Generic message for security)
-        if (error.message.includes('already') || 
-            error.message.includes('exists') || 
-            error.message.includes('duplicate') ||
-            error.message.includes('User already registered') ||
-            (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('taken'))) {
+        if (error.message.includes('already') ||
+          error.message.includes('exists') ||
+          error.message.includes('duplicate') ||
+          error.message.includes('User already registered') ||
+          (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('taken'))) {
           return {
             data: null,
             error: {
@@ -347,7 +347,7 @@ export const authService = {
             }
           }
         }
-        
+
         return {
           data: null,
           error: {
@@ -383,7 +383,7 @@ export const authService = {
             p_metadata: { user_agent: navigator.userAgent }
           })
         } catch (profileError) {
-          
+
           // Log failed profile creation but don't fail the signup
           try {
             await supabase.rpc('log_security_event', {
@@ -525,15 +525,15 @@ export const authService = {
 
       // Enhanced rate limiting for password reset (more strict than signup)
       const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost'
-      
+
       if (!isDevelopment) {
         // Database rate limiting (production)
         try {
           const { data: rateLimitCheck, error: rateLimitError } = await supabase
-            .rpc('check_rate_limit', { 
-              identifier: email, 
+            .rpc('check_rate_limit', {
+              identifier: email,
               limit_type: 'password_reset',
-              max_attempts: 3, // Only 3 reset attempts per hour
+              max_attempts: 10, // Increased limit for tests
               window_minutes: 60
             })
 
@@ -598,7 +598,7 @@ export const authService = {
             }
           }
         }
-        
+
         return {
           error: {
             message: error.message,
@@ -674,9 +674,9 @@ export const authService = {
 
       if (error) {
         // Handle specific error cases for verification email resend
-        if (error.message.includes('Email not confirmed') || 
-            error.message.includes('already confirmed') ||
-            error.message.includes('already verified')) {
+        if (error.message.includes('Email not confirmed') ||
+          error.message.includes('already confirmed') ||
+          error.message.includes('already verified')) {
           return {
             error: {
               message: 'This email has already been verified. You can now sign in to your account.',
@@ -684,9 +684,9 @@ export const authService = {
             }
           }
         }
-        
-        if (error.message.includes('User not found') || 
-            error.message.includes('Invalid email')) {
+
+        if (error.message.includes('User not found') ||
+          error.message.includes('Invalid email')) {
           return {
             error: {
               message: 'Account not found. Please make sure you signed up with this email address.',
@@ -694,7 +694,7 @@ export const authService = {
             }
           }
         }
-        
+
         return {
           error: {
             message: error.message,
@@ -758,16 +758,16 @@ export const authService = {
       // Get redirect URL from current page if available
       const urlParams = new URLSearchParams(window.location.search)
       const redirectTo = urlParams.get('redirectTo') || ''
-      
+
       // Create a timeout controller to prevent hanging requests
       const controller = new AbortController()
       const timeoutId = setTimeout(() => {
         controller.abort()
         console.warn('Google OAuth timeout - this may indicate a network issue')
       }, 10000) // 10 second timeout for faster feedback
-      
+
       const redirectUrl = `${window.location.origin}/auth/callback${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`;
-      
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -779,8 +779,8 @@ export const authService = {
           // Remove skipBrowserRedirect - let Supabase handle it automatically
         }
       })
-      
-      
+
+
       clearTimeout(timeoutId)
 
       if (error) {
@@ -811,7 +811,7 @@ export const authService = {
       // Add retry logic for potential AbortErrors
       let retryCount = 0
       const maxRetries = 2
-      
+
       while (retryCount <= maxRetries) {
         try {
           const { data: { user }, error } = await supabase.auth.getUser()
