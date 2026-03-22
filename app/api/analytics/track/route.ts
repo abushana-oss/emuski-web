@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
+import { withRateLimit } from '@/lib/rate-limiter'
+import { AnalyticsEventSchema, validateRequest } from '@/lib/input-validation'
 
 /**
  * GA4 Measurement Protocol Server-Side Tracking
@@ -61,7 +63,7 @@ function getUserAgent(request: NextRequest): string {
   return request.headers.get('user-agent') || 'unknown'
 }
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest): Promise<NextResponse> {
   try {
     // Security check - ensure analytics is properly configured
     if (!GA4_MEASUREMENT_ID || !GA4_API_SECRET) {
@@ -71,8 +73,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
-    const { eventName, eventParams, clientId: providedClientId } = body
+    // Validate analytics event data with comprehensive schema
+    const validation = await validateRequest(request, AnalyticsEventSchema);
+    
+    if (!validation.success) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Invalid analytics data',
+          details: validation.error 
+        },
+        { status: 400 }
+      );
+    }
+
+    const { eventName, eventParams, clientId: providedClientId } = validation.data;
 
     // Get or generate client ID
     const clientId = providedClientId || getClientId(request)
@@ -153,11 +168,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Health check endpoint
-export async function GET() {
+async function getHandler(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({
     status: 'ok',
     endpoint: 'GA4 Server-Side Tracking',
     configured: !!GA4_API_SECRET,
   })
 }
+
+// Apply rate limiting to all endpoints
+export const POST = withRateLimit(postHandler, '/api/analytics/track')
+export const GET = withRateLimit(getHandler, '/api/analytics/track')

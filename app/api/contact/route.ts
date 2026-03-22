@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-// Rate limiting removed - using simple webhook protection
+import { withRateLimit } from '@/lib/rate-limiter';
 import { handleCorsPreflightRequest, addCorsHeaders } from '@/lib/cors';
+import { ContactFormSchema, validateRequest, sanitizeInput } from '@/lib/input-validation';
 
 /**
  * Contact Form API Route
@@ -351,53 +352,51 @@ async function sendEmail(
 /**
  * POST handler for contact form submissions
  */
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest): Promise<NextResponse> {
   // Simple rate limiting removed for contact form (now handled by reCAPTCHA)
 
   try {
     // Parse multipart form data
     const formData = await request.formData();
 
-    // Extract form fields
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const phone = formData.get('phone') as string;
-    const requirements = formData.get('requirements') as string || '';
-    const recaptchaToken = formData.get('recaptchaToken') as string;
+    // Extract and prepare form fields for validation
+    const formFields = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      requirements: formData.get('requirements') as string || '',
+      recaptchaToken: formData.get('recaptchaToken') as string
+    };
+    
+    // Handle file attachments if present
     const file = formData.get('file') as File | null;
+    if (file && file.size > 0) {
+      formFields.attachments = [{
+        name: file.name,
+        size: file.size,
+        type: file.type
+      }];
+    }
 
-    // Validate required fields
-    if (!name || !email || !phone || !recaptchaToken) {
+    // Comprehensive input validation using Zod schema
+    const validationResult = ContactFormSchema.safeParse(formFields);
+    if (!validationResult.success) {
+      const errorDetails = validationResult.error.errors
+        .map(err => `${err.path.join('.')}: ${err.message}`)
+        .join(', ');
+        
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields',
-          details: {
-            name: !name,
-            email: !email,
-            phone: !phone,
-            recaptchaToken: !recaptchaToken,
-          }
+          error: 'Validation failed',
+          details: errorDetails
         },
         { status: 400 }
       );
     }
 
-    // Validate email format
-    if (!isValidEmail(email)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
-
-    // Validate phone number
-    if (!isValidPhone(phone)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid phone number format' },
-        { status: 400 }
-      );
-    }
+    // Extract validated and sanitized data
+    const { name, email, phone, requirements, recaptchaToken } = validationResult.data;
 
     // Verify reCAPTCHA v2
     const recaptchaResult = await verifyRecaptchaV2(recaptchaToken);
@@ -497,14 +496,14 @@ export async function POST(request: NextRequest) {
 /**
  * OPTIONS handler - CORS preflight
  */
-export async function OPTIONS(request: NextRequest) {
+async function optionsHandler(request: NextRequest): Promise<NextResponse> {
   return handleCorsPreflightRequest(request);
 }
 
 /**
  * GET handler - returns API information
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest): Promise<NextResponse> {
   const response = NextResponse.json(
     {
       name: 'EMUSKI Contact Form API',
@@ -519,3 +518,8 @@ export async function GET(request: NextRequest) {
 
   return addCorsHeaders(response, request);
 }
+
+// Apply rate limiting to all contact form endpoints
+export const POST = withRateLimit(postHandler, '/api/contact');
+export const GET = withRateLimit(getHandler, '/api/contact');
+export const OPTIONS = withRateLimit(optionsHandler, '/api/contact');

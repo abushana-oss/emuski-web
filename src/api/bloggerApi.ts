@@ -1,9 +1,11 @@
-const BLOGGER_API_KEY = process.env.NEXT_PUBLIC_BLOGGER_API_KEY || '';
+// SECURITY WARNING: This client-side file should NOT contain API keys
+// Client-side API calls should route through secure server endpoints
 const BLOGGER_API_BASE = 'https://www.googleapis.com/blogger/v3';
 
-if (!BLOGGER_API_KEY) {
-  console.warn('Warning: NEXT_PUBLIC_BLOGGER_API_KEY is not set. Blogger API calls may fail.');
-}
+// Use server-side API endpoint for secure requests
+const INTERNAL_API_BASE = '/api/blog';
+
+console.warn('Client-side Blogger API is deprecated. Use server-side /api/blog endpoints for security.');
 
 // Cache blog IDs by URL to support multiple blogs
 const BLOG_ID_CACHE = new Map<string, string>();
@@ -33,17 +35,19 @@ export interface BloggerResponse {
   nextPageToken?: string;
 }
 
-// Get blog ID from blog URL
+// DEPRECATED: Use server-side API instead for security
+// Get blog ID from blog URL via secure server endpoint
 export async function getBlogId(blogUrl: string): Promise<string> {
+  console.warn('DEPRECATED: getBlogId should use server-side API for security');
+  
   // Check if we already have this blog ID cached
   if (BLOG_ID_CACHE.has(blogUrl)) {
     return BLOG_ID_CACHE.get(blogUrl)!;
   }
 
   try {
-    const response = await fetch(
-      `${BLOGGER_API_BASE}/blogs/byurl?url=${encodeURIComponent(blogUrl)}&key=${BLOGGER_API_KEY}`
-    );
+    // Route through secure server endpoint instead of direct API call
+    const response = await fetch(`${INTERNAL_API_BASE}/blog-id?url=${encodeURIComponent(blogUrl)}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch blog ID');
@@ -59,20 +63,24 @@ export async function getBlogId(blogUrl: string): Promise<string> {
   }
 }
 
-// Fetch blog posts
+// DEPRECATED: Use server-side API instead for security
+// Fetch blog posts via secure server endpoint
 export async function fetchBloggerPosts(
   blogId: string,
   maxResults: number = 10,
   pageToken?: string
 ): Promise<BloggerResponse> {
+  console.warn('DEPRECATED: fetchBloggerPosts should use server-side API for security');
+  
   try {
-    let url = `${BLOGGER_API_BASE}/blogs/${blogId}/posts?key=${BLOGGER_API_KEY}&maxResults=${maxResults}`;
+    // Route through secure server endpoint
+    const params = new URLSearchParams({
+      blogId,
+      maxResults: maxResults.toString(),
+      ...(pageToken && { pageToken })
+    });
 
-    if (pageToken) {
-      url += `&pageToken=${pageToken}`;
-    }
-
-    const response = await fetch(url);
+    const response = await fetch(`${INTERNAL_API_BASE}?${params}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch blog posts');
@@ -86,12 +94,15 @@ export async function fetchBloggerPosts(
   }
 }
 
-// Fetch a single post by ID
+// DEPRECATED: Use server-side API instead for security
+// Fetch a single post by ID via secure server endpoint
 export async function fetchBloggerPost(blogId: string, postId: string): Promise<BloggerPost> {
+  console.warn('DEPRECATED: fetchBloggerPost should use server-side API for security');
+  
   try {
-    const response = await fetch(
-      `${BLOGGER_API_BASE}/blogs/${blogId}/posts/${postId}?key=${BLOGGER_API_KEY}`
-    );
+    // Route through secure server endpoint
+    const params = new URLSearchParams({ blogId });
+    const response = await fetch(`${INTERNAL_API_BASE}/${postId}?${params}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch blog post');
@@ -105,16 +116,24 @@ export async function fetchBloggerPost(blogId: string, postId: string): Promise<
   }
 }
 
-// Search posts by label
+// DEPRECATED: Use server-side API instead for security
+// Search posts by label via secure server endpoint
 export async function searchBloggerPostsByLabel(
   blogId: string,
   label: string,
   maxResults: number = 10
 ): Promise<BloggerResponse> {
+  console.warn('DEPRECATED: searchBloggerPostsByLabel should use server-side API for security');
+  
   try {
-    const response = await fetch(
-      `${BLOGGER_API_BASE}/blogs/${blogId}/posts?key=${BLOGGER_API_KEY}&labels=${encodeURIComponent(label)}&maxResults=${maxResults}`
-    );
+    // Route through secure server endpoint
+    const params = new URLSearchParams({
+      blogId,
+      label: encodeURIComponent(label),
+      maxResults: maxResults.toString()
+    });
+
+    const response = await fetch(`${INTERNAL_API_BASE}?${params}`);
 
     if (!response.ok) {
       throw new Error('Failed to search blog posts');

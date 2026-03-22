@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limiter'
 
 export const revalidate = 60 // cache at the edge
 
-export async function GET(_req: NextRequest) {
+async function getHandler(_req: NextRequest) {
   const fileId = process.env.GOOGLE_DRIVE_ON_DEMAND_MANUFACTURING_FILE_ID
   const apiKey = process.env.GOOGLE_DRIVE_API_KEY
 
@@ -28,3 +29,6 @@ export async function GET(_req: NextRequest) {
     },
   })
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getHandler, '/api/videos/on-demand-manufacturing');

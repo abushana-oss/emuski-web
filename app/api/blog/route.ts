@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withSecurity, SECURITY_CONFIGS } from '@/lib/security-middleware';
+import { withRateLimit } from '@/lib/rate-limiter';
+import { BlogQuerySchema, validateRequest } from '@/lib/input-validation';
 
 interface BlogPost {
   kind: string;
@@ -35,17 +37,20 @@ interface BlogPostsResponse {
 }
 
 async function blogHandler(req: NextRequest): Promise<NextResponse> {
-  const { searchParams } = new URL(req.url);
-  const blogId = searchParams.get('blogId');
-  const maxResults = searchParams.get('maxResults') || '10';
-  const label = searchParams.get('label');
+  // Validate query parameters using comprehensive schema
+  const validation = await validateRequest(req, BlogQuerySchema);
   
-  if (!blogId) {
+  if (!validation.success) {
     return NextResponse.json(
-      { error: 'blogId parameter is required' },
+      { 
+        error: 'Invalid query parameters',
+        details: validation.error 
+      },
       { status: 400 }
     );
   }
+  
+  const { blogId, maxResults = 10, label } = validation.data;
 
   const apiKey = process.env.BLOGGER_API_KEY;
   if (!apiKey) {
@@ -89,4 +94,6 @@ async function blogHandler(req: NextRequest): Promise<NextResponse> {
   }
 }
 
-export const GET = withSecurity(blogHandler, SECURITY_CONFIGS.API_DEFAULT);
+// Apply both security and rate limiting middleware
+const securedHandler = withSecurity(blogHandler, SECURITY_CONFIGS.API_DEFAULT);
+export const GET = withRateLimit(securedHandler, '/api/blog');

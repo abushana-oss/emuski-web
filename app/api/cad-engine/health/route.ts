@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAPISecurityHeaders } from '@/lib/security-headers';
+import { withRateLimit } from '@/lib/rate-limiter';
 
 const SECURITY_HEADERS = getAPISecurityHeaders();
 const _raw_url = process.env.CAD_ENGINE_URL || process.env.NEXT_PUBLIC_CAD_ENGINE_URL || 'https://emuski-web-production.up.railway.app';
 const CAD_ENGINE_URL = _raw_url.endsWith('/') ? _raw_url.slice(0, -1) : _raw_url;
 
-export async function GET(req: NextRequest) {
+async function getHandler(req: NextRequest): Promise<NextResponse> {
   const headers = new Headers(SECURITY_HEADERS);
   
   try {
@@ -54,3 +55,6 @@ export async function GET(req: NextRequest) {
     });
   }
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getHandler, '/api/cad-engine/health');

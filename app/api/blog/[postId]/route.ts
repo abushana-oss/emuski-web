@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withSecurity, SECURITY_CONFIGS } from '@/lib/security-middleware';
+import { withRateLimit } from '@/lib/rate-limiter';
 
 async function singlePostHandler(
   req: NextRequest,
@@ -54,4 +55,6 @@ async function singlePostHandler(
   }
 }
 
-export const GET = withSecurity(singlePostHandler, SECURITY_CONFIGS.API_DEFAULT);
+// Apply both security and rate limiting middleware
+const securedHandler = withSecurity(singlePostHandler, SECURITY_CONFIGS.API_DEFAULT);
+export const GET = withRateLimit(securedHandler, '/api/blog/[postId]');
