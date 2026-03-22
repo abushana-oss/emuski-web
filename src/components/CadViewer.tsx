@@ -109,6 +109,7 @@ interface RealTimeGeometry {
   complexity?: string;
   threadFeatures?: { count: number; specifications: string[]; locations: Array<{ x: number; y: number; z: number }> };
   recognizedFeatures?: RecognizedFeatures;
+  holeAnalysis?: { count: number; holes: Array<{ diameter: number; depth: number; location: { x: number; y: number; z: number }; type: string }> };
   bomComponents?: { components: BOMComponent[]; totalComponents: number };
   cadEngineAnalysis?: GeometryAnalysisResponse;
 }
