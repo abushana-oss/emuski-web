@@ -1,14 +1,14 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limiter'
 
 export const revalidate = 60 // cache at the edge
 
-async function getHandler(_req: NextRequest) {
+async function getHandler(_req: NextRequest): Promise<NextResponse> {
   const fileId = process.env.GOOGLE_DRIVE_ON_DEMAND_MANUFACTURING_FILE_ID
   const apiKey = process.env.GOOGLE_DRIVE_API_KEY
 
   if (!fileId || !apiKey) {
-    return new Response('Video not configured', { status: 500 })
+    return new NextResponse('Video not configured', { status: 500 })
   }
 
   const driveUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${apiKey}`
@@ -16,12 +16,12 @@ async function getHandler(_req: NextRequest) {
   const upstream = await fetch(driveUrl)
 
   if (!upstream.ok || !upstream.body) {
-    return new Response('Failed to fetch video', { status: upstream.status })
+    return new NextResponse('Failed to fetch video', { status: upstream.status })
   }
 
   const contentType = upstream.headers.get('content-type') ?? 'video/mp4'
 
-  return new Response(upstream.body, {
+  return new NextResponse(upstream.body, {
     status: 200,
     headers: {
       'Content-Type': contentType,

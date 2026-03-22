@@ -81,7 +81,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
         { 
           success: false, 
           error: 'Invalid analytics data',
-          details: validation.error 
+          details: 'error' in validation ? validation.error : 'Validation failed'
         },
         { status: 400 }
       );
@@ -99,7 +99,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     // Build GA4 Measurement Protocol payload
     const payload = {
       client_id: clientId,
-      user_id: body.userId || undefined,
+      user_id: validation.data.userId || undefined,
       timestamp_micros: Date.now() * 1000,
       non_personalized_ads: false,
       events: [

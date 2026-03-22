@@ -114,10 +114,11 @@ export const BlogQuerySchema = z.object({
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content'),
   
   maxResults: z.string()
-    .regex(/^\d+$/, 'Must be a number')
+    .optional()
+    .default('10')
+    .refine(val => /^\d+$/.test(val), 'Must be a number')
     .transform(val => parseInt(val))
-    .refine(val => val >= 1 && val <= 50, 'Results count must be 1-50')
-    .optional(),
+    .refine(val => val >= 1 && val <= 50, 'Results count must be 1-50'),
   
   label: z.string()
     .min(1, 'Required')

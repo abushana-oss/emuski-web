@@ -370,16 +370,20 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     
     // Handle file attachments if present
     const file = formData.get('file') as File | null;
+    let formFieldsWithAttachments: any = formFields;
     if (file && file.size > 0) {
-      formFields.attachments = [{
-        name: file.name,
-        size: file.size,
-        type: file.type
-      }];
+      formFieldsWithAttachments = {
+        ...formFields,
+        attachments: [{
+          name: file.name,
+          size: file.size,
+          type: file.type
+        }]
+      };
     }
 
     // Comprehensive input validation using Zod schema
-    const validationResult = ContactFormSchema.safeParse(formFields);
+    const validationResult = ContactFormSchema.safeParse(formFieldsWithAttachments);
     if (!validationResult.success) {
       const errorDetails = validationResult.error.errors
         .map(err => `${err.path.join('.')}: ${err.message}`)

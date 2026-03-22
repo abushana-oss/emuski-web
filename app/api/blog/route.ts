@@ -37,20 +37,36 @@ interface BlogPostsResponse {
 }
 
 async function blogHandler(req: NextRequest): Promise<NextResponse> {
-  // Validate query parameters using comprehensive schema
-  const validation = await validateRequest(req, BlogQuerySchema);
+  // Extract and validate query parameters
+  const { searchParams } = new URL(req.url);
+  const blogId = searchParams.get('blogId');
+  const maxResultsParam = searchParams.get('maxResults') || '10';
+  const label = searchParams.get('label');
   
-  if (!validation.success) {
+  // Basic validation
+  if (!blogId) {
     return NextResponse.json(
-      { 
-        error: 'Invalid query parameters',
-        details: validation.error 
-      },
+      { error: 'blogId parameter is required' },
       { status: 400 }
     );
   }
   
-  const { blogId, maxResults = 10, label } = validation.data;
+  // Validate and parse maxResults
+  const maxResults = parseInt(maxResultsParam);
+  if (isNaN(maxResults) || maxResults < 1 || maxResults > 50) {
+    return NextResponse.json(
+      { error: 'maxResults must be a number between 1 and 50' },
+      { status: 400 }
+    );
+  }
+  
+  // Basic XSS protection
+  if (/<script|javascript:|data:|vbscript:/i.test(blogId + (label || ''))) {
+    return NextResponse.json(
+      { error: 'Invalid characters detected' },
+      { status: 400 }
+    );
+  }
 
   const apiKey = process.env.BLOGGER_API_KEY;
   if (!apiKey) {
