@@ -986,8 +986,16 @@ async function analyzeGeometry(
   // Create hole analysis from recognized features
   const holeAnalysis = {
     count: recognizedFeatures.holes?.count || 0,
-    sizes: recognizedFeatures.holes?.features?.map(f => f.properties?.estimatedDiameter || 0).filter(d => d > 0) || [],
-    types: recognizedFeatures.holes?.features?.map(f => f.properties?.holeType || 'unknown') || []
+    holes: recognizedFeatures.holes?.features?.map(f => ({
+      diameter: f.properties?.estimatedDiameter || 0,
+      depth: f.properties?.estimatedDepth || 0,
+      location: {
+        x: f.geometry?.coordinates?.[0] || 0,
+        y: f.geometry?.coordinates?.[1] || 0,
+        z: f.geometry?.coordinates?.[2] || 0
+      },
+      type: f.properties?.holeType || 'unknown'
+    })) || []
   };
 
   return {
