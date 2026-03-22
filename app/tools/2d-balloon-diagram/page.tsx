@@ -5,12 +5,31 @@ import { Suspense } from 'react';
 import DynamicBalloonAnalysis from '@/components/DynamicBalloonAnalysis';
 
 export const metadata: Metadata = {
-  title: 'Free 2D Balloon Diagram Tool | Technical Drawing Annotations | EMUSKI',
-  description: 'Professional balloon diagram tool for technical drawings. Upload PDFs, add numbered annotations, customize styles, and export annotated diagrams. Corporate access only - designed for engineering teams.',
-  keywords: '2D balloon diagram, technical drawing annotation, PDF annotation tool, engineering diagrams, balloon numbering, technical documentation, drawing markup, CAD annotation, engineering tools',
+  title: '2D Balloon Diagram Tool — Engineering Drawing Annotation Online | Emuski',
+  description: 'Create accurate balloon diagrams for engineering drawings in seconds. Emuski\'s free online balloon diagram tool helps quality teams annotate 2D drawings for FAI, DFM review, and inspection.',
+  keywords: [
+    '2D balloon diagram',
+    'technical drawing annotation', 
+    'PDF annotation tool',
+    'engineering diagrams',
+    'balloon numbering',
+    'technical documentation',
+    'drawing markup',
+    'CAD annotation',
+    'engineering tools',
+    'blueprint annotation',
+    'mechanical drawing balloons',
+    'assembly drawing annotation',
+    'part numbering system',
+    'technical drawing software',
+    'PDF markup tool',
+    'engineering documentation',
+    'balloon callouts',
+    'dimension annotation'
+  ].join(', '),
   openGraph: {
-    title: '2D Balloon Diagram Tool | EMUSKI Manufacturing',
-    description: 'Professional 2D balloon diagram tool for technical drawings. Upload PDFs, add interactive annotations, and create professional engineering documentation.',
+    title: '2D Balloon Diagram Tool — Engineering Drawing Annotation Online | Emuski',
+    description: 'Create accurate balloon diagrams for engineering drawings in seconds. Free online balloon diagram tool for FAI, DFM review, and quality inspection.',
     type: 'website',
     url: 'https://www.emuski.com/tools/2d-balloon-diagram',
     images: [
@@ -74,14 +93,19 @@ export default function BalloonDiagramPage() {
       "featureList": [
         "PDF Upload and Visualization",
         "Interactive Balloon Placement",
-        "Drag-and-Drop Annotation Editing",
+        "Drag-and-Drop Annotation Editing", 
         "Customizable Balloon Styles",
-        "Color Picker",
+        "Color Picker and Custom Colors",
         "Export Annotated Diagrams",
         "Technical Drawing Markup",
         "Engineering Documentation",
-        "Balloon Numbering System",
-        "Professional Annotation Tools"
+        "Auto-Numbering System",
+        "Professional Annotation Tools",
+        "Blueprint Annotation",
+        "Assembly Drawing Balloons",
+        "Part Callout Creation",
+        "Real-time Collaboration",
+        "High-Resolution Export"
       ],
       "screenshot": "https://emuski.com/screenshots/balloon-diagram-tool.webp",
       "softwareVersion": "1.0",
@@ -114,10 +138,62 @@ export default function BalloonDiagramPage() {
           "name": "How do I export my annotated diagrams?",
           "acceptedAnswer": {
             "@type": "Answer", 
-            "text": "You can export your balloon diagrams as high-quality PNG images or as JSON data containing all annotation information for later editing."
+            "text": "You can export your balloon diagrams as high-quality PNG images or as JSON data containing all annotation information for later editing. Export options include PDF overlay, standalone image, and editable format."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are balloon diagrams used for in engineering?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Balloon diagrams are used in engineering to identify and number parts in assembly drawings, technical documentation, and manufacturing instructions. They provide clear visual references for part lists, bills of materials, and assembly procedures."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I collaborate with team members on balloon diagrams?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the tool supports real-time collaboration features allowing multiple team members to work on the same diagram simultaneously. Changes are automatically synchronized across all users."
           }
         }
       ]
+    },
+    // Service Schema
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "2D Balloon Diagram Creation Service",
+      "description": "Professional balloon diagram annotation service for technical drawings and engineering documentation",
+      "provider": {
+        "@type": "Organization", 
+        "name": "EMUSKI",
+        "@id": "https://emuski.com/#organization"
+      },
+      "serviceType": "Technical Drawing Annotation",
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Engineers, Designers, Technical Documentarians, Manufacturing Teams"
+      },
+      "availableChannel": {
+        "@type": "ServiceChannel",
+        "serviceUrl": "https://emuski.com/tools/2d-balloon-diagram",
+        "serviceName": "Online 2D Balloon Diagram Tool"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Technical Drawing Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "PDF Annotation Service",
+              "description": "Professional balloon diagram creation for technical drawings"
+            }
+          }
+        ]
+      }
     }
   ];
 
@@ -147,31 +223,31 @@ export default function BalloonDiagramPage() {
                 {/* Category Badge */}
                 <div className="flex justify-center">
                   <span className="text-emuski-teal text-xs sm:text-sm font-semibold tracking-wider uppercase">
-                    Advanced Engineering Tools
+                    Engineering Drawing Tool
                   </span>
                 </div>
 
                 {/* Title */}
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight px-2">
-                  2D Balloon Diagram Tool
+                  2D Balloon Diagram Tool — Annotate Engineering Drawings Online
                 </h1>
 
                 {/* Description */}
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto px-2">
-                  Create professional balloon diagrams for your technical drawings. Upload PDF documents, 
-                  add interactive numbered annotations, customize balloon styles, and export annotated diagrams.
+                  Create balloon diagrams for engineering drawings and technical documentation. Perfect for First Article Inspection (FAI), 
+                  DFM review, and quality inspection. Upload PDF → add balloons → export annotated drawing.
                 </p>
                 
                 {/* Feature highlights */}
                 <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-6">
                   <span className="px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    PDF Upload
+                    FAI Balloons
                   </span>
                   <span className="px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    Annotations
+                    DFM Review
                   </span>
                   <span className="px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    Custom Styles
+                    Quality Inspection
                   </span>
                 </div>
               </div>
@@ -202,11 +278,10 @@ export default function BalloonDiagramPage() {
                 {/* Content */}
                 <div className="space-y-4">
                   <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-                    Professional Engineering Documentation
+                    Complete DFM Workflow Integration
                   </h2>
                   <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                    Need professional technical documentation services? Our expert team provides 
-                    comprehensive engineering drawing services, technical documentation, and balloon diagram creation for complex projects.
+                    Start by <a href="/tools/3d-cad-analysis" className="text-emuski-teal hover:underline">running a 3D DFM analysis</a> on your CAD files, then use balloon diagrams to document findings for First Article Inspection. Our expert team provides comprehensive engineering documentation services and manufacturing support.
                   </p>
                   
                   {/* Trust indicators */}

@@ -2023,11 +2023,6 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       <div className="absolute bottom-12 right-4 z-[60]">
         {!state.isChatOpen && (
           <div className="relative">
-            {!isAuthenticated && (
-              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-2 rounded-lg text-xs whitespace-nowrap animate-bounce z-[80]">
-                🔒 Sign in required
-              </div>
-            )}
             {isAuthenticated && creditInfo && creditInfo.remaining <= 0 && (
               <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white px-3 py-2 rounded-lg text-xs whitespace-nowrap animate-bounce z-[80]">
                 💳 No credits left
@@ -2037,29 +2032,27 @@ export const CadViewer: React.FC<CadViewerProps> = ({
             {/* Chat button with nudge animation */}
             <button
               onClick={() => {
-                if (!isAuthenticated) {
-                  alert('Please sign in to use Mithran AI Assistant');
-                  return;
-                }
-                if (creditInfo && creditInfo.remaining <= 0) {
-                  alert(`No credits remaining. You have used all ${creditInfo.limit} daily credits. Credits reset in ${Math.ceil(creditInfo.timeUntilReset)} hours.`);
-                  return;
-                }
                 set({ isChatOpen: true });
               }}
-              className={`transition-all hover:scale-105 relative ${
-                !isAuthenticated || (creditInfo && creditInfo.remaining <= 0) 
-                  ? 'opacity-50 cursor-not-allowed' 
-                  : 'animate-pulse hover:animate-none'
-              }`}
-              disabled={!isAuthenticated || (creditInfo && creditInfo.remaining <= 0)}
+              className="transition-all hover:scale-105 relative hover:shadow-lg hover:shadow-emuski-teal/30 active:scale-95 active:shadow-xl active:shadow-emuski-teal/50 animate-[glow_2s_ease-in-out_infinite]"
+              style={{ background: 'transparent', border: 'none', padding: 0, outline: 'none' }}
             >
               <div className="relative">
                 <img 
                   src="/EMUSKI_founder.svg" 
                   alt="Mithran - AI Assistant" 
-                  className="w-16 h-16 object-cover"
+                  className="w-16 h-16 object-cover rounded-full animate-[nudge_3s_ease-in-out_infinite] ring-2 ring-white shadow-lg"
+                  style={{ 
+                    imageRendering: 'crisp-edges',
+                    borderRadius: '50%',
+                    clipPath: 'circle(50% at 50% 50%)'
+                  }}
                 />
+                
+                {/* Thought emoji on top */}
+                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-2xl animate-pulse">
+                  💭
+                </div>
                 {/* Thinking dots animation */}
                 <div className="absolute -top-2 -right-1 flex space-x-1">
                   {[0, 150, 300].map(delay => (
@@ -2257,7 +2250,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
               <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
                 {isAuthenticated
                   ? <span>AI-powered DFM analysis</span>
-                  : <span><Link href="/auth/login" className="text-emuski-teal hover:underline font-medium">Sign in</Link> or <Link href="/auth/register" className="text-emuski-teal hover:underline font-medium">register</Link> for AI features</span>
+                  : <span><Link href="/auth/login" className="text-emuski-teal hover:underline font-medium">Sign in</Link> or <Link href="/auth/register" className="text-emuski-teal hover:underline font-medium">create account</Link> to access Mithran AI Assistant</span>
                 }
                 {isAuthenticated && creditInfo && (
                   <div className="flex items-center gap-1">

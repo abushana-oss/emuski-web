@@ -5,12 +5,12 @@ import { Suspense } from 'react';
 import { DynamicCadAnalysis } from '@/components/DynamicCadAnalysis';
 
 export const metadata: Metadata = {
-  title: 'Free 3D CAD Analysis Tool | AI-Powered DFM Analysis | EMUSKI',
-  description: 'Upload STL, STEP, IGES files for instant AI-powered Design for Manufacturing analysis. Get cost estimates, manufacturability insights, and production recommendations in seconds. Free daily credits available.',
-  keywords: 'CAD analysis tool, DFM analysis, 3D file viewer, STL viewer, STEP analysis, IGES viewer, manufacturing analysis, cost estimation, design for manufacturing, CNC analysis, 3D printing optimization, AI CAD tool, free CAD analysis, manufacturing cost calculator',
+  title: 'Free AI-Powered 3D DFM Analysis Tool — Instant Manufacturability Check | Emuski',
+  description: 'Upload your CAD file and get instant AI-powered 3D DFM analysis. Our artificial intelligence identifies manufacturing errors, optimizes designs, and provides cost estimates. Free web-based tool, no download needed.',
+  keywords: 'AI DFM analysis tool, 3D DFM analysis, AI-powered Design for Manufacturing, free AI DFM tool online, AI CAD analysis, 3D manufacturing analysis AI, automated AI DFM analysis, AI manufacturability check, AI DFM software, AI-powered CAD analysis, AI injection molding DFM, AI CNC machining DFM, 3D AI part analysis, AI manufacturing design tool, online AI DFM checker, artificial intelligence DFM, machine learning CAD analysis',
   openGraph: {
-    title: '3D CAD Analysis & Viewer | EMUSKI Manufacturing',
-    description: 'Professional 3D CAD file analysis with AI-powered insights. Upload STL, STEP, IGES files for instant visualization and manufacturing recommendations.',
+    title: 'Free AI-Powered 3D DFM Analysis Tool — Instant Manufacturability Check | Emuski',
+    description: 'Upload your CAD file and get instant AI-powered 3D DFM analysis. Our artificial intelligence identifies manufacturing errors and provides cost estimates.',
     type: 'website',
     url: 'https://www.emuski.com/tools/3d-cad-analysis',
     images: [
@@ -176,31 +176,31 @@ export default function CadAnalysisPage() {
                 {/* Category Badge */}
                 <div className="flex justify-center">
                   <span className="text-emuski-teal text-xs sm:text-sm font-semibold tracking-wider uppercase">
-                    Advanced Engineering Tools
+                    Free DFM Analysis Tool
                   </span>
                 </div>
 
                 {/* Title */}
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight px-2">
-                  3D CAD Analysis & Viewer
+                  AI-Powered 3D DFM Analysis Tool — Instant Design for Manufacturing Check
                 </h1>
 
                 {/* Description */}
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto px-2">
-                  Professional 3D CAD file analysis with real-time visualization. Upload STL, STEP, IGES, OBJ files 
-                  for instant AI-powered manufacturing analysis, cost estimations, and design optimization recommendations.
+                  Upload your CAD file and get instant AI-powered 3D DFM analysis. Our artificial intelligence identifies manufacturing errors like wall thickness violations, 
+                  undercuts, and draft angle issues before production. Zero download required — AI runs in your browser.
                 </p>
                 
                 {/* Feature highlights */}
                 <div className="flex flex-wrap justify-center gap-4 mt-6">
                   <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    Real-time 3D Viewer
+                    AI-Powered Analysis
                   </span>
                   <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    AI Manufacturing Analysis
+                    Zero Install Required
                   </span>
                   <span className="px-3 py-1 text-xs font-medium rounded-full bg-emuski-teal/20 text-emuski-teal border border-emuski-teal/30">
-                    Instant Cost Estimates
+                    AI Cost Optimization
                   </span>
                 </div>
               </div>
@@ -232,11 +232,10 @@ export default function CadAnalysisPage() {
                 {/* Content */}
                 <div className="space-y-4">
                   <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                    Transform Your 3D Models Into Reality
+                    Complete Your DFM Workflow
                   </h2>
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                    Get professional manufacturing quotes for your analyzed CAD files. Our expert team provides 
-                    detailed cost analysis, material recommendations, and optimized manufacturing strategies for your 3D models.
+                    After analyzing your 3D design, <a href="/tools/2d-balloon-diagram" className="text-emuski-teal hover:underline">annotate findings with our 2D balloon diagram tool</a> for First Article Inspection (FAI) and quality documentation. Get professional manufacturing quotes for your analyzed CAD files.
                   </p>
                   
                   {/* Trust indicators */}
