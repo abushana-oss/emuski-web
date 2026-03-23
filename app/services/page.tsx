@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     'manufacturing services bangalore',
     'engineering services india',
     'OEM manufacturing bangalore 2026',
-    'precision engineering services bangalore',
+    'cost engineering services bangalore',
     'cost engineering services india',
 
     // Manufacturing Services
@@ -389,7 +389,7 @@ export default function ServicesPage() {
                 "name": "How much cost reduction can I achieve with EMUSKI services?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "EMUSKI's services deliver 25-45% average cost reduction through our VAVE methodology and cost optimization approaches. Our precision engineering services achieve 15-25% savings, while comprehensive VAVE consulting can deliver 20-30% cost reduction with 5-10x ROI. We combine expert engineering, strategic sourcing from 500+ suppliers, and AI-powered intelligence for maximum cost optimization."
+                  "text": "EMUSKI's services deliver 25-45% average cost reduction through our VAVE methodology and cost optimization approaches. Our cost engineering services achieve 15-25% savings, while comprehensive VAVE consulting can deliver 20-30% cost reduction with 5-10x ROI. We combine expert engineering, strategic sourcing from 500+ suppliers, and AI-powered intelligence for maximum cost optimization."
                 }
               },
               {

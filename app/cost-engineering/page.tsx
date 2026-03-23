@@ -303,8 +303,8 @@ export default function CostEngineering() {
         "@type": "WebPage",
         "@id": "https://www.emuski.com/cost-engineering#webpage",
         "url": "https://www.emuski.com/cost-engineering",
-        "name": "India's Leading Precision Engineering Services | 15+ Years Experience | Cost Estimation, VAVE & Strategic Sourcing",
-        "description": "India's ISO-Certified precision engineering services with 15+ years proven experience serving all of India (Mumbai, Delhi, Pune, Chennai, Hyderabad) and globally. ISO 9001:2015 certified cost estimation, VAVE analysis, strategic sourcing. 75+ satisfied clients across automotive, aerospace, medical devices, electronics. Reduce manufacturing costs by 15-25%.",
+        "name": "India's Leading Cost Engineering Services | 15+ Years Experience | Cost Estimation, VAVE & Strategic Sourcing",
+        "description": "India's ISO-Certified cost engineering services with 15+ years proven experience serving all of India (Mumbai, Delhi, Pune, Chennai, Hyderabad) and globally. ISO 9001:2015 certified cost estimation, VAVE analysis, strategic sourcing. 75+ satisfied clients across automotive, aerospace, medical devices, electronics. Reduce manufacturing costs by 15-25%.",
         "keywords": "precision engineering india, cost estimation india, VAVE analysis india, strategic sourcing india, manufacturing cost reduction india, precision engineering mumbai, precision engineering delhi, precision engineering pune, 15 years experience",
         "isPartOf": {
           "@type": "WebSite",
@@ -326,7 +326,7 @@ export default function CostEngineering() {
       // Precision Engineering Specific FAQs
       {
         "@type": "Question",
-        "name": "What precision engineering services does EMUSKI provide across India?",
+        "name": "What cost engineering services does EMUSKI provide across India?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "EMUSKI is India's leading precision engineering company with 15+ years experience serving clients across Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore and all of India, as well as globally. We provide ISO 9001:2015 certified product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing from 500+ global suppliers, and expert engineering support. Our services reduce manufacturing costs by 15-25% while maintaining quality. From our Bangalore facility, we serve 75+ clients in automotive, aerospace, medical devices, and electronics industries."
