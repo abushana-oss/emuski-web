@@ -1162,6 +1162,10 @@ export const CadAnalysisInterface = () => {
                   className="w-full"
                   isLoading={!creditInfo}
                 />
+                {/* Join Community Button below credit display */}
+                <div className="mt-4 flex justify-center">
+                  <CommunityButton />
+                </div>
               </div>
             )}
 
