@@ -346,7 +346,6 @@ export const Navbar = () => {
                       const getSectionLink = (title: string) => {
                         if (title === "Manufacturing Excellence") return "/manufacturing-services";
                         if (title === "Engineering Innovation") return "/precision-engineering";
-                        if (title === "Tools") return "/tools";
                         return null;
                       };
 
