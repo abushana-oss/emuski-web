@@ -86,10 +86,10 @@ export const metadata: Metadata = {
   category: 'Cost Engineering & Cost Optimization',
   openGraph: {
     title: 'India\'s Leading Cost Engineering Services | 15+ Years Experience | EMUSKI Bangalore',
-    description: 'ISO 9001:2015 certified cost engineering serving all of India with 15+ years proven experience. Product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing (500+ global suppliers). 75+ clients worldwide across automotive, aerospace, medical devices, electronics industries.'
+    description: 'ISO 9001:2015 certified cost engineering serving all of India with 15+ years proven experience. Product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing (500+ global suppliers). 75+ clients worldwide across automotive, aerospace, medical devices, electronics industries.',
     type: 'website',
     url: 'https://www.emuski.com/cost-engineering',
-    siteName: 'EMUSKI - India\'s Premier Cost Engineering Company'
+    siteName: 'EMUSKI - India\'s Premier Cost Engineering Company',
     locale: 'en_IN',
     images: [
       {
