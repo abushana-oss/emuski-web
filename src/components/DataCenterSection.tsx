@@ -13,21 +13,21 @@ const serviceItems = [
     title: "CNC Machining Excellence",
     description: "High-precision CNC machining capabilities delivering complex geometries with tight tolerances for automotive and aerospace applications.",
     image: "/assets/componets/Part-Photos/IMG-20250310-WA0011.jpg",
-    link: "/precision-engineering#cnc"
+    link: "/cost-engineering#cnc"
   },
   {
     category: "Engineering Innovations",
     title: "Component Design & Validation",
     description: "Complete product development lifecycle from concept to production, including rapid prototyping and validation services.",
     image: "/assets/componets/forus/WhatsApp Image 2025-08-23 at 10.06.37 PM.jpeg",
-    link: "/precision-engineering#design"
+    link: "/cost-engineering#design"
   },
   {
     category: "Quality Assurance",
     title: "Quality Control Systems",
     description: "Advanced quality inspection and testing protocols ensuring every component meets exact specifications and industry standards.",
     image: "/assets/componets/Part-Photos/IMG-20250519-WA0016.jpg",
-    link: "/precision-engineering#quality"
+    link: "/cost-engineering#quality"
   },
   {
     category: "Custom Solutions",
@@ -65,17 +65,17 @@ const quickLineupServices = [
   {
     title: "CNC Machining Excellence",
     category: "Precision Engineering",
-    link: "/precision-engineering#cnc"
+    link: "/cost-engineering#cnc"
   },
   {
     title: "Component Design & Validation", 
     category: "Engineering Innovations",
-    link: "/precision-engineering#design"
+    link: "/cost-engineering#design"
   },
   {
     title: "Quality Control Systems",
     category: "Quality Assurance", 
-    link: "/precision-engineering#quality"
+    link: "/cost-engineering#quality"
   },
   {
     title: "Fixture Design & Tooling",

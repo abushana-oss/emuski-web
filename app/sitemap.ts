@@ -43,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.99, // HIGHEST - Primary OEM manufacturing service page
     },
     {
-      url: `${baseUrl}/precision-engineering`,
+      url: `${baseUrl}/cost-engineering`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'weekly',
       priority: 0.97, // SECOND - Cost engineering and VAVE services

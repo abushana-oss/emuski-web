@@ -15,6 +15,123 @@ const deliverables = [
 ];
 
 const ProductDeliverablesSection = () => {
+  // Add keyframe animations to document head
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.8) translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      @keyframes flowLine {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(400%); }
+      }
+
+      @keyframes flowLineVertical {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(400%); }
+      }
+
+      @keyframes drawLine {
+        from {
+          transform: scaleX(0);
+          transform-origin: left;
+        }
+        to {
+          transform: scaleX(1);
+          transform-origin: left;
+        }
+      }
+
+      @keyframes drawLineVertical {
+        from {
+          transform: scaleY(0);
+          transform-origin: top;
+        }
+        to {
+          transform: scaleY(1);
+          transform-origin: top;
+        }
+      }
+
+      @keyframes scaleIn {
+        from { transform: scale(0); }
+        to { transform: scale(1); }
+      }
+
+      @keyframes particleFlow {
+        0% {
+          opacity: 0;
+          transform: translateX(0) translateY(-50%);
+        }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% {
+          opacity: 0;
+          transform: translateX(80px) translateY(-50%);
+        }
+      }
+
+      @keyframes particleFlowVertical {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(-50%);
+        }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% {
+          opacity: 0;
+          transform: translateY(40px) translateX(-50%);
+        }
+      }
+
+      .animate-fadeInScale {
+        animation: fadeInScale 0.5s ease-out forwards;
+      }
+
+      .animate-flowLine {
+        animation: flowLine 3s ease-in-out infinite;
+      }
+
+      .animate-flowLineVertical {
+        animation: flowLineVertical 3s ease-in-out infinite;
+      }
+
+      .animate-drawLine {
+        animation: drawLine 2s ease-out forwards;
+      }
+
+      .animate-drawLineVertical {
+        animation: drawLineVertical 2s ease-out forwards;
+      }
+
+      .animate-scaleIn {
+        animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      .animate-particleFlow {
+        animation: particleFlow 2s ease-in-out infinite;
+      }
+
+      .animate-particleFlowVertical {
+        animation: particleFlowVertical 2s ease-in-out infinite;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <section className="py-16 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4 sm:px-6">
@@ -50,9 +167,8 @@ const ProductDeliverablesSection = () => {
                 {deliverables.map((item, index) => (
                   <div
                     key={index}
-                    className="flex-shrink-0 flex flex-col items-center text-center opacity-0"
+                    className="flex-shrink-0 flex flex-col items-center text-center animate-fadeInScale"
                     style={{
-                      animation: `fadeInScale 0.5s ease-out forwards`,
                       animationDelay: `${index * 100}ms`,
                       minWidth: '100px',
                       maxWidth: '120px'
@@ -116,9 +232,8 @@ const ProductDeliverablesSection = () => {
                 {deliverables.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-4 opacity-0"
+                    className="flex items-start gap-4 animate-fadeInScale"
                     style={{
-                      animation: `fadeInScale 0.5s ease-out forwards`,
                       animationDelay: `${index * 100}ms`
                     }}
                   >
@@ -186,138 +301,6 @@ const ProductDeliverablesSection = () => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeInScale {
-          from {
-            opacity: 0;
-            transform: scale(0.8) translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-
-        @keyframes flowLine {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(400%);
-          }
-        }
-
-        @keyframes flowLineVertical {
-          0% {
-            transform: translateY(-100%);
-          }
-          100% {
-            transform: translateY(400%);
-          }
-        }
-
-        @keyframes drawLine {
-          from {
-            transform: scaleX(0);
-            transform-origin: left;
-          }
-          to {
-            transform: scaleX(1);
-            transform-origin: left;
-          }
-        }
-
-        @keyframes drawLineVertical {
-          from {
-            transform: scaleY(0);
-            transform-origin: top;
-          }
-          to {
-            transform: scaleY(1);
-            transform-origin: top;
-          }
-        }
-
-        @keyframes scaleIn {
-          from {
-            transform: scale(0);
-          }
-          to {
-            transform: scale(1);
-          }
-        }
-
-        @keyframes particleFlow {
-          0% {
-            opacity: 0;
-            transform: translateX(0) translateY(-50%);
-          }
-          20% {
-            opacity: 1;
-          }
-          80% {
-            opacity: 1;
-          }
-          100% {
-            opacity: 0;
-            transform: translateX(80px) translateY(-50%);
-          }
-        }
-
-        @keyframes particleFlowVertical {
-          0% {
-            opacity: 0;
-            transform: translateY(0) translateX(-50%);
-          }
-          20% {
-            opacity: 1;
-          }
-          80% {
-            opacity: 1;
-          }
-          100% {
-            opacity: 0;
-            transform: translateY(40px) translateX(-50%);
-          }
-        }
-
-        .animate-flowLine {
-          animation: flowLine 3s ease-in-out infinite;
-        }
-
-        .animate-flowLineVertical {
-          animation: flowLineVertical 3s ease-in-out infinite;
-        }
-
-        .animate-drawLine {
-          animation: drawLine 2s ease-out forwards;
-        }
-
-        .animate-drawLineVertical {
-          animation: drawLineVertical 2s ease-out forwards;
-        }
-
-        .animate-scaleIn {
-          animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        .animate-particleFlow {
-          animation: particleFlow 2s ease-in-out infinite;
-        }
-
-        .animate-particleFlowVertical {
-          animation: particleFlowVertical 2s ease-in-out infinite;
-        }
-
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </section>
   );
 };

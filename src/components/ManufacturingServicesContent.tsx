@@ -328,7 +328,7 @@ export const ManufacturingServicesContent = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-emuski-teal/20 to-emuski-teal-dark/20 rounded-2xl blur-3xl"></div>
                 <div className="relative bg-white rounded-2xl overflow-hidden border border-gray-200">
                   <Image
-                    src="/assets/precision-engineering-icon.svg"
+                    src="/assets/production-scaling.svg"
                     alt="Production Scaling"
                     width={1200}
                     height={800}

@@ -22,7 +22,8 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: 'Googlebot',
         allow: [
           '/',
-          '/tools/',
+          '/tools/3d-cad-analysis/',
+          '/tools/2d-balloon-diagram/',
           '/services/',
           '/solutions/',
         ],

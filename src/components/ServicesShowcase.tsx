@@ -43,19 +43,19 @@ const servicesData = [
     items: [
       {
         name: "Product Cost Estimation",
-        link: "/precision-engineering#cost-estimation",
+        link: "/cost-engineering#cost-estimation",
       },
       {
         name: "VAVE - Teardown & Benchmarking",
-        link: "/precision-engineering#vave",
+        link: "/cost-engineering#vave",
       },
       {
         name: "Strategic Sourcing Support",
-        link: "/precision-engineering#sourcing",
+        link: "/cost-engineering#sourcing",
       },
       {
         name: "Expert Engineer Support",
-        link: "/precision-engineering#expert-support",
+        link: "/cost-engineering#expert-support",
       },
       {
         name: "Mithran AI Platform",
@@ -73,28 +73,28 @@ const showcaseItems = [
     category: "Engineering Innovations",
     description: "Accurate cost analysis and estimation services to optimize your product development budget and maximize profitability.",
     image: "/assets/engineering/automotive-engineering-cost-estimation.svg",
-    link: "/precision-engineering#cost-estimation"
+    link: "/cost-engineering#cost-estimation"
   },
   {
     title: "VAVE - Teardown & Benchmarking",
     category: "Engineering Innovations",
     description: "Value Analysis and Value Engineering through comprehensive teardown studies and competitive benchmarking for cost optimization.",
     image: "/assets/engineering/product-teardown-analysis.png",
-    link: "/precision-engineering#vave"
+    link: "/cost-engineering#vave"
   },
   {
     title: "Strategic Sourcing Support",
     category: "Engineering Innovations",
     description: "Expert guidance in supplier selection and procurement strategy to ensure quality components at competitive prices.",
     image: "/assets/engineering/strategic-sourcing-solutions.svg",
-    link: "/precision-engineering#sourcing"
+    link: "/cost-engineering#sourcing"
   },
   {
     title: "Expert Engineer Support",
     category: "Engineering Innovations",
     description: "Dedicated engineering expertise to solve complex technical challenges and accelerate your product development lifecycle.",
     image: "/assets/engineering/supplier-management-system.svg",
-    link: "/precision-engineering#expert-support"
+    link: "/cost-engineering#expert-support"
   },
   {
     title: "On-Demand Manufacturing",

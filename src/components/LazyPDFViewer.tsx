@@ -98,15 +98,14 @@ export const LazyPDFViewer = ({
               style={{ height: minHeight }}
             >
               <iframe
-                src={`${src}#view=FitH&scrollbar=1&toolbar=1&navpanes=1`}
+                src={src}
                 className="w-full h-full border-0"
                 style={{ minHeight }}
                 title={title}
                 aria-label={ariaLabel}
                 loading="lazy"
                 onLoad={() => setIsLoaded(true)}
-                allow="fullscreen"
-                sandbox="allow-scripts allow-popups allow-forms"
+                referrerPolicy="strict-origin-when-cross-origin"
               />
             </div>
           )}

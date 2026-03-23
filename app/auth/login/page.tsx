@@ -344,21 +344,21 @@ function LoginPageComponent() {
                 <div className="text-left">
                   <h3 className="font-semibold text-gray-800 mb-3">Manufacturing Excellence</h3>
                   <ul className="text-sm space-y-2">
-                    <li><a href="/on-demand-manufacturing" className="text-black hover:text-gray-600 transition-colors">On-Demand Manufacturing</a></li>
-                    <li><a href="/rapid-prototyping" className="text-black hover:text-gray-600 transition-colors">Rapid Prototyping</a></li>
-                    <li><a href="/custom-manufacturing" className="text-black hover:text-gray-600 transition-colors">Custom Manufacturing</a></li>
-                    <li><a href="/production-scaling" className="text-black hover:text-gray-600 transition-colors">Production Scaling</a></li>
+                    <li><a href="/manufacturing-services#on-demand-details" className="text-black hover:text-gray-600 transition-colors">On-Demand Manufacturing</a></li>
+                    <li><a href="/manufacturing-services#prototyping-details" className="text-black hover:text-gray-600 transition-colors">Rapid Prototyping</a></li>
+                    <li><a href="/manufacturing-services#custom-details" className="text-black hover:text-gray-600 transition-colors">Custom Manufacturing</a></li>
+                    <li><a href="/manufacturing-services#scaling-details" className="text-black hover:text-gray-600 transition-colors">Production Scaling</a></li>
                   </ul>
                 </div>
                 
                 <div className="text-left">
                   <h3 className="font-semibold text-gray-800 mb-3">Engineering Innovation</h3>
                   <ul className="text-sm space-y-2">
-                    <li><a href="/product-cost-estimation" className="text-black hover:text-gray-600 transition-colors">Product Cost Estimation</a></li>
-                    <li><a href="/vave-teardown-benchmarking" className="text-black hover:text-gray-600 transition-colors">VAVE - Teardown & Benchmarking</a></li>
-                    <li><a href="/strategic-sourcing-support" className="text-black hover:text-gray-600 transition-colors">Strategic Sourcing Support</a></li>
-                    <li><a href="/expert-engineer-support" className="text-black hover:text-gray-600 transition-colors">Expert Engineer Support</a></li>
-                    <li><a href="/mithran-ai-platform" className="text-black hover:text-gray-600 transition-colors">Mithran AI Platform</a></li>
+                    <li><a href="/cost-engineering#cost-estimation-details" className="text-black hover:text-gray-600 transition-colors">Product Cost Estimation</a></li>
+                    <li><a href="/cost-engineering#vave-details" className="text-black hover:text-gray-600 transition-colors">VAVE - Teardown & Benchmarking</a></li>
+                    <li><a href="/cost-engineering#sourcing-details" className="text-black hover:text-gray-600 transition-colors">Strategic Sourcing Support</a></li>
+                    <li><a href="/cost-engineering#expert-support-details" className="text-black hover:text-gray-600 transition-colors">Expert Engineer Support</a></li>
+                    <li><a href="/solutions/ai" className="text-black hover:text-gray-600 transition-colors">Mithran AI Platform</a></li>
                   </ul>
                 </div>
               </div>

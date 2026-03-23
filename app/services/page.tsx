@@ -188,7 +188,7 @@ const manufacturingServices = [
     icon: Settings,
     title: "Precision Engineering",
     description: "High-precision CNC machining, injection molding, and sheet metal fabrication with micron-level accuracy",
-    link: "/precision-engineering",
+    link: "/cost-engineering",
     features: ["CNC Machining", "Injection Molding", "Sheet Metal Fabrication", "Quality Control"]
   },
   {

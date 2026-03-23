@@ -9,10 +9,10 @@ const servicesData = [
   {
     category: "Engineering Innovation",
     items: [
-      { name: "Product Cost Estimation", link: "/precision-engineering#cost-estimation" },
-      { name: "VAVE - Teardown & Benchmarking", link: "/precision-engineering#vave" },
-      { name: "Strategic Sourcing Support", link: "/precision-engineering#sourcing" },
-      { name: "Expert Engineer Support", link: "/precision-engineering#expert-support" },
+      { name: "Product Cost Estimation", link: "/cost-engineering#cost-estimation" },
+      { name: "VAVE - Teardown & Benchmarking", link: "/cost-engineering#vave" },
+      { name: "Strategic Sourcing Support", link: "/cost-engineering#sourcing" },
+      { name: "Expert Engineer Support", link: "/cost-engineering#expert-support" },
     ]
   },
   {

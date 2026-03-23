@@ -38,14 +38,14 @@ const featuredContent = [
         title: "Mastering Costs Engineering Success",
         description: "From initial design and cost estimation to strategic sourcing and expert deployment, we provide integrated Engineering Innovations that drive efficiency, reduce costs, and accelerate your time-to-market",
         image: "/assets/engineering/automotive-engineering-cost-estimation.svg",
-        link: "/precision-engineering#cost-estimation"
+        link: "/cost-engineering#cost-estimation"
       },
       {
         category: "VAVE & Benchmarking",
         title: "Teardown & Value Engineering",
         description: "Comprehensive teardown analysis and value Engineering Innovations to optimize product costs while maintaining quality standards and performance requirements.",
         image: "/assets/engineering/product-teardown-analysis.png",
-        link: "/precision-engineering#vave"
+        link: "/cost-engineering#vave"
       }
     ]
   },
@@ -302,7 +302,7 @@ export const FeaturedTabs = () => {
                           href={
                             item.link ||
                             (tab.id === "engineering"
-                              ? "/precision-engineering"
+                              ? "/cost-engineering"
                               : "/solutions/ai")
                           }
                         >

@@ -124,27 +124,6 @@ const securityHeaders = [
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=()'
   },
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      `script-src ${generateCSPScriptSrc().join(' ')} 'wasm-unsafe-eval'`,
-      `script-src-elem ${generateCSPScriptSrc().join(' ')}`,
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com blob: data:",
-      "font-src 'self' data: https://fonts.gstatic.com blob:",
-      "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://lh3.googleusercontent.com https://images.unsplash.com https://via.placeholder.com https://upload-dev-s3.s3.eu-central-1.amazonaws.com",
-      `connect-src ${generateCSPConnectSrc().join(' ')}`,
-      "worker-src 'self' blob: data:",
-      "child-src 'self' blob: data:",
-      "frame-src 'self' https://*.google.com https://*.googletagmanager.com https://td.doubleclick.net",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-      "media-src 'self' data: blob: https://*.supabase.co https://upload-dev-s3.s3.eu-central-1.amazonaws.com",
-      "upgrade-insecure-requests"
-    ].join('; ')
-  }
 ];
 
 /**
@@ -320,6 +299,27 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/:path*\\.pdf',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/pdf'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600'
+          },
+        ],
+      },
     ];
   },
 
@@ -363,8 +363,8 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/precision-engineering/',
-        destination: '/precision-engineering',
+        source: '/cost-engineering/',
+        destination: '/cost-engineering',
         permanent: true,
       },
       {

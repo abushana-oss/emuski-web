@@ -441,7 +441,7 @@ export const generateWelcomeEmailHTML = (subscriberEmail: string) => {
                 </p>
                 <a href="https://www.emuski.com/blog" class="cta-button">Read Latest Insights</a>
                 <a href="https://www.emuski.com/manufacturing-services" class="cta-button">Learn More</a>
-                <a href="https://www.emuski.com/precision-engineering" class="cta-button">Explore Precision Engineering</a>
+                <a href="https://www.emuski.com/cost-engineering" class="cta-button">Explore Precision Engineering</a>
             </div>
 
             <div style="text-align: center; margin: 30px 0; color: #718096;">

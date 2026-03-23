@@ -196,7 +196,7 @@ export const PRECISION_ENGINEERING_FAQS: FAQItem[] = [
     keywords: ['precision surface finishing', 'mirror polishing', 'hard anodizing', 'PVD coating', 'precision grinding', 'surface roughness control']
   },
   {
-    id: 'smart-manufacturing-precision-engineering',
+    id: 'smart-manufacturing-cost-engineering',
     question: 'How does EMUSKI integrate smart manufacturing in precision engineering?',
     answer: 'EMUSKI\'s smart precision manufacturing includes: Real-time process monitoring with IoT sensors, AI-powered predictive quality control, machine learning algorithms for tool wear prediction, automated in-process inspection with vision systems, digital twin technology for process optimization, and Industry 4.0 connectivity for remote monitoring. This integration ensures consistent precision while reducing cycle times and improving efficiency.',
     category: 'Smart Manufacturing',
@@ -210,7 +210,7 @@ export const PRECISION_ENGINEERING_FAQS: FAQItem[] = [
     keywords: ['precision fixture design', 'custom cutting tools', 'modular fixturing', 'automation tooling', 'precision workholding', 'tool design engineering']
   },
   {
-    id: 'precision-engineering-quality-systems',
+    id: 'cost-engineering-quality-systems',
     question: 'What quality systems ensure precision engineering excellence at EMUSKI?',
     answer: 'EMUSKI\'s precision quality systems include: ISO 9001:2015 certified quality management, Statistical Process Control (SPC) with real-time monitoring, First Article Inspection (FAI) protocols, Geometric Dimensioning & Tolerancing (GD&T) verification, Material traceability and certification, Environmental monitoring for temperature and humidity control, and Measurement Systems Analysis (MSA) for gauge repeatability and reproducibility.',
     category: 'Quality Systems',
@@ -269,7 +269,7 @@ export const PAGE_FAQ_MAP = {
   '/': HOME_FAQS,
   '/manufacturing-services': MANUFACTURING_SERVICES_FAQS,
   '/industries': INDUSTRIES_FAQS,
-  '/precision-engineering': PRECISION_ENGINEERING_FAQS,
+  '/cost-engineering': PRECISION_ENGINEERING_FAQS,
   '/contact': CONTACT_FAQS
 };
 
@@ -341,7 +341,7 @@ export const getFAQMetaForPage = (pathname: string) => {
       title: 'EMUSKI Industries FAQ - Healthcare, Aerospace & Defense Solutions',
       description: 'Explore EMUSKI\'s specialized manufacturing solutions for healthcare, aerospace, defense, automotive, and electronics industries with regulatory compliance.'
     },
-    '/precision-engineering': {
+    '/cost-engineering': {
       title: 'Engineering FAQ - Precision CNC & Machining Questions',
       description: 'Advanced precision engineering capabilities including VMC machining, ultra-tight tolerances, smart manufacturing, and cost engineering optimization.'
     },
@@ -361,7 +361,7 @@ export const VOICE_QUERY_PATTERNS = [
   { pattern: /who (is|are) EMUSKI/i, redirect: '/', intent: 'company' },
   { pattern: /tell me about EMUSKI/i, redirect: '/', intent: 'company' },
   { pattern: /(manufacturing|production) (services|capabilities)/i, redirect: '/manufacturing-services', intent: 'services' },
-  { pattern: /(precision|CNC|machining) (engineering|capabilities)/i, redirect: '/precision-engineering', intent: 'technical' },
+  { pattern: /(precision|CNC|machining) (engineering|capabilities)/i, redirect: '/cost-engineering', intent: 'technical' },
   { pattern: /(contact|reach|call) EMUSKI/i, redirect: '/contact', intent: 'location' },
   { pattern: /(cost|price|savings|budget)/i, intent: 'cost' },
   { pattern: /(quality|ISO|certification)/i, intent: 'quality' }

@@ -13,7 +13,7 @@ Crawl-delay: 1
 
 # Priority crawling for manufacturing content
 Allow: /manufacturing-services
-Allow: /precision-engineering
+Allow: /cost-engineering
 Allow: /manufacturing-engineering-solutions
 Allow: /manufacturing-in-bangalore
 Allow: /solutions/ai
@@ -41,7 +41,7 @@ Allow: /*.ico
 
 # SEO optimized paths
 Allow: /oem-manufacturing*
-Allow: /precision-engineering*
+Allow: /cost-engineering*
 Allow: /manufacturing-bangalore*
 Allow: /ai-manufacturing*
 Allow: /automotive-manufacturing*

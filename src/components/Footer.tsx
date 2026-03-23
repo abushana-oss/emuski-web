@@ -26,11 +26,11 @@ export const Footer = () => {
           <div>
             <h4 className="text-foreground font-semibold mb-4">Engineering Innovations</h4>
             <ul className="space-y-2">
-              <li><Link href="/precision-engineering" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Cost Precision</Link></li>
-              <li><Link href="/precision-engineering#cost-estimation" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Product Cost Estimation</Link></li>
-              <li><Link href="/precision-engineering#vave" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">VAVE & Benchmarking</Link></li>
-              <li><Link href="/precision-engineering#sourcing" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Strategic Sourcing</Link></li>
-              <li><Link href="/precision-engineering#expert-support" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Expert Engineer Support</Link></li>
+              <li><Link href="/cost-engineering" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Cost Precision</Link></li>
+              <li><Link href="/cost-engineering#cost-estimation" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Product Cost Estimation</Link></li>
+              <li><Link href="/cost-engineering#vave" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">VAVE & Benchmarking</Link></li>
+              <li><Link href="/cost-engineering#sourcing" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Strategic Sourcing</Link></li>
+              <li><Link href="/cost-engineering#expert-support" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Expert Engineer Support</Link></li>
             </ul>
           </div>
 

@@ -740,10 +740,17 @@ export const CadAnalysisInterface = () => {
           <Alert className="border-emuski-teal/20 bg-emuski-teal/5">
             <User className="h-4 w-4 text-emuski-teal" />
             <AlertDescription className="text-sm">
-              <span className="font-medium text-emuski-teal">Guest Mode:</span> You can upload and analyze 1 design for free. 
-              <Link href="/auth/register" className="ml-1 text-emuski-teal font-medium hover:underline">
-                Create a free account
-              </Link> to analyze unlimited designs, save your work, and access advanced features.
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <span className="font-medium text-emuski-teal">Guest Mode:</span> You can upload and analyze 1 design for free. 
+                  <Link href="/auth/register" className="ml-1 text-emuski-teal font-medium hover:underline">
+                    Create a free account
+                  </Link> to analyze unlimited designs, save your work, and access advanced features.
+                </div>
+                <div className="flex gap-2">
+                  <CommunityButton />
+                </div>
+              </div>
             </AlertDescription>
           </Alert>
         </div>

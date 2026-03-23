@@ -514,7 +514,7 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
   const regularEngineeringPosts = posts.slice(1, 7);
 
   return (
-    <section className="bg-gray-50 py-16 border-t border-gray-200" aria-labelledby="precision-engineering-heading">
+    <section className="bg-gray-50 py-16 border-t border-gray-200" aria-labelledby="cost-engineering-heading">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
         {/* Navigation Header */}
         <div className="flex items-center justify-between py-5 border-b border-gray-200 mb-8">

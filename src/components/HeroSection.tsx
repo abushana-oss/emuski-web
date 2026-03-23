@@ -27,13 +27,13 @@ const slides: Slide[] = [
     ctaText: "Explore Manufacturing Services",
   },
   {
-    image: "/assets/hero/precision-engineering-hero-banner.webp",
-    mobileImage: "/assets/hero-mobile/precision-engineering-mobile-banner.webp",
+    image: "/assets/hero/cost-engineering-hero-banner.webp",
+    mobileImage: "/assets/hero-mobile/cost-engineering-mobile-banner.webp",
     category: "Engineering Innovation",
     title: "Engineering That Reduces Your Costs",
     shortTitle: "Engineering Innovations",
     description: "We use teardown analysis, design benchmarking, and clear cost models to help you cut cost without sacrificing quality.",
-    link: "/precision-engineering",
+    link: "/cost-engineering",
     ctaText: "Discover Engineering Solutions",
   },
   {

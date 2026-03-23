@@ -71,7 +71,7 @@ export const ErrorPage = ({
     },
     {
       label: "Precision Engineering",
-      href: "/precision-engineering",
+      href: "/cost-engineering",
       description: "Discover our engineering precision capabilities"
     },
     {
