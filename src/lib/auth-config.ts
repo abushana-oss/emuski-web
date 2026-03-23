@@ -162,7 +162,7 @@ const emailRateLimiter = {
 // Authentication service
 export const authService = {
   // Sign up with email and password
-  async signUpWithEmail(email: string, password: string, name?: string): Promise<{ data: any; error: AuthError | null }> {
+  async signUpWithEmail(email: string, password: string, name?: string, captchaToken?: string): Promise<{ data: any; error: AuthError | null }> {
     try {
       // Basic validation
       if (!email || !password) {
@@ -305,7 +305,8 @@ export const authService = {
           data: {
             name: name || '',
             full_name: name || ''
-          }
+          },
+          captchaToken: captchaToken
         }
       })
 

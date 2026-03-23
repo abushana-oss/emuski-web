@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -9,6 +9,22 @@ import { authService } from '@/lib/auth-config'
 import type { AuthError } from '@/types/auth'
 import Link from 'next/link'
 import Image from 'next/image'
+import Script from 'next/script'
+
+// TypeScript declaration for reCAPTCHA
+declare global {
+  interface Window {
+    grecaptcha: {
+      ready: (callback: () => void) => void
+      render: (element: HTMLElement | string, options: {
+        sitekey: string
+        callback?: (token: string) => void
+        'expired-callback'?: () => void
+        'error-callback'?: () => void
+      }) => void
+    }
+  }
+}
 
 // Password requirement component
 interface PasswordRequirementProps {
@@ -40,6 +56,9 @@ function RegisterPageComponent() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [showServices, setShowServices] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const [recaptchaReady, setRecaptchaReady] = useState(false)
+  const recaptchaRef = useRef<any>(null)
   const router = useRouter()
 
   // Auto-rotate carousel
@@ -50,6 +69,36 @@ function RegisterPageComponent() {
 
     return () => clearInterval(interval)
   }, [])
+
+  // Initialize reCAPTCHA
+  useEffect(() => {
+    const initRecaptcha = () => {
+      if (typeof window !== 'undefined' && window.grecaptcha) {
+        window.grecaptcha.ready(() => {
+          setRecaptchaReady(true)
+          if (recaptchaRef.current) {
+            window.grecaptcha.render(recaptchaRef.current, {
+              sitekey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // Test key
+              callback: (token: string) => {
+                setCaptchaToken(token)
+              },
+              'expired-callback': () => {
+                setCaptchaToken(null)
+              },
+              'error-callback': () => {
+                setCaptchaToken(null)
+              }
+            })
+          }
+        })
+      } else {
+        // Retry after a short delay if grecaptcha is not ready
+        setTimeout(initRecaptcha, 100)
+      }
+    }
+
+    initRecaptcha()
+  }, [recaptchaReady])
 
   const handleGoogleSignUp = async () => {
     try {
@@ -139,10 +188,20 @@ function RegisterPageComponent() {
         return
       }
 
+      // CAPTCHA validation
+      if (!captchaToken) {
+        setError({
+          message: 'Please complete the CAPTCHA verification',
+          type: 'validation'
+        })
+        return
+      }
+
       const { data, error } = await authService.signUpWithEmail(
         formData.email,
         formData.password,
-        formData.name
+        formData.name,
+        captchaToken
       )
 
       if (error) {
@@ -307,6 +366,18 @@ function RegisterPageComponent() {
               </div>
             )}
             
+            {/* CAPTCHA */}
+            <div className="flex flex-col items-center space-y-4">
+              {recaptchaReady ? (
+                <div 
+                  ref={recaptchaRef}
+                  className="flex justify-center"
+                />
+              ) : (
+                <div className="text-sm text-gray-500">Loading security verification...</div>
+              )}
+            </div>
+            
             <Button 
               type="submit"
               disabled={isLoading}
@@ -470,12 +541,18 @@ function RegisterPageComponent() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    }>
-      <RegisterPageComponent />
-    </Suspense>
+    <>
+      <Script
+        src="https://www.google.com/recaptcha/api.js"
+        strategy="lazyOnload"
+      />
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      }>
+        <RegisterPageComponent />
+      </Suspense>
+    </>
   )
 }
