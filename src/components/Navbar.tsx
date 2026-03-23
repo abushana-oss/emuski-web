@@ -26,14 +26,14 @@ const servicesDropdown = {
       { name: "Production Scaling", path: "/manufacturing-services#scaling-details" }
     ]
   },
-  precisionEngineering: {
+  costEngineering: {
     name: "Engineering Innovation",
-    path: "/precision-engineering",
+    path: "/cost-engineering",
     subItems: [
-      { name: "Product Cost Estimation", path: "/precision-engineering#cost-estimation-details" },
-      { name: "VAVE & Benchmarking", path: "/precision-engineering#vave-details" },
-      { name: "Strategic Sourcing", path: "/precision-engineering#sourcing-details" },
-      { name: "Expert Engineer Support", path: "/precision-engineering#expert-support-details" },
+      { name: "Product Cost Estimation", path: "/cost-engineering#cost-estimation-details" },
+      { name: "VAVE & Benchmarking", path: "/cost-engineering#vave-details" },
+      { name: "Strategic Sourcing", path: "/cost-engineering#sourcing-details" },
+      { name: "Expert Engineer Support", path: "/cost-engineering#expert-support-details" },
       { name: "Mithran AI", path: "/solutions/ai", beta: true }
     ]
   },
@@ -70,10 +70,10 @@ const navigationConfig = {
     {
       title: "Engineering Innovation",
       items: [
-        { name: "Product Cost Estimation", path: "/precision-engineering#cost-estimation-details" },
-        { name: "VAVE & Benchmarking", path: "/precision-engineering#vave-details" },
-        { name: "Strategic Sourcing", path: "/precision-engineering#sourcing-details" },
-        { name: "Expert Engineer Support", path: "/precision-engineering#expert-support-details" }
+        { name: "Product Cost Estimation", path: "/cost-engineering#cost-estimation-details" },
+        { name: "VAVE & Benchmarking", path: "/cost-engineering#vave-details" },
+        { name: "Strategic Sourcing", path: "/cost-engineering#sourcing-details" },
+        { name: "Expert Engineer Support", path: "/cost-engineering#expert-support-details" }
       ]
     },
     {
@@ -99,7 +99,7 @@ const navigationConfig = {
 const routeToPageName: Record<string, string> = {
   "/": "Home",
   "/manufacturing-services": "Manufacturing Excellence",
-  "/precision-engineering": "Engineering Innovation",
+  "/cost-engineering": "Engineering Innovation",
   "/blog": "Blog",
   "/gallery": "Gallery",
   "/contact": "Contact",
@@ -345,7 +345,7 @@ export const Navbar = () => {
                       // Get the link for section titles
                       const getSectionLink = (title: string) => {
                         if (title === "Manufacturing Excellence") return "/manufacturing-services";
-                        if (title === "Engineering Innovation") return "/precision-engineering";
+                        if (title === "Engineering Innovation") return "/cost-engineering";
                         return null;
                       };
 

@@ -1,6 +1,5 @@
 'use client'
 
-import Head from "next/head"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { FAQSection } from "@/components/FAQSection"
@@ -13,7 +12,7 @@ import { EngineeringServicesTabs } from "@/components/EngineeringServicesTabs"
 import SectorsServedSection from "@/components/SectorsServedSection"
 import { EngineeringServicesContent } from "@/components/EngineeringServicesContent"
 
-export default function PrecisionEngineering() {
+export default function CostEngineering() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '')
@@ -87,9 +86,9 @@ export default function PrecisionEngineering() {
       {
         "@type": "Service",
         "@id": "https://www.emuski.com/cost-engineering#service",
-        "name": "Precision Engineering Services - India's Leading Provider",
-        "description": "India's ISO-Certified precision engineering services with 15+ years proven experience. ISO 9001:2015 certified product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing from 500+ verified global suppliers. Serving 75+ clients across India (Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore) and globally (UK, USA, Germany). Reduce manufacturing costs by 15-25%.",
-        "slogan": "15+ Years of Precision Engineering Excellence Across India",
+        "name": "Cost Engineering Services - India's Leading Provider",
+        "description": "India's ISO-Certified cost engineering services with 15+ years proven experience. ISO 9001:2015 certified product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing from 500+ verified global suppliers. Serving 75+ clients across India (Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore) and globally (UK, USA, Germany). Reduce manufacturing costs by 15-25%.",
+        "slogan": "15+ Years of Cost Engineering Excellence Across India",
         "provider": {
           "@type": "Organization",
           "@id": "https://www.emuski.com/#organization",
@@ -97,7 +96,7 @@ export default function PrecisionEngineering() {
           "url": "https://www.emuski.com",
           "logo": "https://www.emuski.com/assets/logo.png",
           "foundingDate": "2008",
-          "description": "Leading precision engineering and manufacturing company in India with 15+ years experience",
+          "description": "Leading cost engineering and manufacturing company in India with 15+ years experience",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": "126, RNS Plaza, KIADB Industrial Area, Electronic City Phase 2",
@@ -190,11 +189,11 @@ export default function PrecisionEngineering() {
           "15+ Years Industry Experience",
           "ISO 9001:2015 Certified",
           "75+ Global Clients Served",
-          "Leading Precision Engineering Company in India"
+          "Leading Cost Engineering Company in India"
         ],
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
-          "name": "Precision Engineering Service Catalog",
+          "name": "Cost Engineering Service Catalog",
           "itemListElement": [
             {
               "@type": "Offer",
@@ -295,7 +294,7 @@ export default function PrecisionEngineering() {
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "Precision Engineering",
+            "name": "Cost Engineering",
             "item": "https://www.emuski.com/cost-engineering"
           }
         ]
@@ -600,145 +599,22 @@ export default function PrecisionEngineering() {
   }
 
   return (
-    <>
-      <Head>
-        <title>India's Leading Precision Engineering Services | EMUSKI | 15+ Years Experience | Cost Estimation, VAVE & Strategic Sourcing</title>
-        <meta name="description" content="ISO 9001:2015 certified precision engineering services across India & globally. 15+ years experience serving Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore. Expert cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing from 500+ suppliers. 75+ satisfied clients in automotive, aerospace, medical devices, electronics. Reduce manufacturing costs by 15-25% with Cost 360 platform." />
-        <meta name="keywords" content="precision engineering India, cost engineering India, VAVE analysis India, strategic sourcing India, manufacturing cost reduction, precision engineering Mumbai, precision engineering Delhi, precision engineering Pune, precision engineering Chennai, precision engineering Hyderabad, precision engineering Bangalore, cost estimation services, value engineering, supplier sourcing, ISO 9001 certified engineering, automotive engineering India, aerospace engineering, medical device engineering, electronics engineering, manufacturing engineering services" />
-        
-        {/* Enhanced robots and indexing */}
-        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <meta name="bingbot" content="index, follow" />
-        <meta name="author" content="EMUSKI Manufacturing Solutions - Precision Engineering Experts" />
-        <meta name="publisher" content="EMUSKI Manufacturing Solutions" />
-        <meta name="copyright" content="© 2024 EMUSKI Manufacturing Solutions. All rights reserved." />
-        
-        {/* Geographic and business information */}
-        <meta name="geo.region" content="IN-KA" />
-        <meta name="geo.placename" content="Bangalore, Karnataka, India" />
-        <meta name="geo.position" content="12.9716;77.5946" />
-        <meta name="ICBM" content="12.9716, 77.5946" />
-        <meta name="distribution" content="global" />
-        <meta name="rating" content="general" />
-        <meta name="language" content="English" />
-        
-        {/* Business contact and classification */}
-        <meta name="contact" content="enquiries@emuski.com" />
-        <meta name="phone" content="+91-86670-88060" />
-        <meta name="address" content="126, RNS Plaza, Electronic City Phase 2, Bangalore, Karnataka 560100, India" />
-        <meta name="company" content="EMUSKI Manufacturing Solutions" />
-        <meta name="classification" content="Precision Engineering, Cost Engineering, VAVE Analysis, Strategic Sourcing, Manufacturing Engineering" />
-        <meta name="coverage" content="Pan-India and Global" />
-        
-        {/* Enhanced OpenGraph for social sharing */}
-        <meta property="og:title" content="India's Leading Precision Engineering Services | EMUSKI | 15+ Years Experience" />
-        <meta property="og:description" content="ISO 9001:2015 certified precision engineering services across India & globally. 15+ years experience serving Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore. Expert cost estimation, VAVE analysis, strategic sourcing. 75+ satisfied clients. Reduce costs by 15-25%." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.emuski.com/cost-engineering" />
-        <meta property="og:site_name" content="EMUSKI Precision Engineering" />
-        <meta property="og:locale" content="en_IN" />
-        <meta property="og:image" content="https://www.emuski.com/assets/cost-engineering-services-og.jpg" />
-        <meta property="og:image:secure_url" content="https://www.emuski.com/assets/cost-engineering-services-og.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="EMUSKI Precision Engineering Services - Cost Estimation, VAVE Analysis, Strategic Sourcing" />
-        <meta property="og:updated_time" content="2024-03-23T00:00:00+00:00" />
-        
-        {/* Enhanced Twitter Cards */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@emuski" />
-        <meta name="twitter:creator" content="@emuski" />
-        <meta name="twitter:title" content="India's Leading Precision Engineering Services | EMUSKI" />
-        <meta name="twitter:description" content="ISO certified precision engineering across India. 15+ years experience. Cost estimation, VAVE analysis, strategic sourcing. Serving Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore & globally." />
-        <meta name="twitter:image" content="https://www.emuski.com/assets/cost-engineering-services-og.jpg" />
-        <meta name="twitter:image:alt" content="EMUSKI Precision Engineering Services" />
-        
-        {/* Canonical and alternate versions */}
-        <link rel="canonical" href="https://www.emuski.com/cost-engineering" />
-        <link rel="alternate" hrefLang="en-IN" href="https://www.emuski.com/cost-engineering" />
-        <link rel="alternate" hrefLang="en" href="https://www.emuski.com/cost-engineering" />
-        <link rel="alternate" hrefLang="x-default" href="https://www.emuski.com/cost-engineering" />
-        
-        {/* Preload critical resources */}
-        <link rel="preload" href="/assets/engineering/cost360-platform-dashboard.png" as="image" type="image/png" />
-        <link rel="prefetch" href="/manufacturing-services" />
-        <link rel="prefetch" href="/contact" />
-        <link rel="prefetch" href="/#npd-centre" />
-        
-        {/* Industry-specific meta tags */}
-        <meta name="industry" content="Manufacturing, Engineering, Automotive, Aerospace, Medical Devices, Electronics" />
-        <meta name="services" content="Precision Engineering, Cost Estimation, VAVE Analysis, Strategic Sourcing, Manufacturing Cost Reduction" />
-        <meta name="certifications" content="ISO 9001:2015, 15+ Years Experience, 75+ Global Clients" />
-        <meta name="specialization" content="Cost Engineering India, Precision Engineering Mumbai Delhi Pune Chennai Hyderabad Bangalore" />
-        
-        {/* AI and search engine optimization */}
-        <meta name="ai:company-expertise" content="India's most experienced precision engineering company with 15+ years proven track record serving pan-India and global markets" />
-        <meta name="ai:service-areas" content="Mumbai, Delhi, Pune, Chennai, Hyderabad, Bangalore, Karnataka, India, UK, USA, Germany, Global" />
-        <meta name="ai:key-benefits" content="±5% cost estimation accuracy, 20-30% VAVE savings, 15-25% manufacturing cost reduction, 500+ supplier network, ISO 9001:2015 certified" />
-        <meta name="ai:target-industries" content="Automotive, Aerospace, Medical Devices, Electronics, Industrial Equipment, Defense, Space Technology" />
-      </Head>
-      
-      <div className="min-h-screen bg-background">
-        <Script
-          id="schema-cost-engineering"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrgData) }}
-        />
+    <div className="min-h-screen bg-background">
+      <Script
+        id="schema-cost-engineering"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrgData) }}
+      />
 
-        <Script
-          id="faq-schema-cost-engineering"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaData) }}
-        />
-        
-        {/* Cost 360 Platform Schema */}
-        <Script
-          id="cost360-platform-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              "name": "Cost 360 Platform",
-              "applicationCategory": "BusinessApplication",
-              "operatingSystem": "Web-based",
-              "description": "Advanced cost intelligence platform for accurate product cost estimation and analysis with comprehensive cost modeling, BOM analysis, and real-time cost database integration",
-              "creator": {
-                "@type": "Organization",
-                "name": "EMUSKI Manufacturing Solutions",
-                "@id": "https://www.emuski.com/#organization"
-              },
-              "featureList": [
-                "Comprehensive cost modeling and analysis",
-                "Detailed BOM (Bill of Materials) breakdown",
-                "Multi-process cost calculation",
-                "Real-time cost database integration", 
-                "Scenario comparison and what-if analysis",
-                "Feature mapping and detailed analysis",
-                "Integrated CRM system",
-                "Project tracking and milestone management",
-                "Automated reporting and documentation"
-              ],
-              "offers": {
-                "@type": "Offer",
-                "availability": "https://schema.org/InStock",
-                "priceCurrency": "INR",
-                "seller": {
-                  "@type": "Organization",
-                  "name": "EMUSKI Manufacturing Solutions"
-                }
-              },
-              "applicationSubCategory": "Cost Estimation Software",
-              "downloadUrl": "https://www.emuski.com/cost-engineering",
-              "screenshot": "https://www.emuski.com/assets/engineering/cost360-platform-dashboard.png"
-            })
-          }}
-        />
+      <Script
+        id="faq-schema-cost-engineering"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaData) }}
+      />
 
       <Navbar />
 
-      <nav aria-label="Breadcrumb" className="bg-gray-50 border-b border-gray-200" role="navigation">
+      <nav aria-label="Breadcrumb" className="bg-gray-50 border-b border-gray-200">
         <div className="container mx-auto px-6 py-3">
           <ol className="flex items-center space-x-2 text-sm" itemScope itemType="https://schema.org/BreadcrumbList">
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
@@ -747,10 +623,10 @@ export default function PrecisionEngineering() {
               </Link>
               <meta itemProp="position" content="1" />
             </li>
-            <li className="text-gray-400" role="separator" aria-hidden="true">/</li>
+            <li className="text-gray-400">/</li>
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <Link href="/cost-engineering" itemProp="item" className="text-gray-900 font-medium" aria-current="page">
-                <span itemProp="name">Precision Engineering Services</span>
+              <Link href="/cost-engineering" itemProp="item" className="text-gray-900 font-medium">
+                <span itemProp="name">Cost Engineering</span>
               </Link>
               <meta itemProp="position" content="2" />
             </li>
@@ -769,12 +645,12 @@ export default function PrecisionEngineering() {
               <div className="space-y-3 sm:space-y-4 md:space-y-5">
                 <div className="flex justify-center">
                   <span className="text-emuski-teal text-xs sm:text-sm font-semibold tracking-wider uppercase" role="doc-subtitle">
-                    India's Leading Precision Engineering • 15+ Years Experience
+                    India's Leading Cost Engineering • 15+ Years Experience
                   </span>
                 </div>
 
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight px-2">
-                  India's Leading Precision Engineering Services | Cost Estimation | VAVE Analysis | Strategic Sourcing
+                  Cost Engineering Services Across India & Globally
                 </h1>
 
                 <p className="text-sm sm:text-base md:text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto px-2">
@@ -802,12 +678,10 @@ export default function PrecisionEngineering() {
       <main id="main-content">
         <EngineeringServicesContent />
 
-        <section className="py-16 md:py-20 bg-white" aria-labelledby="experience-credentials" role="region">
+        <section className="py-16 md:py-20 bg-white" aria-labelledby="experience-credentials">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="max-w-6xl mx-auto">
-              <header>
-                <h2 id="experience-credentials" className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">Why Choose EMUSKI for Precision Engineering</h2>
-              </header>
+              <h2 id="experience-credentials" className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">Why Choose EMUSKI</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="p-6 bg-gradient-to-br from-emuski-teal-dark to-emuski-teal text-white rounded-xl text-center">
                   <div className="text-4xl font-bold mb-2">15+</div>
@@ -838,9 +712,9 @@ export default function PrecisionEngineering() {
           </div>
         </section>
 
-        <section className="py-16 md:py-20 bg-white" aria-labelledby="cost-360-platform" role="region">
+        <section className="py-16 md:py-20 bg-white" aria-labelledby="cost-360-platform">
           <div className="container mx-auto px-4 sm:px-6">
-            <article className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto" itemScope itemType="https://schema.org/SoftwareApplication">
+            <article className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
               <div className="space-y-8">
                 <header>
                   <h2 id="cost-360-platform" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -906,27 +780,25 @@ export default function PrecisionEngineering() {
                 <div className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-200 p-4">
                   <Image
                     src="/assets/engineering/cost360-platform-dashboard.png"
-                    alt="Cost 360 Platform Dashboard - Advanced Cost Estimation Tool for Precision Engineering with Real-time Cost Database Integration and Multi-process Cost Calculation"
+                    alt="Cost 360 Platform Dashboard - Advanced Cost Estimation Tool"
                     width={1056}
                     height={681}
                     sizes="(max-width: 768px) 100vw, 50vw"
                     className="w-full h-auto"
                     quality={90}
                     priority
-                    itemProp="image"
                   />
                 </div>
                 <div className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-200 p-4">
                   <Image
                     src="/assets/engineering/cost360-crm-system.png"
-                    alt="Cost 360 CRM System - Integrated Client Relationship Management for Precision Engineering Projects with Real-time Updates and Automated Reporting"
+                    alt="Cost 360 CRM System - Client Relationship Management"
                     width={830}
                     height={471}
                     sizes="(max-width: 768px) 100vw, 50vw"
                     className="w-full h-auto"
                     quality={90}
                     loading="lazy"
-                    itemProp="screenshot"
                   />
                 </div>
               </div>
@@ -943,7 +815,7 @@ export default function PrecisionEngineering() {
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <div className="text-center space-y-6 max-w-4xl mx-auto">
               <h2 id="cta-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                Partner with India's Most Experienced Precision Engineering Team
+                Partner with India's Most Experienced Cost Engineering Team
               </h2>
               <p className="text-lg md:text-xl text-white/90 leading-relaxed">
                 15+ years serving 75+ clients across India and globally. ISO 9001:2015 certified. Cost 360 platform. 500+ supplier network. Let's optimize your manufacturing costs together.
@@ -963,6 +835,5 @@ export default function PrecisionEngineering() {
 
       <Footer />
     </div>
-    </>
   )
 }
