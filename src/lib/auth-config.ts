@@ -311,20 +311,44 @@ export const authService = {
       })
 
       if (error) {
+        // Production security: Log detailed errors but show generic messages to users
+        const isProduction = process.env.NODE_ENV === 'production'
+        
+        // Log detailed error for internal debugging (server-side only)
+        if (typeof window === 'undefined') {
+          console.error('[AUTH_SIGNUP_ERROR]', {
+            error: error.message,
+            code: error.status,
+            email: email.replace(/(.{2}).*(@.*)/, '$1***$2'), // Partial email for logs
+            timestamp: new Date().toISOString()
+          })
+        }
 
-        // In development or when rate limited, provide the exact error message
-        if (error.message.includes('429') || error.message.includes('rate limit') ||
-          error.message.includes('Too many requests') || error.message.includes('Too many signup attempts')) {
+        // Handle CAPTCHA failures with generic message
+        if (error.message.includes('captcha') || error.message.includes('Captcha') || 
+            error.message.includes('invalid-input-response') || error.status === 400) {
           return {
             data: null,
             error: {
-              message: `(SUPABASE CLOUD BLOCK): Your specific internet IP address or email quota has triggered Supabase's GoTrue security firewall. Even though the native error says '15 minutes', it may be a 1-hour spam limit. Please use a Mobile Hotspot right now to bypass the IP block or wait 1 hour. Native API Error: ${error.message}`,
+              message: 'Security verification failed. Please try again or contact support if the issue persists.',
               type: 'validation'
             }
           }
         }
 
-        // Handle email already registered (Industry Standard: Generic message for security)
+        // Handle rate limiting with generic message
+        if (error.message.includes('429') || error.message.includes('rate limit') ||
+          error.message.includes('Too many requests') || error.message.includes('Too many signup attempts')) {
+          return {
+            data: null,
+            error: {
+              message: 'Too many attempts. Please try again in a few minutes.',
+              type: 'validation'
+            }
+          }
+        }
+
+        // Handle duplicate accounts (generic message for security)
         if (error.message.includes('already') ||
           error.message.includes('exists') ||
           error.message.includes('duplicate') ||
@@ -333,16 +357,19 @@ export const authService = {
           return {
             data: null,
             error: {
-              message: 'An account with this email address already exists. If this is your email, please try signing in instead.',
+              message: 'An account with this email address already exists. Please try signing in instead.',
               type: 'validation'
             }
           }
         }
 
+        // Generic error message for production, detailed for development
         return {
           data: null,
           error: {
-            message: error.message,
+            message: isProduction 
+              ? 'Unable to create account. Please try again or contact support.' 
+              : error.message,
             type: 'authentication'
           }
         }

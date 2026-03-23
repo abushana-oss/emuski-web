@@ -82,7 +82,7 @@ export const RecaptchaEnterprise = ({
         try {
           window.grecaptcha.enterprise.reset(widgetIdRef.current);
         } catch (e) {
-          console.error('Error cleaning up reCAPTCHA:', e);
+          // Silent cleanup failure - no logging for security
         }
       }
     };
