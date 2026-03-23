@@ -97,7 +97,7 @@ export const metadata: Metadata = {
         secureUrl: 'https://www.emuski.com/assets/engineering/cost360-platform-dashboard.png',
         width: 1200,
         height: 630,
-        alt: 'EMUSKI Cost 360 Platform - Advanced Cost Engineering Cost Estimation Tool'
+        alt: 'EMUSKI Cost 360 Platform - Advanced Cost Engineering Cost Estimation Tool',
         type: 'image/png',
       },
     ],
