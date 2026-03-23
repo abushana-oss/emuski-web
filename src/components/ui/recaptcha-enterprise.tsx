@@ -3,26 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
-// Declare grecaptcha.enterprise for TypeScript
-declare global {
-  interface Window {
-    grecaptcha: {
-      enterprise: {
-        ready: (callback: () => void) => void;
-        execute: (siteKey: string, options: { action: string }) => Promise<string>;
-        render: (container: HTMLElement | string, parameters: {
-          sitekey: string;
-          callback?: (token: string) => void;
-          'expired-callback'?: () => void;
-          'error-callback'?: () => void;
-          theme?: 'light' | 'dark';
-          size?: 'compact' | 'normal' | 'invisible';
-        }) => number;
-        reset: (widgetId?: number) => void;
-      };
-    };
-  }
-}
+// TypeScript declaration is now unified in register page
 
 interface RecaptchaEnterpriseProps {
   onVerify: (token: string | null) => void;

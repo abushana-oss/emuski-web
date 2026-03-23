@@ -11,7 +11,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Script from 'next/script'
 
-// TypeScript declaration for reCAPTCHA
+// TypeScript declaration for reCAPTCHA (compatible with enterprise)
 declare global {
   interface Window {
     grecaptcha: {
@@ -22,6 +22,19 @@ declare global {
         'expired-callback'?: () => void
         'error-callback'?: () => void
       }) => void
+      enterprise?: {
+        ready: (callback: () => void) => void
+        execute: (siteKey: string, options: { action: string }) => Promise<string>
+        render: (container: string | HTMLElement, parameters: {
+          sitekey: string
+          callback?: (token: string) => void
+          'expired-callback'?: () => void
+          'error-callback'?: () => void
+          theme?: 'light' | 'dark'
+          size?: 'compact' | 'normal' | 'invisible'
+        }) => number
+        reset: (widgetId?: number) => void
+      }
     }
   }
 }
