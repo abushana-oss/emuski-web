@@ -57,6 +57,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signOut = async (): Promise<{ error: Error | null }> => {
+    try {
+      // Clear token cache and session data before signing out (server-side only)
+      if (user?.id && typeof window === 'undefined') {
+        const { sessionCache } = await import('@/lib/cache/session-cache')
+        await sessionCache.invalidateUserSessions(user.id)
+      }
+    } catch (cacheError) {
+      // Don't block logout if cache cleanup fails
+      console.warn('Failed to clear session cache:', cacheError)
+    }
+
     const { error } = await supabase.auth.signOut()
     if (error) {
       // Fallback: clear local state even if server call failed

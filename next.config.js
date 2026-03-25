@@ -31,7 +31,7 @@ const securityHeaders = [
   },
   {
     key: 'X-Frame-Options',
-    value: 'SAMEORIGIN'
+    value: 'DENY'
   },
   {
     key: 'X-Content-Type-Options',
@@ -137,6 +137,31 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '2mb', // Prevent large payload attacks
     },
+    // Server components external packages
+    serverComponentsExternalPackages: ['ioredis', 'redis', 'pg', 'mysql2'],
+  },
+
+  // Custom Webpack configuration for build optimizations
+  webpack: (config, { isServer, dev }) => {
+    // Exclude server-only packages from client bundle
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        os: false,
+        dns: false,
+        net: false,
+        tls: false,
+        crypto: false,
+        stream: false,
+        buffer: false,
+        util: false,
+        events: false,
+      };
+    }
+
+    return config;
   },
 
   // Custom headers for security and performance
@@ -189,7 +214,7 @@ const nextConfig = {
           },
           {
             key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
+            value: 'DENY'
           },
           {
             key: 'Access-Control-Allow-Origin',

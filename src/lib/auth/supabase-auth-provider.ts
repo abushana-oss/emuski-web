@@ -213,12 +213,26 @@ export class SupabaseAuthProvider implements AuthTokenProvider {
 
   // Method to sign out
   async signOut(): Promise<void> {
+    // Clear token cache immediately
     this.tokenCache = {
       token: null,
       expires: 0
     };
     
     try {
+      // Get current user before signing out to clean up session cache
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Clear session cache if we have user ID (server-side only)
+      if (user?.id && typeof window === 'undefined') {
+        try {
+          const { sessionCache } = await import('@/lib/cache/session-cache');
+          await sessionCache.invalidateUserSessions(user.id);
+        } catch (cacheError) {
+          console.warn('Failed to clear session cache during signout:', cacheError);
+        }
+      }
+      
       await supabase.auth.signOut();
     } catch (error) {
       console.error('Sign out failed:', error);
