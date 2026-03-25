@@ -88,8 +88,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // For hydration stability, we get the nonce but only use it for server-side CSP headers
-  // Client-side scripts don't need explicit nonce since CSP is handled at middleware level
+  // Get the nonce from middleware headers to ensure consistency between server and client
   const nonce = await getCSPNonce();
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
