@@ -10,6 +10,7 @@ export function generateCSPNonce(): string {
 
 /**
  * Get CSP nonce from headers (for use in components)
+ * Returns empty string if no nonce to avoid hydration mismatch
  */
 export async function getCSPNonce(): Promise<string> {
   const headersList = await headers();
@@ -17,18 +18,24 @@ export async function getCSPNonce(): Promise<string> {
 }
 
 /**
- * Generate enhanced CSP policy with nonce support
+ * Generate enhanced CSP policy
  */
-export function generateCSPWithNonce(nonce: string): string {
+export function generateCSP(): string {
   const isDevelopment = process.env.NODE_ENV === 'development';
   
   const directives = {
     'default-src': ["'self'"],
     'script-src': [
       "'self'",
-      `'nonce-${nonce}'`,
+      "'unsafe-inline'", // Temporarily allow inline scripts to fix blank page
       // Only allow unsafe-eval in development
       ...(isDevelopment ? ["'unsafe-eval'"] : []),
+      // Development webpack hot reload
+      ...(isDevelopment ? [
+        'http://localhost:*',
+        'ws://localhost:*',
+        'wss://localhost:*',
+      ] : []),
       // Trusted third-party scripts
       'https://www.google.com',
       'https://www.gstatic.com',
@@ -151,14 +158,14 @@ export function generateCSPWithNonce(nonce: string): string {
 }
 
 /**
- * Enhanced security headers with CSP nonce support
+ * Enhanced security headers
  */
-export function getEnhancedSecurityHeaders(nonce: string) {
+export function getEnhancedSecurityHeaders() {
   const isDevelopment = process.env.NODE_ENV === 'development';
   
   const headers: Record<string, string> = {
-    // Content Security Policy with nonce
-    'Content-Security-Policy': generateCSPWithNonce(nonce),
+    // Content Security Policy
+    'Content-Security-Policy': generateCSP(),
     
     // HSTS (production only)
     ...(isDevelopment ? {} : {
@@ -202,8 +209,6 @@ export function getEnhancedSecurityHeaders(nonce: string) {
     'Pragma': 'no-cache',
     'Expires': '0',
     
-    // Custom nonce header for components
-    'X-Nonce': nonce,
   };
 
   return headers;
