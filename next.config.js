@@ -1,5 +1,5 @@
 /**
- * Next.js Configuration
+ * Next.js Configuration - Optimized for Next.js 16+ with Turbopack
  *
  * @see https://nextjs.org/docs/app/api-reference/next-config-js
  * @type {import('next').NextConfig}
@@ -12,84 +12,9 @@ import { fileURLToPath } from 'url';
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Generate CSP sources dynamically
-const generateCSPConnectSrc = () => {
-  const baseDomains = ["'self'", 'blob:', 'data:'];
-  
-  if (isDevelopment) {
-    baseDomains.push('ws://localhost:*', 'wss://localhost:*', 'http://localhost:*', 'https://localhost:*', 'http://localhost:5000', 'https://localhost:5000');
-  }
-
-  // Add tracker domains for both dev and production
-  baseDomains.push(
-    // Google services
-    'https://*.google.com',
-    'https://www.googleapis.com',
-    'https://*.googleapis.com',
-    'https://*.google-analytics.com',
-    'https://*.analytics.google.com',
-    'https://*.doubleclick.net',
-    'https://*.googletagmanager.com',
-    'https://tagmanager.google.com',
-    // Apollo tracker (allowed in both dev and prod)
-    'https://assets.apollo.io',
-    'https://*.apollo.io',
-    'https://aplo-evnt.com',
-    'https://*.aplo-evnt.com',
-    'https://app.apollo.io',
-    'https://track.apollo.io',
-    // Mixpanel
-    'https://api.mixpanel.com',
-    'https://api-js.mixpanel.com',
-    'https://cdn.mxpnl.com',
-    // Blog content
-    'https://*.blogger.com',
-    'https://blogger.googleusercontent.com'
-  );
-
-  // Always allow Supabase and S3
-  baseDomains.push(
-    'https://*.supabase.co',
-    'https://upload-dev-s3.s3.eu-central-1.amazonaws.com',
-    'https://s3.eu-central-1.amazonaws.com'
-  );
-
-  return baseDomains;
-};
-
-const generateCSPScriptSrc = () => {
-  const baseSources = ["'self'", "'unsafe-inline'"];
-  
-  if (isDevelopment) {
-    baseSources.push("'unsafe-eval'", 'blob:', 'data:');
-  }
-
-  // Production script sources
-  baseSources.push(
-    'https://*.google.com',
-    'https://*.gstatic.com',
-    'https://*.googletagmanager.com',
-    'https://*.google-analytics.com',
-    'https://tagmanager.google.com'
-  );
-
-  if (isProduction) {
-    baseSources.push(
-      'https://*.apollo.io',
-      'https://assets.apollo.io',
-      'https://cdn.mxpnl.com',
-      'https://api-js.mixpanel.com'
-    );
-  }
-
-  return baseSources;
-};
-
 // ES Module compatibility: Recreate __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Environment variables moved to top
 
 /**
  * Security Headers Configuration
@@ -171,93 +96,6 @@ const imageConfig = {
 };
 
 /**
- * Webpack optimization for production builds
- * Implements code splitting and tree shaking
- */
-const configureWebpack = (config, { isServer, dev }) => {
-  // Production optimizations only
-  if (!isServer && !dev) {
-    config.optimization = {
-      ...config.optimization,
-      moduleIds: 'deterministic',
-      runtimeChunk: 'single',
-      minimize: true,
-      splitChunks: {
-        chunks: 'all',
-        maxInitialRequests: 25,
-        minSize: 20000,
-        maxSize: 244000,
-        cacheGroups: {
-          // Framework chunk (React, React-DOM)
-          framework: {
-            test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
-            name: 'framework',
-            priority: 40,
-            enforce: true,
-            reuseExistingChunk: true,
-          },
-          // UI library chunks
-          radixUI: {
-            test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-            name: 'radix-ui',
-            priority: 35,
-            reuseExistingChunk: true,
-          },
-          // Icon library
-          icons: {
-            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
-            name: 'icons',
-            priority: 30,
-            reuseExistingChunk: true,
-          },
-          // Other vendor libraries
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module) {
-              const packageName = module.context?.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-              )?.[1];
-              return packageName ? `vendor.${packageName.replace('@', '')}` : 'vendor';
-            },
-            priority: 20,
-            reuseExistingChunk: true,
-          },
-          // CSS optimization
-          styles: {
-            name: 'styles',
-            test: /\.(css|scss|sass)$/,
-            chunks: 'all',
-            enforce: true,
-            priority: 10,
-          },
-          // Common code
-          common: {
-            minChunks: 2,
-            priority: 5,
-            reuseExistingChunk: true,
-          },
-        },
-      },
-      // Enable tree shaking
-      usedExports: true,
-      sideEffects: true,
-    };
-
-    // Skip parsing for known safe modules
-    config.module.noParse = /^(react|react-dom|scheduler)$/;
-  }
-
-  // Performance budgets
-  config.performance = {
-    hints: dev ? false : 'warning',
-    maxEntrypointSize: 512000, // 500KB
-    maxAssetSize: 512000,
-  };
-
-  return config;
-};
-
-/**
  * Main Next.js Configuration
  */
 const nextConfig = {
@@ -272,6 +110,34 @@ const nextConfig = {
 
   // Explicitly set project root (prevents multi-lockfile warnings)
   outputFileTracingRoot: __dirname,
+
+  // Production optimizations
+  productionBrowserSourceMaps: false,
+  generateEtags: true,
+
+  // Turbopack configuration for Next.js 16+
+  turbopack: {
+    // Basic configuration for Turbopack
+    // Let Turbopack handle optimizations automatically
+  },
+
+  // Experimental features
+  experimental: {
+    // Optimize package imports to reduce bundle size
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-popover',
+      'react-phone-number-input',
+    ],
+    // Server actions configuration
+    serverActions: {
+      bodySizeLimit: '2mb', // Prevent large payload attacks
+    },
+  },
 
   // Custom headers for security and performance
   async headers() {
@@ -472,7 +338,6 @@ const nextConfig = {
   // Image optimization
   images: imageConfig,
 
-
   // Compiler options - Industry Standard: Zero console logs in production
   compiler: {
     // Remove ALL console statements in production for security and performance
@@ -482,88 +347,6 @@ const nextConfig = {
     // Enable SWC minification for better performance
     styledComponents: true,
   },
-
-  // Disable Turbopack for stable production builds
-  // turbopack: {},
-  
-  // Production-optimized configuration
-  productionBrowserSourceMaps: false,
-  poweredByHeader: false,
-  generateEtags: true,
-  
-  // Optimize bundle splitting
-  experimental: {
-    // Disable Turbopack in production for stability
-    turbo: process.env.NODE_ENV === 'development' ? {} : undefined,
-    
-    // Optimize package imports to reduce bundle size
-    optimizePackageImports: [
-      'lucide-react',
-      '@radix-ui/react-tabs',
-      '@radix-ui/react-accordion',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-popover',
-      'react-phone-number-input',
-    ],
-    // Server actions configuration
-    serverActions: {
-      bodySizeLimit: '2mb', // Prevent large payload attacks
-    },
-  },
-
-  // Webpack configuration for production stability
-  webpack: (config, options) => {
-    // Production stability fixes
-    if (!options.dev) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        // Ensure consistent module resolution
-        'react': require.resolve('react'),
-        'react-dom': require.resolve('react-dom'),
-        'next': require.resolve('next'),
-      };
-      
-      // Optimize chunk splitting for better loading
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          ...config.optimization.splitChunks,
-          cacheGroups: {
-            ...config.optimization.splitChunks?.cacheGroups,
-            framework: {
-              chunks: 'all',
-              name: 'framework',
-              test: /(?<!node_modules.*)[\/\\]node_modules[\/\\](react|react-dom|scheduler|prop-types|use-subscription)[\/\\]/,
-              priority: 40,
-              enforce: true,
-            },
-            lib: {
-              test(module) {
-                return module.size() > 160000 && /node_modules[/\\]/.test(module.identifier());
-              },
-              name(module) {
-                const hash = require('crypto').createHash('sha1');
-                if (module.libIdent) {
-                  hash.update(module.libIdent({ context: options.dir }));
-                } else {
-                  hash.update(module.identifier());
-                }
-                return hash.digest('hex').substring(0, 8);
-              },
-              priority: 30,
-              minChunks: 1,
-              reuseExistingChunk: true,
-              chunks: 'all',
-            },
-          },
-        },
-      };
-    }
-
-    return configureWebpack(config, options);
-  },
-
 };
 
 export default nextConfig;
