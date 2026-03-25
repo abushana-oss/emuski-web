@@ -92,6 +92,7 @@ export interface CADEngineConfig {
   baseUrl: string;
   timeout: number;
   maxRetries: number;
+  getAuthToken?: () => Promise<string | null>;
 }
 
 export class CADEngineClient {
@@ -100,11 +101,12 @@ export class CADEngineClient {
   constructor(config: Partial<CADEngineConfig> = {}) {
     this.config = {
       baseUrl: '/api/cad-engine',
-      timeout: 120000, // 2 minutes for complex models
+      timeout: 120000,
       maxRetries: 3,
       ...config
     };
   }
+
 
   /**
    * Check if the CAD engine is healthy and available
@@ -364,12 +366,20 @@ export class CADEngineClient {
       
       for (let attempt = 1; attempt <= this.config.maxRetries; attempt++) {
         try {
+          const token = this.config.getAuthToken ? await this.config.getAuthToken() : null;
+          
+          const headers: Record<string, string> = {
+            ...options.headers as Record<string, string>,
+          };
+          
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
           const response = await fetch(url, {
             ...options,
             signal: controller.signal,
-            headers: {
-              ...options.headers,
-            },
+            headers,
           });
           
           clearTimeout(timeoutId);
@@ -379,7 +389,6 @@ export class CADEngineClient {
           lastError = error as Error;
           
           if (attempt < this.config.maxRetries) {
-            // Wait before retrying (exponential backoff)
             await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt - 1) * 1000));
             continue;
           }

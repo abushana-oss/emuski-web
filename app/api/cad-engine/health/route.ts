@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAPISecurityHeaders } from '@/lib/security-headers';
 import { withRateLimit } from '@/lib/rate-limiter';
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 const SECURITY_HEADERS = getAPISecurityHeaders();
 // ✅ SECURITY FIX: Remove hardcoded URL fallback and client-side exposure
 const _raw_url = process.env.CAD_ENGINE_URL;

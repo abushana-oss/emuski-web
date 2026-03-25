@@ -4,6 +4,8 @@ import { withRateLimit } from '@/lib/rate-limiter';
 import { handleCorsPreflightRequest, addCorsHeaders } from '@/lib/cors';
 import { ContactFormSchema, validateRequest, sanitizeInput } from '@/lib/input-validation';
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 /**
  * Contact Form API Route
  *

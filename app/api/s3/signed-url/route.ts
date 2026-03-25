@@ -6,6 +6,8 @@ import { validateRequest } from '@/lib/input-validation';
 import { withRateLimit } from '@/lib/rate-limiter';
 import { withSecurity } from '@/lib/security-middleware';
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 // Input validation schema
 const SignedUrlSchema = z.object({
   fileName: z.string().min(1).max(255).regex(/^[a-zA-Z0-9._-]+$/),

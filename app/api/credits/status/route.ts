@@ -4,6 +4,8 @@ import { getAPISecurityHeaders } from '@/lib/security-headers';
 import { authenticateRequest } from '@/lib/jwt-auth';
 import { withRateLimit } from '@/lib/rate-limiter';
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 const SECURITY_HEADERS = getAPISecurityHeaders();
 
 // Add caching for performance (1 minute for faster updates)

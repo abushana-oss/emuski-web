@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three-stdlib';
 import { OBJLoader } from 'three-stdlib';
@@ -11,7 +11,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { useAuth } from './auth/AuthProvider';
 import { supabase } from '@/lib/supabase';
-import { cadEngine, CADEngineClient, type GeometryAnalysisResponse } from '@/lib/cad-engine-client';
+import { CADEngineClient, type GeometryAnalysisResponse } from '@/lib/cad-engine-client';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -969,7 +969,7 @@ async function analyzeGeometry(
 
   if (engineAvailable && rawFile && CADEngineClient.isSupportedCADFile(rawFile)) {
     try {
-      const result = await cadEngine.analyzeGeometry(rawFile, { strategy: 'balanced', forceReanalysis: false });
+      const result = await authenticatedCadEngine.analyzeGeometry(rawFile, { strategy: 'balanced', forceReanalysis: false });
       if (result?.success) {
         cadEngineAnalysis = result;
         bomComponents = generateBOMFromEngine(result, volume, surfaceArea);
@@ -1073,6 +1073,17 @@ export const CadViewer: React.FC<CadViewerProps> = ({
   className = '',
 }) => {
   const { user, isAuthenticated } = useAuth();
+  
+  const authenticatedCadEngine = useMemo(() => new CADEngineClient({
+    getAuthToken: async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        return session?.access_token || null;
+      } catch (error) {
+        return null;
+      }
+    }
+  }), []);
   const viewerRef = useRef<HTMLDivElement>(null);
   const viewCubeRef = useRef<HTMLCanvasElement>(null);
   const three = useRef<ThreeRefs>({
@@ -1240,10 +1251,10 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       let geometry: THREE.BufferGeometry;
 
       if (rawFile && CADEngineClient.isSupportedCADFile(rawFile)) {
-        const engineOk = await cadEngine.healthCheck().catch(() => false);
+        const engineOk = await authenticatedCadEngine.healthCheck().catch(() => false);
         set({ engineAvailable: engineOk });
         if (!engineOk) throw new Error('CAD Engine required for STEP/IGES files but is unavailable');
-        const result = await cadEngine.convertToSTL(rawFile);
+        const result = await authenticatedCadEngine.convertToSTL(rawFile);
         const bin = atob(result.stl_base64);
         const arr = new Uint8Array(bin.length);
         for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);

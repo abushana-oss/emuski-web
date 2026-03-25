@@ -3,6 +3,8 @@ import { withSecurity, SECURITY_CONFIGS } from '@/lib/security-middleware';
 import { withRateLimit } from '@/lib/rate-limiter';
 import { BlogQuerySchema, validateRequest } from '@/lib/input-validation';
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 interface BlogPost {
   kind: string;
   id: string;

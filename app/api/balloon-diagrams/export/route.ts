@@ -4,6 +4,8 @@ import { withRateLimit } from '@/lib/rate-limiter';
 import { withSecurity } from '@/lib/security-middleware';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 // Validation schema for balloon diagram export
 const BalloonExportSchema = z.object({
   pdfUrl: z.string().url().optional(),

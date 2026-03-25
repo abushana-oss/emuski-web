@@ -3,6 +3,8 @@ import { headers } from 'next/headers'
 import { withRateLimit } from '@/lib/rate-limiter'
 import { AnalyticsEventSchema, validateRequest } from '@/lib/input-validation'
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 /**
  * GA4 Measurement Protocol Server-Side Tracking
  *

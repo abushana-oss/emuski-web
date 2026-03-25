@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withSecurity, SECURITY_CONFIGS } from '@/lib/security-middleware';
 import { withRateLimit } from '@/lib/rate-limiter';
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 async function imageProxyHandler(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
   const imageUrl = searchParams.get('url');
