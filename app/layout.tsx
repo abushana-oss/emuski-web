@@ -198,8 +198,11 @@ export default async function RootLayout({
           }}
         />
 
-        <script
+        <Script
+          id="ld-json"
           type="application/ld+json"
+          strategy="beforeInteractive"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
