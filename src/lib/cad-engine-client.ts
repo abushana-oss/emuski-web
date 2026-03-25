@@ -88,6 +88,10 @@ export interface GeometryAnalysisResponse {
   };
 }
 
+export interface AuthTokenProvider {
+  getToken(): Promise<string | null>;
+}
+
 export interface CADEngineConfig {
   baseUrl: string;
   timeout: number;

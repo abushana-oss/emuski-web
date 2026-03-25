@@ -938,7 +938,8 @@ function analyzeThreads(geo: THREE.BufferGeometry) {
 async function analyzeGeometry(
   geo: THREE.BufferGeometry,
   rawFile: File | undefined,
-  engineAvailable: boolean
+  engineAvailable: boolean,
+  cadEngine: CADEngineClient
 ): Promise<RealTimeGeometry> {
   geo.computeBoundingBox();
   const box = geo.boundingBox!;
@@ -969,7 +970,7 @@ async function analyzeGeometry(
 
   if (engineAvailable && rawFile && CADEngineClient.isSupportedCADFile(rawFile)) {
     try {
-      const result = await authenticatedCadEngine.analyzeGeometry(rawFile, { strategy: 'balanced', forceReanalysis: false });
+      const result = await cadEngine.analyzeGeometry(rawFile, { strategy: 'balanced', forceReanalysis: false });
       if (result?.success) {
         cadEngineAnalysis = result;
         bomComponents = generateBOMFromEngine(result, volume, surfaceArea);
@@ -1074,16 +1075,18 @@ export const CadViewer: React.FC<CadViewerProps> = ({
 }) => {
   const { user, isAuthenticated } = useAuth();
   
-  const authenticatedCadEngine = useMemo(() => new CADEngineClient({
-    getAuthToken: async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        return session?.access_token || null;
-      } catch (error) {
-        return null;
-      }
+  const getAuthToken = useCallback(async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      return session?.access_token || null;
+    } catch (error) {
+      return null;
     }
-  }), []);
+  }, []);
+  
+  const authenticatedCadEngine = useMemo(() => new CADEngineClient({
+    getAuthToken
+  }), [getAuthToken]);
   const viewerRef = useRef<HTMLDivElement>(null);
   const viewCubeRef = useRef<HTMLCanvasElement>(null);
   const three = useRef<ThreeRefs>({
@@ -1283,7 +1286,7 @@ export const CadViewer: React.FC<CadViewerProps> = ({
       scene.add(modelGroup);
       three.current.model = modelGroup;
 
-        const realTimeGeometry = await analyzeGeometry(geometry, rawFile, state.engineAvailable);
+        const realTimeGeometry = await analyzeGeometry(geometry, rawFile, state.engineAvailable, authenticatedCadEngine);
         set({ realTimeGeometry, currentGeometry: geometry, isLoading: false });
         onGeometryAnalyzed?.(realTimeGeometry);
 

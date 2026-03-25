@@ -105,7 +105,7 @@ BEGIN
   
   -- Reserve the credits (temporarily reduce available credits)
   UPDATE user_credits 
-  SET credits_remaining = credits_remaining - p_credits_needed,
+  SET credits_remaining = user_credits.credits_remaining - p_credits_needed,
       updated_at = NOW()
   WHERE user_id = p_user_id;
   
@@ -165,7 +165,7 @@ BEGIN
   -- If actual usage is less than reserved, credit back the difference
   IF v_credit_difference > 0 THEN
     UPDATE user_credits
-    SET credits_remaining = credits_remaining + v_credit_difference,
+    SET credits_remaining = user_credits.credits_remaining + v_credit_difference,
         updated_at = NOW()
     WHERE user_id = v_reservation.user_id;
   END IF;
@@ -210,7 +210,7 @@ BEGIN
   
   -- Return the reserved credits to the user
   UPDATE user_credits
-  SET credits_remaining = credits_remaining + v_reservation.credits_reserved,
+  SET credits_remaining = user_credits.credits_remaining + v_reservation.credits_reserved,
       updated_at = NOW()
   WHERE user_id = v_reservation.user_id;
 END;
@@ -237,8 +237,8 @@ BEGIN
     
   -- Return credits for released reservations
   UPDATE user_credits
-  SET credits_remaining = credits_remaining + (
-    SELECT COALESCE(SUM(credits_reserved), 0)
+  SET credits_remaining = user_credits.credits_remaining + (
+    SELECT COALESCE(SUM(cr.credits_reserved), 0)
     FROM credit_reservations cr
     WHERE cr.user_id = user_credits.user_id 
       AND cr.status = 'released'
@@ -256,5 +256,5 @@ BEGIN
   DELETE FROM credit_reservations
   WHERE status IN ('confirmed', 'released') 
     AND created_at < NOW() - INTERVAL '7 days';
-END;
+END; 
 $$;
