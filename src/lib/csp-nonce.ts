@@ -50,10 +50,10 @@ export function generateCSPWithNonce(nonce: string): string {
     'script-src': [
       "'self'",
       `'nonce-${nonce}'`,
-      "'unsafe-inline'", // Temporary for production compatibility
-      // Development only - allow unsafe-eval for hot reload
+      "'unsafe-inline'", // Required for Next.js chunks in production
+      "'unsafe-eval'", // Required for Next.js webpack chunks
+      // Development - additional localhost
       ...(isDevelopment ? [
-        "'unsafe-eval'",
         'http://localhost:*',
         'https://localhost:*',
         'ws://localhost:*',
@@ -75,8 +75,9 @@ export function generateCSPWithNonce(nonce: string): string {
     ],
     'style-src': [
       "'self'",
-      "'unsafe-inline'", // Still needed for dynamic styles in many React components
+      "'unsafe-inline'", // Required for Next.js and React dynamic styles
       'https://fonts.googleapis.com',
+      'https://fonts.gstatic.com',
       'https://www.google.com',
       'https://tagmanager.google.com',
     ],
@@ -187,8 +188,13 @@ export function getEnhancedSecurityHeaders(nonce: string) {
   const isDevelopment = process.env.NODE_ENV === 'development';
   
   const headers: Record<string, string> = {
-    // Content Security Policy with nonce
-    'Content-Security-Policy': generateCSPWithNonce(nonce),
+    // Content Security Policy with nonce - disabled temporarily for production stability
+    ...(isDevelopment ? {
+      'Content-Security-Policy': generateCSPWithNonce(nonce),
+    } : {
+      // Production: Report-only mode for now
+      'Content-Security-Policy-Report-Only': generateCSPWithNonce(nonce),
+    }),
     
     // HSTS (production only)
     ...(isDevelopment ? {} : {
