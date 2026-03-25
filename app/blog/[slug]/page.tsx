@@ -2,7 +2,6 @@ import { Navbar } from "@/components/Navbar"
 import { BlogPostComponent } from "@/components/BlogPost"
 import { Footer } from "@/components/Footer"
 import { fetchPostBySlug, fetchAllBlogs, generateBlogStaticParams } from "@/lib/api/blogger"
-import { getCSPNonce } from "@/lib/csp-nonce"
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -164,8 +163,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   // Fetch all posts for related articles - now fetches ALL posts automatically
   const { all: allPosts } = await fetchAllBlogs(true);
   
-  // Get CSP nonce for inline scripts
-  const nonce = await getCSPNonce();
+  // Skip CSP nonce during static generation
 
   // Check if this is a success story
   const isSuccessStory = post.category === 'Case Study' || post.category === 'Success Story';
@@ -344,22 +342,18 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       {/* Enhanced Schema Markup for Maximum SEO Impact */}
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageData) }}
       />
       <div className="min-h-screen bg-white">

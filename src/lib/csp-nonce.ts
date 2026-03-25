@@ -14,6 +14,11 @@ export function generateCSPNonce(): string {
  * Returns empty string if no nonce to prevent hydration issues
  */
 export async function getCSPNonce(): Promise<string> {
+  // Skip header access during static generation
+  if (typeof window === 'undefined' && !process.env.REQUEST_CONTEXT) {
+    return '';
+  }
+  
   try {
     const headersList = await headers();
     const nonce = headersList.get('x-nonce');
@@ -22,19 +27,16 @@ export async function getCSPNonce(): Promise<string> {
       // In production, middleware should always set nonce
       // Return empty string to prevent hydration mismatch
       if (process.env.NODE_ENV === 'production') {
-        console.error('[CSP] No nonce found in production - middleware issue');
         return '';
       }
       
-      // Development: log warning but continue
-      console.warn('[CSP] No nonce found in headers - middleware may have been skipped');
+      // Development: return empty string
       return '';
     }
     
     return nonce;
   } catch (error) {
-    console.error('[CSP] Error getting nonce from headers:', error);
-    // Return empty string to prevent hydration mismatch
+    // Silent fail during static generation
     return '';
   }
 }

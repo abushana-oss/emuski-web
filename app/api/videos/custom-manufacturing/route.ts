@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limiter'
 
+export const dynamic = 'force-dynamic' // Prevent static generation
 export const revalidate = 60 // cache for 1 minute at the edge/CDN
 
 async function getHandler(_req: NextRequest): Promise<NextResponse> {
