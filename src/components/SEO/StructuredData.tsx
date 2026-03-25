@@ -46,7 +46,9 @@ export const STRUCTURED_DATA_TEMPLATES = {
     description: 'Leading OEM manufacturing and precision engineering solutions provider in Bangalore, India. ISO 9001:2015 certified with 15+ years expertise serving automotive, aerospace, medical device, and electronics industries globally.',
     foundingDate: '2008',
     slogan: 'Your One-Stop Solution for OEM Excellence',
-    priceRange: '$$',\n    telephone: '+91-86670-88060',\n    email: 'enquiries@emuski.com',
+    priceRange: '$$',
+    telephone: '+91-86670-88060',
+    email: 'enquiries@emuski.com',
     contactPoint: [
       {
         '@type': 'ContactPoint',
