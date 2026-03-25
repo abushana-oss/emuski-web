@@ -163,9 +163,8 @@ export function generateCSPWithNonce(nonce: string): string {
       'blob:',
       'data:',
     ],
-    // Enhanced security directives - only in production
+    // Enhanced security directives - only in production when not in report-only mode
     ...(isDevelopment ? {} : {
-      'upgrade-insecure-requests': [],
       'block-all-mixed-content': [],
     }),
   };
@@ -194,8 +193,7 @@ export function getEnhancedSecurityHeaders(nonce: string) {
     ...(isDevelopment ? {
       'Content-Security-Policy': generateCSPWithNonce(nonce),
     } : {
-      // Production: Report-only mode for now
-      'Content-Security-Policy-Report-Only': generateCSPWithNonce(nonce),
+        'Content-Security-Policy': generateCSPWithNonce(nonce),
     }),
     
     // HSTS (production only)
