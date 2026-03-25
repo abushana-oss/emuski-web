@@ -145,9 +145,16 @@ export default async function middleware(request: NextRequest) {
       pathname.endsWith('.js') ||
       pathname.startsWith('/api/') && !pathname.startsWith('/api/admin')
     ) {
-      return NextResponse.next({
+      const response = NextResponse.next({
         request: { headers: requestHeaders }
       })
+      
+      // Apply basic security headers to static/API routes too
+      Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
+        response.headers.set(key, value)
+      })
+      
+      return response
     }
 
     // === ADMIN ROUTE PROTECTION ===
@@ -334,7 +341,13 @@ export default async function middleware(request: NextRequest) {
           page_path: pathname,
           content_group1: getContentCategory(pathname),
           content_group2: 'web',
-          traffic_source: pageReferrer ? new URL(pageReferrer).hostname : 'direct',
+          traffic_source: (() => {
+            try {
+              return pageReferrer ? new URL(pageReferrer).hostname : 'direct';
+            } catch (e) {
+              return 'invalid';
+            }
+          })(),
         },
       })
 

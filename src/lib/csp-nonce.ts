@@ -193,9 +193,9 @@ export function getEnhancedSecurityHeaders(nonce: string) {
     ].join(', '),
     
     // Cross-Origin policies - secure with specific allowances
-    'Cross-Origin-Embedder-Policy': 'require-corp',
+    'Cross-Origin-Embedder-Policy': 'credentialless', // Safer alternative to require-corp for general web apps
     'Cross-Origin-Opener-Policy': 'same-origin',
-    'Cross-Origin-Resource-Policy': 'same-origin',
+    'Cross-Origin-Resource-Policy': 'cross-origin', // Allow cross-origin embedding of our resources
     
     // Cache control for security-sensitive responses
     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',

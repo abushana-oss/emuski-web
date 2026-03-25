@@ -95,11 +95,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
 
-        {/* DNS Prefetch and Preconnect for Performance Optimization */}
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        {/* Essential DNS Prefetch and Preconnect for Performance Optimization */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
@@ -177,47 +173,27 @@ export default async function RootLayout({
         <meta name="twitter:image" content="https://www.emuski.com/social-banner.jpg" />
         <meta name="twitter:image:alt" content="EMUSKI - ISO Certified Manufacturer in Bangalore" />
 
-        {/* Google Analytics 4 Consent Mode & Enhanced Configuration */}
+        {/* Consent Mode Configuration for GDPR/CCPA compliance */}
         <Script
-          id="gtag-consent"
-          strategy="afterInteractive"
+          id="consent-mode"
+          strategy="beforeInteractive"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
-              try {
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-
-                // Set default consent mode (GDPR/CCPA compliance)
-                gtag('consent', 'default', {
-                  'ad_storage': 'denied',
-                  'ad_user_data': 'denied',
-                  'ad_personalization': 'denied',
-                  'analytics_storage': 'granted',
-                  'functionality_storage': 'granted',
-                  'personalization_storage': 'granted',
-                  'security_storage': 'granted',
-                  'wait_for_update': 500
-                });
-
-                // Enhanced GA4 Configuration with Bot Filtering
-                gtag('config', 'G-QFDFYZLZPK', {
-                  // Bot Filtering & Traffic Quality
-                  'send_page_view': true,
-                  'ignore_referrer': false,
-                  'allow_google_signals': true,
-                  'allow_ad_personalization_signals': true,
-                  'cookie_flags': 'SameSite=None;Secure',
-
-                  // Enhanced measurement for bot detection
-                  'enhanced_measurement': true,
-                  'engagement_time_msec': 1000,
-
-                  // Debug mode (set to false in production)
-                  'debug_mode': false
-                });
-              } catch(e) {
-                console.warn('Analytics initialization failed:', e);
-              }
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              
+              // Set default consent mode before any analytics load
+              gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied', 
+                'ad_personalization': 'denied',
+                'analytics_storage': 'granted',
+                'functionality_storage': 'granted',
+                'personalization_storage': 'granted',
+                'security_storage': 'granted',
+                'wait_for_update': 500
+              });
             `,
           }}
         />
@@ -452,6 +428,7 @@ export default async function RootLayout({
         <Script
           id="pdf-worker-config"
           strategy="beforeInteractive"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               // ✅ Set PDF.js worker to local file (Turbopack safe)
@@ -464,6 +441,7 @@ export default async function RootLayout({
         <Script
           id="extension-error-handler"
           strategy="beforeInteractive"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               // Comprehensive error suppression and security for production
@@ -602,7 +580,7 @@ export default async function RootLayout({
                   ) {
                     return; // Block suspicious postMessage calls
                   }
-                  originalPostMessage.call(this, message, targetOrigin, transfer);
+                  originalPostMessage.call(window, message, targetOrigin, transfer);
                 };
               })();
             `
@@ -610,22 +588,54 @@ export default async function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        {process.env.NEXT_PUBLIC_GTM_ID && (
-          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
-        )}
         <ClientErrorWrapper>
           <ErrorBoundary>
             <Providers>{children}</Providers>
           </ErrorBoundary>
         </ClientErrorWrapper>
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+        )}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
+        
+        {/* Enhanced GA4 Configuration */}
+        <Script
+          id="ga4-config"
+          strategy="afterInteractive"
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `
+              function configureGA4() {
+                if (typeof gtag !== 'function') return;
+                
+                // Enhanced GA4 Configuration with Bot Filtering
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-QFDFYZLZPK'}', {
+                  'send_page_view': true,
+                  'allow_google_signals': true,
+                  'allow_ad_personalization_signals': false,
+                  'cookie_flags': 'SameSite=None;Secure',
+                  'enhanced_measurement': true,
+                  'debug_mode': false
+                });
+              }
+              
+              // Wait for gtag to be available
+              if (typeof gtag === 'function') {
+                configureGA4();
+              } else {
+                document.addEventListener('DOMContentLoaded', configureGA4);
+              }
+            `,
+          }}
+        />
 
         {/* Configuration Scripts */}
         <Script
           id="emuski-geo-config"
           strategy="beforeInteractive"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               window.EmuskiGeoConfig = {
@@ -646,7 +656,8 @@ export default async function RootLayout({
 
         <Script
           id="apollo-tracking"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               function initApollo(){
@@ -655,7 +666,8 @@ export default async function RootLayout({
                 o.onload=function(){window.trackingFunctions.onLoad({appId:"6983449db0cf09001d61e1af"})},
                 document.head.appendChild(o)
               }
-              initApollo();
+              // Load Apollo only after user interaction
+              setTimeout(initApollo, 2000);
             `
           }}
         />
@@ -664,6 +676,7 @@ export default async function RootLayout({
         <Script
           id="global-error-handlers"
           strategy="beforeInteractive"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               window.addEventListener('unhandledrejection', function(event) {
