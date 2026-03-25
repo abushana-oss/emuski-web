@@ -108,7 +108,7 @@ async function handleStepToStlConversion(req: NextRequest) {
     return NextResponse.json({
       success: false,
       error: 'Conversion service temporarily unavailable',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details: process.env.NODE_ENV === 'development' ? 'Check server logs for details' : undefined
     }, { 
       status: 503, 
       headers 
