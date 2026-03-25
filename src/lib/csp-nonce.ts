@@ -9,30 +9,52 @@ export function generateCSPNonce(): string {
 }
 
 /**
- * Get CSP nonce from headers (for use in components)
- * Returns empty string if no nonce to avoid hydration mismatch
+ * Get CSP nonce from request headers
+ * This ensures the same nonce is used across server and client
+ * Returns empty string if no nonce to prevent hydration issues
  */
 export async function getCSPNonce(): Promise<string> {
-  const headersList = await headers();
-  return headersList.get('x-nonce') || '';
+  try {
+    const headersList = await headers();
+    const nonce = headersList.get('x-nonce');
+    
+    if (!nonce) {
+      // In production, middleware should always set nonce
+      // Return empty string to prevent hydration mismatch
+      if (process.env.NODE_ENV === 'production') {
+        console.error('[CSP] No nonce found in production - middleware issue');
+        return '';
+      }
+      
+      // Development: log warning but continue
+      console.warn('[CSP] No nonce found in headers - middleware may have been skipped');
+      return '';
+    }
+    
+    return nonce;
+  } catch (error) {
+    console.error('[CSP] Error getting nonce from headers:', error);
+    // Return empty string to prevent hydration mismatch
+    return '';
+  }
 }
 
 /**
- * Generate enhanced CSP policy
+ * Generate enhanced CSP policy with nonce support
  */
-export function generateCSP(): string {
+export function generateCSPWithNonce(nonce: string): string {
   const isDevelopment = process.env.NODE_ENV === 'development';
   
   const directives = {
     'default-src': ["'self'"],
     'script-src': [
       "'self'",
-      "'unsafe-inline'", // Temporarily allow inline scripts to fix blank page
-      // Only allow unsafe-eval in development
-      ...(isDevelopment ? ["'unsafe-eval'"] : []),
-      // Development webpack hot reload
+      `'nonce-${nonce}'`,
+      // Development only - allow unsafe-eval for hot reload
       ...(isDevelopment ? [
+        "'unsafe-eval'",
         'http://localhost:*',
+        'https://localhost:*',
         'ws://localhost:*',
         'wss://localhost:*',
       ] : []),
@@ -158,14 +180,14 @@ export function generateCSP(): string {
 }
 
 /**
- * Enhanced security headers
+ * Enhanced security headers with CSP nonce
  */
-export function getEnhancedSecurityHeaders() {
+export function getEnhancedSecurityHeaders(nonce: string) {
   const isDevelopment = process.env.NODE_ENV === 'development';
   
   const headers: Record<string, string> = {
-    // Content Security Policy
-    'Content-Security-Policy': generateCSP(),
+    // Content Security Policy with nonce
+    'Content-Security-Policy': generateCSPWithNonce(nonce),
     
     // HSTS (production only)
     ...(isDevelopment ? {} : {
@@ -209,6 +231,8 @@ export function getEnhancedSecurityHeaders() {
     'Pragma': 'no-cache',
     'Expires': '0',
     
+    // Pass nonce to components via header
+    'X-Nonce': nonce,
   };
 
   return headers;

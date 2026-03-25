@@ -12,6 +12,7 @@ if (typeof window === 'undefined') {
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { ClientErrorWrapper } from '@/components/ClientErrorWrapper'
+import { getCSPNonce } from '@/lib/csp-nonce'
 import Script from 'next/script'
 
 const inter = Inter({
@@ -82,11 +83,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Get nonce from middleware - critical for CSP compliance
+  const nonce = await getCSPNonce();
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
@@ -173,6 +176,7 @@ export default function RootLayout({
         <Script
           id="consent-mode"
           strategy="beforeInteractive"
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -197,6 +201,7 @@ export default function RootLayout({
           id="ld-json"
           type="application/ld+json"
           strategy="beforeInteractive"
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -425,6 +430,7 @@ export default function RootLayout({
         <Script
           id="pdf-worker-config"
           strategy="beforeInteractive"
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: `
               // ✅ Set PDF.js worker to local file (Turbopack safe)
@@ -437,6 +443,7 @@ export default function RootLayout({
         <Script
           id="extension-error-handler"
           strategy="beforeInteractive"
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: `
               // Comprehensive error suppression and security for production
@@ -599,6 +606,7 @@ export default function RootLayout({
         <Script
           id="ga4-config"
           strategy="afterInteractive"
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: `
               function configureGA4() {
@@ -629,6 +637,7 @@ export default function RootLayout({
         <Script
           id="emuski-geo-config"
           strategy="beforeInteractive"
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: `
               window.EmuskiGeoConfig = {
@@ -650,6 +659,7 @@ export default function RootLayout({
         <Script
           id="apollo-tracking"
           strategy="lazyOnload"
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: `
               function initApollo(){
@@ -668,6 +678,7 @@ export default function RootLayout({
         <Script
           id="global-error-handlers"
           strategy="beforeInteractive"
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: `
               window.addEventListener('unhandledrejection', function(event) {

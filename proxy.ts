@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
-import { getEnhancedSecurityHeaders } from './src/lib/csp-nonce'
+import { generateCSPNonce, getEnhancedSecurityHeaders } from './src/lib/csp-nonce'
 import crypto from 'crypto'
 
 /**
@@ -109,6 +109,9 @@ async function sendGA4Event(payload: any) {
 
 export default async function middleware(request: NextRequest) {
   try {
+    // Generate a unique CSP nonce for this request
+    const nonce = generateCSPNonce();
+    
     const { pathname, search, searchParams, origin } = request.nextUrl
     const host = request.headers.get('host') || ''
     const protocol = request.headers.get('x-forwarded-proto') || 'https'
@@ -120,6 +123,9 @@ export default async function middleware(request: NextRequest) {
     requestHeaders.delete('Next-Router-State-Tree')
     requestHeaders.delete('Next-Router-Prefetch')
     requestHeaders.delete('Next-Url')
+    
+    // Set nonce in request headers for consistent access in layout
+    requestHeaders.set('x-nonce', nonce)
 
     // Skip authentication checks for static assets and API routes (except protected ones)
     if (
@@ -355,8 +361,8 @@ export default async function middleware(request: NextRequest) {
       sendGA4Event(payload)
     }
 
-    // Apply enhanced security headers
-    const enhancedHeaders = getEnhancedSecurityHeaders()
+    // Apply enhanced security headers with nonce
+    const enhancedHeaders = getEnhancedSecurityHeaders(nonce)
     Object.entries(enhancedHeaders).forEach(([key, value]) => {
       response.headers.set(key, value)
     })
