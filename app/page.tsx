@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
-import Head from 'next/head'
 import { Navbar } from "@/components/Navbar"
 import { HeroSection } from "@/components/HeroSection"
 import { Footer } from "@/components/Footer"
@@ -171,120 +170,7 @@ export default function Home() {
   };
 
   return (
-    <>
-      <Head>
-        <title>EMUSKI | ISO Certified OEM Precision & Cost Engineering Partner</title>
-        <meta name="description" content="ISO 9001:2015 certified manufacturers in Bangalore, Karnataka. EMUSKI - Leading manufacturing company delivering world-class OEM manufacturing, precision engineering, CNC machining, injection molding in Electronic City. 15+ years of excellence serving 75+ global clients. Top ISO certified manufacturer in Bangalore for automotive, aerospace, and medical device industries. Contact: +91-86670-88060" />
-        <meta name="keywords" content="manufacturers in bangalore, manufacturing in bangalore, ISO certified manufacturers bangalore, manufacturing companies in bangalore, top manufacturers in bangalore, OEM manufacturers Bangalore, precision engineering manufacturers Bangalore, CNC machining manufacturers Bangalore, injection molding manufacturers Bangalore, automotive manufacturers Bangalore, aerospace manufacturers Bangalore, medical device manufacturers Bangalore, Electronic City manufacturers, rapid prototyping manufacturers Bangalore, custom manufacturers Bangalore, AI-powered manufacturing Bangalore, smart manufacturing Bangalore, Industry 4.0 manufacturers Bangalore" />
-        
-        {/* Enhanced meta tags for home page SEO */}
-        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <meta name="bingbot" content="index, follow" />
-        <meta name="author" content="EMUSKI Manufacturing Solutions" />
-        <meta name="publisher" content="EMUSKI Manufacturing Solutions" />
-        <meta name="copyright" content="© 2024 EMUSKI Manufacturing Solutions. All rights reserved." />
-        <meta name="distribution" content="global" />
-        <meta name="rating" content="general" />
-        <meta name="language" content="English" />
-        <meta name="geo.region" content="IN-KA" />
-        <meta name="geo.placename" content="Bangalore, Karnataka, India" />
-        <meta name="geo.position" content="12.9716;77.5946" />
-        <meta name="ICBM" content="12.9716, 77.5946" />
-        
-        {/* Business and contact information */}
-        <meta name="contact" content="enquiries@emuski.com" />
-        <meta name="phone" content="+91-86670-88060" />
-        <meta name="address" content="126, RNS Plaza, Electronic City Phase 2, Bangalore, Karnataka 560100, India" />
-        <meta name="company" content="EMUSKI Manufacturing Solutions" />
-        <meta name="classification" content="Manufacturing, Engineering Solutions, OEM Manufacturing, Precision Engineering" />
-        <meta name="coverage" content="Worldwide" />
-        
-        {/* Enhanced OpenGraph meta tags */}
-        <meta property="og:title" content="EMUSKI | ISO Certified OEM Precision & Cost Engineering Partner" />
-        <meta property="og:description" content="ISO 9001:2015 certified manufacturers in Bangalore, Electronic City. Leading manufacturing company with 15+ years excellence. Serving 75+ global clients across automotive, aerospace, and medical device industries with precision engineering and AI-powered production in Bangalore, Karnataka. Top ISO certified manufacturers." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.emuski.com/" />
-        <meta property="og:site_name" content="EMUSKI" />
-        <meta property="og:locale" content="en_US" />
-        <meta property="og:image" content="https://www.emuski.com/og-image.png" />
-        <meta property="og:image:secure_url" content="https://www.emuski.com/og-image.png" />
-        <meta property="og:image:width" content="2000" />
-        <meta property="og:image:height" content="1333" />
-        <meta property="og:image:alt" content="EMUSKI Manufacturing Solutions - Precision Engineering Excellence" />
-        <meta property="og:updated_time" content="2024-03-23T00:00:00+00:00" />
-        
-        {/* Enhanced Twitter meta tags */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@emuski" />
-        <meta name="twitter:creator" content="@emuski" />
-        <meta name="twitter:title" content="EMUSKI - ISO Certified Manufacturer in Bangalore" />
-        <meta name="twitter:description" content="ISO 9001:2015 certified manufacturers in Bangalore, Electronic City, Karnataka. Leading manufacturing company with 15+ years excellence. Precision engineering, CNC machining, AI-powered production. Top manufacturers in Bangalore. Contact: +91-86670-88060" />
-        <meta name="twitter:image" content="https://www.emuski.com/og-image.png" />
-        <meta name="twitter:image:alt" content="EMUSKI Manufacturing Excellence" />
-        
-        {/* Canonical URL */}
-        <link rel="canonical" href="https://www.emuski.com/" />
-        
-        {/* Alternate language versions */}
-        <link rel="alternate" hrefLang="en" href="https://www.emuski.com/" />
-        <link rel="alternate" hrefLang="x-default" href="https://www.emuski.com/" />
-        
-        {/* Preload critical resources */}
-        <link rel="preload" href="/assets/hero-background.jpg" as="image" type="image/jpeg" />
-        <link rel="prefetch" href="/manufacturing-services" />
-        <link rel="prefetch" href="/cost-engineering" />
-        <link rel="prefetch" href="/contact" />
-      </Head>
-      
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-      />
-      
-      {/* NPD Centre Services Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "name": "EMUSKI NPD Centre Manufacturing Services",
-            "description": "Comprehensive New Product Development services including 3D Printing, VMC Machining, Turning Centre, and advanced manufacturing solutions",
-            "itemListElement": npdSolutions.map((solution, index) => ({
-              "@type": "Service",
-              "position": index + 1,
-              "name": `EMUSKI ${solution.title}`,
-              "description": solution.description,
-              "provider": {
-                "@type": "Organization",
-                "name": "EMUSKI Manufacturing Solutions",
-                "url": "https://www.emuski.com"
-              },
-              "serviceType": solution.subtitle,
-              "areaServed": {
-                "@type": "Place",
-                "name": "Worldwide"
-              },
-              "availableChannel": {
-                "@type": "ServiceChannel",
-                "serviceUrl": "https://www.emuski.com/manufacturing-services",
-                "servicePhone": "+91-86670-88060"
-              }
-            }))
-          })
-        }}
-      />
-      
-      <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
         <Navbar />
         <main className="pt-20">
           <h1 className="sr-only">
@@ -469,6 +355,5 @@ export default function Home() {
         </main>
         <Footer />
       </div>
-    </>
   )
 }

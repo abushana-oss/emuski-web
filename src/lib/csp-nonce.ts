@@ -50,6 +50,7 @@ export function generateCSPWithNonce(nonce: string): string {
     'script-src': [
       "'self'",
       `'nonce-${nonce}'`,
+      "'unsafe-inline'", // Temporary for production compatibility
       // Development only - allow unsafe-eval for hot reload
       ...(isDevelopment ? [
         "'unsafe-eval'",
