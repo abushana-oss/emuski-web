@@ -163,9 +163,11 @@ export function generateCSPWithNonce(nonce: string): string {
       'blob:',
       'data:',
     ],
-    // Enhanced security directives
-    'upgrade-insecure-requests': [],
-    'block-all-mixed-content': [],
+    // Enhanced security directives - only in production
+    ...(isDevelopment ? {} : {
+      'upgrade-insecure-requests': [],
+      'block-all-mixed-content': [],
+    }),
   };
 
   // Convert directives to CSP string
