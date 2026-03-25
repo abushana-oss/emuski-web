@@ -151,11 +151,19 @@ function convertBloggerPostToLocalFormat(post: BloggerPost, defaultCategory: str
   const imgMatch = post.content.match(/<img[^>]+src="([^">]+)"/);
   let image = imgMatch ? imgMatch[1] : 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80';
 
-  // Fix Blogger image sizes to prevent 5xx errors
+  // Fix Blogger image sizes to prevent 5xx errors and route through proxy for COEP compliance
   // Large sizes like s16000 cause server errors on Google's side
   if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com')) {
     image = image.replace(/\/s\d+(-c)?\//, '/s1600/');  // Path format: /s16000/ → /s1600/
     image = image.replace(/=s\d+$/i, '=s1600');         // Parameter format: =s16000 → =s1600
+    
+    // Route through proxy for COEP compliance
+    image = `/api/image-proxy?url=${encodeURIComponent(image)}`;
+  }
+
+  // Route Unsplash images through proxy for COEP compliance
+  if (image.includes('unsplash.com')) {
+    image = `/api/image-proxy?url=${encodeURIComponent(image)}`;
   }
 
   let excerpt = '';
@@ -185,16 +193,148 @@ function convertBloggerPostToLocalFormat(post: BloggerPost, defaultCategory: str
   const wordCount = textContent.split(/\s+/).length;
   const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
 
+  // Process HTML content to convert embedded images to proxy URLs and remove duplicates
+  let processedContent = post.content;
+  const seenImages = new Set<string>();
+  
+  // Also remove images by alt text to catch duplicates with same title
+  const seenAltTexts = new Set<string>();
+  
+  // Normalize featured image URL for comparison
+  const normalizeUrl = (url: string) => {
+    let normalized = url;
+    
+    // If it's a proxy URL, extract the original URL
+    if (normalized.includes('/api/image-proxy?url=')) {
+      const urlParam = normalized.split('url=')[1];
+      if (urlParam) {
+        try {
+          normalized = decodeURIComponent(urlParam.split('&')[0]);
+        } catch {
+          // Keep original if decoding fails
+        }
+      }
+    }
+    
+    // Remove protocol
+    normalized = normalized.replace(/^https?:\/\//i, '');
+    
+    // Normalize Blogger image sizes (both path and parameter formats)
+    normalized = normalized
+      .replace(/\/s\d+(-c)?\//, '/s1600/')
+      .replace(/=s\d+$/i, '=s1600')
+      .replace(/=s\d+(-c)?$/i, '=s1600');
+    
+    // Extract base image identifier from Blogger URLs
+    // Example: blogger.googleusercontent.com/img/a/AVvXsEjXBopIsOG9h5UuNij3rmbw8F8o_15GHG1mJ-IRo4YRRjd9Cg0jOL7LbQS8qrUuUngxiHOXVStGQ2rRoEDExNBU_6QoU2h8vdOzmuTkSoMUXztMyyZukqzZlDIbAESme7qZtw85kl021q_SlNg59vOPBXPnMevzFg6aTJLViJt0xrg_NL4IlpHoUVdJSBDd/s1600
+    const bloggerMatch = normalized.match(/blogger\.googleusercontent\.com\/img\/[ab]\/([A-Za-z0-9_-]+)/i);
+    if (bloggerMatch) {
+      return bloggerMatch[1].toLowerCase(); // Return just the unique image ID
+    }
+    
+    // Also check for pattern with 'b' prefix
+    const bloggerMatchB = normalized.match(/blogger\.googleusercontent\.com\/img\/b\/[^/]+\/([A-Za-z0-9_-]+)/i);
+    if (bloggerMatchB) {
+      return bloggerMatchB[1].toLowerCase();
+    }
+    
+    // For other URLs, return normalized version
+    return normalized.toLowerCase();
+  };
+  
+  // Get the original featured image URL before proxy conversion for comparison
+  let originalFeaturedImageUrl = image;
+  if (originalFeaturedImageUrl.includes('/api/image-proxy?url=')) {
+    const urlParam = originalFeaturedImageUrl.split('url=')[1];
+    if (urlParam) {
+      try {
+        originalFeaturedImageUrl = decodeURIComponent(urlParam.split('&')[0]);
+      } catch {
+        // Keep original if decoding fails
+      }
+    }
+  }
+  
+  const normalizedFeaturedImage = normalizeUrl(originalFeaturedImageUrl);
+  seenImages.add(normalizedFeaturedImage);
+  
+  // Also add the featured image title to seen alt texts
+  seenAltTexts.add(post.title.toLowerCase());
+  
+  processedContent = processedContent.replace(/<img([^>]*)>/gi, (_match, attrs) => {
+    const srcMatch = attrs.match(/src\s*=\s*["']([^"']+)["']/i);
+    if (srcMatch) {
+      let src = srcMatch[1];
+      
+      // Fix protocol-relative URLs
+      if (src.startsWith('//')) {
+        src = 'https:' + src;
+      }
+
+      // Get alt text for duplicate detection
+      const altMatch = attrs.match(/alt\s*=\s*["']([^"']*)["']/i);
+      const altText = altMatch ? altMatch[1].toLowerCase() : '';
+
+      // Normalize current image URL for comparison
+      const normalizedSrc = normalizeUrl(src);
+      
+      // Remove if we've already seen this image (by URL or alt text matching title)
+      if (seenImages.has(normalizedSrc) || (altText && seenAltTexts.has(altText))) {
+        return ''; // Remove duplicate
+      }
+      
+      // Add to seen images set
+      seenImages.add(normalizedSrc);
+      if (altText) {
+        seenAltTexts.add(altText);
+      }
+
+      // Convert Blogger and Unsplash images to proxy URLs
+      if (src.includes('blogger.googleusercontent.com') || 
+          src.includes('blogspot.com') || 
+          src.includes('unsplash.com')) {
+        // Fix image sizes for Blogger
+        if (src.includes('blogger.googleusercontent.com') || src.includes('blogspot.com')) {
+          src = src.replace(/\/s\d+(-c)?\//, '/s1600/');
+          src = src.replace(/=s\d+$/i, '=s1600');
+        }
+        
+        // Convert to proxy URL
+        const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(src)}`;
+        return _match.replace(/src\s*=\s*["']([^"']+)["']/i, `src="${proxyUrl}"`);
+      }
+    }
+    return _match;
+  });
+
   return {
     id: post.id,
     slug,
     title: post.title,
     excerpt,
-    fullContent: post.content,
+    fullContent: processedContent,
     category: post.labels?.[0] || defaultCategory,
     tags: post.labels || [],
     author: post.author.displayName,
-    authorImage: post.author.image?.url || '/assets/authors/default.jpg',
+    authorImage: (() => {
+      let authorImg = post.author.image?.url || '/assets/authors/default.jpg';
+      
+      // Fix protocol-relative URLs
+      if (authorImg.startsWith('//')) {
+        authorImg = 'https:' + authorImg;
+      }
+      
+      // Route Blogger images through proxy
+      if (authorImg.includes('blogger.googleusercontent.com') || authorImg.includes('blogspot.com')) {
+        // Fix image sizes
+        authorImg = authorImg.replace(/\/s\d+(-c)?\//, '/s1600/');
+        authorImg = authorImg.replace(/=s\d+$/i, '=s1600');
+        // Convert to proxy URL
+        authorImg = `/api/image-proxy?url=${encodeURIComponent(authorImg)}`;
+      }
+      
+      return authorImg;
+    })(),
     publishDate: new Date(post.published).toISOString(),
     readTime,
     image,

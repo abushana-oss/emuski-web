@@ -3,10 +3,7 @@ import { clearSupabaseStorage } from './storage'
 import type { AuthUser, AuthError } from '@/types/auth'
 
 export const AUTH_CONFIG = {
-  // Admin email addresses
-  ADMIN_EMAILS: (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'abushan.a@emuski.com').split(',').map(email => email.trim()),
-
-  // Allowed company domains for regular access
+  // Allowed company domains for regular access (client-safe)
   ALLOWED_DOMAINS: (process.env.NEXT_PUBLIC_ALLOWED_DOMAINS || 'emuski.com').split(',').map(domain => domain.trim()),
 
   // Google OAuth configuration
@@ -48,17 +45,16 @@ export const validateEmailDomain = (email: string): boolean => {
   return true
 }
 
-// Check if user is admin
-export const isAdminUser = (email: string): boolean => {
-  if (!email) return false
-  return AUTH_CONFIG.ADMIN_EMAILS.includes(email.toLowerCase())
+// Admin functionality removed for security
+export const isAdminUser = async (email: string): Promise<boolean> => {
+  return false;
 }
 
 // Check if user has any access (admin or company domain)
-export const validateEmailAccess = (email: string): boolean => {
+export const validateEmailAccess = async (email: string): Promise<boolean> => {
   if (!email || !email.includes('@')) return false
 
-  return isAdminUser(email) || validateEmailDomain(email)
+  return (await isAdminUser(email)) || validateEmailDomain(email)
 }
 
 // Validate email format
@@ -855,7 +851,7 @@ export const authService = {
           }
 
           // Validate user email access
-          if (!validateEmailAccess(user.email || '')) {
+          if (!(await validateEmailAccess(user.email || ''))) {
             const { error } = await this.signOut()
             if (error) console.error('[authService] Internal signOut failed:', error)
             return {
@@ -870,7 +866,7 @@ export const authService = {
           const formattedUser: AuthUser = {
             ...user,  // spread all SupabaseUser fields
             name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0],
-            isAdmin: isAdminUser(user.email || '')
+            isAdmin: await isAdminUser(user.email || '')
           }
 
           return { user: formattedUser, error: null }

@@ -37,7 +37,7 @@ function AuthCallbackComponent() {
           const user = data.session.user
           
           // Validate email access
-          if (!validateEmailAccess(user.email || '')) {
+          if (!(await validateEmailAccess(user.email || ''))) {
             await supabase.auth.signOut()
             setError('Access is restricted to authorized company email addresses only.')
             setIsProcessing(false)

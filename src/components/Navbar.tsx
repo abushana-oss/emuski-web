@@ -174,7 +174,7 @@ export const Navbar = () => {
                 alt="EMUSKI Manufacturing Solutions Logo"
                 width={56}
                 height={28}
-                sizes="(max-width: 768px) 28px, 32px"
+                sizes="56px"
                 className="h-7 sm:h-8 w-auto object-contain [image-rendering:crisp-edges] contrast-110 brightness-105"
                 quality={75}
                 priority
@@ -328,7 +328,7 @@ export const Navbar = () => {
                         alt="EMUSKI Manufacturing Solutions Logo"
                         width={32}
                         height={16}
-                        sizes="16px"
+                        sizes="32px"
                         className="h-4 w-auto object-contain [image-rendering:crisp-edges] contrast-[1.2] brightness-110 opacity-80"
                         quality={75}
                       />

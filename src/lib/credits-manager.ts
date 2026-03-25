@@ -174,7 +174,106 @@ export class CreditsManager {
   }
 
   /**
-   * Deduct credits from user account
+   * Atomically check and reserve credits for a request (prevents race conditions)
+   */
+  static async reserveCredits(
+    userId: string, 
+    estimatedTokens: number,
+    requestType: CreditUsage['request_type'],
+    fileName?: string
+  ): Promise<{
+    success: boolean;
+    reservationId?: string;
+    creditsRequired: number;
+    creditsRemaining: number;
+    timeUntilReset: number;
+    error?: string;
+  }> {
+    // Calculate fractional credits based on actual token usage
+    const rawCreditsRequired = estimatedTokens / this.TOKENS_PER_CREDIT;
+    const creditsRequired = Math.max(this.MIN_CREDIT_CHARGE, Math.round(rawCreditsRequired * 10) / 10);
+    
+    // Use database transaction to prevent race conditions
+    const { data, error } = await supabaseServiceRole.rpc('reserve_credits', {
+      p_user_id: userId,
+      p_credits_needed: creditsRequired,
+      p_request_type: requestType,
+      p_file_name: fileName || null,
+      p_estimated_tokens: estimatedTokens
+    });
+
+    if (error) {
+      console.error('Credit reservation error:', error);
+      return {
+        success: false,
+        creditsRequired,
+        creditsRemaining: 0,
+        timeUntilReset: 0,
+        error: 'Failed to reserve credits'
+      };
+    }
+
+    const result = data[0];
+    if (!result.success) {
+      return {
+        success: false,
+        creditsRequired,
+        creditsRemaining: result.credits_remaining || 0,
+        timeUntilReset: result.hours_until_reset || 0,
+        error: result.error_message || 'Insufficient credits'
+      };
+    }
+
+    return {
+      success: true,
+      reservationId: result.reservation_id,
+      creditsRequired,
+      creditsRemaining: result.credits_remaining || 0,
+      timeUntilReset: result.hours_until_reset || 0
+    };
+  }
+
+  /**
+   * Confirm credit usage after successful operation
+   */
+  static async confirmCreditUsage(
+    userId: string,
+    reservationId: string,
+    actualTokensUsed: number
+  ): Promise<UserCredits> {
+    // Calculate actual credits used
+    const rawCreditsUsed = actualTokensUsed / this.TOKENS_PER_CREDIT;
+    const creditsUsed = Math.max(this.MIN_CREDIT_CHARGE, Math.round(rawCreditsUsed * 10) / 10);
+    const costUsd = (actualTokensUsed / 1000000) * this.COST_PER_1M_TOKENS;
+
+    // Confirm the reservation and finalize credit usage
+    const { data, error } = await supabaseServiceRole.rpc('confirm_credit_usage', {
+      p_reservation_id: reservationId,
+      p_actual_credits_used: creditsUsed,
+      p_actual_tokens_used: actualTokensUsed,
+      p_cost_usd: costUsd
+    });
+
+    if (error) {
+      console.error('Credit confirmation error:', error);
+      throw new Error('Failed to confirm credit usage');
+    }
+
+    return data[0];
+  }
+
+  /**
+   * Release reserved credits if operation fails
+   */
+  static async releaseCreditReservation(reservationId: string): Promise<void> {
+    await supabaseServiceRole.rpc('release_credit_reservation', {
+      p_reservation_id: reservationId
+    });
+  }
+
+  /**
+   * Deduct credits from user account (legacy method - use reserveCredits instead)
+   * @deprecated Use reserveCredits() followed by confirmCreditUsage() for atomic operations
    */
   static async deductCredits(
     userId: string, 

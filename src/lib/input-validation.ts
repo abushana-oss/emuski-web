@@ -125,7 +125,8 @@ export const BlogQuerySchema = z.object({
     .max(100, 'Label too long')
     .trim()
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content')
-    .optional(),
+    .optional()
+    .nullable(),
     
   pageToken: z.string()
     .min(1, 'Required')

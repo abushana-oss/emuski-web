@@ -3,7 +3,13 @@ import { getAPISecurityHeaders } from '@/lib/security-headers';
 import { withRateLimit } from '@/lib/rate-limiter';
 
 const SECURITY_HEADERS = getAPISecurityHeaders();
-const _raw_url = process.env.CAD_ENGINE_URL || process.env.NEXT_PUBLIC_CAD_ENGINE_URL || 'https://emuski-web-production.up.railway.app';
+// ✅ SECURITY FIX: Remove hardcoded URL fallback and client-side exposure
+const _raw_url = process.env.CAD_ENGINE_URL;
+
+if (!_raw_url) {
+  throw new Error('CAD_ENGINE_URL environment variable is required for security');
+}
+
 const CAD_ENGINE_URL = _raw_url.endsWith('/') ? _raw_url.slice(0, -1) : _raw_url;
 
 async function getHandler(req: NextRequest): Promise<NextResponse> {

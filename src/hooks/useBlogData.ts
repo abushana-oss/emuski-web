@@ -171,17 +171,13 @@ export const useSuccessStoriesPosts = (options?: UseBlogDataOptions) =>
  * Replaces multiple duplicate conversion functions
  */
 function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'Blog'): BlogPost {
-  // Extract featured image from content
-  const imgMatch = post.content?.match(/<img[^>]+src="([^">]+)"/)
-  let image = imgMatch ? imgMatch[1] : 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80'
+  // Generate slug first since it's used in multiple places
+  const slug = post.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
 
-  // Fix Blogger image sizes to prevent server errors
-  if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com')) {
-    image = image.replace(/\/s\d+(-c)?\//, '/s1600/')
-    image = image.replace(/=s\d+$/i, '=s1600')
-  }
-
-  // Generate excerpt from snippet or content
+  // Generate excerpt early since it's used in early return
   let excerpt = ''
   if (post.snippet) {
     excerpt = decodeHtmlEntities(post.snippet.trim())
@@ -193,7 +189,7 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
     excerpt = extractSEODescription(post.content || '')
   }
 
-  // Calculate read time
+  // Calculate read time early
   let textContent = (post.content || '')
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
@@ -206,11 +202,76 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
   const wordCount = textContent.split(/\s+/).length
   const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`
 
-  // Generate slug
-  const slug = post.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+  // Extract featured image from content - comprehensive image extraction
+  const imgMatches = post.content?.match(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi) || []
+  let image = ''
+  
+  // Find the best image URL
+  for (const imgTag of imgMatches) {
+    const srcMatch = imgTag.match(/src=["']([^"']+)["']/)
+    if (srcMatch && srcMatch[1]) {
+      const imgUrl = srcMatch[1]
+      // Skip small or icon images
+      if (!imgUrl.includes('/s45/') && !imgUrl.includes('icon') && !imgUrl.includes('logo')) {
+        // Prefer larger Blogger images
+        if (imgUrl.includes('blogger.googleusercontent.com')) {
+          image = imgUrl
+          break
+        } else if (!image) {
+          image = imgUrl
+        }
+      }
+    }
+  }
+
+  // Fallback images based on category
+  if (!image || image.includes('Opto Imaging Png')) {
+    const fallbackImages = {
+      'Manufacturing': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80',
+      'Engineering': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=1200&q=80', 
+      'Success Story': 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80',
+      'Blog': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80'
+    }
+    image = fallbackImages[defaultCategory] || fallbackImages['Manufacturing']
+  }
+
+  // Skip if already a proxy URL to prevent double-encoding
+  if (image.startsWith('/api/image-proxy')) {
+    // Already processed, just return as-is
+    return {
+      id: post.id,
+      title: post.title,
+      slug,
+      excerpt,
+      fullContent: post.content || '',
+      category: post.labels?.[0] || defaultCategory,
+      tags: post.labels || [],
+      author: post.author?.displayName || 'EMUSKI',
+      authorImage: post.author?.image?.url || '/assets/authors/default.jpg',
+      publishDate: new Date(post.published).toISOString(),
+      readTime,
+      image,
+    }
+  }
+
+  // Fix protocol-relative URLs
+  if (image.startsWith('//')) {
+    image = 'https:' + image
+  }
+
+  // Fix Blogger image sizes to prevent server errors
+  if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com')) {
+    image = image.replace(/\/s\d+(-c)?\//, '/s1600/')
+    image = image.replace(/=s\d+$/i, '=s1600')
+  }
+
+  // Decode HTML entities in image URL
+  image = decodeHtmlEntities(image)
+  
+  // Use secure proxy for external images to comply with COEP
+  if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com') || image.includes('unsplash.com')) {
+    image = `/api/image-proxy?url=${encodeURIComponent(image)}`
+  }
 
   return {
     id: post.id,
@@ -245,6 +306,8 @@ function getBlogCategoryName(blogType: BlogType): string {
  */
 function decodeHtmlEntities(text: string): string {
   return text
+    // Fix double-encoded entities first
+    .replace(/&amp;amp;/g, '&')
     .replace(/&nbsp;/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')

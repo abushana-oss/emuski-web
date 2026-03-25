@@ -1,14 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAPISecurityHeaders } from '@/lib/security-headers';
+import { authenticateRequest } from '@/lib/jwt-auth';
+import { isAdminUser } from '@/lib/auth-config';
+import { withRateLimit } from '@/lib/rate-limiter';
+import { withSecurity } from '@/lib/security-middleware';
 
 const SECURITY_HEADERS = getAPISecurityHeaders();
-const _raw_url = process.env.CAD_ENGINE_URL || process.env.NEXT_PUBLIC_CAD_ENGINE_URL || 'https://emuski-web-production.up.railway.app';
+// ✅ SECURITY FIX: Remove hardcoded URL fallback
+const _raw_url = process.env.CAD_ENGINE_URL;
+
+if (!_raw_url) {
+  throw new Error('CAD_ENGINE_URL environment variable is required for security');
+}
+
 const CAD_ENGINE_URL = _raw_url.endsWith('/') ? _raw_url.slice(0, -1) : _raw_url;
 
-export async function GET(req: NextRequest) {
+async function handleMemoryReport(req: NextRequest) {
   const headers = new Headers(SECURITY_HEADERS);
   
   try {
+    // Verify authentication
+    const authHeader = req.headers.get('authorization');
+    const authResult = await authenticateRequest(authHeader);
+    
+    if (!authResult.valid || !authResult.userId) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401, headers }
+      );
+    }
+
+    // Check admin privileges
+    const adminStatus = await isAdminUser(authResult.email || '');
+    if (!adminStatus) {
+      return NextResponse.json(
+        { error: 'Admin privileges required for memory reports' },
+        { status: 403, headers }
+      );
+    }
     // Proxy the request to the CAD engine backend
     const response = await fetch(`${CAD_ENGINE_URL}/memory/usage-report`, {
       method: 'GET',
@@ -36,10 +65,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       success: false,
       error: 'Memory report service temporarily unavailable',
-      details: error.message
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     }, { 
       status: 503, 
       headers 
     });
   }
 }
+
+// Apply security middleware and rate limiting (admin only)
+export const GET = withSecurity(
+  withRateLimit(handleMemoryReport, '/api/cad-engine/memory/usage-report')
+);

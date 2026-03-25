@@ -78,9 +78,17 @@ export class BalloonAPI {
 
   static async getProjects(): Promise<BalloonProject[]> {
     try {
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return [];
+      }
+
+      // Only fetch projects belonging to the authenticated user
       const { data: projects, error } = await supabase
         .from('balloon_projects_with_stats')
         .select('*')
+        .eq('user_id', user.id)  // ✅ SECURITY FIX: Only user's own projects
         .order('updated_at', { ascending: false });
 
       if (error) {
@@ -97,6 +105,13 @@ export class BalloonAPI {
 
   static async getProject(projectId: string): Promise<BalloonProject | null> {
     try {
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return null;
+      }
+
+      // Only fetch project if it belongs to the authenticated user
       const { data: project, error } = await supabase
         .from('balloon_projects')
         .select(`
@@ -104,6 +119,7 @@ export class BalloonAPI {
           annotations:balloon_annotations(*)
         `)
         .eq('id', projectId)
+        .eq('user_id', user.id)  // ✅ SECURITY FIX: Only user's own project
         .single();
 
       if (error) {
@@ -134,10 +150,18 @@ export class BalloonAPI {
 
   static async updateProject(projectId: string, updates: Partial<CreateProjectData>): Promise<boolean> {
     try {
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return false;
+      }
+
+      // Only update project if it belongs to the authenticated user
       const { error } = await supabase
         .from('balloon_projects')
         .update(updates)
-        .eq('id', projectId);
+        .eq('id', projectId)
+        .eq('user_id', user.id);  // ✅ SECURITY FIX: Only user's own project
 
       if (error) {
         // Error('Error updating balloon project:', error);
@@ -153,10 +177,18 @@ export class BalloonAPI {
 
   static async deleteProject(projectId: string): Promise<boolean> {
     try {
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return false;
+      }
+
+      // Only delete project if it belongs to the authenticated user
       const { error } = await supabase
         .from('balloon_projects')
         .delete()
-        .eq('id', projectId);
+        .eq('id', projectId)
+        .eq('user_id', user.id);  // ✅ SECURITY FIX: Only user's own project
 
       if (error) {
         // Error('Error deleting balloon project:', error);
@@ -173,6 +205,25 @@ export class BalloonAPI {
   // Annotations CRUD
   static async createAnnotation(data: CreateAnnotationData): Promise<BalloonAnnotation | null> {
     try {
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return null;
+      }
+
+      // Verify the project belongs to the authenticated user before creating annotation
+      const { data: project, error: projectError } = await supabase
+        .from('balloon_projects')
+        .select('id')
+        .eq('id', data.project_id)
+        .eq('user_id', user.id)  // ✅ SECURITY FIX: Verify project ownership
+        .single();
+
+      if (projectError || !project) {
+        // Error('Project not found or unauthorized');
+        return null;
+      }
+
       const { data: annotation, error } = await supabase
         .from('balloon_annotations')
         .insert([{
@@ -212,6 +263,29 @@ export class BalloonAPI {
 
   static async updateAnnotation(annotationId: string, updates: Partial<CreateAnnotationData>): Promise<boolean> {
     try {
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return false;
+      }
+
+      // Verify the annotation belongs to a project owned by the authenticated user
+      const { data: annotation, error: annotationError } = await supabase
+        .from('balloon_annotations')
+        .select(`
+          id,
+          project_id,
+          balloon_projects!inner(user_id)
+        `)
+        .eq('id', annotationId)
+        .eq('balloon_projects.user_id', user.id)  // ✅ SECURITY FIX: Verify project ownership
+        .single();
+
+      if (annotationError || !annotation) {
+        // Error('Annotation not found or unauthorized');
+        return false;
+      }
+
       // Transform component format to database format
       const dbUpdates: any = {};
       if (updates.x_position !== undefined) dbUpdates.x_position = updates.x_position;
@@ -240,6 +314,29 @@ export class BalloonAPI {
 
   static async deleteAnnotation(annotationId: string): Promise<boolean> {
     try {
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return false;
+      }
+
+      // Verify the annotation belongs to a project owned by the authenticated user
+      const { data: annotation, error: annotationError } = await supabase
+        .from('balloon_annotations')
+        .select(`
+          id,
+          project_id,
+          balloon_projects!inner(user_id)
+        `)
+        .eq('id', annotationId)
+        .eq('balloon_projects.user_id', user.id)  // ✅ SECURITY FIX: Verify project ownership
+        .single();
+
+      if (annotationError || !annotation) {
+        // Error('Annotation not found or unauthorized');
+        return false;
+      }
+
       const { error } = await supabase
         .from('balloon_annotations')
         .delete()
@@ -259,6 +356,25 @@ export class BalloonAPI {
 
   static async getProjectAnnotations(projectId: string): Promise<BalloonAnnotation[]> {
     try {
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return [];
+      }
+
+      // Verify the project belongs to the authenticated user before fetching annotations
+      const { data: project, error: projectError } = await supabase
+        .from('balloon_projects')
+        .select('id')
+        .eq('id', projectId)
+        .eq('user_id', user.id)  // ✅ SECURITY FIX: Verify project ownership
+        .single();
+
+      if (projectError || !project) {
+        // Error('Project not found or unauthorized');
+        return [];
+      }
+
       const { data: annotations, error } = await supabase
         .from('balloon_annotations')
         .select('*')
@@ -290,7 +406,26 @@ export class BalloonAPI {
   // Batch operations for better performance
   static async saveAllAnnotations(projectId: string, annotations: BalloonAnnotation[]): Promise<boolean> {
     try {
-      // Delete existing annotations
+      // Check if user is authenticated first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return false;
+      }
+
+      // Verify the project belongs to the authenticated user
+      const { data: project, error: projectError } = await supabase
+        .from('balloon_projects')
+        .select('id')
+        .eq('id', projectId)
+        .eq('user_id', user.id)  // ✅ SECURITY FIX: Verify project ownership
+        .single();
+
+      if (projectError || !project) {
+        // Error('Project not found or unauthorized');
+        return false;
+      }
+
+      // Delete existing annotations (now safe because we verified ownership)
       await supabase
         .from('balloon_annotations')
         .delete()

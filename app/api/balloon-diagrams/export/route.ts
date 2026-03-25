@@ -1,7 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { authenticateRequest } from '@/lib/jwt-auth';
+import { withRateLimit } from '@/lib/rate-limiter';
+import { withSecurity } from '@/lib/security-middleware';
+import { z } from 'zod';
 
-export async function POST(request: NextRequest) {
+// Validation schema for balloon diagram export
+const BalloonExportSchema = z.object({
+  pdfUrl: z.string().url().optional(),
+  pdfImageBase64: z.string().optional(),
+  balloons: z.array(z.object({
+    x: z.number().min(0).max(100),
+    y: z.number().min(0).max(100),
+    number: z.number().int().min(1),
+    color: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+    style: z.enum(['circle', 'square', 'diamond']),
+    note: z.string().max(100).optional(),
+  })).min(1).max(50),
+  containerWidth: z.number().int().min(100).max(2000),
+  containerHeight: z.number().int().min(100).max(2000),
+  balloonSize: z.number().int().min(1).max(5),
+});
+
+async function handleBalloonExport(request: NextRequest) {
   try {
+    // Verify authentication
+    const authHeader = request.headers.get('authorization');
+    const authResult = await authenticateRequest(authHeader);
+    
+    if (!authResult.valid || !authResult.userId) {
+      return NextResponse.json(
+        { error: 'Authentication required for diagram export' },
+        { status: 401 }
+      );
+    }
+
+    // Validate request body
+    const body = await request.json();
+    const validation = BalloonExportSchema.safeParse(body);
+    
+    if (!validation.success) {
+      return NextResponse.json(
+        { 
+          error: 'Invalid export data',
+          details: validation.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        },
+        { status: 400 }
+      );
+    }
+
     const { 
       pdfUrl,
       pdfImageBase64, 
@@ -9,11 +55,7 @@ export async function POST(request: NextRequest) {
       containerWidth, 
       containerHeight, 
       balloonSize
-    } = await request.json();
-
-    if (!balloons) {
-      return NextResponse.json({ error: 'Missing balloon data' }, { status: 400 });
-    }
+    } = validation.data;
 
     try {
       const { createCanvas, loadImage } = await import('canvas');
@@ -204,6 +246,14 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Export API error:', error);
-    return NextResponse.json({ error: 'Export failed' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Export failed',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    }, { status: 500 });
   }
 }
+
+// Apply security middleware and rate limiting
+export const POST = withSecurity(
+  withRateLimit(handleBalloonExport, '/api/balloon-diagrams/export')
+);

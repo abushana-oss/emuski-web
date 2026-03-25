@@ -12,6 +12,7 @@ if (typeof window === 'undefined') {
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { ClientErrorWrapper } from '@/components/ClientErrorWrapper'
+import { getCSPNonce } from '@/lib/csp-nonce'
 import Script from 'next/script'
 
 const inter = Inter({
@@ -82,14 +83,18 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // For hydration stability, we get the nonce but only use it for server-side CSP headers
+  // Client-side scripts don't need explicit nonce since CSP is handled at middleware level
+  const nonce = await getCSPNonce();
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+
         {/* DNS Prefetch and Preconnect for Performance Optimization */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
@@ -159,7 +164,7 @@ export default function RootLayout({
         <meta property="article:author" content="EMUSKI" />
         <meta property="article:publisher" content="https://www.emuski.com" />
         <meta name="format-detection" content="telephone=no" />
-        
+
         {/* Social banner will load when needed for sharing - no preload required */}
         <link rel="canonical" href="https://www.emuski.com/" />
 
@@ -477,8 +482,18 @@ export default function RootLayout({
                     message.includes('chrome-extension://') ||
                     message.includes('Unchecked runtime.lastError') ||
                     message.includes('access_token') ||
-                    message.includes('provider_token')
+                    message.includes('provider_token') ||
+                    message.includes('supabase.co/auth/v1/token') ||
+                    message.includes('grant_type=password') ||
+                    (message.includes('POST') && message.includes('supabase.co') && message.includes('auth')) ||
+                    (message.includes('Bad Request') && message.includes('supabase.co')) ||
+                    /POST https?:\/\/[^.]+\.supabase\.co\/auth\/v1\/token\?grant_type=password/.test(message) ||
+                    (message.includes('400') && message.includes('supabase.co') && message.includes('auth'))
                   ) {
+                    // Replace sensitive auth errors with generic message
+                    if (message.includes('400') || message.includes('Bad Request')) {
+                      originalError('Login failed');
+                    }
                     return; // Suppress extension and auth token errors
                   }
                   originalError.apply(console, args);
@@ -493,11 +508,66 @@ export default function RootLayout({
                     message.includes('provider_token') ||
                     message.includes('refresh_token') ||
                     message.includes('/auth/callback#') ||
-                    message.includes('eyJ')
+                    message.includes('eyJ') ||
+                    message.includes('supabase.co/auth/v1/token') ||
+                    message.includes('grant_type=password') ||
+                    (message.includes('POST') && message.includes('supabase.co') && message.includes('auth')) ||
+                    (message.includes('Bad Request') && message.includes('supabase.co')) ||
+                    /POST https?:\/\/[^.]+\.supabase\.co\/auth\/v1\/token\?grant_type=password/.test(message) ||
+                    (message.includes('400') && message.includes('supabase.co') && message.includes('auth'))
                   ) {
-                    return; // Suppress auth token logs
+                    // Replace sensitive auth errors with generic message
+                    if (message.includes('400') || message.includes('Bad Request')) {
+                      originalLog('Login failed');
+                    }
+                    return; // Suppress auth token and URL logs
                   }
                   originalLog.apply(console, args);
+                };
+
+                // ✅ Suppress console.warn containing sensitive data
+                const originalWarn = console.warn;
+                console.warn = function(...args) {
+                  const message = args.join(' ');
+                  if (
+                    message.includes('access_token') ||
+                    message.includes('provider_token') ||
+                    message.includes('refresh_token') ||
+                    message.includes('supabase.co/auth/v1/token') ||
+                    message.includes('grant_type=password') ||
+                    (message.includes('POST') && message.includes('supabase.co') && message.includes('auth')) ||
+                    (message.includes('Bad Request') && message.includes('supabase.co')) ||
+                    /POST https?:\/\/[^.]+\.supabase\.co\/auth\/v1\/token\?grant_type=password/.test(message) ||
+                    (message.includes('400') && message.includes('supabase.co') && message.includes('auth'))
+                  ) {
+                    // Replace sensitive auth errors with generic message
+                    if (message.includes('400') || message.includes('Bad Request')) {
+                      originalWarn('Login failed');
+                    }
+                    return; // Suppress auth warnings
+                  }
+                  originalWarn.apply(console, args);
+                };
+
+                // ✅ Intercept and filter XMLHttpRequest logs for auth endpoints
+                const originalXHROpen = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function(method, url, ...args) {
+                  this._url = url;
+                  this._method = method;
+                  return originalXHROpen.apply(this, [method, url, ...args]);
+                };
+
+                const originalXHRSend = XMLHttpRequest.prototype.send;
+                XMLHttpRequest.prototype.send = function(data) {
+                  this.addEventListener('error', function() {
+                    if (this._url && typeof this._url === 'string' && 
+                        (this._url.includes('supabase.co/auth/v1/token') || 
+                         this._url.includes('grant_type=password'))) {
+                      // Suppress auth-related network errors from appearing in console
+                      return;
+                    }
+                  });
+                  return originalXHRSend.apply(this, [data]);
                 };
 
                 // ✅ Handle unhandled promise rejections from extensions
@@ -518,8 +588,14 @@ export default function RootLayout({
                 // ✅ Block malicious extension communication
                 const originalPostMessage = window.postMessage;
                 window.postMessage = function(message, targetOrigin, transfer) {
+                  // reCAPTCHA may pass a MessagePort as targetOrigin (invalid).
+                  // Guard against non-strings to avoid browser SyntaxError.
+                  if (typeof targetOrigin !== 'string') {
+                    return;
+                  }
                   if (
-                    targetOrigin && (
+                    targetOrigin &&
+                    (
                       targetOrigin.includes('plugin.lusha.com') ||
                       targetOrigin.includes('chrome-extension')
                     )
@@ -583,7 +659,7 @@ export default function RootLayout({
             `
           }}
         />
-        
+
         {/* Initialize global error handlers */}
         <Script
           id="global-error-handlers"

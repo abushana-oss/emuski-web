@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { generateCSPNonce, getEnhancedSecurityHeaders } from './src/lib/csp-nonce'
+import crypto from 'crypto'
 
 /**
  * Next.js Proxy Middleware
@@ -57,6 +59,37 @@ function getSessionId(request: NextRequest): string {
   return sessionId || `${Date.now()}`
 }
 
+// Helper: Get proper page title based on pathname
+function getPageTitle(pathname: string): string {
+  const titleMap: Record<string, string> = {
+    '/': 'EMUSKI - Your One-Stop Solution for OEM in Bangalore, India',
+    '/manufacturing-services': 'Manufacturing Services - EMUSKI Engineering Solutions',
+    '/cost-engineering': 'Cost Engineering & Optimization - EMUSKI',
+    '/tools/3d-cad-analysis': '3D CAD Analysis Tool - EMUSKI',
+    '/tools/2d-balloon-diagram': '2D Balloon Diagram Tool - EMUSKI',
+    '/solutions/ai': 'AI Solutions for Manufacturing - EMUSKI',
+    '/blog': 'Blog - Manufacturing Industry Insights | EMUSKI',
+    '/gallery': 'Gallery - EMUSKI Manufacturing Portfolio',
+    '/contact': 'Contact EMUSKI - Get Manufacturing Quote',
+    '/auth/login': 'Login - EMUSKI Portal',
+    '/auth/register': 'Register - EMUSKI Portal',
+  }
+  return titleMap[pathname] || `EMUSKI - ${pathname.replace('/', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`
+}
+
+// Helper: Get content category for analytics
+function getContentCategory(pathname: string): string {
+  if (pathname.startsWith('/blog')) return 'blog'
+  if (pathname === '/manufacturing-services') return 'services'
+  if (pathname === '/cost-engineering') return 'cost-engineering'
+  if (pathname.startsWith('/tools/')) return 'tools'
+  if (pathname.startsWith('/solutions/')) return 'solutions'
+  if (pathname.startsWith('/auth')) return 'auth'
+  if (pathname === '/gallery') return 'gallery'
+  if (pathname === '/contact') return 'contact'
+  return 'general'
+}
+
 // Helper: Send GA4 event (non-blocking)
 async function sendGA4Event(payload: any) {
   if (!GA4_API_SECRET) return // Skip if not configured
@@ -76,6 +109,9 @@ async function sendGA4Event(payload: any) {
 
 export default async function middleware(request: NextRequest) {
   try {
+    // Generate CSP nonce for this request
+    const nonce = generateCSPNonce()
+    
     const { pathname, search, searchParams, origin } = request.nextUrl
     const host = request.headers.get('host') || ''
     const protocol = request.headers.get('x-forwarded-proto') || 'https'
@@ -87,6 +123,10 @@ export default async function middleware(request: NextRequest) {
     requestHeaders.delete('Next-Router-State-Tree')
     requestHeaders.delete('Next-Router-Prefetch')
     requestHeaders.delete('Next-Url')
+    // Set nonce on request headers so that:
+    //  - next/headers() in the layout reads the same value (prevents SSR/hydration mismatch)
+    //  - Next.js automatically threads it into <Script> components via x-nonce
+    requestHeaders.set('x-nonce', nonce)
 
     // Skip authentication checks for static assets and API routes (except protected ones)
     if (
@@ -287,10 +327,14 @@ export default async function middleware(request: NextRequest) {
         params: {
           page_location: pageLocation,
           page_referrer: pageReferrer,
-          page_title: pathname,
+          page_title: getPageTitle(pathname),
           session_id: sessionId,
           engagement_time_msec: 100,
           tracking_method: 'server_side',
+          page_path: pathname,
+          content_group1: getContentCategory(pathname),
+          content_group2: 'web',
+          traffic_source: pageReferrer ? new URL(pageReferrer).hostname : 'direct',
         },
       })
 
@@ -305,43 +349,17 @@ export default async function middleware(request: NextRequest) {
       sendGA4Event(payload)
     }
 
-    // Content Security Policy - Updated to include all Google, Mixpanel, reCAPTCHA, and PDF viewing domains
-    response.headers.set(
-      'Content-Security-Policy',
-      [
-        "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com https://assets.apollo.io",
-        "script-src-elem 'self' 'unsafe-inline' https://*.google.com https://*.gstatic.com https://*.googletagmanager.com https://*.google-analytics.com https://tagmanager.google.com https://www.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://cdn.mxpnl.com https://assets.apollo.io",
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com blob: data:",
-        "font-src 'self' data: https://fonts.gstatic.com blob:",
-        "img-src 'self' data: blob: https: https://*.google.com https://*.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.blogger.com https://*.blogspot.com https://blogger.googleusercontent.com https://images.unsplash.com https://via.placeholder.com https://*.supabase.co",
-        "connect-src 'self' https://*.google.com https://www.googleapis.com https://*.googleapis.com https://accounts.google.com https://oauth2.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://*.googletagmanager.com https://*.blogger.com https://blogger.googleusercontent.com https://api.mixpanel.com https://api-js.mixpanel.com https://cdn.mxpnl.com https://*.supabase.co https://assets.apollo.io https://*.apollo.io",
-        "worker-src 'self' blob: data:",
-        "child-src 'self' blob: data:",
-        "frame-src 'self' blob: data: https://*.google.com https://accounts.google.com https://*.googletagmanager.com https://td.doubleclick.net https://*.supabase.co",
-        "object-src 'self' blob: data:",
-        "media-src 'self' data: blob: https://*.supabase.co",
-        "base-uri 'self'",
-        "form-action 'self'",
-        "frame-ancestors 'self'",
-        "upgrade-insecure-requests"
-      ].join('; ')
-    )
-
-    // Enhanced security headers for production
-    Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
+    // Apply enhanced security headers with CSP nonce
+    const enhancedHeaders = getEnhancedSecurityHeaders(nonce)
+    Object.entries(enhancedHeaders).forEach(([key, value]) => {
       response.headers.set(key, value)
     })
     
-    // Additional security headers
-    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()')
-    response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
-    response.headers.set('X-Request-ID', crypto.randomUUID())
+    // Add nonce to response headers for client access
+    response.headers.set('X-Nonce', nonce)
     
-    // HTTPS enforcement in production
-    if (process.env.NODE_ENV === 'production') {
-      response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
-    }
+    // Generate unique request ID for tracking
+    response.headers.set('X-Request-ID', crypto.randomUUID())
 
     return response
   } catch (error) {

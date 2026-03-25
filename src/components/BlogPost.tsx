@@ -7,6 +7,7 @@ import { BlogPost } from "@/lib/api/blogger";
 import { useBlogTracking } from "@/lib/hooks/useAnalytics";
 import { trackClick, trackBlogEngagement } from "@/lib/analytics";
 import { tagToSlug } from "@/lib/utils/tags";
+import { useCSPNonce } from "@/components/security/NonceScript";
 import "../styles/blog-content.css";
 
 interface BlogPostComponentProps {
@@ -28,6 +29,9 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
 
   // Track blog engagement - reading time, scroll depth
   const { readingTime } = useBlogTracking(post.title, post.category);
+  
+  // Get CSP nonce for inline scripts
+  const nonce = useCSPNonce();
 
   useEffect(() => {
     setIsMounted(true);
@@ -464,12 +468,14 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       {/* Article Schema - PRIMARY SEO */}
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
 
       {/* Breadcrumb Schema - Rich Snippets */}
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
@@ -477,6 +483,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       {faqSchema && (
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
@@ -484,6 +491,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       {/* WebPage Schema - Additional Context */}
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
 
@@ -780,7 +788,18 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                           if (srcMatch) {
                             let src = srcMatch[1];
 
-                            // Fix Blogger image URLs if needed
+                            // Skip if already a proxy URL to prevent double-encoding
+                            if (src.startsWith('/api/image-proxy')) {
+                              const alt = altMatch ? altMatch[1] : (titleMatch ? titleMatch[1] : post.title);
+                              return `<img src="${src}" alt="${alt}" class="w-full h-auto rounded-lg border border-gray-200 my-8 object-cover" loading="eager" decoding="async" />`;
+                            }
+
+                            // Fix protocol-relative URLs
+                            if (src.startsWith('//')) {
+                              src = 'https:' + src;
+                            }
+
+                            // Fix Blogger image URLs and route through proxy for COEP compliance
                             if (src.includes('blogger.googleusercontent.com') ||
                                 src.includes('blogspot.com') ||
                                 src.includes('bp.blogspot.com')) {
@@ -790,22 +809,55 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                               // 2. Parameter format: =s16000 → =s1600
                               // Large sizes like s16000 cause 5xx errors, so limit to s1600 max
                               src = src.replace(/=s\d+$/i, '=s1600');
+                              
+                              // Route through proxy for COEP compliance
+                              src = `/api/image-proxy?url=${encodeURIComponent(src)}`;
+                            }
+
+                            // Route Unsplash images through proxy for COEP compliance
+                            if (src.includes('unsplash.com')) {
+                              src = `/api/image-proxy?url=${encodeURIComponent(src)}`;
                             }
 
                             // Only remove first image if it matches the featured image URL
                             if (isFirstImage) {
                               isFirstImage = false;
+                              
+                              // Extract original URL from proxy if present for comparison
+                              let originalSrc = src;
+                              if (src.startsWith('/api/image-proxy?url=')) {
+                                try {
+                                  const urlParam = new URLSearchParams(src.split('?')[1]).get('url');
+                                  if (urlParam) originalSrc = decodeURIComponent(urlParam);
+                                } catch (e) {
+                                  // Keep original if parsing fails
+                                }
+                              }
+                              
+                              // Extract original URL from featured image proxy if present
+                              let originalFeatured = featuredImageUrl;
+                              if (featuredImageUrl.startsWith('/api/image-proxy?url=')) {
+                                try {
+                                  const urlParam = new URLSearchParams(featuredImageUrl.split('?')[1]).get('url');
+                                  if (urlParam) originalFeatured = decodeURIComponent(urlParam);
+                                } catch (e) {
+                                  // Keep original if parsing fails
+                                }
+                              }
+                              
                               // Normalize URLs for comparison (remove protocol and size parameters)
-                              const normalizedSrc = src
+                              const normalizedSrc = originalSrc
                                 .replace(/^https?:\/\//i, '')
                                 .replace(/\/s\d+(-c)?\//, '/')
                                 .replace(/=s\d+$/i, '');
-                              const normalizedFeatured = featuredImageUrl
+                              const normalizedFeatured = originalFeatured
                                 .replace(/^https?:\/\//i, '')
                                 .replace(/\/s\d+(-c)?\//, '/')
                                 .replace(/=s\d+$/i, '');
 
-                              if (normalizedSrc.includes(normalizedFeatured) || normalizedFeatured.includes(normalizedSrc)) {
+                              if (normalizedSrc === normalizedFeatured || 
+                                  normalizedSrc.includes(normalizedFeatured) || 
+                                  normalizedFeatured.includes(normalizedSrc)) {
                                 return ''; // Remove duplicate featured image
                               }
                             }
@@ -920,20 +972,22 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                   />
 
                   {/* Tags - SEO Keywords */}
-                  {post.tags && post.tags.length > 0 && (
+                  {post.tags && Array.isArray(post.tags) && post.tags.length > 0 && (
                     <div className="mt-10 pt-8 border-t border-gray-200">
                       <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-3">Related Topics</h3>
                       <div className="flex flex-wrap gap-2" itemProp="keywords">
-                        {post.tags.map((tag, index) => (
-                          <a
-                            key={index}
-                            href={`/blog?tag=${tagToSlug(tag)}`}
-                            className="inline-block px-3 py-1 bg-teal-50 text-teal-700 text-sm font-medium rounded hover:bg-teal-100 transition-colors"
-                            rel="tag"
-                          >
-                            {tag}
-                          </a>
-                        ))}
+                        {post.tags
+                          .filter(tag => tag && typeof tag === 'string')
+                          .map((tag, index) => (
+                            <a
+                              key={`tag-${index}`}
+                              href={`/blog?tag=${tagToSlug(tag || '')}`}
+                              className="inline-block px-3 py-1 bg-teal-50 text-teal-700 text-sm font-medium rounded hover:bg-teal-100 transition-colors"
+                              rel="tag"
+                            >
+                              {tag}
+                            </a>
+                          ))}
                       </div>
                     </div>
                   )}

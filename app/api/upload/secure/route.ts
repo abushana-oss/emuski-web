@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateCADFile, generateSecureFileName, scanFileContent, checkUploadRateLimit } from '@/lib/file-security';
 import { getUploadSecurityHeaders, logSecurityEvent } from '@/lib/security-headers';
 import { supabase } from '@/lib/supabase';
+import { authenticateRequest } from '@/lib/jwt-auth';
 
 const SECURITY_HEADERS = getUploadSecurityHeaders();
 
@@ -10,16 +11,20 @@ export async function POST(req: NextRequest) {
   const clientIP = req.headers.get('x-forwarded-for') || 'unknown';
   const userAgent = req.headers.get('user-agent') || 'unknown';
 
+  let userId: string | undefined;
   try {
-    // Get user ID (require authentication for uploads)
-    const userId = req.headers.get('x-user-id') || req.headers.get('authorization')?.replace('Bearer ', '');
+    // Verify authentication using JWT (standardized approach)
+    const authHeader = req.headers.get('authorization');
+    const authResult = await authenticateRequest(authHeader);
     
-    if (!userId) {
+    if (!authResult.valid || !authResult.userId) {
       return NextResponse.json(
-        { error: 'Authentication required for file uploads' },
+        { error: 'Valid authentication required for file uploads' },
         { status: 401, headers }
       );
     }
+    
+    userId = authResult.userId;
 
     // Rate limiting check
     if (!checkUploadRateLimit(userId, 10, 3600000)) { // 10 uploads per hour
@@ -163,7 +168,7 @@ export async function POST(req: NextRequest) {
     logSecurityEvent({
       type: 'suspicious_activity',
       severity: 'medium',
-      userId: req.headers.get('x-user-id'),
+      userId: userId,
       ip: clientIP,
       userAgent,
       details: {

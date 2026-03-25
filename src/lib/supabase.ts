@@ -60,6 +60,12 @@ export const isSupabaseConfigured = () => {
   return !!(supabaseUrl && supabaseAnonKey);
 };
 
+// Service role client for server-side operations (ISO 27001 standard)
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+export const supabaseService = (supabaseUrl && supabaseServiceRoleKey)
+  ? createClient(supabaseUrl, supabaseServiceRoleKey)
+  : supabase; // Fallback to anon client if service key missing (graceful degradation)
+
 // Type definitions for our tables
 export interface EmailSubscription {
   id?: string
@@ -132,15 +138,27 @@ export const STORAGE_BUCKETS = {
 } as const
 
 // S3 Configuration for external bucket integration
+// S3 config for server-side only (credentials removed from client)
 export const S3_CONFIG = {
   ENDPOINT: 's3.eu-central-1.amazonaws.com',
   REGION: 'eu-central-1',
   BUCKET_NAME: 'upload-dev-s3',
-  ACCESS_KEY_ID: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID,
-  SECRET_ACCESS_KEY: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY,
-  // Use CORS-enabled endpoints for browser uploads
+  // S3 credentials are now server-side only
   UPLOAD_URL: `https://upload-dev-s3.s3.eu-central-1.amazonaws.com/`
 } as const
+
+// Server-side S3 configuration (only available on server)
+export const getServerS3Config = () => {
+  if (typeof window !== 'undefined') {
+    throw new Error('S3 credentials not available on client-side');
+  }
+  
+  return {
+    ...S3_CONFIG,
+    ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
+  };
+};
 
 // Enterprise CAD Analysis API - Principal Engineer Standards
 export const cadAnalysisApi = {

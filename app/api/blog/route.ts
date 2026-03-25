@@ -37,36 +37,27 @@ interface BlogPostsResponse {
 }
 
 async function blogHandler(req: NextRequest): Promise<NextResponse> {
-  // Extract and validate query parameters
+  // Extract and validate query parameters using Zod schema
   const { searchParams } = new URL(req.url);
-  const blogId = searchParams.get('blogId');
-  const maxResultsParam = searchParams.get('maxResults') || '10';
-  const label = searchParams.get('label');
+  const queryParams = {
+    blogId: searchParams.get('blogId'),
+    maxResults: searchParams.get('maxResults') || '10',
+    label: searchParams.get('label'),
+  };
   
-  // Basic validation
-  if (!blogId) {
+  // Validate using Zod schema
+  const validation = BlogQuerySchema.safeParse(queryParams);
+  if (!validation.success) {
     return NextResponse.json(
-      { error: 'blogId parameter is required' },
+      { 
+        error: 'Invalid query parameters',
+        details: validation.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+      },
       { status: 400 }
     );
   }
   
-  // Validate and parse maxResults
-  const maxResults = parseInt(maxResultsParam);
-  if (isNaN(maxResults) || maxResults < 1 || maxResults > 50) {
-    return NextResponse.json(
-      { error: 'maxResults must be a number between 1 and 50' },
-      { status: 400 }
-    );
-  }
-  
-  // Basic XSS protection
-  if (/<script|javascript:|data:|vbscript:/i.test(blogId + (label || ''))) {
-    return NextResponse.json(
-      { error: 'Invalid characters detected' },
-      { status: 400 }
-    );
-  }
+  const { blogId, maxResults, label } = validation.data;
 
   const apiKey = process.env.BLOGGER_API_KEY;
   if (!apiKey) {

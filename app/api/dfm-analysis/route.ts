@@ -4,6 +4,7 @@ import { CreditsManager } from '@/lib/credits-manager';
 import { RequestQueue } from '@/lib/request-queue';
 import { withSecurity, SECURITY_CONFIGS } from '@/lib/security-middleware';
 import { ErrorHandler } from '@/lib/error-handler';
+import { authenticateRequest } from '@/lib/jwt-auth';
 import crypto from 'crypto';
 import { z } from 'zod';
 import { CacheAPI, withCacheMetrics } from '@/lib/cache';
@@ -31,6 +32,7 @@ const DFMRequestSchema = z.object({
 // DFM Analysis handler with enterprise security
 async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
 
+  let creditReservation: any = null;
   try {
     // Parse and validate request body
     let body;
@@ -57,15 +59,18 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
 
     const { message, geometryData, fileName, userId, priority } = validationResult.data;
 
-    // Get user ID from authenticated request (set by security middleware)
-    const userIdentifier = (req as any).userId || userId || req.headers.get('x-user-id');
+    // Verify authentication
+    const authHeader = req.headers.get('authorization');
+    const authResult = await authenticateRequest(authHeader);
     
-    if (!userIdentifier || userIdentifier === 'anonymous') {
+    if (!authResult.valid || !authResult.userId) {
       return NextResponse.json(
-        { error: 'Authentication required. Please sign in to use DFM analysis.' },
+        { error: 'Valid authentication required for AI analysis' },
         { status: 401 }
       );
     }
+    
+    const userIdentifier = authResult.userId;
 
     // Check API key configuration
     if (!process.env.ANTHROPIC_API_KEY) {
@@ -80,35 +85,37 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
     // Estimate tokens for credit check
     const estimatedTokens = CreditsManager.estimateTokens(message, geometryData);
 
-    // Check user credits (authentication is required)
-    let creditInfo = null;
-      try {
-        // Add timeout to credit check to prevent hanging
-        const creditTimeout = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Credit check timeout')), 5000)
+    // Atomically reserve credits (prevents race conditions)
+    try {
+      const creditTimeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Credit reservation timeout')), 5000)
+      );
+      
+      creditReservation = await Promise.race([
+        CreditsManager.reserveCredits(userIdentifier, estimatedTokens, 'dfm_analysis', fileName),
+        creditTimeout
+      ]);
+      
+      if (!creditReservation.success) {
+        return NextResponse.json(
+          {
+            error: 'Insufficient credits',
+            creditsRequired: creditReservation.creditsRequired,
+            creditsRemaining: creditReservation.creditsRemaining,
+            timeUntilReset: Math.ceil(creditReservation.timeUntilReset),
+            message: `You need ${creditReservation.creditsRequired} credits but only have ${creditReservation.creditsRemaining} remaining. Credits reset in ${Math.ceil(creditReservation.timeUntilReset)} hours.`,
+            details: creditReservation.error
+          },
+          { status: 402 }
         );
-        
-        creditInfo = await Promise.race([
-          CreditsManager.checkCredits(userIdentifier, estimatedTokens),
-          creditTimeout
-        ]);
-        
-        if (!creditInfo.hasCredits) {
-          return NextResponse.json(
-            {
-              error: 'Insufficient credits',
-              creditsRequired: creditInfo.creditsRequired,
-              creditsRemaining: creditInfo.creditsRemaining,
-              timeUntilReset: Math.ceil(creditInfo.timeUntilReset),
-              message: `You need ${creditInfo.creditsRequired} credits but only have ${creditInfo.creditsRemaining} remaining. Credits reset in ${Math.ceil(creditInfo.timeUntilReset)} hours.`
-            },
-            { status: 402 }
-          );
-        }
-      } catch (error) {
-        // Don't block the request - proceed with analysis but warn about credit system
-        creditInfo = null; // Will proceed without credit tracking
       }
+    } catch (error) {
+      console.error('Credit reservation error:', error);
+      return NextResponse.json(
+        { error: 'Credit system temporarily unavailable' },
+        { status: 503 }
+      );
+    }
 
     // Check cache using new enterprise caching system
     const dfmRequest = {
@@ -192,17 +199,20 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
       throw new Error('AI response too short or empty');
     }
 
-    // Deduct credits (user is authenticated)
-    if (creditInfo) {
+    // Confirm credit usage after successful analysis
+    if (creditReservation && creditReservation.reservationId) {
       try {
-        await CreditsManager.deductCredits(
-          userIdentifier, // Use userIdentifier instead of userId
-          estimatedTokens,
-          'dfm_analysis',
-          fileName
+        // Calculate actual tokens used based on response length
+        const actualTokensUsed = Math.max(estimatedTokens, Math.ceil(response.length / 4));
+        
+        await CreditsManager.confirmCreditUsage(
+          userIdentifier,
+          creditReservation.reservationId,
+          actualTokensUsed
         );
       } catch (error) {
-        // Continue - don't block successful response for credit issues
+        console.error('Credit confirmation error:', error);
+        // Don't block successful response for credit confirmation issues
       }
     }
 
@@ -221,11 +231,19 @@ async function dfmAnalysisHandler(req: NextRequest): Promise<NextResponse> {
         cached: false,
         processingTime,
         estimatedTokens,
-        creditsUsed: creditInfo ? creditInfo.creditsRequired : 0,
-        creditsRemaining: creditInfo ? (creditInfo.creditsRemaining - creditInfo.creditsRequired) : null
+        creditsUsed: creditReservation ? creditReservation.creditsRequired : 0,
+        creditsRemaining: creditReservation ? creditReservation.creditsRemaining : null
       }
     });
   } catch (error: any) {
+    // Release reserved credits if operation fails
+    if (creditReservation && creditReservation.reservationId) {
+      try {
+        await CreditsManager.releaseCreditReservation(creditReservation.reservationId);
+      } catch (releaseError) {
+        console.error('Failed to release credit reservation:', releaseError);
+      }
+    }
 
     // Handle specific API errors
     if (error?.status === 401) {

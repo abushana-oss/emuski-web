@@ -196,7 +196,7 @@ export const HeroSection = () => {
                   priority={index === 0}
                   loading={index === 0 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "low"}
-                  sizes="100vw"
+                  sizes="(max-width: 1023px) 100vw, 0px"
                   quality={75}
                   className="object-cover brightness-110"
                 />

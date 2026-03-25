@@ -128,7 +128,7 @@ const securityHeaders = [
 
 /**
  * Image optimization configuration
- * Allows images from trusted CDN sources only
+ * Allows images from trusted CDN sources and local proxy
  */
 const imageConfig = {
   remotePatterns: [
@@ -145,6 +145,21 @@ const imageConfig = {
     {
       protocol: 'https',
       hostname: 'via.placeholder.com',
+      pathname: '/**',
+    },
+  ],
+  localPatterns: [
+    {
+      pathname: '/api/image-proxy**',
+      search: '**',
+    },
+    {
+      pathname: '/assets/**',
+    },
+    {
+      pathname: '/images/**',
+    },
+    {
       pathname: '/**',
     },
   ],
