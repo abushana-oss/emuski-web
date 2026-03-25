@@ -9,8 +9,9 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "build:analyze": "next build",
+    "build": "NODE_ENV=production next build",
+    "build:production": "NODE_ENV=production DISABLE_TURBOPACK=true next build",
+    "build:analyze": "NODE_ENV=production ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
     "optimize:images": "node scripts/optimize-images.js",
