@@ -50,8 +50,8 @@ export function generateCSPWithNonce(nonce: string): string {
     'script-src': [
       "'self'",
       `'nonce-${nonce}'`,
-      "'unsafe-inline'", // Required for Next.js chunks in production
-      "'unsafe-eval'", // Required for Next.js webpack chunks
+      "'unsafe-inline'", // Required for Turbopack chunks
+      "'unsafe-eval'", // Required for Turbopack in production
       // Development - additional localhost
       ...(isDevelopment ? [
         'http://localhost:*',

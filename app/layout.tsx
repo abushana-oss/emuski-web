@@ -137,9 +137,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* Production Error Handler Script - Load First */}
-        {process.env.NODE_ENV === 'production' && (
-          <script src="/error-handler.js" defer />
-        )}
+        <script src="/turbo-error-fix.js" defer />
 
         {/* Essential DNS Prefetch and Preconnect for Performance Optimization */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />

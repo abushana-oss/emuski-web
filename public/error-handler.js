@@ -1,6 +1,7 @@
 /**
- * Production Error Handler
+ * Production Error Handler - CSP Compliant
  * Handles chunk loading failures and connection errors
+ * Designed to work with Content Security Policy nonces
  */
 
 (function() {
