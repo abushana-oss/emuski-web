@@ -472,8 +472,30 @@ const nextConfig = {
   // Image optimization
   images: imageConfig,
 
-  // Experimental features
+
+  // Compiler options - Industry Standard: Zero console logs in production
+  compiler: {
+    // Remove ALL console statements in production for security and performance
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'], // Keep error and warning logs
+    } : false,
+    // Enable SWC minification for better performance
+    styledComponents: true,
+  },
+
+  // Disable Turbopack for stable production builds
+  // turbopack: {},
+  
+  // Production-optimized configuration
+  productionBrowserSourceMaps: false,
+  poweredByHeader: false,
+  generateEtags: true,
+  
+  // Optimize bundle splitting
   experimental: {
+    // Disable Turbopack in production for stability
+    turbo: process.env.NODE_ENV === 'development' ? {} : undefined,
+    
     // Optimize package imports to reduce bundle size
     optimizePackageImports: [
       'lucide-react',
@@ -490,45 +512,54 @@ const nextConfig = {
     },
   },
 
-  // Compiler options - Industry Standard: Zero console logs in production
-  compiler: {
-    // Remove ALL console statements in production for security and performance
-    removeConsole: process.env.NODE_ENV === 'production' ? true : false,
-  },
-
-  // Turbopack configuration (Next.js 15+)
-  turbopack: {},
-
-  // Webpack configuration
+  // Webpack configuration for production stability
   webpack: (config, options) => {
-    // Fix SWC helpers resolution issue in Next.js 16
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@swc/helpers/_/_async_to_generator': '@swc/helpers/_async_to_generator',
-      '@swc/helpers/_/_call_super': '@swc/helpers/_call_super',
-      '@swc/helpers/_/_class_call_check': '@swc/helpers/_class_call_check',
-      '@swc/helpers/_/_class_private_field_get': '@swc/helpers/_class_private_field_get',
-      '@swc/helpers/_/_class_private_field_init': '@swc/helpers/_class_private_field_init',
-      '@swc/helpers/_/_class_private_field_set': '@swc/helpers/_class_private_field_set',
-      '@swc/helpers/_/_class_private_method_get': '@swc/helpers/_class_private_method_get',
-      '@swc/helpers/_/_class_private_method_init': '@swc/helpers/_class_private_method_init',
-      '@swc/helpers/_/_construct': '@swc/helpers/_construct',
-      '@swc/helpers/_/_create_class': '@swc/helpers/_create_class',
-      '@swc/helpers/_/_define_property': '@swc/helpers/_define_property',
-      '@swc/helpers/_/_inherits': '@swc/helpers/_inherits',
-      '@swc/helpers/_/_instanceof': '@swc/helpers/_instanceof',
-      '@swc/helpers/_/_interop_require_default': '@swc/helpers/_interop_require_default',
-      '@swc/helpers/_/_interop_require_wildcard': '@swc/helpers/_interop_require_wildcard',
-      '@swc/helpers/_/_object_spread': '@swc/helpers/_object_spread',
-      '@swc/helpers/_/_object_spread_props': '@swc/helpers/_object_spread_props',
-      '@swc/helpers/_/_object_without_properties': '@swc/helpers/_object_without_properties',
-      '@swc/helpers/_/_sliced_to_array': '@swc/helpers/_sliced_to_array',
-      '@swc/helpers/_/_to_array': '@swc/helpers/_to_array',
-      '@swc/helpers/_/_to_consumable_array': '@swc/helpers/_to_consumable_array',
-      '@swc/helpers/_/_ts_generator': '@swc/helpers/_ts_generator',
-      '@swc/helpers/_/_type_of': '@swc/helpers/_type_of',
-      '@swc/helpers/_/_wrap_native_super': '@swc/helpers/_wrap_native_super',
-    };
+    // Production stability fixes
+    if (!options.dev) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        // Ensure consistent module resolution
+        'react': require.resolve('react'),
+        'react-dom': require.resolve('react-dom'),
+        'next': require.resolve('next'),
+      };
+      
+      // Optimize chunk splitting for better loading
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          cacheGroups: {
+            ...config.optimization.splitChunks?.cacheGroups,
+            framework: {
+              chunks: 'all',
+              name: 'framework',
+              test: /(?<!node_modules.*)[\/\\]node_modules[\/\\](react|react-dom|scheduler|prop-types|use-subscription)[\/\\]/,
+              priority: 40,
+              enforce: true,
+            },
+            lib: {
+              test(module) {
+                return module.size() > 160000 && /node_modules[/\\]/.test(module.identifier());
+              },
+              name(module) {
+                const hash = require('crypto').createHash('sha1');
+                if (module.libIdent) {
+                  hash.update(module.libIdent({ context: options.dir }));
+                } else {
+                  hash.update(module.identifier());
+                }
+                return hash.digest('hex').substring(0, 8);
+              },
+              priority: 30,
+              minChunks: 1,
+              reuseExistingChunk: true,
+              chunks: 'all',
+            },
+          },
+        },
+      };
+    }
 
     return configureWebpack(config, options);
   },

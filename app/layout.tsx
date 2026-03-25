@@ -12,6 +12,7 @@ if (typeof window === 'undefined') {
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { ClientErrorWrapper } from '@/components/ClientErrorWrapper'
+import { ProductionErrorBoundary } from '@/components/ProductionErrorBoundary'
 import Script from 'next/script'
 
 const inter = Inter({
@@ -23,25 +24,54 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.emuski.com'),
-  title: 'EMUSKI - Your One-Stop Solution for OEM in Bangalore, India',
-  description: 'EMUSKI delivers world-class OEM manufacturing solutions, precision Engineering Innovations, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing, rapid prototyping, cost optimization, and intelligent manufacturing solutions for automotive, electronics, medical devices, and aerospace industries. ISO certified manufacturing partner with 15+ years experience.',
-  keywords: 'OEM manufacturing, precision engineering, AI manufacturing, design for manufacturing, rapid prototyping, cost optimization, VAVE methodology, Manufacturing Excellences Bangalore, precision engineering India, automotive manufacturing, electronics manufacturing, medical device manufacturing, aerospace manufacturing, intelligent manufacturing, manufacturing automation, CNC machining, injection molding, sheet metal fabrication, quality assurance manufacturing, lean manufacturing, strategic sourcing, supply chain optimization, manufacturing consulting, industrial engineering, production optimization, smart manufacturing, Industry 4.0 solutions',
-  authors: [{ name: 'EMUSKI' }],
+  title: {
+    default: 'EMUSKI - Leading OEM Manufacturing & Precision Engineering Solutions | Bangalore, India',
+    template: '%s | EMUSKI Manufacturing Solutions'
+  },
+  description: 'EMUSKI delivers world-class OEM manufacturing, precision engineering, and AI-powered production solutions in Bangalore, India. ISO 9001:2015 certified with 15+ years expertise serving automotive, aerospace, medical device, and electronics industries globally.',
+  keywords: [
+    'OEM manufacturing Bangalore',
+    'precision engineering India',
+    'manufacturing solutions',
+    'CNC machining services',
+    'rapid prototyping Bangalore',
+    'injection molding services',
+    'cost engineering VAVE',
+    'AI manufacturing solutions',
+    'automotive manufacturing India',
+    'aerospace manufacturing',
+    'medical device manufacturing',
+    'electronics manufacturing',
+    'ISO certified manufacturing',
+    'design for manufacturing',
+    'manufacturing consulting',
+    'precision machining Bangalore',
+    'sheet metal fabrication',
+    'quality assurance manufacturing',
+    'manufacturing Electronic City',
+    'engineering services Bangalore'
+  ],
+  authors: [{ name: 'EMUSKI Manufacturing Solutions', url: 'https://www.emuski.com' }],
+  creator: 'EMUSKI Manufacturing Solutions',
+  publisher: 'EMUSKI Manufacturing Solutions',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
-    title: 'EMUSKI - One-Stop OEM Manufacturing Solutions | Precision Engineering & AI-Powered Production in Bangalore, India',
-    description: 'EMUSKI delivers world-class OEM manufacturing solutions, precision Engineering Innovations, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing, rapid prototyping, cost optimization for automotive, electronics, medical devices, aerospace industries.',
     type: 'website',
-    url: 'https://www.emuski.com/',
-    siteName: 'EMUSKI',
     locale: 'en_US',
+    url: 'https://www.emuski.com',
+    siteName: 'EMUSKI Manufacturing Solutions',
+    title: 'EMUSKI - Leading OEM Manufacturing & Precision Engineering | Bangalore, India',
+    description: 'World-class OEM manufacturing, precision engineering, and AI-powered production solutions. ISO 9001:2015 certified manufacturing partner in Bangalore, India serving global industries.',
     images: [
       {
-        url: 'https://www.emuski.com/social-banner.jpg',
-        secureUrl: 'https://www.emuski.com/social-banner.jpg',
+        url: '/social-banner.jpg',
         width: 1200,
         height: 630,
-        alt: 'EMUSKI - ISO Certified Manufacturer in Bangalore | Precision Engineering Excellence',
-        type: 'image/jpeg',
+        alt: 'EMUSKI - ISO Certified OEM Manufacturing & Precision Engineering Solutions',
       },
     ],
   },
@@ -49,9 +79,25 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@emuski',
     creator: '@emuski',
-    title: 'EMUSKI - Your One-Stop Partner for OEM Excellence',
-    description: 'World-class OEM manufacturing, precision engineering, and AI-powered production systems in Bangalore, India. Expert design-for-manufacturing and rapid prototyping services.',
-    images: ['https://www.emuski.com/social-banner.jpg'],
+    title: 'EMUSKI - Leading OEM Manufacturing & Precision Engineering',
+    description: 'ISO 9001:2015 certified manufacturing solutions in Bangalore, India. Serving automotive, aerospace, medical device, and electronics industries globally.',
+    images: ['/social-banner.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  category: 'Manufacturing and Engineering',
+  classification: 'Manufacturing Solutions Provider',
+  alternates: {
+    canonical: 'https://www.emuski.com',
   },
   other: {
     'geo.region': 'IN-KA',
@@ -90,6 +136,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+        {/* Production Error Handler Script - Load First */}
+        {process.env.NODE_ENV === 'production' && (
+          <script src="/error-handler.js" defer />
+        )}
 
         {/* Essential DNS Prefetch and Preconnect for Performance Optimization */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
@@ -583,11 +633,13 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <ClientErrorWrapper>
-          <ErrorBoundary>
-            <Providers>{children}</Providers>
-          </ErrorBoundary>
-        </ClientErrorWrapper>
+        <ProductionErrorBoundary>
+          <ClientErrorWrapper>
+            <ErrorBoundary>
+              <Providers>{children}</Providers>
+            </ErrorBoundary>
+          </ClientErrorWrapper>
+        </ProductionErrorBoundary>
         {process.env.NEXT_PUBLIC_GTM_ID && (
           <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
         )}

@@ -54,6 +54,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.95, // Core service offering
     },
+    {
+      url: `${baseUrl}/manufacturing-engineering-solutions`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.92, // High priority engineering solutions
+    },
     // Geographic-specific service pages
     {
       url: `${baseUrl}/manufacturing-in-bangalore`,

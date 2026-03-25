@@ -1,97 +1,67 @@
-# EMUSKI Manufacturing Solutions - Advanced Robots.txt
-# Leading OEM Manufacturing, Precision Engineering & AI-Powered Production
-# www.emuski.com
+# www.emuski.com robots.txt -- optimized for manufacturing industry SEO
+# EMUSKI Manufacturing Solutions - Leading OEM Manufacturing & Precision Engineering
+# Global manufacturing services from Bangalore, India
 
 User-agent: *
 Allow: /
 
-# Primary Sitemap
-Sitemap: https://www.emuski.com/sitemap.xml
-
-# Crawl-delay for optimal performance
-Crawl-delay: 1
-
-# Priority crawling for manufacturing content
+# Core business pages - priority crawling
 Allow: /manufacturing-services
 Allow: /cost-engineering
-Allow: /manufacturing-engineering-solutions
-Allow: /manufacturing-in-bangalore
 Allow: /solutions/ai
-Allow: /industries
 Allow: /blog
-Allow: /blog/*
 Allow: /contact
 Allow: /gallery
 
-# Allow important assets and favicons
+# Assets and static resources
 Allow: /assets/
-Allow: /favicon.ico
-Allow: /favicon.svg
-Allow: /favicon*.png
-Allow: /apple-touch-icon*.png
+Allow: /static/
+Allow: /_next/static/
+Allow: /favicon*
+Allow: /apple-touch-icon*
 Allow: /site.webmanifest
 Allow: /manifest.json
-Allow: /browserconfig.xml
-Allow: /*.jpg
-Allow: /*.jpeg
-Allow: /*.png
-Allow: /*.svg
-Allow: /*.webp
-Allow: /*.ico
+Allow: /social-banner.jpg
 
-# SEO optimized paths
-Allow: /oem-manufacturing*
-Allow: /cost-engineering*
-Allow: /manufacturing-bangalore*
-Allow: /ai-manufacturing*
-Allow: /automotive-manufacturing*
-Allow: /aerospace-manufacturing*
-Allow: /medical-device-manufacturing*
-Allow: /electronics-manufacturing*
-
-# Block development and sensitive files
+# Block sensitive and admin areas
 Disallow: /api/
 Disallow: /admin/
-Disallow: /newsroom/
+Disallow: /_next/
+Disallow: /checkout/
+Disallow: /member/
+Disallow: /auth/
+Disallow: /*.pdf$
+Disallow: /*.log$
+Disallow: /*.env$
+
+# Block development files
 Disallow: /node_modules/
-Disallow: /dist/
-Disallow: /.vite/
 Disallow: /src/
-Disallow: *.log
-Disallow: *.env
 Disallow: /.git/
 Disallow: /package.json
 Disallow: /tsconfig.json
-Disallow: /vite.config.ts
+Disallow: /next.config.js
 
-# Block non-existent language variants (redirected to main site)
-Disallow: /es/
-Disallow: /fr/
-Disallow: /cn/
-Disallow: /kr/
-Disallow: /jp/
-Disallow: /de/
-Disallow: /it/
-Disallow: /us/
-
-# Block old/redirected URLs (prevent duplicate indexing)
-# Note: /services is now an active page - DO NOT block
+# Block old/redirected paths
 Disallow: /platform/
 Disallow: /about/
 Disallow: /contact-us/
+Disallow: /services/
 
-# Block non-essential file types from crawling
-Disallow: /*.pdf
-Disallow: /*.doc
-Disallow: /*.docx
-Disallow: /*.zip
+# Block non-existent locales (until implemented)
+Disallow: /es/
+Disallow: /fr/
+Disallow: /de/
+Disallow: /cn/
+Disallow: /jp/
+Disallow: /kr/
 
-# Allow specific search engines
+# Search engines with special handling
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 0
 
-User-agent: Bingbot
+User-agent: Bingbot 
 Allow: /
 Crawl-delay: 1
 
@@ -99,11 +69,7 @@ User-agent: Slurp
 Allow: /
 Crawl-delay: 1
 
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 1
-
-# AI Search Engine Crawlers
+# AI crawlers
 User-agent: ChatGPT-User
 Allow: /
 Crawl-delay: 1
@@ -124,25 +90,16 @@ User-agent: Claude-Web
 Allow: /
 Crawl-delay: 1
 
-# Block resource-heavy crawlers
+# Block aggressive crawlers
 User-agent: AhrefsBot
 Disallow: /
-
-User-agent: SemrushBot
-Allow: /
-Crawl-delay: 1
 
 User-agent: MJ12bot
 Disallow: /
 
-User-agent: DotBot
-Disallow: /
+User-agent: SemrushBot
+Allow: /
+Crawl-delay: 2
 
-User-agent: BLEXBot
-Disallow: /
-
-# Manufacturing industry specific directives
-# Allow crawling of technical documentation
-Allow: /technical-specifications*
-Allow: /quality-certifications*
-Allow: /manufacturing-processes*
+# Sitemaps
+Sitemap: https://www.emuski.com/sitemap.xml
