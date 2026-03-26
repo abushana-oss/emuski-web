@@ -114,11 +114,6 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-    bingBot: {
-      index: true,
-      follow: true,
-      nocache: true,
-    },
   },
   category: 'Manufacturing and Engineering',
   classification: 'Manufacturing Solutions Provider',
