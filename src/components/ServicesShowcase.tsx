@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { ChevronRight, ArrowRight, ChevronLeft } from "lucide-react";
 import Link from "next/link";
@@ -133,7 +133,44 @@ const showcaseItems = [
   }
 ];
 
-export const ServicesShowcase = () => {
+// Memoize the heavy project card component
+const ProjectCard = memo(({ project, projectIndex }: { project: any; projectIndex: number }) => (
+  <Link
+    key={projectIndex}
+    href={project.link}
+    className="flex-shrink-0 w-[340px] group"
+  >
+    <div className="relative h-full bg-white overflow-hidden border border-gray-200 hover:border-emuski-teal-darker/40 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">
+      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10"></div>
+        <Image
+          src={project.image}
+          alt={`${project.title} - ${project.category} Service`}
+          width={800}
+          height={450}
+          className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
+          loading="lazy"
+          sizes="(max-width: 768px) 100vw, 33vw"
+        />
+      </div>
+      <div className="p-6 flex-1">
+        <h4 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-emuski-teal-darker transition-colors line-clamp-2">
+          {project.title}
+        </h4>
+        <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 mb-4">
+          {project.description}
+        </p>
+        <div className="flex items-center gap-2 text-emuski-teal-darker font-semibold group-hover:gap-3 transition-all duration-300">
+          <span className="text-sm">Learn more</span>
+          <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+        </div>
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emuski-teal via-emuski-teal-dark to-emuski-teal-darker transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+    </div>
+  </Link>
+));
+
+const ServicesShowcase = memo(() => {
   const [isVisible, setIsVisible] = useState(false);
   const [showLeftGradient, setShowLeftGradient] = useState<{ [key: string]: boolean }>({});
   const [showRightGradient, setShowRightGradient] = useState<{ [key: string]: boolean }>({});
@@ -166,14 +203,14 @@ export const ServicesShowcase = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleScroll = (serviceId: string) => {
+  const handleScroll = useCallback((serviceId: string) => {
     const container = sectionScrollRefs.current[serviceId];
     if (container) {
       const { scrollLeft, scrollWidth, clientWidth } = container;
       setShowLeftGradient(prev => ({ ...prev, [serviceId]: scrollLeft > 10 }));
       setShowRightGradient(prev => ({ ...prev, [serviceId]: scrollLeft < scrollWidth - clientWidth - 10 }));
     }
-  };
+  }, []);
 
   useEffect(() => {
     // Initialize gradient states
@@ -186,27 +223,26 @@ export const ServicesShowcase = () => {
     });
   }, []);
 
-  const scrollSection = (direction: 'left' | 'right', serviceId: string) => {
+  const scrollSection = useCallback((direction: 'left' | 'right', serviceId: string) => {
     const scrollContainer = sectionScrollRefs.current[serviceId];
     if (scrollContainer) {
       const scrollAmount = direction === 'left' ? -600 : 600;
       scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  const scroll = (direction: 'left' | 'right', serviceId: string) => {
-    const scrollContainer = scrollRefs.current[serviceId];
-    if (scrollContainer) {
-      const scrollAmount = direction === 'left' ? -400 : 400;
-      scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const getFilteredShowcaseItems = (relatedCategories: string[]) => {
-    return showcaseItems.filter(item =>
-      relatedCategories.includes(item.category)
-    );
-  };
+  const getFilteredShowcaseItems = useMemo(() => {
+    const cache = new Map<string, typeof showcaseItems>();
+    return (relatedCategories: string[]) => {
+      const key = relatedCategories.join(',');
+      if (!cache.has(key)) {
+        cache.set(key, showcaseItems.filter(item =>
+          relatedCategories.includes(item.category)
+        ));
+      }
+      return cache.get(key)!;
+    };
+  }, []);
 
   return (
     <section
@@ -365,47 +401,11 @@ export const ServicesShowcase = () => {
                             {/* Projects Carousel */}
                             <div className="flex gap-6">
                               {filteredProjects.map((project, projectIndex) => (
-                                <Link
-                                  key={projectIndex}
-                                  href={project.link}
-                                  className="flex-shrink-0 w-[340px] group"
-                                >
-                                  <div className="relative h-full bg-white overflow-hidden border border-gray-200 hover:border-emuski-teal-darker/40 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">
-                                    {/* Project Image */}
-                                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10"></div>
-                                      <Image
-                                        src={project.image}
-                                        alt={`${project.title} - ${project.category} Service`}
-                                        width={800}
-                                        height={450}
-                                        className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
-                                        loading="lazy"
-                                        sizes="(max-width: 768px) 100vw, 33vw"
-                                      />
-
-
-                                    </div>
-
-                                    {/* Project Content */}
-                                    <div className="p-6 flex-1">
-                                      <h4 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-emuski-teal-darker transition-colors line-clamp-2">
-                                        {project.title}
-                                      </h4>
-                                      <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 mb-4">
-                                        {project.description}
-                                      </p>
-
-                                      <div className="flex items-center gap-2 text-emuski-teal-darker font-semibold group-hover:gap-3 transition-all duration-300">
-                                        <span className="text-sm">Learn more</span>
-                                        <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                                      </div>
-                                    </div>
-
-                                    {/* Bottom Accent */}
-                                    <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emuski-teal via-emuski-teal-dark to-emuski-teal-darker transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-                                  </div>
-                                </Link>
+                                <ProjectCard 
+                                  key={projectIndex} 
+                                  project={project} 
+                                  projectIndex={projectIndex} 
+                                />
                               ))}
                             </div>
                           </div>
@@ -428,4 +428,6 @@ export const ServicesShowcase = () => {
       </div>
     </section>
   );
-};
+});
+
+export { ServicesShowcase };

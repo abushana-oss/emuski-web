@@ -74,7 +74,9 @@ export const useBlogData = (
         params.append('label', label)
       }
 
-      const response = await fetch(`/api/blog?${params}`)
+      const response = await fetch(`/api/blog?${params}`, {
+        next: { revalidate: 300 } // Cache for 5 minutes
+      })
       
       if (!response.ok) {
         throw new Error(`Failed to fetch ${blogType} blog posts`)
@@ -170,14 +172,23 @@ export const useSuccessStoriesPosts = (options?: UseBlogDataOptions) =>
  * Centralized blog post conversion logic
  * Replaces multiple duplicate conversion functions
  */
+// Memoized conversion cache
+const conversionCache = new Map<string, BlogPost>()
+
 function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'Blog'): BlogPost {
+  // Check cache first
+  const cacheKey = `${post.id}-${post.updated}`
+  if (conversionCache.has(cacheKey)) {
+    return conversionCache.get(cacheKey)!
+  }
+
   // Generate slug first since it's used in multiple places
   const slug = post.title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
 
-  // Generate excerpt early since it's used in early return
+  // Use snippet if available (faster than parsing content)
   let excerpt = ''
   if (post.snippet) {
     excerpt = decodeHtmlEntities(post.snippet.trim())
@@ -186,94 +197,39 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
       excerpt = excerpt.substring(0, lastSpace > 100 ? lastSpace : 157) + '...'
     }
   } else {
-    excerpt = extractSEODescription(post.content || '')
+    // Simplified excerpt extraction
+    const cleanText = (post.content || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+    excerpt = cleanText.length > 160 ? cleanText.substring(0, 157) + '...' : cleanText
   }
 
-  // Calculate read time early
-  let textContent = (post.content || '')
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-  
-  textContent = decodeHtmlEntities(textContent)
-  
-  const wordCount = textContent.split(/\s+/).length
+  // Simplified read time calculation
+  const wordCount = (post.content || '').split(/\s+/).length
   const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`
 
-  // Extract featured image from content - comprehensive image extraction
-  const imgMatches = post.content?.match(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi) || []
+  // Simplified image extraction - just get first image
   let image = ''
-  
-  // Find the best image URL
-  for (const imgTag of imgMatches) {
-    const srcMatch = imgTag.match(/src=["']([^"']+)["']/)
-    if (srcMatch && srcMatch[1]) {
-      const imgUrl = srcMatch[1]
-      // Skip small or icon images
-      if (!imgUrl.includes('/s45/') && !imgUrl.includes('icon') && !imgUrl.includes('logo')) {
-        // Prefer larger Blogger images
-        if (imgUrl.includes('blogger.googleusercontent.com')) {
-          image = imgUrl
-          break
-        } else if (!image) {
-          image = imgUrl
-        }
-      }
+  const imgMatch = post.content?.match(/<img[^>]*src=["']([^"']+)["']/i)
+  if (imgMatch && imgMatch[1]) {
+    image = imgMatch[1]
+  }
+
+  // Quick fallback for missing images
+  if (!image) {
+    const fallbacks = {
+      'Success Story': '/assets/fallback-success.jpg',
+      'Manufacturing': '/assets/fallback-manufacturing.jpg',
+      'Engineering': '/assets/fallback-engineering.jpg'
     }
+    image = fallbacks[defaultCategory] || '/assets/fallback-default.jpg'
   }
 
-  // Fallback images based on category
-  if (!image || image.includes('Opto Imaging Png')) {
-    const fallbackImages = {
-      'Manufacturing': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80',
-      'Engineering': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=1200&q=80', 
-      'Success Story': 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80',
-      'Blog': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80'
-    }
-    image = fallbackImages[defaultCategory] || fallbackImages['Manufacturing']
-  }
-
-  // Skip if already a proxy URL to prevent double-encoding
-  if (image.startsWith('/api/image-proxy')) {
-    // Already processed, just return as-is
-    return {
-      id: post.id,
-      title: post.title,
-      slug,
-      excerpt,
-      fullContent: post.content || '',
-      category: post.labels?.[0] || defaultCategory,
-      tags: post.labels || [],
-      author: post.author?.displayName || 'EMUSKI',
-      authorImage: post.author?.image?.url || '/assets/authors/default.jpg',
-      publishDate: new Date(post.published).toISOString(),
-      readTime,
-      image,
-    }
-  }
-
-  // Fix protocol-relative URLs
-  if (image.startsWith('//')) {
-    image = 'https:' + image
-  }
-
-  // Fix Blogger image sizes to prevent server errors
-  if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com')) {
-    image = image.replace(/\/s\d+(-c)?\//, '/s1600/')
-    image = image.replace(/=s\d+$/i, '=s1600')
-  }
-
-  // Decode HTML entities in image URL
-  image = decodeHtmlEntities(image)
-  
-  // Use secure proxy for external images to comply with COEP
-  if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com') || image.includes('unsplash.com')) {
+  // Simple image processing
+  if (image.startsWith('//')) image = 'https:' + image
+  if (image.includes('blogger.googleusercontent.com')) {
     image = `/api/image-proxy?url=${encodeURIComponent(image)}`
   }
 
-  return {
+  const result = {
     id: post.id,
     title: post.title,
     slug,
@@ -287,6 +243,17 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
     readTime,
     image,
   }
+
+  // Cache the result
+  conversionCache.set(cacheKey, result)
+  
+  // Limit cache size
+  if (conversionCache.size > 100) {
+    const firstKey = conversionCache.keys().next().value
+    conversionCache.delete(firstKey)
+  }
+
+  return result
 }
 
 /**

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import Image from 'next/image';
@@ -42,20 +42,20 @@ const manufacturingExcellenceItems = [
   }
 ];
 
-const ManufacturingExcellenceSection = () => {
+const ManufacturingExcellenceSection = memo(() => {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
-  const scrollLeft = () => {
+  const scrollLeft = useCallback(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  const scrollRight = () => {
+  const scrollRight = useCallback(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' });
     }
-  };
+  }, []);
 
   return (
     <section className="py-20 bg-gray-900 text-white">
@@ -96,6 +96,6 @@ const ManufacturingExcellenceSection = () => {
       </div>
     </section>
   );
-};
+});
 
 export default ManufacturingExcellenceSection;

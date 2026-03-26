@@ -82,6 +82,7 @@ async function blogHandler(req: NextRequest): Promise<NextResponse> {
       headers: {
         'Accept': 'application/json',
       },
+      next: { revalidate: 300 }, // Cache for 5 minutes
     });
 
     if (!response.ok) {
