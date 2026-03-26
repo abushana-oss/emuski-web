@@ -133,24 +133,22 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
       ],
     }
 
-    // Send to GA4
-    const response = await fetch(GA4_ENDPOINT, {
+    // Send to GA4 asynchronously (fire-and-forget for better performance)
+    fetch(GA4_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
+    }).then(response => {
+      if (!response.ok) {
+        console.error('[GA4 Server] Failed to send event:', response.statusText)
+      }
+    }).catch(error => {
+      console.error('[GA4 Server] Network error:', error)
     })
 
-    if (!response.ok) {
-      console.error('[GA4 Server] Failed to send event:', response.statusText)
-      return NextResponse.json(
-        { success: false, error: 'GA4 API error' },
-        { status: 500 }
-      )
-    }
-
-    // Set cookie with client ID for future requests
+    // Immediately return response without waiting for GA4
     const res = NextResponse.json({ success: true, clientId })
     res.cookies.set('_ga_client_id', clientId, {
       maxAge: 60 * 60 * 24 * 365 * 2, // 2 years

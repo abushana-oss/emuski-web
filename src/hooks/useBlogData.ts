@@ -172,8 +172,17 @@ export const useSuccessStoriesPosts = (options?: UseBlogDataOptions) =>
  * Centralized blog post conversion logic
  * Replaces multiple duplicate conversion functions
  */
-// Memoized conversion cache
+// Memoized conversion cache - clear on new deployments
 const conversionCache = new Map<string, BlogPost>()
+
+// Clear cache periodically to ensure fresh images
+if (typeof window !== 'undefined') {
+  setInterval(() => {
+    if (conversionCache.size > 50) {
+      conversionCache.clear()
+    }
+  }, 300000) // Clear every 5 minutes
+}
 
 function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'Blog'): BlogPost {
   // Check cache first
@@ -206,26 +215,78 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
   const wordCount = (post.content || '').split(/\s+/).length
   const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`
 
-  // Simplified image extraction - just get first image
+  // Enhanced image extraction to get the best image
   let image = ''
-  const imgMatch = post.content?.match(/<img[^>]*src=["']([^"']+)["']/i)
-  if (imgMatch && imgMatch[1]) {
-    image = imgMatch[1]
+  const imgMatches = post.content?.match(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi) || []
+  
+  // Debug logging for production image issues
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Processing post: ${post.title}`)
+    console.log(`Found ${imgMatches.length} images`)
+    imgMatches.forEach((match, i) => console.log(`Image ${i}:`, match))
   }
-
-  // Quick fallback for missing images
-  if (!image) {
-    const fallbacks = {
-      'Success Story': '/assets/fallback-success.jpg',
-      'Manufacturing': '/assets/fallback-manufacturing.jpg',
-      'Engineering': '/assets/fallback-engineering.jpg'
+  
+  // Find the best image URL - prefer larger, content images
+  for (const imgTag of imgMatches) {
+    const srcMatch = imgTag.match(/src=["']([^"']+)["']/)
+    if (srcMatch && srcMatch[1]) {
+      const imgUrl = srcMatch[1]
+      // Skip small icons, logos, and default images
+      if (!imgUrl.includes('/s45/') && 
+          !imgUrl.includes('/s72/') && 
+          !imgUrl.includes('icon') && 
+          !imgUrl.includes('logo') && 
+          !imgUrl.includes('favicon') &&
+          !imgUrl.includes('default') &&
+          !imgUrl.includes('avatar')) {
+        
+        // Prefer blogger images over others
+        if (imgUrl.includes('blogger.googleusercontent.com')) {
+          image = imgUrl
+          break
+        } else if (!image) {
+          image = imgUrl
+        }
+      }
     }
-    image = fallbacks[defaultCategory] || '/assets/fallback-default.jpg'
   }
 
-  // Simple image processing
+  // Fallback to diverse category-specific images to avoid same image everywhere
+  if (!image || image.includes('Opto Imaging Png')) {
+    // Generate a hash from post ID to get consistent but different images
+    const postHash = post.id ? parseInt(post.id.slice(-2), 36) % 3 : 0
+    
+    const fallbackSets = {
+      'Success Story': [
+        'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80',
+        'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80'
+      ],
+      'Manufacturing': [
+        'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80',
+        'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=1200&q=80',
+        'https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=1200&q=80'
+      ],
+      'Engineering': [
+        'https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=1200&q=80',
+        'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=80',
+        'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&q=80'
+      ]
+    }
+    
+    const categoryFallbacks = fallbackSets[defaultCategory] || fallbackSets['Manufacturing']
+    image = categoryFallbacks[postHash]
+  }
+
+  // Enhanced image processing
   if (image.startsWith('//')) image = 'https:' + image
-  if (image.includes('blogger.googleusercontent.com')) {
+  
+  // Fix Blogger image sizes for better quality
+  if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com')) {
+    image = image.replace(/\/s\d+(-c)?\//, '/s1600/')
+    image = image.replace(/=s\d+$/i, '=s1600')
+    image = `/api/image-proxy?url=${encodeURIComponent(image)}`
+  } else if (image.includes('unsplash.com')) {
     image = `/api/image-proxy?url=${encodeURIComponent(image)}`
   }
 

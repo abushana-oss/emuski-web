@@ -5,6 +5,10 @@ import { BlogQuerySchema, validateRequest } from '@/lib/input-validation';
 
 export const dynamic = 'force-dynamic'; // Prevent static generation
 
+// In-memory cache for blog posts
+const blogCache = new Map<string, { data: any, timestamp: number }>()
+const CACHE_TTL = 300000 // 5 minutes
+
 interface BlogPost {
   kind: string;
   id: string;
@@ -71,6 +75,16 @@ async function blogHandler(req: NextRequest): Promise<NextResponse> {
   }
 
   try {
+    // Check cache first
+    const cacheKey = `${blogId}-${maxResults}-${label || 'all'}`
+    const cached = blogCache.get(cacheKey)
+    
+    if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+      return NextResponse.json(cached.data, {
+        headers: { 'X-Cache': 'HIT' }
+      });
+    }
+
     // Build API URL with optional label filter
     let apiUrl = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${apiKey}&maxResults=${maxResults}&orderBy=published`;
     
@@ -82,7 +96,6 @@ async function blogHandler(req: NextRequest): Promise<NextResponse> {
       headers: {
         'Accept': 'application/json',
       },
-      next: { revalidate: 300 }, // Cache for 5 minutes
     });
 
     if (!response.ok) {
@@ -91,7 +104,22 @@ async function blogHandler(req: NextRequest): Promise<NextResponse> {
 
     const data: BlogPostsResponse = await response.json();
     
-    return NextResponse.json(data);
+    // Cache the result
+    blogCache.set(cacheKey, { data, timestamp: Date.now() })
+    
+    // Clean old cache entries
+    if (blogCache.size > 50) {
+      const oldestKeys = Array.from(blogCache.entries())
+        .sort(([,a], [,b]) => a.timestamp - b.timestamp)
+        .slice(0, 10)
+        .map(([key]) => key)
+      
+      oldestKeys.forEach(key => blogCache.delete(key))
+    }
+    
+    return NextResponse.json(data, {
+      headers: { 'X-Cache': 'MISS' }
+    });
   } catch (error: any) {
     console.error('Blog API error:', error);
     return NextResponse.json(
