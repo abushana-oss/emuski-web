@@ -170,11 +170,46 @@ const ProjectCard = memo(({ project, projectIndex }: { project: any; projectInde
   </Link>
 ));
 
+// Skeleton loading component
+const ServiceSkeleton = memo(() => (
+  <div className="space-y-10">
+    {[1, 2].map((index) => (
+      <div key={index} className="animate-pulse">
+        <div className="lg:hidden mb-6">
+          <div className="h-8 bg-gray-200 rounded-md mb-4 w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded-md mb-2 w-full"></div>
+          <div className="h-4 bg-gray-200 rounded-md mb-4 w-5/6"></div>
+        </div>
+        <div className="flex gap-8">
+          <div className="hidden lg:block w-[400px]">
+            <div className="h-8 bg-gray-200 rounded-md mb-4 w-3/4"></div>
+            <div className="h-4 bg-gray-200 rounded-md mb-2 w-full"></div>
+            <div className="h-4 bg-gray-200 rounded-md mb-4 w-5/6"></div>
+          </div>
+          <div className="flex gap-6">
+            {[1, 2, 3].map((cardIndex) => (
+              <div key={cardIndex} className="w-[340px] bg-white border border-gray-200 rounded-lg">
+                <div className="h-48 bg-gray-200 rounded-t-lg"></div>
+                <div className="p-6">
+                  <div className="h-6 bg-gray-200 rounded-md mb-3 w-3/4"></div>
+                  <div className="h-4 bg-gray-200 rounded-md mb-2 w-full"></div>
+                  <div className="h-4 bg-gray-200 rounded-md w-4/5"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+));
+
 const ServicesShowcase = memo(() => {
   const [isVisible, setIsVisible] = useState(false);
   const [showLeftGradient, setShowLeftGradient] = useState<{ [key: string]: boolean }>({});
   const [showRightGradient, setShowRightGradient] = useState<{ [key: string]: boolean }>({});
   const [expandedQuickLinks, setExpandedQuickLinks] = useState<{ [key: string]: boolean }>({});
+  const [isLoading, setIsLoading] = useState(true);
   const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const sectionScrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -200,7 +235,13 @@ const ServicesShowcase = memo(() => {
       observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect();
+    // Show content immediately since this is static data
+    setIsLoading(false);
+    setIsVisible(true);
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   const handleScroll = useCallback((serviceId: string) => {
@@ -256,8 +297,12 @@ const ServicesShowcase = memo(() => {
       </div>
 
       <div className="w-full px-4 sm:px-6 relative z-10">
-        {/* Services Sections */}
-        <div className="space-y-10">
+        {/* Show skeleton while loading */}
+        {isLoading ? (
+          <ServiceSkeleton />
+        ) : (
+          /* Services Sections */
+          <div className="space-y-10">
           {servicesData.map((service, serviceIndex) => {
             const filteredProjects = getFilteredShowcaseItems(service.relatedCategories);
 
@@ -425,6 +470,7 @@ const ServicesShowcase = memo(() => {
             );
           })}
         </div>
+        )}
       </div>
     </section>
   );
