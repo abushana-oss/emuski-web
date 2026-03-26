@@ -1,19 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import dynamic from 'next/dynamic'
 import { Navbar } from "@/components/Navbar"
 import { HeroSection } from "@/components/HeroSection"
 import { Footer } from "@/components/Footer"
 import { LazyRender } from "@/components/LazyRender"
-
-// Lazy load below-the-fold components - use LazyRender for deferred client-side rendering
-const ServicesShowcase = dynamic(() => import("@/components/ServicesShowcase").then(mod => ({ default: mod.ServicesShowcase })))
-const NewsCarousel = dynamic(() => import("@/components/NewsCarousel").then(mod => ({ default: mod.NewsCarousel })))
-const AboutSection = dynamic(() => import("@/components/AboutSection").then(mod => ({ default: mod.AboutSection })))
-const TechnicalSpecsSection = dynamic(() => import("@/components/TechnicalSpecsSection").then(mod => ({ default: mod.TechnicalSpecsSection })))
-const FeaturedTabs = dynamic(() => import("@/components/FeaturedTabs").then(mod => ({ default: mod.FeaturedTabs })))
-const FAQSection = dynamic(() => import("@/components/FAQSection").then(mod => ({ default: mod.FAQSection })))
+import { ServicesShowcase } from "@/components/ServicesShowcase"
+import { NewsCarousel } from "@/components/NewsCarousel"
+import { AboutSection } from "@/components/AboutSection"
+import { TechnicalSpecsSection } from "@/components/TechnicalSpecsSection"
+import { FeaturedTabs } from "@/components/FeaturedTabs"
+import { FAQSection } from "@/components/FAQSection"
 
 // Client component - revalidate not applicable
 

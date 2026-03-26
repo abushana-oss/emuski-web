@@ -477,3 +477,4 @@ const ServicesShowcase = memo(() => {
 });
 
 export { ServicesShowcase };
+export default ServicesShowcase;

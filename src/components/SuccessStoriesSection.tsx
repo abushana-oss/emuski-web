@@ -71,7 +71,7 @@ export function SuccessStoriesSection() {
                       alt={story.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/api/image-proxy?url=' + encodeURIComponent('https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=1200&q=80');
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80';
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />

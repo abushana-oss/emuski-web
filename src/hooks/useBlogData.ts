@@ -175,6 +175,9 @@ export const useSuccessStoriesPosts = (options?: UseBlogDataOptions) =>
 // Memoized conversion cache - clear on new deployments
 const conversionCache = new Map<string, BlogPost>()
 
+// Clear cache immediately to get fresh images with new logic
+conversionCache.clear()
+
 // Clear cache periodically to ensure fresh images
 if (typeof window !== 'undefined') {
   setInterval(() => {
@@ -219,7 +222,7 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
   let image = ''
   const imgMatches = post.content?.match(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi) || []
   
-  // Debug logging for production image issues
+  // Debug logging for image processing
   if (process.env.NODE_ENV === 'development') {
     console.log(`Processing post: ${post.title}`)
     console.log(`Found ${imgMatches.length} images`)
@@ -278,16 +281,23 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
     image = categoryFallbacks[postHash]
   }
 
-  // Enhanced image processing
+  // Simple image processing - use direct URLs for better performance
   if (image.startsWith('//')) image = 'https:' + image
   
-  // Fix Blogger image sizes for better quality
+  // Fix Blogger image sizes for better quality (use direct URLs)
   if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com')) {
+    // Convert to larger size and use direct URL
     image = image.replace(/\/s\d+(-c)?\//, '/s1600/')
     image = image.replace(/=s\d+$/i, '=s1600')
-    image = `/api/image-proxy?url=${encodeURIComponent(image)}`
-  } else if (image.includes('unsplash.com')) {
-    image = `/api/image-proxy?url=${encodeURIComponent(image)}`
+    // Don't use proxy for Blogger images - they work directly
+  }
+  
+  // Decode any HTML entities in the URL
+  image = decodeHtmlEntities(image)
+
+  // Debug final image URL
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Final image URL for "${post.title}": ${image}`)
   }
 
   const result = {
