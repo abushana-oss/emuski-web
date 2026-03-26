@@ -121,6 +121,9 @@ const nextConfig = {
     // Let Turbopack handle optimizations automatically
   },
 
+  // Server external packages (moved from experimental)
+  serverExternalPackages: ['ioredis', 'redis', 'pg', 'mysql2'],
+
   // Experimental features
   experimental: {
     // Optimize package imports to reduce bundle size
@@ -137,8 +140,6 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '2mb', // Prevent large payload attacks
     },
-    // Server components external packages
-    serverComponentsExternalPackages: ['ioredis', 'redis', 'pg', 'mysql2'],
   },
 
   // Custom Webpack configuration for build optimizations
