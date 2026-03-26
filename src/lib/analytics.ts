@@ -55,6 +55,46 @@ declare global {
 }
 
 /**
+ * Helper functions to categorize content and avoid "not set" values
+ */
+function getServiceCategory(url: string): string {
+  if (url.includes('manufacturing-services')) return 'Precision Manufacturing Services';
+  if (url.includes('cost-engineering')) return 'Cost Engineering Services';
+  if (url.includes('solutions/ai')) return 'AI Solutions';
+  if (url.includes('tools/2d-balloon-diagram')) return 'Engineering Tools - 2D Balloon Diagram';
+  if (url.includes('tools/3d-cad-analysis')) return 'Engineering Tools - 3D CAD Analysis';
+  if (url.includes('tools/')) return 'Engineering Tools';
+  if (url.includes('blog')) return 'Blog & Resources';
+  if (url.includes('gallery')) return 'Portfolio Gallery';
+  if (url.includes('contact')) return 'Contact & Inquiries';
+  return 'General Pages';
+}
+
+function getIndustryFocus(url: string): string {
+  if (url.includes('automotive')) return 'Automotive';
+  if (url.includes('aerospace')) return 'Aerospace';
+  if (url.includes('medical')) return 'Medical Devices';
+  if (url.includes('electronics')) return 'Electronics';
+  if (url.includes('defense')) return 'Defense & Military';
+  return 'Multi-Industry';
+}
+
+function getTrafficSource(): string {
+  if (typeof window === 'undefined') return 'unknown';
+  
+  const referrer = document.referrer;
+  if (!referrer) return 'direct';
+  
+  if (referrer.includes('google')) return 'google_search';
+  if (referrer.includes('linkedin')) return 'linkedin';
+  if (referrer.includes('facebook')) return 'facebook';
+  if (referrer.includes('twitter')) return 'twitter';
+  if (referrer.includes('youtube')) return 'youtube';
+  
+  return 'external_referral';
+}
+
+/**
  * Send custom event to Google Analytics and GTM
  * Enhanced with custom parameters support
  */
@@ -100,12 +140,16 @@ export const trackPageView = (url: string, title?: string): void => {
   const pageTitle = title || (typeof window !== 'undefined' ? document.title : '');
   const pageLocation = typeof window !== 'undefined' ? window.location.href : '';
 
-  // Google Analytics
+  // Google Analytics with enhanced parameters
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'page_view', {
       page_path: url,
       page_title: pageTitle,
       page_location: pageLocation,
+      page_referrer: document.referrer || '(direct)',
+      content_group1: getServiceCategory(url),
+      content_group2: getIndustryFocus(url),
+      traffic_source: getTrafficSource()
     });
   }
 

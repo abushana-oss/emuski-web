@@ -788,18 +788,12 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                           if (srcMatch) {
                             let src = srcMatch[1];
 
-                            // Skip if already a proxy URL to prevent double-encoding
-                            if (src.startsWith('/api/image-proxy')) {
-                              const alt = altMatch ? altMatch[1] : (titleMatch ? titleMatch[1] : post.title);
-                              return `<img src="${src}" alt="${alt}" class="w-full h-auto rounded-lg border border-gray-200 my-8 object-cover" loading="eager" decoding="async" />`;
-                            }
-
                             // Fix protocol-relative URLs
                             if (src.startsWith('//')) {
                               src = 'https:' + src;
                             }
 
-                            // Fix Blogger image URLs and route through proxy for COEP compliance
+                            // Fix Blogger image URLs - use direct URLs for better performance
                             if (src.includes('blogger.googleusercontent.com') ||
                                 src.includes('blogspot.com') ||
                                 src.includes('bp.blogspot.com')) {
@@ -809,41 +803,16 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                               // 2. Parameter format: =s16000 → =s1600
                               // Large sizes like s16000 cause 5xx errors, so limit to s1600 max
                               src = src.replace(/=s\d+$/i, '=s1600');
-                              
-                              // Route through proxy for COEP compliance
-                              src = `/api/image-proxy?url=${encodeURIComponent(src)}`;
-                            }
-
-                            // Route Unsplash images through proxy for COEP compliance
-                            if (src.includes('unsplash.com')) {
-                              src = `/api/image-proxy?url=${encodeURIComponent(src)}`;
+                              // Use direct URL - Blogger images are public and work directly
                             }
 
                             // Only remove first image if it matches the featured image URL
                             if (isFirstImage) {
                               isFirstImage = false;
                               
-                              // Extract original URL from proxy if present for comparison
+                              // Since we're using direct URLs now, compare directly
                               let originalSrc = src;
-                              if (src.startsWith('/api/image-proxy?url=')) {
-                                try {
-                                  const urlParam = new URLSearchParams(src.split('?')[1]).get('url');
-                                  if (urlParam) originalSrc = decodeURIComponent(urlParam);
-                                } catch (e) {
-                                  // Keep original if parsing fails
-                                }
-                              }
-                              
-                              // Extract original URL from featured image proxy if present
                               let originalFeatured = featuredImageUrl;
-                              if (featuredImageUrl.startsWith('/api/image-proxy?url=')) {
-                                try {
-                                  const urlParam = new URLSearchParams(featuredImageUrl.split('?')[1]).get('url');
-                                  if (urlParam) originalFeatured = decodeURIComponent(urlParam);
-                                } catch (e) {
-                                  // Keep original if parsing fails
-                                }
-                              }
                               
                               // Normalize URLs for comparison (remove protocol and size parameters)
                               const normalizedSrc = originalSrc

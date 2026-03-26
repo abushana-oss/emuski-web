@@ -661,7 +661,26 @@ export default function RootLayout({
                   'allow_ad_personalization_signals': false,
                   'cookie_flags': 'SameSite=None;Secure',
                   'enhanced_measurement': true,
-                  'debug_mode': false
+                  'debug_mode': false,
+                  'page_title': document.title || 'EMUSKI - Precision Manufacturing & Cost Engineering',
+                  'page_location': window.location.href,
+                  'content_group1': 'Precision Manufacturing Services',
+                  'content_group2': 'Cost Engineering Services',
+                  'custom_map': {
+                    'dimension1': 'service_type',
+                    'dimension2': 'industry_focus', 
+                    'dimension3': 'client_type',
+                    'dimension4': 'traffic_source'
+                  }
+                });
+                
+                // Set default user properties to avoid "not set"
+                gtag('set', 'user_properties', {
+                  'service_type': 'precision_manufacturing',
+                  'industry_focus': 'automotive_aerospace_medical',
+                  'client_type': 'visitor',
+                  'traffic_source': document.referrer || 'direct',
+                  'business_category': 'precision_manufacturing_cost_engineering'
                 });
               }
               
