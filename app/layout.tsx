@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google'
-import { Metadata } from 'next'
+import { Metadata, Viewport } from 'next'
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 import '@/index.css'
 import { initializeCacheSystem } from '@/lib/cache'
@@ -23,18 +23,19 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.emuski.com'),
   title: {
     default: 'EMUSKI - Leading OEM Manufacturing & Precision Engineering Solutions | Bangalore, India',
     template: '%s | EMUSKI Manufacturing Solutions'
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-    viewportFit: 'cover',
   },
   description: 'EMUSKI delivers world-class OEM manufacturing, precision engineering, and AI-powered production solutions in Bangalore, India. ISO 9001:2015 certified with 15+ years expertise serving automotive, aerospace, medical device, and electronics industries globally.',
   keywords: [

@@ -1,12 +1,17 @@
 import { Navbar } from "@/components/Navbar"
 import { BlogPage } from "@/components/BlogPage"
 import { Footer } from "@/components/Footer"
-import { Metadata } from 'next'
+import { Metadata, Viewport } from 'next'
 import { fetchAllBlogs } from '@/lib/api/blogger'
 
 // Enable ISR - Revalidate every 5 minutes for near real-time blog updates
 // Combined with webhook endpoint at /api/blogger-webhook for instant updates
 export const revalidate = 300
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
 
 export const metadata: Metadata = {
   title: 'Manufacturing & Precision Engineering Blog | Expert Insights | EMUSKI',
