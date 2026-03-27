@@ -24,6 +24,10 @@ interface BlogPost {
   publishDate: string
   readTime: string
   image: string
+  // Additional images for success story sections
+  challengeImage?: string
+  solutionImage?: string
+  outcomeImage?: string
 }
 
 interface UseBlogDataOptions {
@@ -175,7 +179,7 @@ export const useSuccessStoriesPosts = (options?: UseBlogDataOptions) =>
 // Memoized conversion cache - clear on new deployments
 const conversionCache = new Map<string, BlogPost>()
 
-// Clear cache immediately to get fresh images with new logic
+// Clear cache immediately to get fresh images with new logic - Updated
 conversionCache.clear()
 
 // Clear cache periodically to ensure fresh images
@@ -218,8 +222,12 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
   const wordCount = (post.content || '').split(/\s+/).length
   const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`
 
-  // Enhanced image extraction to get the best image
+  // Enhanced image extraction to get multiple images for success stories
   let image = ''
+  let challengeImage = ''
+  let solutionImage = ''
+  let outcomeImage = ''
+  
   const imgMatches = post.content?.match(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi) || []
   
   // Debug logging for image processing
@@ -229,7 +237,8 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
     imgMatches.forEach((match, i) => console.log(`Image ${i}:`, match))
   }
   
-  // Find the best image URL - prefer larger, content images
+  // Extract valid image URLs
+  const validImages = []
   for (const imgTag of imgMatches) {
     const srcMatch = imgTag.match(/src=["']([^"']+)["']/)
     if (srcMatch && srcMatch[1]) {
@@ -243,13 +252,32 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
           !imgUrl.includes('default') &&
           !imgUrl.includes('avatar')) {
         
-        // Prefer blogger images over others
-        if (imgUrl.includes('blogger.googleusercontent.com')) {
-          image = imgUrl
-          break
-        } else if (!image) {
-          image = imgUrl
+        let processedUrl = imgUrl
+        // Fix Blogger image sizes
+        if (imgUrl.includes('blogger.googleusercontent.com') || imgUrl.includes('blogspot.com')) {
+          processedUrl = imgUrl.replace(/\/s\d+(-c)?\//, '/s1600/')
+          processedUrl = processedUrl.replace(/=s\d+$/i, '=s1600')
         }
+        if (processedUrl.startsWith('//')) processedUrl = 'https:' + processedUrl
+        processedUrl = decodeHtmlEntities(processedUrl)
+        
+        validImages.push(processedUrl)
+      }
+    }
+  }
+  
+  // Assign images: first as hero, then to sections if this is a success story
+  if (validImages.length > 0) {
+    image = validImages[0] // Hero image
+    
+    // For success stories, assign additional images to sections
+    if (defaultCategory === 'Success Story' && validImages.length > 1) {
+      challengeImage = validImages[1] // Second image for challenge
+      if (validImages.length > 2) {
+        solutionImage = validImages[2] // Third image for solution
+      }
+      if (validImages.length > 3) {
+        outcomeImage = validImages[3] // Fourth image for outcome
       }
     }
   }
@@ -281,31 +309,48 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
     image = categoryFallbacks[postHash]
   }
 
-  // Simple image processing - use direct URLs for better performance
-  if (image.startsWith('//')) image = 'https:' + image
-  
-  // Fix Blogger image sizes for better quality (use direct URLs)
-  if (image.includes('blogger.googleusercontent.com') || image.includes('blogspot.com')) {
-    // Convert to larger size and use direct URL
-    image = image.replace(/\/s\d+(-c)?\//, '/s1600/')
-    image = image.replace(/=s\d+$/i, '=s1600')
-    // Don't use proxy for Blogger images - they work directly
-  }
-  
-  // Decode any HTML entities in the URL
-  image = decodeHtmlEntities(image)
-
   // Debug final image URL
   if (process.env.NODE_ENV === 'development') {
     console.log(`Final image URL for "${post.title}": ${image}`)
   }
 
-  const result = {
+  // For success stories, inject additional images into the content
+  let fullContent = post.content || ''
+  if (defaultCategory === 'Success Story' && (challengeImage || solutionImage || outcomeImage)) {
+    // Inject challenge image if available
+    if (challengeImage) {
+      // Look for challenge section and inject image after challenge heading
+      const challengeRegex = /(challenge|problem|issue)[^<]*(<\/h[2-6]>|<\/strong>|:)/i
+      fullContent = fullContent.replace(challengeRegex, (match, ...args) => {
+        return match + `<div style="margin: 20px 0;"><img src="${challengeImage}" alt="Challenge" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
+      })
+    }
+    
+    // Inject solution image if available
+    if (solutionImage) {
+      // Look for solution section and inject image after solution heading
+      const solutionRegex = /(solution|approach|methodology|strategy)[^<]*(<\/h[2-6]>|<\/strong>|:)/i
+      fullContent = fullContent.replace(solutionRegex, (match, ...args) => {
+        return match + `<div style="margin: 20px 0;"><img src="${solutionImage}" alt="Solution" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
+      })
+    }
+    
+    // Inject outcome image if available
+    if (outcomeImage) {
+      // Look for outcome/result section and inject image after outcome heading
+      const outcomeRegex = /(outcome|result|achievement|success)[^<]*(<\/h[2-6]>|<\/strong>|:)/i
+      fullContent = fullContent.replace(outcomeRegex, (match, ...args) => {
+        return match + `<div style="margin: 20px 0;"><img src="${outcomeImage}" alt="Outcome" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
+      })
+    }
+  }
+
+  const result: BlogPost = {
     id: post.id,
     title: post.title,
     slug,
     excerpt,
-    fullContent: post.content || '',
+    fullContent,
     category: post.labels?.[0] || defaultCategory,
     tags: post.labels || [],
     author: post.author?.displayName || 'EMUSKI',
@@ -313,6 +358,10 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
     publishDate: new Date(post.published).toISOString(),
     readTime,
     image,
+    // Include section images for success stories
+    ...(challengeImage && { challengeImage }),
+    ...(solutionImage && { solutionImage }),
+    ...(outcomeImage && { outcomeImage }),
   }
 
   // Cache the result
