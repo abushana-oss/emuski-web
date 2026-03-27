@@ -6,6 +6,8 @@
   NODE_VERSION = "22"
   # Use the latest Ubuntu 22.04 (Jammy) build image instead of deprecated Focal
   AWS_LAMBDA_JS_RUNTIME = "nodejs22.x"
+  # Force clear build cache
+  NETLIFY_CACHE_ID = "v2"
 
 # Use Ubuntu 22.04 (Jammy) build image
 [build.processing]

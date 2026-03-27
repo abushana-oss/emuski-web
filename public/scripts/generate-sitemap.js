@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 // CONFIGURATION
 // ========================================
 const CONFIG = {
-  baseUrl: 'https://emuski-website-template.netlify.app',
+  baseUrl: 'https://www.emuski.com',
   outputPath: path.join(__dirname, '../public/sitemap.xml'),
   today: new Date().toISOString().split('T')[0],
   
