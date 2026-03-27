@@ -362,14 +362,14 @@ export const Navbar = () => {
                             sectionLink ? (
                               <Link
                                 href={sectionLink}
-                                className="flex items-center justify-between text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3 hover:text-emuski-teal-darker transition-colors"
+                                className="flex items-center justify-between text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3 hover:text-emuski-teal-darker transition-colors whitespace-nowrap"
                                 onClick={() => setIsMenuOpen(false)}
                               >
                                 <span>{section.title}</span>
                               </Link>
                             ) : (
                               <div className="flex items-center justify-between">
-                                <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3">{section.title}</h4>
+                                <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3 whitespace-nowrap">{section.title}</h4>
                               </div>
                             )
                           )}
