@@ -181,9 +181,7 @@ export const Navbar = () => {
                   height: "42px", 
                   maxWidth: "42px", 
                   maxHeight: "42px",
-                  imageRendering: "crisp-edges",
-                  WebkitImageRendering: "crisp-edges",
-                  MozImageRendering: "crisp-edges"
+                  imageRendering: "crisp-edges"
                 }}
                 quality={75}
                 priority
