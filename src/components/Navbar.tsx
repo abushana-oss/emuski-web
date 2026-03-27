@@ -175,7 +175,15 @@ export const Navbar = () => {
                 height={42}
                 sizes="42px"
                 className="h-9 sm:h-10 w-auto object-contain"
-                style={{ width: "42px", height: "42px", maxWidth: "42px", maxHeight: "42px" }}
+                style={{ 
+                  width: "42px", 
+                  height: "42px", 
+                  maxWidth: "42px", 
+                  maxHeight: "42px",
+                  imageRendering: "crisp-edges",
+                  WebkitImageRendering: "crisp-edges",
+                  MozImageRendering: "crisp-edges"
+                }}
                 quality={75}
                 priority
               />
@@ -322,7 +330,15 @@ export const Navbar = () => {
                         height={26}
                         sizes="26px"
                         className="h-5 w-auto object-contain opacity-80"
-                        style={{ width: "26px", height: "26px", maxWidth: "26px", maxHeight: "26px" }}
+                        style={{ 
+                          width: "26px", 
+                          height: "26px", 
+                          maxWidth: "26px", 
+                          maxHeight: "26px",
+                          imageRendering: "crisp-edges",
+                          WebkitImageRendering: "crisp-edges",
+                          MozImageRendering: "crisp-edges"
+                        }}
                         quality={75}
                       />
                       <div>

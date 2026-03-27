@@ -93,7 +93,7 @@ const imageConfig = {
   imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   qualities: [50, 60, 65, 75, 80],
   minimumCacheTTL: 86400,
-  dangerouslyAllowSVG: false,
+  dangerouslyAllowSVG: true,
   contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
 };
 
