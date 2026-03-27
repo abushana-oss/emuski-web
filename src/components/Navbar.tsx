@@ -17,7 +17,7 @@ interface NavItem {
 
 const servicesDropdown = {
   manufacturingServices: {
-    name: "Manufacturing Excellence",
+    name: "Precision Manufacturing",
     path: "/manufacturing-services",
     subItems: [
       { name: "On-Demand Manufacturing", path: "/manufacturing-services#on-demand-details" },
@@ -27,7 +27,7 @@ const servicesDropdown = {
     ]
   },
   costEngineering: {
-    name: "Engineering Innovation",
+    name: "Cost Engineering",
     path: "/cost-engineering",
     subItems: [
       { name: "Product Cost Estimation", path: "/cost-engineering#cost-estimation-details" },
@@ -40,7 +40,6 @@ const servicesDropdown = {
   tools: {
     name: "Tools",
     path: "#",
-    isNew: true,
     subItems: [
       { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" },
       { name: "2D Balloon Diagram", path: "/tools/2d-balloon-diagram" }
@@ -59,7 +58,7 @@ const navigationConfig = {
   ],
   mobileMenuSections: [
     {
-      title: "Manufacturing Excellence",
+      title: "Precision Manufacturing",
       items: [
         { name: "On-Demand Manufacturing", path: "/manufacturing-services#on-demand-details" },
         { name: "Rapid Prototyping", path: "/manufacturing-services#prototyping-details" },
@@ -68,7 +67,7 @@ const navigationConfig = {
       ]
     },
     {
-      title: "Engineering Innovation",
+      title: "Cost Engineering",
       items: [
         { name: "Product Cost Estimation", path: "/cost-engineering#cost-estimation-details" },
         { name: "VAVE & Benchmarking", path: "/cost-engineering#vave-details" },
@@ -98,8 +97,8 @@ const navigationConfig = {
 // Map of all routes to their display names
 const routeToPageName: Record<string, string> = {
   "/": "Home",
-  "/manufacturing-services": "Manufacturing Excellence",
-  "/cost-engineering": "Engineering Innovation",
+  "/manufacturing-services": "Precision Manufacturing",
+  "/cost-engineering": "Cost Engineering",
   "/blog": "Blog",
   "/gallery": "Gallery",
   "/contact": "Contact",
@@ -176,6 +175,7 @@ export const Navbar = () => {
                 height={28}
                 sizes="56px"
                 className="h-7 sm:h-8 w-auto object-contain [image-rendering:crisp-edges] contrast-110 brightness-105"
+                style={{ width: "auto", height: "auto" }}
                 quality={75}
                 priority
               />
@@ -189,7 +189,7 @@ export const Navbar = () => {
                 className={getLinkClasses("/")}
                 title="Home"
               >
-                Home
+                <Home className="h-5 w-5" />
               </Link>
 
               {/* Individual Service Dropdowns */}
@@ -214,14 +214,6 @@ export const Navbar = () => {
                         <span className={getLinkClasses("#")}>
                           {service.name}
                         </span>
-                        {'isNew' in service && service.isNew && (
-                          <span 
-                            className="ml-1 px-1.5 flex items-center justify-center h-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full border-0 shadow-sm animate-pulse"
-                            style={{ fontSize: '8px', lineHeight: '8px', paddingBottom: '1px' }}
-                          >
-                            NEW
-                          </span>
-                        )}
                       </div>
                     )}
                     <button
@@ -330,6 +322,7 @@ export const Navbar = () => {
                         height={16}
                         sizes="32px"
                         className="h-4 w-auto object-contain [image-rendering:crisp-edges] contrast-[1.2] brightness-110 opacity-80"
+                        style={{ width: "auto", height: "auto" }}
                         quality={75}
                       />
                       <div>
@@ -344,8 +337,8 @@ export const Navbar = () => {
                     {navigationConfig.mobileMenuSections.map((section, sectionIndex) => {
                       // Get the link for section titles
                       const getSectionLink = (title: string) => {
-                        if (title === "Manufacturing Excellence") return "/manufacturing-services";
-                        if (title === "Engineering Innovation") return "/cost-engineering";
+                        if (title === "Precision Manufacturing") return "/manufacturing-services";
+                        if (title === "Cost Engineering") return "/cost-engineering";
                         return null;
                       };
 
@@ -361,26 +354,10 @@ export const Navbar = () => {
                                 onClick={() => setIsMenuOpen(false)}
                               >
                                 <span>{section.title}</span>
-                                {section.title === "Tools" && (
-                                  <span 
-                                    className="ml-1 px-1.5 flex items-center justify-center h-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full border-0 shadow-sm animate-pulse"
-                                    style={{ fontSize: '7px', lineHeight: '7px' }}
-                                  >
-                                    NEW
-                                  </span>
-                                )}
                               </Link>
                             ) : (
                               <div className="flex items-center justify-between">
                                 <h4 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 px-3">{section.title}</h4>
-                                {section.title === "Tools" && (
-                                  <span 
-                                    className="ml-1 mr-3 px-1.5 flex items-center justify-center h-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full border-0 shadow-sm animate-pulse"
-                                    style={{ fontSize: '7px', lineHeight: '7px' }}
-                                  >
-                                    NEW
-                                  </span>
-                                )}
                               </div>
                             )
                           )}

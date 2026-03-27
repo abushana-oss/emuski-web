@@ -177,21 +177,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        {/* Production Error Handler Script - Load First */}
-        <script src="/turbo-error-fix.js" defer />
 
-        {/* Essential DNS Prefetch and Preconnect for Performance Optimization */}
+        {/* Minimal DNS Prefetch - Carbon Optimized */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.google-analytics.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://blogger.googleusercontent.com" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
 
-        {/* Critical resource preloads for performance */}
-        <link rel="preload" href="/social-banner.jpg" as="image" type="image/jpeg" />
+        {/* Critical resource preloads - Carbon Optimized */}
         <link rel="preload" href="/assets/hero/manufacturing-services-hero-banner.svg" as="image" />
-        <link rel="preload" href="/assets/partners/etherealx-partner-logo-1.svg" as="image" />
 
         {/* Favicon - Explicit links for best SEO and browser compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon-new.ico" sizes="48x48" />
@@ -265,419 +257,21 @@ export default function RootLayout({
         <meta name="twitter:image" content="https://www.emuski.com/social-banner.jpg" />
         <meta name="twitter:image:alt" content="EMUSKI - ISO Certified Manufacturer in Bangalore" />
 
-        {/* Consent Mode Configuration for GDPR/CCPA compliance */}
-        <Script
-          id="consent-mode"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              
-              // Set default consent mode before any analytics load
-              gtag('consent', 'default', {
-                'ad_storage': 'denied',
-                'ad_user_data': 'denied', 
-                'ad_personalization': 'denied',
-                'analytics_storage': 'granted',
-                'functionality_storage': 'granted',
-                'personalization_storage': 'granted',
-                'security_storage': 'granted',
-                'wait_for_update': 500
-              });
-            `,
-          }}
-        />
+        {/* Consent Mode Configuration moved to body */}
 
-        <Script
-          id="ld-json"
-          type="application/ld+json"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@graph": [
-                {
-                  "@type": ["Organization", "LocalBusiness"],
-                  "@id": "https://www.emuski.com/#organization",
-                  "name": "EMUSKI",
-                  "legalName": "EMUSKI Manufacturing Solutions Private Limited",
-                  "alternateName": "EMUSKI Manufacturing",
-                  "url": "https://www.emuski.com/",
-                  "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://www.emuski.com/og-image.png",
-                    "width": 2000,
-                    "height": 1333
-                  },
-                  "image": [
-                    "https://www.emuski.com/og-image.png"
-                  ],
-                  "description": "EMUSKI is one of the best manufacturing and engineering solutions companies in Bangalore, India, and among the leading manufacturing and engineering solution providers worldwide. Top manufacturing engineering solution provider offering ISO-certified OEM manufacturing, precision engineering, rapid prototyping, and AI-powered production solutions for automotive, aerospace, medical devices, and electronics industries globally.",
-                  "foundingDate": "2008",
-                  "slogan": "Your One-Stop Solution for OEM Excellence",
-                  "priceRange": "$$",
-                  "telephone": "+91-86670-88060",
-                  "email": "enquiries@emuski.com",
-                  "contactPoint": [
-                    {
-                      "@type": "ContactPoint",
-                      "telephone": "+91-86670-88060",
-                      "contactType": "Customer Service",
-                      "email": "enquiries@emuski.com",
-                      "availableLanguage": ["English", "Hindi"],
-                      "areaServed": ["IN", "Global"],
-                      "contactOption": "TollFree"
-                    },
-                    {
-                      "@type": "ContactPoint",
-                      "telephone": "+91-86670-88060",
-                      "contactType": "Sales",
-                      "email": "enquiries@emuski.com",
-                      "availableLanguage": ["English"],
-                      "areaServed": "Worldwide"
-                    }
-                  ],
-                  "address": {
-                    "@type": "PostalAddress",
-                    "streetAddress": "126, RNS Plaza, KIADB Industrial Area, Electronic City Phase 2",
-                    "addressLocality": "Bengaluru",
-                    "addressRegion": "Karnataka",
-                    "postalCode": "560100",
-                    "addressCountry": "IN"
-                  },
-                  "geo": {
-                    "@type": "GeoCoordinates",
-                    "latitude": "12.9716",
-                    "longitude": "77.5946"
-                  },
-                  "areaServed": [
-                    {
-                      "@type": "City",
-                      "name": "Bangalore"
-                    },
-                    {
-                      "@type": "City",
-                      "name": "Bengaluru"
-                    },
-                    {
-                      "@type": "State",
-                      "name": "Karnataka"
-                    },
-                    {
-                      "@type": "Country",
-                      "name": "India"
-                    },
-                    {
-                      "@type": "Place",
-                      "name": "Global"
-                    }
-                  ],
-                  "serviceArea": [
-                    {
-                      "@type": "City",
-                      "name": "Bangalore"
-                    },
-                    {
-                      "@type": "State",
-                      "name": "Karnataka"
-                    },
-                    {
-                      "@type": "Country",
-                      "name": "India"
-                    }
-                  ],
-                  "hasOfferCatalog": {
-                    "@type": "OfferCatalog",
-                    "name": "Manufacturing Services",
-                    "itemListElement": [
-                      {
-                        "@type": "Offer",
-                        "itemOffered": {
-                          "@type": "Service",
-                          "name": "OEM Manufacturing",
-                          "description": "Custom OEM manufacturing solutions for automotive, aerospace, and electronics industries"
-                        }
-                      },
-                      {
-                        "@type": "Offer",
-                        "itemOffered": {
-                          "@type": "Service",
-                          "name": "Precision Engineering",
-                          "description": "High-precision CNC machining and engineering services"
-                        }
-                      },
-                      {
-                        "@type": "Offer",
-                        "itemOffered": {
-                          "@type": "Service",
-                          "name": "Rapid Prototyping",
-                          "description": "Fast prototyping services for product development"
-                        }
-                      },
-                      {
-                        "@type": "Offer",
-                        "itemOffered": {
-                          "@type": "Service",
-                          "name": "AI Manufacturing Solutions",
-                          "description": "AI-powered manufacturing optimization and cost estimation"
-                        }
-                      }
-                    ]
-                  },
-                  "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": "4.8",
-                    "reviewCount": "75",
-                    "bestRating": "5",
-                    "worstRating": "1"
-                  },
-                  "openingHoursSpecification": [
-                    {
-                      "@type": "OpeningHoursSpecification",
-                      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                      "opens": "09:00",
-                      "closes": "18:00"
-                    },
-                    {
-                      "@type": "OpeningHoursSpecification",
-                      "dayOfWeek": "Saturday",
-                      "opens": "09:00",
-                      "closes": "13:00"
-                    }
-                  ],
-                  "knowsAbout": [
-                    "Manufacturing Engineering Solutions",
-                    "Precision Engineering",
-                    "CNC Machining",
-                    "Rapid Prototyping",
-                    "Injection Molding",
-                    "Sheet Metal Fabrication",
-                    "Quality Assurance",
-                    "VAVE Methodology",
-                    "Cost Optimization",
-                    "Supply Chain Management",
-                    "AI Manufacturing",
-                    "Design for Manufacturing",
-                    "OEM Manufacturing",
-                    "Manufacturing Solutions Worldwide",
-                    "Engineering Services",
-                    "Industrial Engineering",
-                    "Production Optimization",
-                    "Automotive Manufacturing",
-                    "Aerospace Manufacturing",
-                    "Medical Device Manufacturing"
-                  ],
-                  "additionalType": [
-                    "Manufacturing Company",
-                    "Engineering Solutions Provider",
-                    "OEM Manufacturer",
-                    "Precision Engineering Company",
-                    "Manufacturing Services Company"
-                  ],
-                  "makesOffer": [
-                    {
-                      "@type": "Offer",
-                      "name": "Best Manufacturing and Engineering Solutions",
-                      "description": "Leading manufacturing and engineering solution provider offering comprehensive services worldwide"
-                    },
-                    {
-                      "@type": "Offer",
-                      "name": "Top Manufacturing Engineering Services Bangalore",
-                      "description": "ISO-certified manufacturing engineering solutions in Bangalore, India serving global clients"
-                    }
-                  ],
-                  "memberOf": [
-                    {
-                      "@type": "Organization",
-                      "name": "ISO 9001:2015 Certified"
-                    }
-                  ],
-                  "sameAs": [
-                    "https://www.linkedin.com/company/emuski",
-                    "https://twitter.com/emuski"
-                  ]
-                },
-                {
-                  "@type": "WebSite",
-                  "@id": "https://www.emuski.com/#website",
-                  "url": "https://www.emuski.com/",
-                  "name": "EMUSKI Manufacturing Solutions",
-                  "publisher": {
-                    "@id": "https://www.emuski.com/#organization"
-                  },
-                  "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": "https://www.emuski.com/search?q={search_term_string}",
-                    "query-input": "required name=search_term_string"
-                  }
-                }
-              ]
-            })
-          }}
-        />
+        {/* Commented out to fix Script warning - will be moved to body */}
 
-        {/* PDF.js Configuration - Simple and Turbopack-safe */}
-        <Script
-          id="pdf-worker-config"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              // ✅ Set PDF.js worker to local file (Turbopack safe)
-              window.pdfjsWorkerPath = '/pdf.worker.min.js';
-            `
-          }}
-        />
+        {/* PDF.js Configuration - moved to body to fix Script warning */}
 
         {/* AI-Optimized Structured Data for Business Recommendations */}
         <AIOptimizedStructuredData />
 
-        {/* Enhanced Error Suppression & Security */}
+        {/* Minimal Error Suppression - Carbon Optimized */}
         <Script
-          id="extension-error-handler"
+          id="minimal-error-handler"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `
-              // Comprehensive error suppression and security for production
-              (function() {
-                'use strict';
-                
-                // ✅ Suppress all extension and runtime errors
-                const originalError = console.error;
-                console.error = function(...args) {
-                  const message = args.join(' ');
-                  if (
-                    message.includes('runtime.lastError') ||
-                    message.includes('message port closed') ||
-                    message.includes('Extension context invalidated') ||
-                    message.includes('plugin.lusha.com') ||
-                    message.includes('chrome-extension://') ||
-                    message.includes('Unchecked runtime.lastError') ||
-                    message.includes('access_token') ||
-                    message.includes('provider_token') ||
-                    message.includes('supabase.co/auth/v1/token') ||
-                    message.includes('grant_type=password') ||
-                    (message.includes('POST') && message.includes('supabase.co') && message.includes('auth')) ||
-                    (message.includes('Bad Request') && message.includes('supabase.co')) ||
-                    /POST https?:\/\/[^.]+\.supabase\.co\/auth\/v1\/token\?grant_type=password/.test(message) ||
-                    (message.includes('400') && message.includes('supabase.co') && message.includes('auth'))
-                  ) {
-                    // Replace sensitive auth errors with generic message
-                    if (message.includes('400') || message.includes('Bad Request')) {
-                      originalError('Login failed');
-                    }
-                    return; // Suppress extension and auth token errors
-                  }
-                  originalError.apply(console, args);
-                };
-
-                // ✅ Suppress console.log containing sensitive data
-                const originalLog = console.log;
-                console.log = function(...args) {
-                  const message = args.join(' ');
-                  if (
-                    message.includes('access_token') ||
-                    message.includes('provider_token') ||
-                    message.includes('refresh_token') ||
-                    message.includes('/auth/callback#') ||
-                    message.includes('eyJ') ||
-                    message.includes('supabase.co/auth/v1/token') ||
-                    message.includes('grant_type=password') ||
-                    (message.includes('POST') && message.includes('supabase.co') && message.includes('auth')) ||
-                    (message.includes('Bad Request') && message.includes('supabase.co')) ||
-                    /POST https?:\/\/[^.]+\.supabase\.co\/auth\/v1\/token\?grant_type=password/.test(message) ||
-                    (message.includes('400') && message.includes('supabase.co') && message.includes('auth'))
-                  ) {
-                    // Replace sensitive auth errors with generic message
-                    if (message.includes('400') || message.includes('Bad Request')) {
-                      originalLog('Login failed');
-                    }
-                    return; // Suppress auth token and URL logs
-                  }
-                  originalLog.apply(console, args);
-                };
-
-                // ✅ Suppress console.warn containing sensitive data
-                const originalWarn = console.warn;
-                console.warn = function(...args) {
-                  const message = args.join(' ');
-                  if (
-                    message.includes('access_token') ||
-                    message.includes('provider_token') ||
-                    message.includes('refresh_token') ||
-                    message.includes('supabase.co/auth/v1/token') ||
-                    message.includes('grant_type=password') ||
-                    (message.includes('POST') && message.includes('supabase.co') && message.includes('auth')) ||
-                    (message.includes('Bad Request') && message.includes('supabase.co')) ||
-                    /POST https?:\/\/[^.]+\.supabase\.co\/auth\/v1\/token\?grant_type=password/.test(message) ||
-                    (message.includes('400') && message.includes('supabase.co') && message.includes('auth'))
-                  ) {
-                    // Replace sensitive auth errors with generic message
-                    if (message.includes('400') || message.includes('Bad Request')) {
-                      originalWarn('Login failed');
-                    }
-                    return; // Suppress auth warnings
-                  }
-                  originalWarn.apply(console, args);
-                };
-
-                // ✅ Intercept and filter XMLHttpRequest logs for auth endpoints
-                const originalXHROpen = XMLHttpRequest.prototype.open;
-                XMLHttpRequest.prototype.open = function(method, url, ...args) {
-                  this._url = url;
-                  this._method = method;
-                  return originalXHROpen.apply(this, [method, url, ...args]);
-                };
-
-                const originalXHRSend = XMLHttpRequest.prototype.send;
-                XMLHttpRequest.prototype.send = function(data) {
-                  this.addEventListener('error', function() {
-                    if (this._url && typeof this._url === 'string' && 
-                        (this._url.includes('supabase.co/auth/v1/token') || 
-                         this._url.includes('grant_type=password'))) {
-                      // Suppress auth-related network errors from appearing in console
-                      return;
-                    }
-                  });
-                  return originalXHRSend.apply(this, [data]);
-                };
-
-                // ✅ Handle unhandled promise rejections from extensions
-                window.addEventListener('unhandledrejection', function(event) {
-                  const message = event.reason?.message || event.reason || '';
-                  if (
-                    message.includes('Extension') ||
-                    message.includes('chrome-extension') ||
-                    message.includes('plugin.lusha.com') ||
-                    message.includes('runtime.lastError') ||
-                    message.includes('message port closed')
-                  ) {
-                    event.preventDefault();
-                    return;
-                  }
-                });
-
-                // ✅ Block malicious extension communication
-                const originalPostMessage = window.postMessage;
-                window.postMessage = function(message, targetOrigin, transfer) {
-                  // reCAPTCHA may pass a MessagePort as targetOrigin (invalid).
-                  // Guard against non-strings to avoid browser SyntaxError.
-                  if (typeof targetOrigin !== 'string') {
-                    return;
-                  }
-                  if (
-                    targetOrigin &&
-                    (
-                      targetOrigin.includes('plugin.lusha.com') ||
-                      targetOrigin.includes('chrome-extension')
-                    )
-                  ) {
-                    return; // Block suspicious postMessage calls
-                  }
-                  originalPostMessage.call(window, message, targetOrigin, transfer);
-                };
-              })();
-            `
+            __html: `(function(){const e=console.error;console.error=function(...r){const o=r.join(' ');if(o.includes('extension')||o.includes('chrome-extension'))return;e.apply(console,r)};window.addEventListener('unhandledrejection',e=>{if(String(e.reason).includes('extension'))e.preventDefault()})})();`
           }}
         />
       </head>
@@ -696,115 +290,61 @@ export default function RootLayout({
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
         
-        {/* Enhanced GA4 Configuration */}
+        {/* Production Error Handler Script */}
+        <Script src="/turbo-error-fix.js" strategy="beforeInteractive" />
+        
+        {/* DMCA Protection Badge Script */}
+        <Script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js" strategy="afterInteractive" />
+        
+        {/* Website Carbon Badge Script removed to reduce footprint */}
+        
+        {/* PDF.js Configuration */}
+        <Script
+          id="pdf-worker-config"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Set PDF.js worker to local file
+              window.pdfjsWorkerPath = '/pdf.worker.min.js';
+            `
+          }}
+        />
+        
+        {/* Minimal Consent Mode - Carbon Optimized */}
+        <Script
+          id="consent-mode"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',analytics_storage:'granted'});`
+          }}
+        />
+        
+        {/* Minimal GA4 Config - Carbon Optimized */}
         <Script
           id="ga4-config"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
-            __html: `
-              function configureGA4() {
-                if (typeof gtag !== 'function') return;
-                
-                // Enhanced GA4 Configuration with Bot Filtering
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-QFDFYZLZPK'}', {
-                  'send_page_view': true,
-                  'allow_google_signals': true,
-                  'allow_ad_personalization_signals': false,
-                  'cookie_flags': 'SameSite=None;Secure',
-                  'enhanced_measurement': true,
-                  'debug_mode': false,
-                  'page_title': document.title || 'EMUSKI - Precision Manufacturing & Cost Engineering',
-                  'page_location': window.location.href,
-                  'content_group1': 'Precision Manufacturing Services',
-                  'content_group2': 'Cost Engineering Services',
-                  'custom_map': {
-                    'dimension1': 'service_type',
-                    'dimension2': 'industry_focus', 
-                    'dimension3': 'client_type',
-                    'dimension4': 'traffic_source'
-                  }
-                });
-                
-                // Set default user properties to avoid "not set"
-                gtag('set', 'user_properties', {
-                  'service_type': 'precision_manufacturing',
-                  'industry_focus': 'automotive_aerospace_medical',
-                  'client_type': 'visitor',
-                  'traffic_source': document.referrer || 'direct',
-                  'business_category': 'precision_manufacturing_cost_engineering'
-                });
-              }
-              
-              // Wait for gtag to be available
-              if (typeof gtag === 'function') {
-                configureGA4();
-              } else {
-                document.addEventListener('DOMContentLoaded', configureGA4);
-              }
-            `,
+            __html: `if(typeof gtag==='function')gtag('config','${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-QFDFYZLZPK'}',{send_page_view:true});`
           }}
         />
 
-        {/* Configuration Scripts */}
+        {/* Minimal Geo Config - Carbon Optimized */}
         <Script
           id="emuski-geo-config"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `
-              window.EmuskiGeoConfig = {
-                enableAutoTranslation: true,
-                enableCurrencyConversion: true,
-                enableUnitsConversion: true,
-                defaultLanguage: 'en',
-                supportedLanguages: {
-                  'en': { name: 'English', currency: 'USD', units: 'imperial' },
-                  'en-GB': { name: 'English (UK)', currency: 'GBP', units: 'metric' },
-                  'de': { name: 'Deutsch', currency: 'EUR', units: 'metric' },
-                  'fr': { name: 'Français', currency: 'EUR', units: 'metric' }
-                }
-              };
-            `
+            __html: `window.EmuskiGeoConfig={defaultLanguage:'en'};`
           }}
         />
 
-        <Script
-          id="apollo-tracking"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              function initApollo(){
-                var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-                o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-                o.onload=function(){window.trackingFunctions.onLoad({appId:"6983449db0cf09001d61e1af"})},
-                document.head.appendChild(o)
-              }
-              // Load Apollo only after user interaction
-              setTimeout(initApollo, 2000);
-            `
-          }}
-        />
+        {/* Apollo tracking removed to improve carbon footprint */}
 
-        {/* Initialize global error handlers */}
+        {/* Minimal Error Handlers - Carbon Optimized */}
         <Script
           id="global-error-handlers"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('unhandledrejection', function(event) {
-                console.error('Unhandled promise rejection:', event.reason);
-                event.preventDefault();
-              });
-              window.addEventListener('error', function(event) {
-                const error = event.error || { message: event.message };
-                // Suppress DOM manipulation errors in development
-                if (error.message && (error.message.includes('removeChild') || error.message.includes('insertBefore'))) {
-                  console.warn('DOM manipulation error suppressed globally:', error.message);
-                  event.preventDefault();
-                  return;
-                }
-                console.error('Global error:', error);
-              });
-            `
+            __html: `window.addEventListener('unhandledrejection',e=>e.preventDefault());`
           }}
         />
       </body>

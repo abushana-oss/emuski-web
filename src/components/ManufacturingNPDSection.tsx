@@ -56,7 +56,7 @@ export const ManufacturingNPDSection = () => {
       <div className="container mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-10">
-          <span className="text-xs font-bold text-emuski-teal-darker uppercase tracking-wider">NPD Centre</span>
+          <span className="text-xs font-bold text-emuski-teal-darker uppercase tracking-wider">New Product Development Centre</span>
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-3">
             EMUSKI NPD Centre
           </h2>
@@ -82,11 +82,10 @@ export const ManufacturingNPDSection = () => {
                 {/* Circular Image Container */}
                 <div className="relative mb-3">
                   <div
-                    className={`relative w-32 h-32 rounded-full overflow-hidden transition-all duration-300 ${
-                      selectedIndex === index
-                        ? 'ring-4 ring-emuski-teal-darker shadow-2xl scale-105'
-                        : 'ring-2 ring-gray-200 group-hover:ring-emuski-teal-darker/50 group-hover:shadow-lg'
-                    }`}
+                    className={`relative w-32 h-32 rounded-full overflow-hidden transition-all duration-300 ${selectedIndex === index
+                      ? 'ring-4 ring-emuski-teal-darker shadow-2xl scale-105'
+                      : 'ring-2 ring-gray-200 group-hover:ring-emuski-teal-darker/50 group-hover:shadow-lg'
+                      }`}
                   >
                     <Image
                       src={solution.image}
@@ -98,9 +97,8 @@ export const ManufacturingNPDSection = () => {
                       sizes="128px"
                     />
                     <div
-                      className={`absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent transition-opacity duration-300 ${
-                        selectedIndex === index ? 'opacity-0' : 'opacity-100 group-hover:opacity-50'
-                      }`}
+                      className={`absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent transition-opacity duration-300 ${selectedIndex === index ? 'opacity-0' : 'opacity-100 group-hover:opacity-50'
+                        }`}
                     />
                   </div>
 
@@ -113,11 +111,10 @@ export const ManufacturingNPDSection = () => {
                 {/* Title */}
                 <div className="text-center">
                   <h4
-                    className={`text-sm font-bold transition-colors duration-200 ${
-                      selectedIndex === index
-                        ? 'text-emuski-teal-darker'
-                        : 'text-gray-900 group-hover:text-emuski-teal-darker'
-                    }`}
+                    className={`text-sm font-bold transition-colors duration-200 ${selectedIndex === index
+                      ? 'text-emuski-teal-darker'
+                      : 'text-gray-900 group-hover:text-emuski-teal-darker'
+                      }`}
                   >
                     {solution.title}
                   </h4>
@@ -131,9 +128,8 @@ export const ManufacturingNPDSection = () => {
         {/* Description Panel */}
         <div className="max-w-4xl mx-auto mt-8">
           <div
-            className={`transition-all duration-500 ease-in-out overflow-hidden ${
-              selectedIndex !== null ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
-            }`}
+            className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedIndex !== null ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+              }`}
           >
             {selectedIndex !== null && (
               <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">

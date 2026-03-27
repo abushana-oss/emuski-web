@@ -153,9 +153,27 @@ export const Footer = () => {
               </div>
             </div>
             
-            <div className="text-center sm:text-right">
-              <p className="text-muted-foreground text-sm">Connect with EMUSKI</p>
-              <p className="text-muted-foreground text-xs mt-1">Your One-Stop Solution for OEM in Bangalore, India</p>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="text-center sm:text-right">
+                <p className="text-muted-foreground text-sm">Connect with EMUSKI</p>
+                <p className="text-muted-foreground text-xs mt-1">Your One-Stop Solution for OEM in Bangalore, India</p>
+              </div>
+              <a 
+                href="https://www.websitecarbon.com/website/emuski-com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                title="View EMUSKI's Carbon Footprint Test Results"
+                className="hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="/image.png"
+                  alt="Powered By Clean Energy - EMUSKI Carbon Footprint"
+                  width={110}
+                  height={50}
+                  className="h-12 w-auto"
+                  title="EMUSKI Green Technology Initiative - View Carbon Test"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -176,13 +194,30 @@ export const Footer = () => {
                 />
                 <span className="text-foreground font-bold text-sm">EMUSKI</span>
               </div>
-              <span className="text-muted-foreground text-sm">© 2025 EMUSKI Corporation. All rights reserved.</span>
+              <div className="flex items-center gap-3">
+                <span className="text-muted-foreground text-sm">© 2026 EMUSKI Corporation. All rights reserved.</span>
+                <a 
+                  href="//www.dmca.com/Protection/Status.aspx?ID=c7dee3e7-a511-43b9-9020-05a024a70964" 
+                  title="DMCA.com Protection Status" 
+                  className="dmca-badge"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img 
+                    src="https://images.dmca.com/Badges/dmca_protected_sml_120y.png?ID=c7dee3e7-a511-43b9-9020-05a024a70964" 
+                    alt="DMCA.com Protection Status"
+                    className="h-8 w-auto"
+                  />
+                </a>
+              </div>
             </div>
 
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
-              <Link href="/privacy-policy" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm">Privacy Policy</Link>
-              <Link href="/terms-and-conditions" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm">Terms of Service</Link>
-              <Link href="/cookie-policy" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm">Cookie Policy</Link>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex flex-wrap gap-x-6 gap-y-2">
+                <Link href="/privacy-policy" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm">Privacy Policy</Link>
+                <Link href="/terms-and-conditions" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm">Terms of Service</Link>
+                <Link href="/cookie-policy" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm">Cookie Policy</Link>
+              </div>
             </div>
           </div>
         </div>

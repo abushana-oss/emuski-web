@@ -23,8 +23,10 @@ export const dynamic = 'force-dynamic'; // Prevent static generation
 // Type definitions for better type safety
 interface ContactFormData {
   name: string;
+  company?: string;
   email: string;
   phone: string;
+  category?: string;
   requirements?: string;
   recaptchaToken: string;
 }
@@ -252,8 +254,15 @@ function generateEmailHtml(data: ContactFormData, hasAttachment: boolean): strin
       <div class="field-value">${sanitizeHtml(data.name)}</div>
     </div>
 
+    ${data.company ? `
     <div class="field-group">
-      <div class="field-label">📧 Company Email</div>
+      <div class="field-label">🏢 Company</div>
+      <div class="field-value">${sanitizeHtml(data.company)}</div>
+    </div>
+    ` : ''}
+
+    <div class="field-group">
+      <div class="field-label">📧 Email Address</div>
       <div class="field-value">
         <a href="mailto:${data.email}" style="color: #009688; text-decoration: none;">
           ${sanitizeHtml(data.email)}
@@ -270,18 +279,25 @@ function generateEmailHtml(data: ContactFormData, hasAttachment: boolean): strin
       </div>
     </div>
 
+    ${data.category ? `
+    <div class="field-group">
+      <div class="field-label">⚙️ Service Category</div>
+      <div class="field-value">${sanitizeHtml(data.category)}</div>
+    </div>
+    ` : ''}
+
     ${data.requirements ? `
     <div class="field-group">
-      <div class="field-label">📋 Project Requirements</div>
+      <div class="field-label">📋 Project Requirements / Message</div>
       <div class="requirements">${sanitizeHtml(data.requirements)}</div>
     </div>
     ` : ''}
 
     ${hasAttachment ? `
     <div class="field-group">
-      <div class="field-label">📎 Attachment</div>
+      <div class="field-label">📎 Attachments</div>
       <div class="field-value">
-        <span class="attachment-badge">✓ File attached to this email</span>
+        <span class="attachment-badge">✓ Files attached to this email</span>
       </div>
     </div>
     ` : ''}
@@ -335,6 +351,7 @@ async function sendEmail(
     });
 
     if (error) {
+      console.error('Resend API error:', error);
       return {
         success: false,
         error: error.message || 'Failed to send email',
@@ -360,27 +377,38 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
   try {
     // Parse multipart form data
     const formData = await request.formData();
+    console.log('Received form data keys:', Array.from(formData.keys()));
 
     // Extract and prepare form fields for validation
     const formFields = {
       name: formData.get('name') as string,
+      company: formData.get('company') as string || '',
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
+      category: formData.get('category') as string || '',
       requirements: formData.get('requirements') as string || '',
       recaptchaToken: formData.get('recaptchaToken') as string
     };
     
-    // Handle file attachments if present
-    const file = formData.get('file') as File | null;
+    // Handle multiple file attachments
+    const files: File[] = [];
+    for (let i = 0; i < 5; i++) {
+      const file = formData.get(`file${i}`) as File | null;
+      if (file && file.size > 0) {
+        files.push(file);
+      }
+    }
+    
     let formFieldsWithAttachments: any = formFields;
-    if (file && file.size > 0) {
+    if (files.length > 0) {
+      console.log('Files found:', files.map(f => ({ name: f.name, type: f.type, size: f.size })));
       formFieldsWithAttachments = {
         ...formFields,
-        attachments: [{
+        attachments: files.map(file => ({
           name: file.name,
           size: file.size,
           type: file.type
-        }]
+        }))
       };
     }
 
@@ -402,62 +430,82 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     }
 
     // Extract validated and sanitized data
-    const { name, email, phone, requirements, recaptchaToken } = validationResult.data;
+    const { name, company, email, phone, category, requirements, recaptchaToken } = validationResult.data;
 
-    // Verify reCAPTCHA v2
-    const recaptchaResult = await verifyRecaptchaV2(recaptchaToken);
-    if (!recaptchaResult.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'reCAPTCHA verification failed. Please try again.',
-          details: recaptchaResult.reasons
-        },
-        { status: 403 }
-      );
+    // Verify reCAPTCHA v2 (skip for internal bypass)
+    if (recaptchaToken !== 'bypass') {
+      const recaptchaResult = await verifyRecaptchaV2(recaptchaToken);
+      if (!recaptchaResult.success) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'reCAPTCHA verification failed. Please try again.',
+            details: recaptchaResult.reasons
+          },
+          { status: 403 }
+        );
+      }
     }
 
     // Prepare contact data
     const contactData: ContactFormData = {
       name,
+      company,
       email,
       phone,
+      category,
       requirements,
       recaptchaToken,
     };
 
-    // Handle file attachment if present
+    // Handle multiple file attachments
     let attachments: EmailPayload['attachments'] = undefined;
-    if (file && file.size > 0) {
-      // Validate file size (10MB limit)
-      const maxSize = 10 * 1024 * 1024; // 10MB
-      if (file.size > maxSize) {
+    if (files.length > 0) {
+      // Validate total files size (50MB limit total)
+      const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+      const maxTotalSize = 50 * 1024 * 1024; // 50MB total
+      if (totalSize > maxTotalSize) {
         return NextResponse.json(
-          { success: false, error: 'File size exceeds 10MB limit' },
+          { success: false, error: 'Total file size exceeds 50MB limit' },
           { status: 400 }
         );
       }
 
-      // Convert file to base64
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const base64 = buffer.toString('base64');
+      // Validate individual file size (10MB limit each)
+      const maxSize = 10 * 1024 * 1024; // 10MB per file
+      for (const file of files) {
+        if (file.size > maxSize) {
+          return NextResponse.json(
+            { success: false, error: `File "${file.name}" exceeds 10MB limit` },
+            { status: 400 }
+          );
+        }
+      }
 
-      attachments = [{
-        filename: file.name,
-        content: base64,
-        encoding: 'base64',
-      }];
+      // Convert all files to base64
+      attachments = await Promise.all(
+        files.map(async (file) => {
+          const bytes = await file.arrayBuffer();
+          const buffer = Buffer.from(bytes);
+          const base64 = buffer.toString('base64');
+          
+          return {
+            filename: file.name,
+            content: base64,
+            encoding: 'base64' as const,
+          };
+        })
+      );
     }
 
     // Generate email content
-    const emailHtml = generateEmailHtml(contactData, !!file);
+    const emailHtml = generateEmailHtml(contactData, files.length > 0);
 
     // Prepare email payload
     const emailPayload: EmailPayload = {
       to: 'enquiries@emuski.com',
       from: 'noreply@emuski.com',
-      subject: `🔔 New Contact Inquiry from ${name}`,
+      subject: `🔔 New Quote Request from ${name}${company ? ` - ${company}` : ''}`,
       html: emailHtml,
       attachments,
     };
@@ -466,8 +514,9 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     const emailResult = await sendEmail(emailPayload);
 
     if (!emailResult.success) {
+      console.error('Email sending failed:', emailResult.error);
       return NextResponse.json(
-        { success: false, error: 'Failed to send email' },
+        { success: false, error: emailResult.error || 'Failed to send email' },
         { status: 500 }
       );
     }
