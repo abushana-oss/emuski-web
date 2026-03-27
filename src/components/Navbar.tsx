@@ -175,7 +175,7 @@ export const Navbar = () => {
                 width={64}
                 height={64}
                 sizes="(max-width: 768px) 32px, 32px"
-                className="h-7 sm:h-8 w-auto object-contain"
+                className="h-8 w-auto object-contain"
                 style={{ 
                   width: "32px", 
                   height: "32px", 
@@ -325,8 +325,8 @@ export const Navbar = () => {
                       <Image
                         src={emuskiLogoMobile}
                         alt="EMUSKI Manufacturing Solutions Logo"
-                        width={40}
-                        height={40}
+                        width={64}
+                        height={64}
                         sizes="20px"
                         className="h-4 w-auto object-contain opacity-80"
                         style={{ 
@@ -334,7 +334,7 @@ export const Navbar = () => {
                           height: "20px", 
                           maxWidth: "20px", 
                           maxHeight: "20px",
-                          imageRendering: "auto"
+                          imageRendering: "-webkit-optimize-contrast"
                         } as React.CSSProperties}
                         quality={100}
                         unoptimized={true}
