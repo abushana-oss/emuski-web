@@ -4,10 +4,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { LogOut, UserPlus } from 'lucide-react'
 import { useAuth } from './AuthProvider'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 export default function UserMenu() {
   const { user, signOut, isAuthenticated } = useAuth()
+  const pathname = usePathname()
 
   const handleSignOut = async () => {
     const { error } = await signOut()
@@ -33,9 +35,13 @@ export default function UserMenu() {
   }
 
   if (!isAuthenticated) {
+    // Create redirect URL with current pathname
+    const loginUrl = `/auth/login?redirectTo=${encodeURIComponent(pathname)}`
+    const registerUrl = `/auth/register?redirectTo=${encodeURIComponent(pathname)}`
+
     return (
       <div className="flex items-center space-x-3">
-        <Link href="/auth/login">
+        <Link href={loginUrl}>
           <Button 
             variant="ghost"
             className="text-emuski-teal hover:text-emuski-teal-darker hover:bg-transparent border-0 focus:ring-0 focus-visible:ring-0"
@@ -43,7 +49,7 @@ export default function UserMenu() {
             Login
           </Button>
         </Link>
-        <Link href="/auth/register">
+        <Link href={registerUrl}>
           <Button className="bg-emuski-teal hover:bg-emuski-teal-darker text-white">
             <UserPlus className="w-4 h-4 mr-2" />
             Sign up

@@ -172,15 +172,15 @@ export const Navbar = () => {
               <Image
                 src={emuskiLogoMobile}
                 alt="EMUSKI Manufacturing Solutions Logo"
-                width={80}
-                height={80}
-                sizes="40px"
-                className="h-10 w-auto object-contain"
+                width={88}
+                height={88}
+                sizes="44px"
+                className="h-11 w-auto object-contain"
                 style={{ 
-                  width: "40px", 
-                  height: "40px", 
-                  maxWidth: "40px", 
-                  maxHeight: "40px",
+                  width: "44px", 
+                  height: "44px", 
+                  maxWidth: "44px", 
+                  maxHeight: "44px",
                   imageRendering: "crisp-edges",
                   WebkitImageSmoothing: false,
                   msInterpolationMode: "nearest-neighbor"
@@ -328,15 +328,15 @@ export const Navbar = () => {
                       <Image
                         src={emuskiLogoMobile}
                         alt="EMUSKI Manufacturing Solutions Logo"
-                        width={64}
-                        height={64}
-                        sizes="20px"
-                        className="h-4 w-auto object-contain opacity-80"
+                        width={72}
+                        height={72}
+                        sizes="22px"
+                        className="h-[18px] w-auto object-contain opacity-80"
                         style={{ 
-                          width: "20px", 
-                          height: "20px", 
-                          maxWidth: "20px", 
-                          maxHeight: "20px",
+                          width: "22px", 
+                          height: "22px", 
+                          maxWidth: "22px", 
+                          maxHeight: "22px",
                           imageRendering: "-webkit-optimize-contrast"
                         } as React.CSSProperties}
                         quality={100}

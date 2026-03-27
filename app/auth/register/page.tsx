@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, Suspense, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, User, Mail, Lock, Eye, EyeOff } from 'lucide-react'
@@ -73,6 +73,8 @@ function RegisterPageComponent() {
   const [recaptchaReady, setRecaptchaReady] = useState(false)
   const recaptchaRef = useRef<any>(null)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo') || '/'
 
   // Auto-rotate carousel
   useEffect(() => {
@@ -264,7 +266,7 @@ function RegisterPageComponent() {
                 {(error.message.includes('already exists') && !error.message.includes('not verified')) && (
                   <div className="mt-2">
                     <Link 
-                      href="/auth/login"
+                      href={`/auth/login?redirectTo=${encodeURIComponent(redirectTo)}`}
                       className="text-blue-600 hover:text-blue-800 font-medium underline"
                     >
                       Go to login page
@@ -442,7 +444,7 @@ function RegisterPageComponent() {
           {/* Login Link */}
           <div className="text-center mt-6">
             <span className="text-gray-600">Already member? </span>
-            <Link href="/auth/login" className="text-emuski-teal hover:text-emuski-teal-dark font-medium">
+            <Link href={`/auth/login?redirectTo=${encodeURIComponent(redirectTo)}`} className="text-emuski-teal hover:text-emuski-teal-dark font-medium">
               Log in
             </Link>
           </div>
