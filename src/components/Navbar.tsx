@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import UserMenu from "./auth/UserMenu";
 const emuskiLogo = "/logo.svg";
-const emuskiLogoMobile = "/logo.png";
+const emuskiLogoMobile = "/logo.webp";
 
 interface NavItem {
   name: string;
