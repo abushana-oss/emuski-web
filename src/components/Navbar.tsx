@@ -334,10 +334,8 @@ export const Navbar = () => {
                           height: "20px", 
                           maxWidth: "20px", 
                           maxHeight: "20px",
-                          imageRendering: "auto",
-                          WebkitImageSmoothing: "true",
-                          msInterpolationMode: "bicubic"
-                        }}
+                          imageRendering: "auto"
+                        } as React.CSSProperties}
                         quality={100}
                         unoptimized={true}
                         priority
