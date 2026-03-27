@@ -211,6 +211,19 @@ export default function RootLayout({
         {/* Theme Color for browsers */}
         <meta name="theme-color" content="#17B8BA" />
 
+        {/* Resource Preloading for Performance & Carbon Optimization */}
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        <link rel="preload" href="/assets/emuski-logo-optimized.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/assets/hero/manufacturing-services-hero-banner.webp" as="image" type="image/webp" />
+        
+        {/* DNS Prefetch for External Resources */}
+        <link rel="dns-prefetch" href="//images.dmca.com" />
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        
+        {/* Reduced Resource Hints for Carbon Optimization */}
+        <link rel="preconnect" href="https://blogger.googleusercontent.com" crossOrigin="anonymous" />
+
         {/* Google-specific meta tags for AI Overviews */}
         <meta name="google" content="nositelinkssearchbox" />
         <meta name="google-site-verification" content="your-verification-code-here" />

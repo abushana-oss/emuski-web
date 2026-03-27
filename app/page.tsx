@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Navbar } from "@/components/Navbar"
 import { HeroSection } from "@/components/HeroSection"
 import { Footer } from "@/components/Footer"
@@ -225,13 +226,14 @@ export default function Home() {
                           : 'ring-2 ring-gray-200 group-hover:ring-emuski-teal-darker/50 group-hover:shadow-lg'
                           }`}
                       >
-                        <img
+                        <Image
                           src={solution.image}
                           alt={`EMUSKI ${solution.title} - ${solution.subtitle} manufacturing service icon`}
-                          width="128"
-                          height="128"
+                          width={128}
+                          height={128}
                           className="object-cover w-full h-full"
                           loading="lazy"
+                          quality={60}
                         />
                         <div
                           className={`absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent transition-opacity duration-300 ${selectedSolution === solution.id ? 'opacity-0' : 'opacity-100 group-hover:opacity-50'
@@ -276,12 +278,14 @@ export default function Home() {
                     <div className="flex items-start gap-4">
                       {/* Mini Icon */}
                       <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-emuski-teal-darker/20 flex-shrink-0">
-                        <img
-                          src={npdSolutions.find(s => s.id === selectedSolution)?.image}
+                        <Image
+                          src={npdSolutions.find(s => s.id === selectedSolution)?.image || ''}
                           alt={`EMUSKI ${npdSolutions.find(s => s.id === selectedSolution)?.title} service icon`}
-                          width="64"
-                          height="64"
+                          width={64}
+                          height={64}
                           className="object-cover w-full h-full"
+                          loading="lazy"
+                          quality={60}
                         />
                       </div>
 

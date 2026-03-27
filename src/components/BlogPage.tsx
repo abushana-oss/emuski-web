@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Filter, Calendar, User, Clock, ChevronRight, X } from "lucide-react";
 import { BlogPost } from "@/lib/api/blogger";
 import { EmailSubscription } from "./EmailSubscription";
@@ -222,12 +223,14 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
             <Link href={`/blog/${featuredPost.slug}`} className="block group">
               <article className="grid lg:grid-cols-2 gap-8 lg:gap-12 rounded-2xl overflow-hidden bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 hover:shadow-2xl transition-all duration-300 border border-gray-200">
                 <div className="relative h-64 lg:h-96 overflow-hidden">
-                  <img
+                  <Image
                     src={featuredPost.image}
                     alt={featuredPost.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    loading="eager"
-                    fetchPriority="high"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    priority
+                    quality={85}
                   />
                   <span className="absolute top-4 left-4 px-4 py-1.5 bg-emuski-teal text-white text-xs font-bold uppercase rounded-full shadow-lg">
                     Featured
@@ -287,11 +290,14 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
                 <article key={post.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-emuski-teal/30 transition-all duration-300 flex flex-col">
                   <Link href={`/blog/${post.slug}`} className="block">
                     <div className="relative h-56 overflow-hidden">
-                      <img
+                      <Image
                         src={post.image}
                         alt={post.title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        quality={75}
                       />
                       <span className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold rounded">
                         {post.category}
@@ -557,11 +563,14 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
           <Link href={`/blog/${featuredEngineeringPost.slug}`} className="block group">
             <article className="grid lg:grid-cols-2 gap-8 lg:gap-12 rounded-2xl overflow-hidden bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 hover:shadow-2xl transition-all duration-300 border border-gray-200">
               <div className="relative h-64 lg:h-96 overflow-hidden">
-                <img
+                <Image
                   src={featuredEngineeringPost.image}
                   alt={featuredEngineeringPost.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
+                  quality={85}
                 />
                 <span className="absolute top-4 left-4 px-4 py-1.5 bg-emuski-teal-darker text-white text-xs font-bold uppercase rounded-full shadow-lg">
                   Featured Engineering
@@ -618,11 +627,14 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
                 <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
                   <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-emuski-teal/30 transition-all h-full flex flex-col">
                     <div className="relative h-56 overflow-hidden">
-                      <img
+                      <Image
                         src={post.image}
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        quality={75}
                       />
                       <span className="absolute top-4 left-4 px-3 py-1.5 bg-emuski-teal-darker text-white text-xs font-bold rounded shadow-md">
                         Engineering
