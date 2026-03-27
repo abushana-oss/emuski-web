@@ -27,8 +27,8 @@ if (!BLOGGER_API_KEY && process.env.NODE_ENV === 'production') {
 // Blog IDs from environment variables (backend only)
 const BLOG_IDS = {
   manufacturing: process.env.MANUFACTURING_BLOG_ID || '3331639473149657933',
-  engineering: process.env.ENGINEERING_BLOG_ID || '',
-  successStories: process.env.SUCCESS_STORIES_BLOG_ID || '',
+  engineering: process.env.ENGINEERING_BLOG_ID || '3127439607261561130',
+  successStories: process.env.SUCCESS_STORIES_BLOG_ID || '850833685312209325',
 } as const;
 
 type BlogType = keyof typeof BLOG_IDS;
@@ -321,12 +321,12 @@ export const fetchBlogPosts = cache(
   async (blogType: BlogType, maxResults: number = 500, fetchAll: boolean = true): Promise<BlogPost[]> => {
     const blogId = BLOG_IDS[blogType];
 
+    // Debug logging
+    console.info(`Fetching ${blogType} blog posts with ID: ${blogId}`);
+
     // Skip if blog ID not configured (silent for optional blogs)
     if (!blogId) {
-      // Only log if it's not the optional successStories blog
-      if (blogType !== 'successStories') {
-        console.info(`Blog ${blogType} not configured, returning empty array`);
-      }
+      console.error(`Blog ${blogType} not configured - no blog ID found, returning empty array`);
       return [];
     }
 
@@ -358,17 +358,29 @@ export const fetchBlogPosts = cache(
 
             if (!response.ok) {
               if (response.status === 404) {
-                console.info(`Blog ${blogType} not found (404)`);
+                console.info(`Blog ${blogType} not found (404) - Blog ID: ${blogId}`);
                 return [];
               }
-              throw new Error(`Failed to fetch ${blogType} posts: ${response.status}`);
+              if (response.status === 403) {
+                console.error(`Blog ${blogType} access forbidden (403) - Check API key and blog permissions`);
+                return [];
+              }
+              console.error(`Failed to fetch ${blogType} posts: ${response.status} ${response.statusText}`);
+              throw new Error(`Failed to fetch ${blogType} posts: ${response.status} ${response.statusText}`);
             }
 
             const data = await response.json();
 
             if (!data.items || !Array.isArray(data.items)) {
+              console.info(`No more posts found for ${blogType} on page ${pageCount + 1}`);
               break;
             }
+
+            console.info(`API Response for ${blogType} page ${pageCount + 1}:`, {
+              itemsCount: data.items.length,
+              hasNextPageToken: !!data.nextPageToken,
+              nextPageToken: data.nextPageToken
+            });
 
             const defaultCategory = blogType === 'engineering' ? 'Engineering' :
                                    blogType === 'successStories' ? 'Case Study' :
@@ -395,7 +407,7 @@ export const fetchBlogPosts = cache(
               break;
             }
 
-          } while (pageToken);
+          } while (pageToken && pageCount < maxPages);
 
           console.info(`Total posts fetched for ${blogType}: ${allPosts.length}`);
           return allPosts;
@@ -405,7 +417,7 @@ export const fetchBlogPosts = cache(
           return [];
         }
       },
-      [`blog-${blogType}-all-v2`],
+      [`blog-${blogType}-all-v3`],
       {
         revalidate: REVALIDATE_TIME,
         tags: [`blog-${blogType}`, 'blog-posts'],
@@ -426,9 +438,9 @@ export async function fetchAllBlogs(fetchAll: boolean = true): Promise<{
   all: BlogPost[];
 }> {
   const [manufacturing, engineering, successStories] = await Promise.all([
-    fetchBlogPosts('manufacturing', 500, fetchAll),
-    fetchBlogPosts('engineering', 500, fetchAll),
-    fetchBlogPosts('successStories', 500, fetchAll),
+    fetchBlogPosts('manufacturing', 100, fetchAll),
+    fetchBlogPosts('engineering', 100, fetchAll),
+    fetchBlogPosts('successStories', 100, fetchAll),
   ]);
 
   return {

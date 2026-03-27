@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import UserMenu from "./auth/UserMenu";
 const emuskiLogo = "/logo.svg";
-const emuskiLogoMobile = "/logo.jpg";
+const emuskiLogoMobile = "/logo.webp";
 
 interface NavItem {
   name: string;
@@ -164,27 +164,30 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
       <div className="w-full px-4 sm:px-6">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center space-x-8">
             <Link href="/" className="flex items-center space-x-1.5 group">
               <Image
-                src={emuskiLogo}
+                src={emuskiLogoMobile}
                 alt="EMUSKI Manufacturing Solutions Logo"
-                width={64}
-                height={64}
-                sizes="(max-width: 768px) 32px, 32px"
-                className="h-8 w-auto object-contain"
+                width={80}
+                height={80}
+                sizes="40px"
+                className="h-10 w-auto object-contain"
                 style={{ 
-                  width: "32px", 
-                  height: "32px", 
-                  maxWidth: "32px", 
-                  maxHeight: "32px",
-                  imageRendering: "-webkit-optimize-contrast"
-                }}
+                  width: "40px", 
+                  height: "40px", 
+                  maxWidth: "40px", 
+                  maxHeight: "40px",
+                  imageRendering: "crisp-edges",
+                  WebkitImageSmoothing: false,
+                  msInterpolationMode: "nearest-neighbor"
+                } as React.CSSProperties}
                 quality={100}
                 priority
+                unoptimized={true}
               />
               <span className="text-xl sm:text-2xl font-bold text-foreground">EMUSKI</span>
             </Link>
