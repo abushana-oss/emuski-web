@@ -158,22 +158,6 @@ export const Footer = () => {
                 <p className="text-muted-foreground text-sm">Connect with EMUSKI</p>
                 <p className="text-muted-foreground text-xs mt-1">Your One-Stop Solution for OEM in Bangalore, India</p>
               </div>
-              <a 
-                href="https://www.websitecarbon.com/website/emuski-com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                title="View EMUSKI's Carbon Footprint Test Results"
-                className="hover:opacity-80 transition-opacity"
-              >
-                <Image
-                  src="/image.png"
-                  alt="Powered By Clean Energy - EMUSKI Carbon Footprint"
-                  width={110}
-                  height={50}
-                  className="h-12 w-auto"
-                  title="EMUSKI Green Technology Initiative - View Carbon Test"
-                />
-              </a>
             </div>
           </div>
         </div>
