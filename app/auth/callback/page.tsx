@@ -21,42 +21,15 @@ function AuthCallbackComponent() {
       if (isCanceled) return
 
       try {
-        // Handle the auth callback from URL hash/search params
-        const { data, error: sessionError } = await supabase.auth.getSession()
-        
-        if (isCanceled) return
-
-        if (sessionError) {
-          setError(sessionError.message || 'Authentication failed')
-          setIsProcessing(false)
-          return
-        }
-
-        // If we have a session, validate and redirect
-        if (data.session?.user) {
-          const user = data.session.user
-          
-          // Validate email access
-          if (!(await validateEmailAccess(user.email || ''))) {
-            await supabase.auth.signOut()
-            setError('Access is restricted to authorized company email addresses only.')
-            setIsProcessing(false)
-            return
-          }
-
-          // Success - redirect immediately
-          const redirectTo = searchParams.get('redirectTo') || '/'
-          router.replace(redirectTo)
-          return
-        }
-
-        // Check for auth callback in URL and process it
+        // Check for OAuth callback parameters in URL
         const hashParams = new URLSearchParams(window.location.hash.substring(1))
         const searchParamsFromURL = new URLSearchParams(window.location.search)
         
-        if (hashParams.has('access_token') || searchParamsFromURL.has('code')) {
-          // Process the auth callback
-          const { error: callbackError } = await supabase.auth.getSession()
+        // Handle PKCE flow (authorization code)
+        if (searchParamsFromURL.has('code')) {
+          const { data: sessionData, error: callbackError } = await supabase.auth.exchangeCodeForSession(
+            searchParamsFromURL.get('code') || ''
+          )
           
           if (isCanceled) return
           
@@ -66,16 +39,92 @@ function AuthCallbackComponent() {
             return
           }
 
-          // Try again to get the session after processing
-          setTimeout(() => {
-            if (!isCanceled) {
-              handleAuthCallback()
+          // If we have a session after exchange, validate and redirect
+          if (sessionData?.session?.user) {
+            const user = sessionData.session.user
+            
+            // Validate email access
+            if (!(await validateEmailAccess(user.email || ''))) {
+              await supabase.auth.signOut()
+              setError('Access is restricted to authorized company email addresses only.')
+              setIsProcessing(false)
+              return
             }
-          }, 500)
-          return
+
+            // Success - redirect immediately
+            const redirectTo = searchParams.get('redirectTo') || '/'
+            router.replace(redirectTo)
+            return
+          }
+        }
+        
+        // Handle implicit flow (access token in hash)
+        else if (hashParams.has('access_token')) {
+          // For implicit flow, the session should be automatically set by Supabase
+          // Wait a moment for the auth state to update
+          await new Promise(resolve => setTimeout(resolve, 500))
+          
+          const { data, error: sessionError } = await supabase.auth.getSession()
+          
+          if (isCanceled) return
+
+          if (sessionError) {
+            setError(sessionError.message || 'Authentication failed')
+            setIsProcessing(false)
+            return
+          }
+
+          // If we have a session, validate and redirect
+          if (data.session?.user) {
+            const user = data.session.user
+            
+            // Validate email access
+            if (!(await validateEmailAccess(user.email || ''))) {
+              await supabase.auth.signOut()
+              setError('Access is restricted to authorized company email addresses only.')
+              setIsProcessing(false)
+              return
+            }
+
+            // Success - redirect immediately
+            const redirectTo = searchParams.get('redirectTo') || '/'
+            router.replace(redirectTo)
+            return
+          }
+        }
+        
+        // Check if we already have a session (direct navigation to callback)
+        else {
+          const { data, error: sessionError } = await supabase.auth.getSession()
+          
+          if (isCanceled) return
+
+          if (sessionError) {
+            setError(sessionError.message || 'Authentication failed')
+            setIsProcessing(false)
+            return
+          }
+
+          // If we have a session, validate and redirect
+          if (data.session?.user) {
+            const user = data.session.user
+            
+            // Validate email access
+            if (!(await validateEmailAccess(user.email || ''))) {
+              await supabase.auth.signOut()
+              setError('Access is restricted to authorized company email addresses only.')
+              setIsProcessing(false)
+              return
+            }
+
+            // Success - redirect immediately
+            const redirectTo = searchParams.get('redirectTo') || '/'
+            router.replace(redirectTo)
+            return
+          }
         }
 
-        // No auth data found - redirect to login
+        // No auth data found
         setError('No authentication data received')
         setIsProcessing(false)
 

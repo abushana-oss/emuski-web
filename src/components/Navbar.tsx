@@ -172,18 +172,18 @@ export const Navbar = () => {
               <Image
                 src={emuskiLogo}
                 alt="EMUSKI Manufacturing Solutions Logo"
-                width={32}
-                height={32}
-                sizes="32px"
+                width={64}
+                height={64}
+                sizes="(max-width: 768px) 32px, 32px"
                 className="h-7 sm:h-8 w-auto object-contain"
                 style={{ 
                   width: "32px", 
                   height: "32px", 
                   maxWidth: "32px", 
                   maxHeight: "32px",
-                  imageRendering: "crisp-edges"
+                  imageRendering: "-webkit-optimize-contrast"
                 }}
-                quality={75}
+                quality={100}
                 priority
               />
               <span className="text-xl sm:text-2xl font-bold text-foreground">EMUSKI</span>
@@ -328,17 +328,13 @@ export const Navbar = () => {
                         width={20}
                         height={20}
                         sizes="20px"
-                        className="h-4 w-auto object-contain opacity-80 transform-gpu"
+                        className="h-4 w-auto object-contain opacity-80"
                         style={{ 
                           width: "20px", 
                           height: "20px", 
                           maxWidth: "20px", 
-                          maxHeight: "20px",
-                          transform: "translateZ(0)",
-                          backfaceVisibility: "hidden",
-                          WebkitBackfaceVisibility: "hidden",
-                          imageRendering: "crisp-edges"
-                        } as React.CSSProperties}
+                          maxHeight: "20px"
+                        }}
                         quality={100}
                         unoptimized={true}
                       />
