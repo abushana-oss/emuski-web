@@ -2,24 +2,42 @@
 
 import { useEffect, useState, useRef, ReactNode, Suspense } from 'react'
 
-// Custom intersection observer hook
-const useInView = (options: IntersectionObserverInit) => {
+// Custom intersection observer hook with triggerOnce support
+interface UseInViewOptions extends IntersectionObserverInit {
+  triggerOnce?: boolean
+}
+
+const useInView = (options: UseInViewOptions) => {
   const [inView, setInView] = useState(false)
   const [ref, setRef] = useState<Element | null>(null)
+  const [hasTriggered, setHasTriggered] = useState(false)
 
   useEffect(() => {
     if (!ref) return
 
     const observer = new IntersectionObserver(([entry]) => {
-      setInView(entry.isIntersecting)
-    }, options)
+      const isIntersecting = entry.isIntersecting
+      
+      if (options.triggerOnce) {
+        if (isIntersecting && !hasTriggered) {
+          setInView(true)
+          setHasTriggered(true)
+        }
+      } else {
+        setInView(isIntersecting)
+      }
+    }, {
+      threshold: options.threshold,
+      rootMargin: options.rootMargin,
+      root: options.root
+    })
 
     observer.observe(ref)
 
     return () => observer.disconnect()
-  }, [ref, options])
+  }, [ref, options, hasTriggered])
 
-  return { ref: setRef, inView }
+  return { ref: setRef, inView: options.triggerOnce ? (hasTriggered ? true : inView) : inView }
 }
 
 interface OptimizedLazyRenderProps {
