@@ -8,6 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import UserMenu from "./auth/UserMenu";
 const emuskiLogo = "/logo.svg";
+const emuskiLogoMobile = "/logo.png";
 
 interface NavItem {
   name: string;
@@ -324,7 +325,7 @@ export const Navbar = () => {
                   <div className="relative z-20 p-4 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 border-b border-gray-100 flex flex-col space-y-4">
                     <div className="flex items-center space-x-3">
                       <Image
-                        src={emuskiLogo}
+                        src={emuskiLogoMobile}
                         alt="EMUSKI Manufacturing Solutions Logo"
                         width={26}
                         height={26}
@@ -334,10 +335,7 @@ export const Navbar = () => {
                           width: "26px", 
                           height: "26px", 
                           maxWidth: "26px", 
-                          maxHeight: "26px",
-                          imageRendering: "crisp-edges",
-                          WebkitImageRendering: "crisp-edges",
-                          MozImageRendering: "crisp-edges"
+                          maxHeight: "26px"
                         }}
                         quality={75}
                       />
