@@ -328,14 +328,19 @@ export const Navbar = () => {
                         width={26}
                         height={26}
                         sizes="26px"
-                        className="h-5 w-auto object-contain opacity-80"
+                        className="h-5 w-auto object-contain opacity-80 transform-gpu"
                         style={{ 
                           width: "26px", 
                           height: "26px", 
                           maxWidth: "26px", 
-                          maxHeight: "26px"
-                        }}
-                        quality={75}
+                          maxHeight: "26px",
+                          transform: "translateZ(0)",
+                          backfaceVisibility: "hidden",
+                          WebkitBackfaceVisibility: "hidden",
+                          imageRendering: "crisp-edges"
+                        } as React.CSSProperties}
+                        quality={100}
+                        unoptimized={true}
                       />
                       <div>
                         <p className="text-xs font-semibold text-gray-700 leading-tight">One-stop solution for OEMs</p>
