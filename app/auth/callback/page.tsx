@@ -7,23 +7,6 @@ import { validateEmailAccess } from '@/lib/auth-config'
 import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Metadata } from 'next'
-
-// Prevent search engine indexing
-export const metadata: Metadata = {
-  title: 'Authentication Processing',
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-    noarchive: true,
-    nosnippet: true,
-    noimageindex: true,
-    'max-video-preview': -1,
-    'max-image-preview': 'none',
-    'max-snippet': -1,
-  },
-}
 
 function AuthCallbackComponent() {
   const router = useRouter()
