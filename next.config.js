@@ -287,6 +287,20 @@ const nextConfig = {
         permanent: true,
       },
 
+      // Auth callback redirect to prevent indexing
+      {
+        source: '/auth/callback',
+        destination: '/',
+        permanent: false, // Temporary redirect as auth callback is functional
+        has: [
+          {
+            type: 'header',
+            key: 'user-agent',
+            value: '(.*bot.*|.*crawler.*|.*spider.*)',
+          }
+        ]
+      },
+
       // Old service URLs to current pages
       {
         source: '/services',

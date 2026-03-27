@@ -7,6 +7,23 @@ import { validateEmailAccess } from '@/lib/auth-config'
 import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Metadata } from 'next'
+
+// Prevent search engine indexing
+export const metadata: Metadata = {
+  title: 'Authentication Processing',
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    noarchive: true,
+    nosnippet: true,
+    noimageindex: true,
+    'max-video-preview': -1,
+    'max-image-preview': 'none',
+    'max-snippet': -1,
+  },
+}
 
 function AuthCallbackComponent() {
   const router = useRouter()
@@ -124,7 +141,12 @@ function AuthCallbackComponent() {
           }
         }
 
-        // No auth data found
+        // No auth data found - redirect to home instead of showing error
+        if (typeof window !== 'undefined') {
+          window.location.href = 'https://www.emuski.com'
+          return
+        }
+        
         setError('No authentication data received')
         setIsProcessing(false)
 
@@ -149,7 +171,7 @@ function AuthCallbackComponent() {
   }, [router, searchParams])
 
   const handleRetry = () => {
-    router.push('/')
+    window.location.href = 'https://www.emuski.com'
   }
 
   // Only show UI if there's an error

@@ -325,18 +325,22 @@ export const Navbar = () => {
                       <Image
                         src={emuskiLogoMobile}
                         alt="EMUSKI Manufacturing Solutions Logo"
-                        width={20}
-                        height={20}
+                        width={40}
+                        height={40}
                         sizes="20px"
                         className="h-4 w-auto object-contain opacity-80"
                         style={{ 
                           width: "20px", 
                           height: "20px", 
                           maxWidth: "20px", 
-                          maxHeight: "20px"
+                          maxHeight: "20px",
+                          imageRendering: "auto",
+                          WebkitImageSmoothing: "true",
+                          msInterpolationMode: "bicubic"
                         }}
                         quality={100}
                         unoptimized={true}
+                        priority
                       />
                       <div>
                         <p className="text-xs font-semibold text-gray-700 leading-tight">One-stop solution for OEMs</p>
