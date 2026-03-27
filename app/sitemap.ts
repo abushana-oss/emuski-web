@@ -86,12 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.93, // International market focus
     },
     // Innovation and technology pages - Lower priority than core services
-    {
-      url: `${baseUrl}/solutions/ai`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'monthly',
-      priority: 0.75, // AI showcase - indexed after manufacturing and precision engineering
-    },
+    // Note: AI solutions page excluded from sitemap to focus SEO on manufacturing and cost engineering
     {
       url: `${baseUrl}/contact`,
       lastModified: STATIC_PAGES_LASTMOD,

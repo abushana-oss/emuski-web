@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import UserMenu from "./auth/UserMenu";
-const emuskiLogo = "/assets/emuski-logo-optimized.webp";
+const emuskiLogo = "/logo.svg";
 
 interface NavItem {
   name: string;
@@ -167,15 +167,15 @@ export const Navbar = () => {
       <div className="w-full px-4 sm:px-6">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-2.5 group">
+            <Link href="/" className="flex items-center space-x-1.5 group">
               <Image
                 src={emuskiLogo}
                 alt="EMUSKI Manufacturing Solutions Logo"
-                width={56}
-                height={28}
-                sizes="56px"
-                className="h-7 sm:h-8 w-auto object-contain [image-rendering:crisp-edges] contrast-110 brightness-105"
-                style={{ width: "auto", height: "auto" }}
+                width={42}
+                height={42}
+                sizes="42px"
+                className="h-9 sm:h-10 w-auto object-contain"
+                style={{ width: "42px", height: "42px", maxWidth: "42px", maxHeight: "42px" }}
                 quality={75}
                 priority
               />
@@ -318,11 +318,11 @@ export const Navbar = () => {
                       <Image
                         src={emuskiLogo}
                         alt="EMUSKI Manufacturing Solutions Logo"
-                        width={32}
-                        height={16}
-                        sizes="32px"
-                        className="h-4 w-auto object-contain [image-rendering:crisp-edges] contrast-[1.2] brightness-110 opacity-80"
-                        style={{ width: "auto", height: "auto" }}
+                        width={26}
+                        height={26}
+                        sizes="26px"
+                        className="h-5 w-auto object-contain opacity-80"
+                        style={{ width: "26px", height: "26px", maxWidth: "26px", maxHeight: "26px" }}
                         quality={75}
                       />
                       <div>
