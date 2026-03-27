@@ -132,7 +132,7 @@ export default function ManufacturingServices() {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <section className="relative py-16 sm:py-20 md:py-24 lg:py-32 border-b border-border/30 overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>
+      <section className="relative py-20 sm:py-20 md:py-24 lg:py-32 border-b border-border/30 overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>
         {/* Grid Pattern Overlay */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4fd3d4_1px,transparent_1px),linear-gradient(to_bottom,#4fd3d4_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
@@ -140,7 +140,7 @@ export default function ManufacturingServices() {
 
         {/* Content */}
         <div className="relative z-10">
-          <div className="container mx-auto px-6 sm:px-8 lg:px-12 pt-4 sm:pt-5 md:pt-6">
+          <div className="container mx-auto px-6 sm:px-8 lg:px-12 pt-6 sm:pt-5 md:pt-6">
             <div className="max-w-4xl mx-auto text-center">
               <div className="space-y-4 sm:space-y-5 md:space-y-6">
                 {/* Category Badge */}

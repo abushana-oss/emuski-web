@@ -172,15 +172,15 @@ export const Navbar = () => {
               <Image
                 src={emuskiLogo}
                 alt="EMUSKI Manufacturing Solutions Logo"
-                width={42}
-                height={42}
-                sizes="42px"
-                className="h-9 sm:h-10 w-auto object-contain"
+                width={32}
+                height={32}
+                sizes="32px"
+                className="h-7 sm:h-8 w-auto object-contain"
                 style={{ 
-                  width: "42px", 
-                  height: "42px", 
-                  maxWidth: "42px", 
-                  maxHeight: "42px",
+                  width: "32px", 
+                  height: "32px", 
+                  maxWidth: "32px", 
+                  maxHeight: "32px",
                   imageRendering: "crisp-edges"
                 }}
                 quality={75}
@@ -325,15 +325,15 @@ export const Navbar = () => {
                       <Image
                         src={emuskiLogoMobile}
                         alt="EMUSKI Manufacturing Solutions Logo"
-                        width={26}
-                        height={26}
-                        sizes="26px"
-                        className="h-5 w-auto object-contain opacity-80 transform-gpu"
+                        width={20}
+                        height={20}
+                        sizes="20px"
+                        className="h-4 w-auto object-contain opacity-80 transform-gpu"
                         style={{ 
-                          width: "26px", 
-                          height: "26px", 
-                          maxWidth: "26px", 
-                          maxHeight: "26px",
+                          width: "20px", 
+                          height: "20px", 
+                          maxWidth: "20px", 
+                          maxHeight: "20px",
                           transform: "translateZ(0)",
                           backfaceVisibility: "hidden",
                           WebkitBackfaceVisibility: "hidden",
