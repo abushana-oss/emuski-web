@@ -512,12 +512,21 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
   );
 };
 
-// Independent Engineering Section with Featured Post (no state dependency)
+// Independent Engineering Section with Featured Post and Pagination
 const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
+  const [currentEngineeringPage, setCurrentEngineeringPage] = useState(1);
+  const ENGINEERING_POSTS_PER_PAGE = 6;
+
   if (posts.length === 0) return null;
 
   const featuredEngineeringPost = posts[0];
-  const regularEngineeringPosts = posts.slice(1, 7);
+  const allRegularEngineeringPosts = posts.slice(1);
+  const totalEngineeringPages = Math.ceil(allRegularEngineeringPosts.length / ENGINEERING_POSTS_PER_PAGE);
+  
+  const regularEngineeringPosts = allRegularEngineeringPosts.slice(
+    (currentEngineeringPage - 1) * ENGINEERING_POSTS_PER_PAGE, 
+    currentEngineeringPage * ENGINEERING_POSTS_PER_PAGE
+  );
 
   return (
     <section className="bg-gray-50 py-16 border-t border-gray-200" aria-labelledby="cost-engineering-heading">
@@ -669,11 +678,12 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
         )}
 
         {/* Engineering Pagination */}
-        {regularEngineeringPosts.length > 6 && (
+        {totalEngineeringPages > 1 && (
           <nav className="mt-16 flex flex-col sm:flex-row justify-center items-center gap-6" aria-label="Engineering Pagination">
             {/* Previous Button */}
             <button
-              disabled
+              onClick={() => setCurrentEngineeringPage(p => Math.max(1, p - 1))}
+              disabled={currentEngineeringPage === 1}
               className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               aria-label="Previous page"
             >
@@ -682,25 +692,79 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
 
             {/* Page Numbers */}
             <div className="flex items-center gap-2">
-              <button
-                className="relative w-12 h-12 rounded-lg font-bold transition-all bg-gradient-to-br from-emuski-teal to-emuski-teal-dark text-white shadow-lg scale-110"
-                aria-current="page"
-                aria-label="Page 1"
-              >
-                1
-                <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-white rounded-full opacity-80" />
-              </button>
-              <button
-                className="relative w-12 h-12 rounded-lg font-bold transition-all bg-white border-2 border-gray-200 text-gray-700 hover:border-emuski-teal hover:text-emuski-teal-dark hover:scale-105"
-                aria-label="Page 2"
-              >
-                2
-              </button>
+              {(() => {
+                const pages: (number | string)[] = [];
+                const showEllipsis = totalEngineeringPages > 7;
+
+                if (!showEllipsis) {
+                  // Show all pages if 7 or fewer
+                  for (let i = 1; i <= totalEngineeringPages; i++) {
+                    pages.push(i);
+                  }
+                } else {
+                  // Smart pagination logic
+                  pages.push(1);
+
+                  if (currentEngineeringPage > 3) {
+                    pages.push('ellipsis-start');
+                  }
+
+                  const startPage = Math.max(2, currentEngineeringPage - 1);
+                  const endPage = Math.min(totalEngineeringPages - 1, currentEngineeringPage + 1);
+
+                  for (let i = startPage; i <= endPage; i++) {
+                    pages.push(i);
+                  }
+
+                  if (currentEngineeringPage < totalEngineeringPages - 2) {
+                    pages.push('ellipsis-end');
+                  }
+
+                  if (totalEngineeringPages > 1) {
+                    pages.push(totalEngineeringPages);
+                  }
+                }
+
+                return pages.map((page, index) => {
+                  if (typeof page === 'string') {
+                    return (
+                      <span
+                        key={`${page}-${index}`}
+                        className="w-12 h-12 flex items-center justify-center text-gray-400 font-medium"
+                        aria-hidden="true"
+                      >
+                        •••
+                      </span>
+                    );
+                  }
+
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentEngineeringPage(page)}
+                      className={`relative w-12 h-12 rounded-lg font-bold transition-all ${
+                        currentEngineeringPage === page
+                          ? 'bg-gradient-to-br from-emuski-teal to-emuski-teal-dark text-white shadow-lg scale-110'
+                          : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-emuski-teal hover:text-emuski-teal-dark hover:scale-105'
+                      }`}
+                      aria-current={currentEngineeringPage === page ? 'page' : undefined}
+                      aria-label={`Page ${page}`}
+                    >
+                      {page}
+                      {currentEngineeringPage === page && (
+                        <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-white rounded-full opacity-80" />
+                      )}
+                    </button>
+                  );
+                });
+              })()}
             </div>
 
             {/* Next Button */}
             <button
-              className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal transition-all"
+              onClick={() => setCurrentEngineeringPage(p => Math.min(totalEngineeringPages, p + 1))}
+              disabled={currentEngineeringPage === totalEngineeringPages}
+              className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               aria-label="Next page"
             >
               Next →
@@ -708,18 +772,6 @@ const EngineeringSection = ({ posts }: { posts: BlogPost[] }) => {
           </nav>
         )}
 
-        {/* View All Button */}
-        {posts.length > 7 && (
-          <div className="text-center mt-12">
-            <Link
-              href="/blog?category=engineering"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-emuski-teal-darker hover:bg-emuski-teal-dark text-white font-bold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-            >
-              View All {posts.length} Engineering Articles
-              <ChevronRight className="h-5 w-5" />
-            </Link>
-          </div>
-        )}
       </div>
     </section>
   );
