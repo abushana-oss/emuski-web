@@ -5,160 +5,22 @@ import { Suspense } from 'react';
 import { DynamicCadAnalysis } from '@/components/DynamicCadAnalysis';
 
 export const metadata: Metadata = {
-  title: 'Free AI-Powered 3D DFM Analysis Tool — Instant Manufacturability Check | Emuski',
-  description: 'Upload your CAD file and get instant AI-powered 3D DFM analysis. Our artificial intelligence identifies manufacturing errors, optimizes designs, and provides cost estimates. Free web-based tool, no download needed.',
-  keywords: 'AI DFM analysis tool, 3D DFM analysis, AI-powered Design for Manufacturing, free AI DFM tool online, AI CAD analysis, 3D manufacturing analysis AI, automated AI DFM analysis, AI manufacturability check, AI DFM software, AI-powered CAD analysis, AI injection molding DFM, AI CNC machining DFM, 3D AI part analysis, AI manufacturing design tool, online AI DFM checker, artificial intelligence DFM, machine learning CAD analysis',
-  openGraph: {
-    title: 'Free AI-Powered 3D DFM Analysis Tool — Instant Manufacturability Check | Emuski',
-    description: 'Upload your CAD file and get instant AI-powered 3D DFM analysis. Our artificial intelligence identifies manufacturing errors and provides cost estimates.',
-    type: 'website',
-    url: 'https://www.emuski.com/tools/3d-cad-analysis',
-    images: [
-      {
-        url: 'https://www.emuski.com/social-banner-cad-analysis.jpg',
-        width: 1200,
-        height: 630,
-        alt: '3D CAD Analysis Tool by EMUSKI'
-      }
-    ]
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: '3D CAD Analysis & Viewer | EMUSKI',
-    description: 'Professional 3D CAD file analysis with AI-powered manufacturing insights.',
-    images: ['https://www.emuski.com/social-banner-cad-analysis.jpg']
-  },
+  title: '3D CAD Analysis Tool',
+  description: 'Basic CAD file viewer for internal use.',
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
     googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      index: false,
+      follow: false,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
-  alternates: {
-    canonical: 'https://www.emuski.com/tools/3d-cad-analysis'
-  }
 };
 
 export default function CadAnalysisPage() {
-  const structuredData = [
-    // Main Software Application
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "EMUSKI 3D CAD Analysis Tool",
-      "description": "Professional 3D CAD file analysis with AI-powered manufacturing insights. Upload STL, STEP, IGES files for instant visualization and cost estimation.",
-      "applicationCategory": ["EngineeringApplication", "DesignApplication"],
-      "operatingSystem": "Web Browser",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "description": "Free 3D CAD file analysis with daily credit system",
-        "eligibleRegion": "Worldwide",
-        "availability": "https://schema.org/InStock"
-      },
-      "provider": {
-        "@type": "Organization",
-        "name": "EMUSKI Manufacturing Solutions",
-        "url": "https://emuski.com",
-        "@id": "https://emuski.com/#organization"
-      },
-      "featureList": [
-        "3D Model Visualization",
-        "STL File Viewer", 
-        "STEP File Analysis",
-        "IGES File Support",
-        "AI Manufacturing Analysis",
-        "Cost Estimation Calculator",
-        "Design for Manufacturing (DFM) Analysis",
-        "Material Recommendations",
-        "Manufacturing Process Optimization",
-        "Real-time 3D Rendering"
-      ],
-      "screenshot": "https://emuski.com/screenshots/cad-analysis-tool.webp",
-      "softwareVersion": "2.0",
-      "datePublished": "2024-01-01",
-      "dateModified": new Date().toISOString().split('T')[0],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "127",
-        "bestRating": "5",
-        "worstRating": "1"
-      }
-    },
-    // FAQ Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question", 
-          "name": "What CAD file formats are supported?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Our tool supports STEP (.step, .stp), STL (.stl), and IGES (.igs, .iges) files. These are the most common CAD file formats used in manufacturing and 3D modeling."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How accurate is the AI manufacturing analysis?", 
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Our AI analysis provides 95%+ accuracy for manufacturability assessments and cost estimates, trained on thousands of real manufacturing projects and industry data."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is the CAD analysis tool free?",
-          "acceptedAnswer": {
-            "@type": "Answer", 
-            "text": "Yes! We offer 5 free analyses per day. Each analysis consumes credits based on complexity - simple queries use 0.3 credits, while detailed analyses use up to 1.2 credits."
-          }
-        }
-      ]
-    },
-    // Service Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "name": "3D CAD File Analysis Service",
-      "description": "Professional CAD file analysis and manufacturing consultation service",
-      "provider": {
-        "@type": "Organization", 
-        "name": "EMUSKI",
-        "@id": "https://emuski.com/#organization"
-      },
-      "serviceType": "CAD Analysis",
-      "audience": {
-        "@type": "Audience",
-        "audienceType": "Engineers, Designers, Manufacturers"
-      },
-      "availableChannel": {
-        "@type": "ServiceChannel",
-        "serviceUrl": "https://emuski.com/tools/3d-cad-analysis",
-        "serviceName": "Online CAD Analysis Tool"
-      }
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-background">
-      {structuredData.map((data, index) => (
-        <script
-          key={index}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-        />
-      ))}
       <Navbar />
       
       {/* Hero Section */}
@@ -285,36 +147,6 @@ export default function CadAnalysisPage() {
       
       <Footer />
       
-      {/* Additional SEO enhancements */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://www.emuski.com"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Tools",
-                "item": "https://www.emuski.com/tools"
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": "3D CAD Analysis",
-                "item": "https://www.emuski.com/tools/3d-cad-analysis"
-              }
-            ]
-          })
-        }}
-      />
     </div>
   );
 }
