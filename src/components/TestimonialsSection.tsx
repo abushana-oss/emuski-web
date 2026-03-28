@@ -199,7 +199,7 @@ export const TestimonialsSection = () => {
                         </div>
                         <div className="ue-image-spacing w-1"></div>
                         <div className="uc_author_info flex-1 min-w-0">
-                          <div className="ue_title font-semibold text-gray-900 text-[10px] sm:text-xs mb-1 truncate">{testimonial.name}</div>
+                          <div className="ue_title font-semibold text-gray-900 text-[10px] sm:text-xs mb-1 truncate">{testimonial.name}, {testimonial.location}</div>
                           <div className="ue_subtitle text-[8px] sm:text-[10px] text-emuski-teal-darker font-medium line-clamp-2">{testimonial.industry}</div>
                         </div>
                       </div>
@@ -265,7 +265,7 @@ export const TestimonialsSection = () => {
                         </div>
                         <div className="ue-image-spacing w-1"></div>
                         <div className="uc_author_info flex-1 min-w-0">
-                          <div className="ue_title font-semibold text-gray-900 text-[10px] sm:text-xs mb-1 truncate">{testimonial.name}</div>
+                          <div className="ue_title font-semibold text-gray-900 text-[10px] sm:text-xs mb-1 truncate">{testimonial.name}, {testimonial.location}</div>
                           <div className="ue_subtitle text-[8px] sm:text-[10px] text-emuski-teal-darker font-medium line-clamp-2">{testimonial.industry}</div>
                         </div>
                       </div>
