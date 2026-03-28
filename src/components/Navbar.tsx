@@ -144,7 +144,7 @@ export const Navbar = () => {
   };
 
   const getLinkClasses = (path: string) => {
-    const baseClasses = "transition-colors text-lg font-medium";
+    const baseClasses = "transition-colors text-lg font-medium whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
     const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
     
@@ -152,7 +152,7 @@ export const Navbar = () => {
   };
 
   const getServicesButtonClasses = () => {
-    const baseClasses = "transition-colors text-lg font-medium flex items-center space-x-1";
+    const baseClasses = "transition-colors text-lg font-medium flex items-center space-x-1 whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
     const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
     

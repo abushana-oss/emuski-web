@@ -74,6 +74,10 @@ export interface BlogPost {
   image: string;
   seoTitle: string;
   metaDescription: string;
+  // Additional images for success story sections
+  challengeImage?: string;
+  solutionImage?: string;
+  outcomeImage?: string;
 }
 
 /**
@@ -232,7 +236,9 @@ function convertBloggerPostToLocalFormat(post: BloggerPost, defaultCategory: str
   // Also add the featured image title to seen alt texts
   seenAltTexts.add(post.title.toLowerCase());
   
-  processedContent = processedContent.replace(/<img([^>]*)>/gi, (_match, attrs) => {
+  // Skip general image processing for success stories - they get special handling below
+  if (defaultCategory !== 'Case Study' && defaultCategory !== 'Success Story') {
+    processedContent = processedContent.replace(/<img([^>]*)>/gi, (_match, attrs) => {
     const srcMatch = attrs.match(/src\s*=\s*["']([^"']+)["']/i);
     if (srcMatch) {
       let src = srcMatch[1];
@@ -276,6 +282,89 @@ function convertBloggerPostToLocalFormat(post: BloggerPost, defaultCategory: str
     }
     return _match;
   });
+  }
+
+  // Extract multiple images for success stories
+  let challengeImage = '';
+  let solutionImage = '';
+  let outcomeImage = '';
+
+  if (defaultCategory === 'Case Study' || defaultCategory === 'Success Story') {
+    // For success stories, preserve the original image positions but enhance them
+    // Fix image sizes in the existing content without moving them
+    processedContent = processedContent.replace(/<img([^>]*)>/gi, (match, attrs) => {
+      const srcMatch = attrs.match(/src\s*=\s*["']([^"']+)["']/i);
+      if (srcMatch) {
+        let src = srcMatch[1];
+        
+        // Skip very small icons and specific unwanted images
+        const shouldSkip = 
+          src.includes('/s45/') || 
+          src.includes('/s72/') || 
+          src.includes('/s120/') ||
+          src.includes('favicon') ||
+          src.includes('profile') ||
+          src.includes('avatar') ||
+          src.includes('blogger-logo') ||
+          src.includes('powered-by') ||
+          (src.includes('icon') && src.includes('16x16')) ||
+          (src.includes('icon') && src.includes('32x32'));
+        
+        if (shouldSkip) {
+          return ''; // Remove unwanted images
+        }
+        
+        // Fix protocol-relative URLs
+        if (src.startsWith('//')) {
+          src = 'https:' + src;
+        }
+        
+        // Fix Blogger image sizes to get high resolution
+        if (src.includes('blogger.googleusercontent.com') || src.includes('blogspot.com')) {
+          src = src.replace(/\/s\d+(-c)?\//, '/s1600/');
+          src = src.replace(/=s\d+$/i, '=s1600');
+        }
+        
+        // Extract alt text
+        const altMatch = attrs.match(/alt\s*=\s*["']([^"']*)["']/i);
+        const altText = altMatch ? altMatch[1] : 'Success Story Image';
+        
+        // Return enhanced image with better styling, preserving original position
+        return `<div style="margin: 20px 0; text-align: center;">
+          <img src="${src}" 
+               alt="${altText}" 
+               style="width: 100%; max-width: 800px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); object-fit: cover;" 
+               loading="lazy" />
+        </div>`;
+      }
+      return match;
+    });
+
+    
+    // Extract images for the properties but don't inject them again
+    const imgMatches = processedContent.match(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi) || [];
+    const validImages = [];
+    
+    for (const imgTag of imgMatches) {
+      const srcMatch = imgTag.match(/src=["']([^"']+)["']/)
+      if (srcMatch && srcMatch[1]) {
+        validImages.push(srcMatch[1]);
+      }
+    }
+    
+    // Assign additional image properties for potential future use
+    if (validImages.length > 1) {
+      challengeImage = validImages[1];
+      if (validImages.length > 2) {
+        solutionImage = validImages[2];
+      }
+      if (validImages.length > 3) {
+        outcomeImage = validImages[3];
+      }
+    }
+    
+    console.log(`[DEBUG] Success story "${post.title}" has ${validImages.length} images after processing`);
+  }
 
   return {
     id: post.id,
@@ -309,6 +398,10 @@ function convertBloggerPostToLocalFormat(post: BloggerPost, defaultCategory: str
     image,
     seoTitle: post.title,
     metaDescription: excerpt,
+    // Include section images for success stories
+    ...(challengeImage && { challengeImage }),
+    ...(solutionImage && { solutionImage }),
+    ...(outcomeImage && { outcomeImage }),
   };
 }
 

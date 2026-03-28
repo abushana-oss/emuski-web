@@ -230,30 +230,30 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
   
   const imgMatches = post.content?.match(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi) || []
   
-  // Debug logging for image processing
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`Processing post: ${post.title}`)
-    console.log(`Found ${imgMatches.length} images`)
-    imgMatches.forEach((match, i) => console.log(`Image ${i}:`, match))
-  }
   
-  // Extract valid image URLs
+  // Extract valid image URLs with more permissive filtering
   const validImages = []
   for (const imgTag of imgMatches) {
     const srcMatch = imgTag.match(/src=["']([^"']+)["']/)
     if (srcMatch && srcMatch[1]) {
       const imgUrl = srcMatch[1]
-      // Skip small icons, logos, and default images
-      if (!imgUrl.includes('/s45/') && 
-          !imgUrl.includes('/s72/') && 
-          !imgUrl.includes('icon') && 
-          !imgUrl.includes('logo') && 
-          !imgUrl.includes('favicon') &&
-          !imgUrl.includes('default') &&
-          !imgUrl.includes('avatar')) {
-        
+      
+      // Only skip very small icons and specific unwanted images
+      const shouldSkip = 
+        imgUrl.includes('/s45/') || 
+        imgUrl.includes('/s72/') || 
+        imgUrl.includes('/s120/') ||
+        imgUrl.includes('favicon') ||
+        imgUrl.includes('profile') ||
+        imgUrl.includes('avatar') ||
+        imgUrl.includes('blogger-logo') ||
+        imgUrl.includes('powered-by') ||
+        (imgUrl.includes('icon') && imgUrl.includes('16x16')) ||
+        (imgUrl.includes('icon') && imgUrl.includes('32x32'))
+      
+      if (!shouldSkip) {
         let processedUrl = imgUrl
-        // Fix Blogger image sizes
+        // Fix Blogger image sizes to get high resolution
         if (imgUrl.includes('blogger.googleusercontent.com') || imgUrl.includes('blogspot.com')) {
           processedUrl = imgUrl.replace(/\/s\d+(-c)?\//, '/s1600/')
           processedUrl = processedUrl.replace(/=s\d+$/i, '=s1600')
@@ -261,11 +261,15 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
         if (processedUrl.startsWith('//')) processedUrl = 'https:' + processedUrl
         processedUrl = decodeHtmlEntities(processedUrl)
         
-        validImages.push(processedUrl)
+        // Avoid duplicates
+        if (!validImages.includes(processedUrl)) {
+          validImages.push(processedUrl)
+        }
       }
     }
   }
   
+
   // Assign images: first as hero, then to sections if this is a success story
   if (validImages.length > 0) {
     image = validImages[0] // Hero image
@@ -279,6 +283,7 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
       if (validImages.length > 3) {
         outcomeImage = validImages[3] // Fourth image for outcome
       }
+      
     }
   }
 
@@ -309,39 +314,64 @@ function convertBloggerPostToLocalFormat(post: any, defaultCategory: string = 'B
     image = categoryFallbacks[postHash]
   }
 
-  // Debug final image URL
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`Final image URL for "${post.title}": ${image}`)
-  }
 
   // For success stories, inject additional images into the content
+  // Note: Success stories are now handled server-side in blogger.ts to preserve original positions
   let fullContent = post.content || ''
-  if (defaultCategory === 'Success Story' && (challengeImage || solutionImage || outcomeImage)) {
-    // Inject challenge image if available
+  if (false && defaultCategory === 'Success Story' && validImages.length > 1) {
+    let imagesInjected = 0
+    
+    // Strategy 1: Try to inject images at specific section headings
     if (challengeImage) {
-      // Look for challenge section and inject image after challenge heading
-      const challengeRegex = /(challenge|problem|issue)[^<]*(<\/h[2-6]>|<\/strong>|:)/i
-      fullContent = fullContent.replace(challengeRegex, (match, ...args) => {
-        return match + `<div style="margin: 20px 0;"><img src="${challengeImage}" alt="Challenge" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
+      // Look for challenge section and inject image after heading
+      const challengeRegex = /(challenge|problem|issue|background)[^<]*(<\/h[2-6]>|<\/strong>|<\/b>|:)/i
+      if (fullContent.match(challengeRegex)) {
+        fullContent = fullContent.replace(challengeRegex, (match, ...args) => {
+          imagesInjected++
+          return match + `<div style="margin: 20px 0;"><img src="${challengeImage}" alt="Challenge" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
+        })
+      }
+    }
+    
+    if (solutionImage && imagesInjected < validImages.length - 1) {
+      // Look for solution section and inject image after heading
+      const solutionRegex = /(solution|approach|methodology|strategy|process|implementation)[^<]*(<\/h[2-6]>|<\/strong>|<\/b>|:)/i
+      if (fullContent.match(solutionRegex)) {
+        fullContent = fullContent.replace(solutionRegex, (match, ...args) => {
+          imagesInjected++
+          return match + `<div style="margin: 20px 0;"><img src="${solutionImage}" alt="Solution" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
+        })
+      }
+    }
+    
+    if (outcomeImage && imagesInjected < validImages.length - 1) {
+      // Look for outcome/result section and inject image after heading
+      const outcomeRegex = /(outcome|result|achievement|success|conclusion|impact)[^<]*(<\/h[2-6]>|<\/strong>|<\/b>|:)/i
+      if (fullContent.match(outcomeRegex)) {
+        fullContent = fullContent.replace(outcomeRegex, (match, ...args) => {
+          imagesInjected++
+          return match + `<div style="margin: 20px 0;"><img src="${outcomeImage}" alt="Outcome" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
+        })
+      }
+    }
+    
+    // Strategy 2: If no specific sections found, inject images after paragraphs
+    if (imagesInjected === 0 && challengeImage) {
+      // Find the first paragraph and inject the second image after it
+      const paragraphRegex = /<\/p>/i
+      let paragraphCount = 0
+      fullContent = fullContent.replace(paragraphRegex, (match) => {
+        paragraphCount++
+        if (paragraphCount === 1) {
+          return match + `<div style="margin: 20px 0;"><img src="${challengeImage}" alt="Additional Image" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
+        }
+        return match
       })
     }
     
-    // Inject solution image if available
-    if (solutionImage) {
-      // Look for solution section and inject image after solution heading
-      const solutionRegex = /(solution|approach|methodology|strategy)[^<]*(<\/h[2-6]>|<\/strong>|:)/i
-      fullContent = fullContent.replace(solutionRegex, (match, ...args) => {
-        return match + `<div style="margin: 20px 0;"><img src="${solutionImage}" alt="Solution" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
-      })
-    }
-    
-    // Inject outcome image if available
-    if (outcomeImage) {
-      // Look for outcome/result section and inject image after outcome heading
-      const outcomeRegex = /(outcome|result|achievement|success)[^<]*(<\/h[2-6]>|<\/strong>|:)/i
-      fullContent = fullContent.replace(outcomeRegex, (match, ...args) => {
-        return match + `<div style="margin: 20px 0;"><img src="${outcomeImage}" alt="Outcome" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`
-      })
+    // Debug injection results
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Images injected into content: ${imagesInjected} out of ${validImages.length - 1} available`)
     }
   }
 
