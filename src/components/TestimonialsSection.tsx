@@ -111,7 +111,12 @@ export const TestimonialsSection = () => {
       {/* Left Side - Fixed Header Section */}
       <div className="flex flex-col lg:flex-row min-h-[50vh]">
         {/* Header Section - Sticky Left */}
-        <div className="w-full lg:w-1/3 bg-gradient-to-br from-emuski-teal-darker to-emuski-teal text-white p-4 sm:p-6 lg:p-8 lg:sticky lg:top-0 lg:h-[50vh] flex flex-col justify-center">
+        <div className="w-full lg:w-1/3 text-white p-4 sm:p-6 lg:p-8 lg:sticky lg:top-0 lg:h-[50vh] flex flex-col justify-center relative overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>
+          {/* Grid Pattern Overlay */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute top-0 left-0 w-full h-full" style={{backgroundImage: 'linear-gradient(to right, rgb(79, 211, 212) 1px, transparent 1px), linear-gradient(rgb(79, 211, 212) 1px, transparent 1px)', backgroundSize: '4rem 4rem'}}></div>
+          </div>
+          <div className="relative z-10">
           <div className="max-w-xs mx-auto lg:mx-0">
             <div className="flex items-center gap-2 mb-3 justify-center lg:justify-start">
               <TrophyIcon />
@@ -135,6 +140,7 @@ export const TestimonialsSection = () => {
                 Get an Instant Quote
               </a>
             </div>
+          </div>
           </div>
         </div>
 
