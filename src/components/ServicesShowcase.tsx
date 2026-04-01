@@ -312,24 +312,6 @@ const ServicesShowcase = memo(() => {
                 className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${serviceIndex * 200}ms` }}
               >
-                {/* Section Navigation */}
-                <div className="flex items-center justify-end gap-2 mb-4">
-                  <button
-                    onClick={() => scrollSection('left', service.id)}
-                    className="p-2.5 rounded-lg bg-emuski-teal-darker text-white shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
-                    aria-label="Scroll section left"
-                  >
-                    <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
-                  </button>
-                  <button
-                    onClick={() => scrollSection('right', service.id)}
-                    className="p-2.5 rounded-lg bg-emuski-teal-darker text-white shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
-                    aria-label="Scroll section right"
-                  >
-                    <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
-                  </button>
-                </div>
-
                 {/* Scrollable Section Wrapper */}
                 <div className="relative">
 
@@ -381,6 +363,26 @@ const ServicesShowcase = memo(() => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Section Navigation - Fixed Position */}
+                  {filteredProjects.length > 0 && (
+                    <div className="flex items-center justify-end gap-2 mb-4">
+                      <button
+                        onClick={() => scrollSection('left', service.id)}
+                        className="p-2.5 rounded-lg bg-emuski-teal-darker text-white shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
+                        aria-label="Scroll section left"
+                      >
+                        <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
+                      </button>
+                      <button
+                        onClick={() => scrollSection('right', service.id)}
+                        className="p-2.5 rounded-lg bg-emuski-teal-darker text-white shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
+                        aria-label="Scroll section right"
+                      >
+                        <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
+                      </button>
+                    </div>
+                  )}
 
                   {/* Horizontal Scroll Container */}
                   <div
