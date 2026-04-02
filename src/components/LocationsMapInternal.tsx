@@ -1,6 +1,6 @@
 'use client';
 
-
+import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -14,17 +14,19 @@ export default function LocationsMap() {
   }) : null;
 
   const locations = [
-    { name: 'Bangalore HQ', coords: [12.9716, 77.5946] as [number, number] },
-    { name: 'Hyderabad', coords: [17.3850, 78.4867] as [number, number] },
-    { name: 'Hosur', coords: [12.7409, 77.8253] as [number, number] },
-    { name: 'Germany', coords: [51.1657, 10.4515] as [number, number] },
-    { name: 'USA', coords: [39.8283, -98.5795] as [number, number] },
+    { name: 'Bangalore HQ', coords: [12.9716, 77.5946] as LatLngExpression },
+    { name: 'Hyderabad', coords: [17.3850, 78.4867] as LatLngExpression },
+    { name: 'Hosur', coords: [12.7409, 77.8253] as LatLngExpression },
+    { name: 'Germany', coords: [51.1657, 10.4515] as LatLngExpression },
+    { name: 'USA', coords: [39.8283, -98.5795] as LatLngExpression },
   ];
+
+  const mapCenter: LatLngExpression = [35.0, 20.0];
 
   return (
     <div className="w-full h-[400px] md:h-[520px] rounded-3xl overflow-hidden shadow-2xl border border-gray-100 z-10 relative">
       <MapContainer
-        center={[35.0, 20.0] as [number, number]}
+        center={mapCenter}
         zoom={2}
         scrollWheelZoom={false}
         className="w-full h-full z-10"
