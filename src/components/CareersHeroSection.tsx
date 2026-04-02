@@ -170,8 +170,6 @@ export function CareersHeroSection() {
               rotateX(${isMobile ? videoRotateX * 0.5 : videoRotateX}deg) 
               rotateY(${isMobile ? videoRotateY * 0.5 : videoRotateY}deg) 
               translateZ(${isMobile ? videoTranslateZ * 0.5 : videoTranslateZ}px)
-              translateX(${isMobile ? scrollProgress * 10 : scrollProgress * 20}px)
-              translateY(${isMobile ? scrollProgress * -8 : scrollProgress * -15}px)
             `,
             transformStyle: 'preserve-3d',
             transformOrigin: 'center center',

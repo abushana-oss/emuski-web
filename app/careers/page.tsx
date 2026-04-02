@@ -402,13 +402,13 @@ export default function CareersPage() {
     <>
       <div className="min-h-screen bg-background scroll-smooth" style={{ scrollPaddingTop: '120px' }}>
         {/* Perplexity-style Navigation - Fixed positioning with proper z-index */}
-        <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
-          <div className="bg-white/90 backdrop-blur-xl border border-border/50 rounded-full px-3 py-1.5 shadow-lg shadow-black/5">
-            <div className="flex items-center justify-center space-x-1">
+        <nav className="fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 w-[92%] sm:w-auto max-w-fit flex justify-center">
+          <div className="bg-white/90 backdrop-blur-xl border border-border/50 rounded-full px-2 sm:px-3 py-1.5 shadow-lg shadow-black/5 w-full flex justify-between">
+            <div className="flex items-center justify-between sm:justify-center space-x-1 w-full">
               {/* Logo - Properly sized */}
               <Link 
                 href="/" 
-                className="flex items-center mr-2 hover:opacity-80 transition-opacity overflow-visible"
+                className="flex items-center mr-1 sm:mr-2 hover:opacity-80 transition-opacity overflow-visible shrink-0"
               >
                 <Image
                   src="/logofull.svg"
