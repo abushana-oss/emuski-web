@@ -59,7 +59,7 @@ export const SecuritySchemas = {
   // Numeric validations
   positiveInteger: z.number().int().positive(),
   nonNegativeInteger: z.number().int().min(0),
-  
+
   // Content validation for rich text
   richText: z.string()
     .max(10000, 'Content too long')
@@ -77,23 +77,23 @@ export const ContactFormSchema = z.object({
     .max(100, 'Name too long')
     .trim()
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content'),
-  
+
   company: z.string()
     .max(200, 'Company name too long')
     .trim()
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content')
     .optional(),
-  
+
   email: SecuritySchemas.email,
-  
+
   phone: SecuritySchemas.phone,
-  
+
   category: z.string()
     .max(100, 'Category too long')
     .trim()
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content')
     .optional(),
-  
+
   requirements: z.string()
     .max(2000, 'Requirements too long')
     .refine(val => {
@@ -101,10 +101,10 @@ export const ContactFormSchema = z.object({
       return !dangerousTags.test(val);
     }, 'Potentially unsafe HTML content')
     .optional(),
-  
+
   recaptchaToken: z.string()
     .max(1000, 'Invalid reCAPTCHA token'),
-    
+
   // Optional file attachments validation
   attachments: z.array(z.object({
     name: SecuritySchemas.fileName,
@@ -113,7 +113,7 @@ export const ContactFormSchema = z.object({
       val => {
         // Be more permissive with file types for now
         console.log('Validating file type:', val);
-        
+
         // Blocked dangerous types
         const blockedTypes = [
           'application/x-msdownload',
@@ -122,7 +122,7 @@ export const ContactFormSchema = z.object({
           'text/html',
           'application/javascript'
         ];
-        
+
         // Allow most file types except blocked ones
         return !blockedTypes.includes(val.toLowerCase());
       },
@@ -138,14 +138,14 @@ export const BlogQuerySchema = z.object({
     .max(50, 'Blog ID too long')
     .trim()
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content'),
-  
+
   maxResults: z.string()
     .optional()
     .default('10')
     .refine(val => /^\d+$/.test(val), 'Must be a number')
     .transform(val => parseInt(val))
     .refine(val => val >= 1 && val <= 50, 'Results count must be 1-50'),
-  
+
   label: z.string()
     .min(1, 'Required')
     .max(100, 'Label too long')
@@ -153,7 +153,7 @@ export const BlogQuerySchema = z.object({
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content')
     .optional()
     .nullable(),
-    
+
   pageToken: z.string()
     .min(1, 'Required')
     .max(200, 'Page token too long')
@@ -168,37 +168,37 @@ export const AnalyticsEventSchema = z.object({
     .min(1, 'Event name required')
     .max(100, 'Event name too long')
     .regex(/^[a-zA-Z0-9_ \-\.]+$/, 'Invalid event name format'),
-  
+
   eventParams: z.record(z.any())
     .refine(
       val => Object.keys(val).length <= 25,
       'Too many event parameters (max 25)'
     ),
-  
+
   clientId: z.string()
     .min(1, 'Required')
     .max(255, 'Client ID too long')
     .trim()
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content')
     .optional(),
-    
+
   userId: SecuritySchemas.uuid.optional()
 });
 
 // File upload validation schema
 export const FileUploadSchema = z.object({
   fileName: SecuritySchemas.fileName,
-  
+
   fileSize: z.number()
     .positive('File size must be positive')
     .max(50 * 1024 * 1024, 'File too large (max 50MB)'),
-  
+
   mimeType: z.string()
     .refine(
       val => /^(application\/(step|x-step|octet-stream|sla)|model\/(vnd\.collada\+xml|x3d\+xml|gltf\+json)|text\/plain)$/i.test(val),
       'Invalid file type for CAD upload'
     ),
-    
+
   userId: SecuritySchemas.uuid
 });
 
@@ -209,11 +209,11 @@ export const DFMAnalysisSchema = z.object({
     .max(500, 'Message too long')
     .trim()
     .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content'),
-  
+
   fileName: SecuritySchemas.fileName,
-  
+
   userId: SecuritySchemas.uuid.optional(),
-  
+
   geometryData: z.object({
     dimensions: z.object({
       length: SecuritySchemas.positiveInteger.optional(),
@@ -224,7 +224,7 @@ export const DFMAnalysisSchema = z.object({
     surfaceArea: SecuritySchemas.positiveInteger.optional(),
     features: z.any().optional()
   }).optional(),
-  
+
   priority: z.enum(['high', 'normal', 'low']).default('normal')
 });
 
@@ -233,7 +233,7 @@ export const DFMAnalysisSchema = z.object({
  */
 export function sanitizeInput(input: string): string {
   if (typeof input !== 'string') return '';
-  
+
   return input
     // Remove HTML tags (basic sanitization)
     .replace(/<script[^>]*>.*?<\/script>/gi, '')
@@ -254,7 +254,7 @@ export function sanitizeInput(input: string): string {
  */
 export function sanitizeSQLInput(input: string): string {
   if (typeof input !== 'string') return '';
-  
+
   return input
     .replace(/['";\\]/g, '') // Remove SQL metacharacters
     .replace(/--/g, '') // Remove SQL comments
@@ -270,7 +270,7 @@ export function sanitizeSQLInput(input: string): string {
  */
 export function sanitizeFilePath(path: string): string | null {
   if (typeof path !== 'string') return null;
-  
+
   // Remove or replace dangerous patterns
   const sanitized = path
     .replace(/\.\./g, '') // Remove parent directory references
@@ -278,11 +278,11 @@ export function sanitizeFilePath(path: string): string | null {
     .replace(/-+/g, '-') // Collapse multiple dashes
     .toLowerCase()
     .trim();
-  
+
   // Validate result
   if (sanitized.length === 0 || sanitized.length > 255) return null;
   if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(sanitized)) return null;
-  
+
   return sanitized;
 }
 
@@ -295,10 +295,10 @@ export async function validateRequest<T>(
 ): Promise<{ success: true; data: T } | { success: false; error: string }> {
   try {
     let body;
-    
+
     // Handle different content types
     const contentType = request.headers.get('content-type') || '';
-    
+
     if (contentType.includes('application/json')) {
       body = await request.json();
     } else if (contentType.includes('application/x-www-form-urlencoded')) {
@@ -310,27 +310,27 @@ export async function validateRequest<T>(
     } else {
       return { success: false, error: 'Unsupported content type' };
     }
-    
+
     // Validate with schema
     const result = schema.safeParse(body);
-    
+
     if (!result.success) {
       const errorDetails = result.error.errors
         .map(err => `${err.path.join('.')}: ${err.message}`)
         .join(', ');
-      
-      return { 
-        success: false, 
-        error: `Validation failed: ${errorDetails}` 
+
+      return {
+        success: false,
+        error: `Validation failed: ${errorDetails}`
       };
     }
-    
+
     return { success: true, data: result.data };
-    
+
   } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Invalid request format' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Invalid request format'
     };
   }
 }
@@ -344,7 +344,7 @@ export function withInputValidation<T>(
 ) {
   return async (req: NextRequest, context: any): Promise<Response> => {
     const validation = await validateRequest(req, schema);
-    
+
     if (!validation.success) {
       return new Response(
         JSON.stringify({
@@ -357,7 +357,7 @@ export function withInputValidation<T>(
         }
       );
     }
-    
+
     return handler(req, validation.data, context);
   };
 }
@@ -372,7 +372,7 @@ export function validateUserContent(content: string): {
 } {
   const warnings: string[] = [];
   let sanitized = content;
-  
+
   // Check for potential XSS patterns
   const xssPatterns = [
     /<script/i,
@@ -383,23 +383,23 @@ export function validateUserContent(content: string): {
     /<embed/i,
     /data:\s*text\/html/i
   ];
-  
+
   for (const pattern of xssPatterns) {
     if (pattern.test(content)) {
       warnings.push('Potentially unsafe HTML content detected');
       break;
     }
   }
-  
+
   // Sanitize content
   sanitized = sanitizeInput(content);
-  
+
   // Length validation
   if (sanitized.length > 10000) {
     warnings.push('Content exceeds maximum length');
     sanitized = sanitized.substring(0, 10000);
   }
-  
+
   return {
     isValid: warnings.length === 0,
     sanitized,

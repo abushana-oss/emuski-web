@@ -77,11 +77,11 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
 
     // Validate analytics event data with comprehensive schema
     const validation = await validateRequest(request, AnalyticsEventSchema);
-    
+
     if (!validation.success) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'Invalid analytics data',
           details: 'error' in validation ? validation.error : 'Validation failed'
         },
