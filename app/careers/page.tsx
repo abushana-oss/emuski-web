@@ -494,7 +494,7 @@ export default function CareersPage() {
               <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
                 
                 {/* Left Side - Mission Statement */}
-                <AnimatedSection animationType="slideInLeft" delay={200}>
+                <AnimatedSection animationType="fadeInLeft" delay={200}>
                   <div className="space-y-8">
                     <div className="bg-gradient-to-r from-emuski-teal/10 via-emuski-teal/5 to-emuski-teal/10 rounded-2xl p-8">
                       <h3 className="text-3xl lg:text-4xl font-bold text-emuski-teal mb-4">
@@ -510,7 +510,7 @@ export default function CareersPage() {
                 </AnimatedSection>
 
                 {/* Right Side - Mission Image Collage */}
-                <AnimatedSection animationType="slideInRight" delay={300}>
+                <AnimatedSection animationType="fadeInRight" delay={300}>
                   <div className="relative">
                     {/* College Style Layout - Group Photo as Full Width Top */}
                     <div className="space-y-3">
@@ -574,7 +574,7 @@ export default function CareersPage() {
               </div>
 
               <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <AnimatedSection animationType="slideInLeft" delay={200}>
+                <AnimatedSection animationType="fadeInLeft" delay={200}>
                   <div className="text-center space-y-4">
                     <h4 className="text-xl font-bold text-emuski-teal">Empowerment</h4>
                     <p className="text-muted-foreground leading-relaxed">
@@ -592,7 +592,7 @@ export default function CareersPage() {
                   </div>
                 </AnimatedSection>
 
-                <AnimatedSection animationType="slideInRight" delay={400}>
+                <AnimatedSection animationType="fadeInRight" delay={400}>
                   <div className="text-center space-y-4">
                     <h4 className="text-xl font-bold text-emuski-teal">Driven Excellence</h4>
                     <p className="text-muted-foreground leading-relaxed">
