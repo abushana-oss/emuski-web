@@ -80,12 +80,13 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     const validation = await validateRequest(request, AnalyticsEventSchema);
 
     if (!validation.success) {
-      console.error('[GA4] Validation failed:', validation.error)
+      const errorDetails = 'error' in validation ? validation.error : 'Validation failed'
+      console.error('[GA4] Validation failed:', errorDetails)
       return NextResponse.json(
         {
           success: false,
           error: 'Invalid analytics data',
-          details: validation.error
+          details: errorDetails
         },
         { status: 400 }
       );
