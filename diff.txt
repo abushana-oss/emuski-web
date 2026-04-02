@@ -1,0 +1,25 @@
+diff --git a/app/careers/[jobId]/page.tsx b/app/careers/[jobId]/page.tsx
+index 39de32d..f1565ff 100644
+--- a/app/careers/[jobId]/page.tsx
++++ b/app/careers/[jobId]/page.tsx
+@@ -851,20 +851,6 @@ export default function JobPage({ params }: PageProps) {
+                 </div>
+ 
+ 
+-                {/* Benefits */}
+-                <div>
+-                  <h3 className="text-sm font-medium text-gray-500 mb-3" style={{
+-                    fontFamily: '"Inter", sans-serif'
+-                  }}>
+-                    India Benefits
+-                  </h3>
+-                  <p className="text-sm text-gray-600 leading-relaxed" style={{
+-                    fontFamily: '"Inter", sans-serif'
+-                  }}>
+-                    Full-time India employees enjoy a comprehensive benefits program including health insurance, 
+-                    performance bonuses, professional development opportunities, and more.
+-                  </p>
+-                </div>
+ 
+               </div>
+             </div>

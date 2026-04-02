@@ -55,7 +55,7 @@ export const CareersNavigation = () => {
     <>
       {/* Desktop Navigation */}
       <nav className="hidden md:flex fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 max-w-fit justify-center">
-        <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-full px-2 sm:px-3 py-1.5 shadow-lg shadow-black/5 flex justify-between">
+        <div className="bg-white border border-gray-200 rounded-full px-2 sm:px-3 py-1.5 shadow-lg flex justify-between">
           <div className="flex items-center space-x-1">
             {/* Logo */}
             <Link
@@ -215,7 +215,7 @@ export const CareersNavigation = () => {
           {/* Logo Container */}
           <Link
             href="/"
-            className="backdrop-filter backdrop-blur-[10px] bg-[rgba(251,250,244,0.94)] border border-[rgba(96,88,77,0.1)] rounded-[40px] shadow-[rgba(0,0,0,0.05)_0px_1px_5px_0px] p-3 hover:opacity-80 transition-opacity"
+            className="bg-white border border-gray-200 rounded-[40px] shadow-sm p-3 hover:shadow-md transition-shadow"
           >
             <Image
               src="/logofull.svg"
@@ -230,21 +230,21 @@ export const CareersNavigation = () => {
           <div className="relative" ref={mobileMenuRef}>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="backdrop-filter backdrop-blur-[10px] bg-[rgba(251,250,244,0.94)] border-0 rounded-[40px] shadow-[rgba(0,0,0,0.1)_0px_1px_5px_0px] p-3 hover:bg-[rgba(251,250,244,0.98)] transition-colors focus:outline-none focus:ring-0"
+              className="bg-white border border-gray-200 rounded-[40px] shadow-sm p-3 hover:shadow-md transition-shadow focus:outline-none focus:ring-0"
             >
               <div className="flex flex-col items-center justify-center w-5 h-5 space-y-1">
                 <div 
-                  className={`w-4 h-0.5 bg-[rgba(96,88,77,0.8)] rounded-[10px] transition-all duration-200 ${isMobileMenuOpen ? 'transform rotate-45 translate-y-1.5' : ''}`}
+                  className={`w-4 h-0.5 bg-gray-600 rounded-[10px] transition-all duration-200 ${isMobileMenuOpen ? 'transform rotate-45 translate-y-1.5' : ''}`}
                 ></div>
                 <div 
-                  className={`w-4 h-0.5 bg-[rgba(96,88,77,0.8)] rounded-[10px] transition-all duration-200 ${isMobileMenuOpen ? 'transform -rotate-45 -translate-y-1.5' : ''}`}
+                  className={`w-4 h-0.5 bg-gray-600 rounded-[10px] transition-all duration-200 ${isMobileMenuOpen ? 'transform -rotate-45 -translate-y-1.5' : ''}`}
                 ></div>
               </div>
             </button>
 
             {/* Mobile Dropdown Menu */}
             {isMobileMenuOpen && (
-              <div className="absolute top-full right-0 mt-2 w-72 backdrop-filter backdrop-blur-[15px] bg-white/95 border-0 rounded-2xl shadow-[rgba(0,0,0,0.15)_0px_10px_40px_0px] overflow-hidden">
+              <div className="absolute top-full right-0 mt-2 w-72 bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
                 <div className="py-4">
                   {/* Quick Action Buttons */}
                   <div className="px-4 mb-4 flex gap-2">
