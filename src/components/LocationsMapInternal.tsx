@@ -17,13 +17,15 @@ export default function LocationsMap() {
     { name: 'Bangalore HQ', coords: [12.9716, 77.5946] as [number, number] },
     { name: 'Hyderabad', coords: [17.3850, 78.4867] as [number, number] },
     { name: 'Hosur', coords: [12.7409, 77.8253] as [number, number] },
+    { name: 'Germany', coords: [51.1657, 10.4515] as [number, number] },
+    { name: 'USA', coords: [39.8283, -98.5795] as [number, number] },
   ];
 
   return (
     <div className="w-full h-[400px] md:h-[520px] rounded-3xl overflow-hidden shadow-2xl border border-gray-100 z-10 relative">
       <MapContainer
-        center={[15.0, 78.0]}
-        zoom={6}
+        center={[35.0, 20.0]}
+        zoom={2}
         scrollWheelZoom={false}
         className="w-full h-full z-10"
         style={{ zIndex: 10 }}

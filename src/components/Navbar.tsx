@@ -48,6 +48,18 @@ const servicesDropdown = {
   }
 };
 
+const locationsDropdown = {
+  name: "Locations",
+  path: "/careers#locations",
+  subItems: [
+    { name: "Bangalore", path: "/careers#locations", description: "RNS Plaza, Electronic City" },
+    { name: "Hyderabad", path: "/careers#locations", description: "Tech Hub, Telangana" },
+    { name: "Hosur", path: "/careers#locations", description: "Production Facility, Tamil Nadu" },
+    { name: "Germany", path: "/careers#locations", description: "Regional Office, Europe" },
+    { name: "USA", path: "/careers#locations", description: "Operations, North America" }
+  ]
+};
+
 const navigationConfig = {
   leftMenu: [
     { name: "Next-GenAI", path: "/solutions/ai" },
@@ -84,6 +96,17 @@ const navigationConfig = {
       ]
     },
     {
+      title: "Locations",
+      items: [
+        { name: "View All Locations", path: "/careers#locations" },
+        { name: "Bangalore", path: "/careers#locations" },
+        { name: "Hyderabad", path: "/careers#locations" },
+        { name: "Hosur", path: "/careers#locations" },
+        { name: "Germany", path: "/careers#locations" },
+        { name: "USA", path: "/careers#locations" }
+      ]
+    },
+    {
       title: "Solutions",
       items: [
         { name: "Next-GenAI", path: "/solutions/ai" },
@@ -112,8 +135,10 @@ const routeToPageName: Record<string, string> = {
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeServiceDropdown, setActiveServiceDropdown] = useState<string | null>(null);
+  const [showLocationsDropdown, setShowLocationsDropdown] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
+  const locationsRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -124,16 +149,19 @@ export const Navbar = () => {
       if (servicesRef.current && !servicesRef.current.contains(event.target as Node)) {
         setActiveServiceDropdown(null);
       }
+      if (locationsRef.current && !locationsRef.current.contains(event.target as Node)) {
+        setShowLocationsDropdown(false);
+      }
     };
 
-    if (isMenuOpen || activeServiceDropdown) {
+    if (isMenuOpen || activeServiceDropdown || showLocationsDropdown) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMenuOpen, activeServiceDropdown]);
+  }, [isMenuOpen, activeServiceDropdown, showLocationsDropdown]);
 
   const isActiveLink = (path: string) => {
     return pathname === path;
@@ -278,6 +306,65 @@ export const Navbar = () => {
                   )}
                 </div>
               ))}
+
+              {/* Locations Dropdown */}
+              <div
+                className="relative"
+                ref={locationsRef}
+                onMouseEnter={() => setShowLocationsDropdown(true)}
+                onMouseLeave={() => setShowLocationsDropdown(false)}
+              >
+                <div className="flex items-center">
+                  <Link
+                    href={locationsDropdown.path}
+                    className={getLinkClasses(locationsDropdown.path)}
+                    onClick={() => setShowLocationsDropdown(false)}
+                  >
+                    {locationsDropdown.name}
+                  </Link>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowLocationsDropdown(!showLocationsDropdown);
+                    }}
+                    className="ml-1 p-1 text-foreground hover:text-emuski-teal-darker transition-colors"
+                  >
+                    <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${showLocationsDropdown ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+
+                {showLocationsDropdown && (
+                  <div className="absolute top-full left-0 pt-2 w-72 z-[60]">
+                    <div
+                      className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
+                      style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+                    >
+                      <div className="py-2">
+                        <Link
+                          href={locationsDropdown.path}
+                          className="block px-4 py-3 text-sm font-semibold text-emuski-teal-darker border-b border-gray-100 hover:bg-emuski-teal/5"
+                          onClick={() => setShowLocationsDropdown(false)}
+                        >
+                          View All Locations
+                        </Link>
+                        {locationsDropdown.subItems.map((location) => (
+                          <Link
+                            key={location.path + location.name}
+                            href={location.path}
+                            className="block px-4 py-3 text-sm hover:bg-emuski-teal/5 hover:text-emuski-teal-darker transition-colors"
+                            onClick={() => setShowLocationsDropdown(false)}
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-medium text-gray-900">{location.name}</span>
+                              <span className="text-xs text-gray-500">{location.description}</span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {navigationConfig.leftMenu.map((item) => (
                 <Link 

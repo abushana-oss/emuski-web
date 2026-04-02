@@ -801,7 +801,10 @@ export default function CareersPage() {
                     <p>
                       Our home base is <span className="font-medium text-emuski-teal">Bangalore</span>, but EMUSKI is truly global.
                       You'll find our teams collaborating across <span className="font-medium text-emuski-teal">Electronic City</span>,
-                      <span className="font-medium text-emuski-teal"> Hyderabad</span>, <span className="font-medium text-emuski-teal"> Hosur</span>, and serving clients worldwide.
+                      <span className="font-medium text-emuski-teal"> Hyderabad</span>, <span className="font-medium text-emuski-teal"> Hosur</span>, 
+                      <span className="font-medium text-emuski-teal">Germany</span>, and the <span className="font-medium text-emuski-teal">USA</span>, 
+                      serving clients worldwide across <span className="font-medium text-emuski-teal"> Europe</span>, 
+                      <span className="font-medium text-emuski-teal">North America</span>, and beyond.
                     </p>
 
                     <p>
@@ -818,7 +821,7 @@ export default function CareersPage() {
                 </div>
 
                 {/* Location Cards */}
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                   <Card className="p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300">
                     <CardContent className="p-0 space-y-3">
                       <div className="flex items-center gap-2">
@@ -867,6 +870,42 @@ export default function CareersPage() {
                           <div>
                             <p className="font-medium">Production Facility</p>
                             <p>Hosur, Tamil Nadu</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-0 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                        <h3 className="text-sm font-semibold">Europe Consultant</h3>
+                      </div>
+                      <div className="space-y-1 text-xs text-muted-foreground">
+                        <div className="flex items-start gap-2">
+                          <MapPin className="h-3 w-3 mt-0.5 text-emuski-teal flex-shrink-0" />
+                          <div>
+                            <p className="font-medium">Regional Office</p>
+                            <p>Germany</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-0 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <h3 className="text-sm font-semibold">USA Operations</h3>
+                      </div>
+                      <div className="space-y-1 text-xs text-muted-foreground">
+                        <div className="flex items-start gap-2">
+                          <MapPin className="h-3 w-3 mt-0.5 text-emuski-teal flex-shrink-0" />
+                          <div>
+                            <p className="font-medium">Regional Office</p>
+                            <p>North America</p>
                           </div>
                         </div>
                       </div>
@@ -967,6 +1006,85 @@ export default function CareersPage() {
 
         {/* Open Roles Section */}
         <OpenRoles jobOpenings={jobOpenings} />
+        
+        {/* Additional Information Section */}
+        <section className="py-16 bg-white">
+          <div className="max-w-6xl mx-auto px-6">
+            {/* Section Header */}
+            <div className="border-t border-gray-300 pt-12 mb-16">
+              <h2 className="text-sm font-medium text-gray-600 tracking-wider uppercase mb-12">
+                ADDITIONAL INFORMATION
+              </h2>
+              
+              {/* Content Grid */}
+              <div className="grid lg:grid-cols-2 gap-16">
+                {/* Left Column */}
+                <div>
+                  <h3 className="text-2xl font-serif text-gray-900 mb-6">Visas and Green Cards</h3>
+                  <div className="space-y-4 text-gray-700 leading-relaxed">
+                    <p>
+                      While we're unable to provide visa sponsorship for all roles or candidates, if we decide to extend you an offer, we'll work hard to make it happen. We partner with an immigration firm to support you in the process.
+                    </p>
+                    <p>
+                      We can sponsor green cards once you are eligible.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Right Column */}
+                <div>
+                  <h3 className="text-2xl font-serif text-gray-900 mb-6">Reapplying</h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    If things don't work out this time, you're welcome to apply again after 12 months; sooner if there's a significant change in your experience or skills.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Privacy Policy Section */}
+              <div className="mt-16">
+                <h3 className="text-2xl font-serif text-gray-900 mb-6">Privacy Policy</h3>
+                <div className="space-y-4 text-gray-700 leading-relaxed max-w-3xl">
+                  <p>
+                    We use applicant details in our legitimate interests to process your application for employment and to evaluate your candidacy. For Singapore, we use this information for evaluative purposes and for the purposes of entering into an employment relationship with you.
+                  </p>
+                  <p>
+                    <a href="/privacy-policy" className="text-blue-600 hover:text-blue-800 underline">
+                      Complete privacy policy
+                    </a>
+                  </p>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </section>
+        
+        {/* Join Us Call to Action Section */}
+        <section className="py-20 bg-teal-600">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <h2 className="text-4xl md:text-5xl font-serif text-white mb-8 leading-tight">
+              Join Us
+            </h2>
+            <p className="text-xl text-teal-50 mb-12 leading-relaxed max-w-2xl mx-auto">
+              Ready to shape the future of manufacturing? Explore our open positions and become part of our innovative team.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <a 
+                href="#open-roles" 
+                className="inline-flex items-center px-8 py-4 bg-teal-500 text-white rounded-full font-semibold hover:bg-teal-400 transition-colors text-lg"
+              >
+                Open Roles
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
+              <a 
+                href="/interview-guide" 
+                className="inline-flex items-center px-8 py-4 bg-white text-teal-600 rounded-full font-semibold hover:bg-teal-50 transition-colors text-lg"
+              >
+                Interview Guide
+              </a>
+            </div>
+          </div>
+        </section>
       </div>
 
       {/* Footer */}

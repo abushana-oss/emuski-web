@@ -18,7 +18,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'Cost Engineering',
     locationType: 'Onsite',
-    compensation: '₹4-8 LPA • Offers Performance Bonus',
     description: 'Are you passionate about cost optimization, electronics, and driving value in manufacturing? We\'re looking for an experienced PCBA Should Costing Engineer to join our team in Hyderabad!',
     responsibilities: [
       'Perform PCBA should-cost analysis, supplier negotiations, and teardown benchmarking',
@@ -44,7 +43,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'Cost Engineering',
     locationType: 'Onsite',
-    compensation: '₹4-8 LPA • Offers Performance Bonus',
     description: 'Are you a mechanical engineer with a sharp eye for cost, value, and manufacturing efficiency? Join our team in Hyderabad and play a key role in driving cost-effective design and smarter sourcing decisions!',
     responsibilities: [
       'Analyze cost for machined parts, plastics & sheet metal',
@@ -67,7 +65,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'Security',
     locationType: 'Hybrid',
-    compensation: '₹5-10 LPA • Offers Equity',
     description: 'EMUSKI is seeking a hands-on AI Security Engineer to build and evolve the security systems that protect our manufacturing AI platforms. This role focuses on securing AI-driven manufacturing tools and developing security automation for our precision engineering systems.',
     responsibilities: [
       'Design, build, and maintain AI security systems for manufacturing platforms',
@@ -99,7 +96,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'Security',
     locationType: 'Hybrid',
-    compensation: '₹4-8 LPA • Offers Equity',
     description: 'EMUSKI is seeking a hands-on Software Engineer to build and evolve the software, automations, and systems that power our security operations. This role focuses on engineering security tools and internal AI-driven agents that improve detection and response, vulnerability management, and the overall security posture of our products and infrastructure.',
     responsibilities: [
       'Design, build, and maintain software and automation that improves our detection and response program, including alert enrichment, triage workflows, and investigation tooling',
@@ -134,7 +130,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'Data Science',
     locationType: 'On-site',
-    compensation: '₹4-9 LPA • Offers Equity',
     description: 'EMUSKI is seeking a Data Scientist who brings AI-native approaches to manufacturing analytics. This role focuses on building AI systems that fundamentally change how manufacturing data science gets done - from precision engineering optimization to supply chain intelligence.',
     responsibilities: [
       'Build AI agents that conduct full manufacturing analyses autonomously - forming hypotheses, analyzing production data, and drafting optimization recommendations',
@@ -172,7 +167,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'Engineering',
     locationType: 'Hybrid',
-    compensation: '₹4-8 LPA • Offers Equity',
     description: 'EMUSKI is seeking a Full Stack Engineer to build and evolve our manufacturing platforms and customer-facing applications. This role focuses on creating scalable web applications that power our precision manufacturing services, cost engineering tools, and client collaboration systems.',
     responsibilities: [
       'Build and maintain full-stack applications for manufacturing project management and client collaboration',
@@ -210,7 +204,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'AI',
     locationType: 'On-site',
-    compensation: '₹7-12 LPA • Offers Equity',
     description: 'EMUSKI is seeking an energetic AI Software Engineer to join our AI Agents team. You will build intelligent agentic experiences for manufacturing workflows, cost engineering automation, and precision manufacturing systems. Our vision is to empower manufacturing teams with AI agents that can faithfully execute complex engineering tasks and manufacturing processes.',
     responsibilities: [
       'Design AI agents to navigate manufacturing systems and perform valuable automation for engineering teams',
@@ -248,7 +241,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'AI',
     locationType: 'On-site',
-    compensation: '₹4-8 LPA • Offers Equity',
     description: 'EMUSKI is looking for an Applied ML Engineer to design, build, and iterate on cutting-edge AI models powering our manufacturing systems. As an expert in machine learning and artificial intelligence, you will develop scalable and impactful solutions for manufacturing optimization, cost prediction, and quality control - serving precision manufacturing needs across the globe.',
     responsibilities: [
       'Apply state-of-the-art ML and LLM techniques to solve manufacturing problems spanning cost optimization, quality prediction, and process automation',
@@ -286,7 +278,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'Product Engineering',
     locationType: 'On-site',
-    compensation: '₹5-10 LPA • Offers Equity',
     description: 'EMUSKI is seeking an experienced Frontend-focused Engineer to help revolutionize the way manufacturing teams interact with precision engineering platforms. In this role, you\'ll be developing the future of manufacturing AI products and design systems.',
     responsibilities: [
       'Work with the design systems team to build excellent user interaction layers for all manufacturing features, including CAD/CAM interfaces and cost analysis tools',
@@ -322,7 +313,6 @@ const jobOpenings = [
     type: 'Full-time',
     department: 'Platform & Infrastructure',
     locationType: 'Hybrid',
-    compensation: '₹4-9 LPA • Offers Equity',
     description: 'EMUSKI is looking for an experienced Backend Engineer to join our team revolutionizing precision manufacturing systems. You will be responsible for leading design, implementation, and scaling of backend systems that power manufacturing platforms, cost engineering tools, and client collaboration systems.',
     responsibilities: [
       'Build scalable systems that ingest and process manufacturing data from CAD/CAM systems, production lines, and quality control sensors',
@@ -667,7 +657,7 @@ export default function JobPage({ params }: PageProps) {
     
     try {
       const url = encodeURIComponent(window.location.href)
-      const text = encodeURIComponent(`Exciting ${job.title} opportunity at EMUSKI!\n\nLocation: ${job.location}\nCompensation: ${job.compensation}\n\nApply now:`)
+      const text = encodeURIComponent(`Exciting ${job.title} opportunity at EMUSKI!\n\nLocation: ${job.location}\n\nApply now:`)
       const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&text=${text}`
       
       const popup = window.open(linkedInUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes')
@@ -704,7 +694,7 @@ export default function JobPage({ params }: PageProps) {
     if (typeof window === 'undefined') return
     
     try {
-      const message = `*${job.title}* at EMUSKI\n\n*Location:* ${job.location}\n*Compensation:* ${job.compensation}\n*Department:* ${job.department}\n\n*Job Description:*\n${job.description.substring(0, 200)}...\n\n*Apply now:* ${window.location.href}`
+      const message = `*${job.title}* at EMUSKI\n\n*Location:* ${job.location}\n*Department:* ${job.department}\n\n*Job Description:*\n${job.description.substring(0, 200)}...\n\n*Apply now:* ${window.location.href}`
       const text = encodeURIComponent(message)
       const whatsappUrl = `https://wa.me/?text=${text}`
       
@@ -727,7 +717,7 @@ export default function JobPage({ params }: PageProps) {
     <>
       <div className="min-h-screen bg-white">
         {/* Header with back button and logo */}
-        <header className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 bg-white" style={{ backgroundColor: '#ffffff', backdropFilter: 'none', WebkitBackdropFilter: 'none', opacity: '1' }}>
           <Link 
             href="/careers#open-roles"
             className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
@@ -741,17 +731,17 @@ export default function JobPage({ params }: PageProps) {
               alt="EMUSKI"
               width={120}
               height={40}
-              className="h-6 w-auto"
+              className="h-8 sm:h-10 w-auto"
             />
           </Link>
           
           <div className="w-5"></div> {/* Spacer for centering */}
         </header>
 
-        <main className="max-w-6xl mx-auto px-6 py-12">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           {/* Job Title */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-semibold text-gray-900 mb-6" style={{
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-4 sm:mb-6" style={{
               fontFamily: '"Inter", sans-serif',
               fontWeight: 600
             }}>
@@ -763,7 +753,7 @@ export default function JobPage({ params }: PageProps) {
               <div className="flex border-b border-gray-200">
                 <button
                   onClick={() => setActiveTab('overview')}
-                  className={`px-8 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  className={`px-4 sm:px-8 py-3 text-sm font-medium border-b-2 transition-colors ${
                     activeTab === 'overview'
                       ? 'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -774,7 +764,7 @@ export default function JobPage({ params }: PageProps) {
                 </button>
                 <button
                   onClick={() => setActiveTab('application')}
-                  className={`px-8 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  className={`px-4 sm:px-8 py-3 text-sm font-medium border-b-2 transition-colors ${
                     activeTab === 'application'
                       ? 'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -788,10 +778,10 @@ export default function JobPage({ params }: PageProps) {
           </div>
 
           {/* Content Grid */}
-          <div className="grid lg:grid-cols-3 gap-12">
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-12">
             {/* Left Sidebar - Job Details */}
-            <div className="lg:col-span-1">
-              <div className="space-y-8 sticky top-8">
+            <div className="lg:col-span-1 order-2 lg:order-1">
+              <div className="space-y-4 sm:space-y-6 lg:sticky lg:top-8">
                 
                 {/* Location */}
                 <div>
@@ -800,11 +790,22 @@ export default function JobPage({ params }: PageProps) {
                   }}>
                     Location
                   </h3>
-                  <p className="text-gray-900" style={{
+                  <p className="text-gray-900 mb-3" style={{
                     fontFamily: '"Inter", sans-serif'
                   }}>
                     {job.location}
                   </p>
+                  <div className="text-sm text-gray-600" style={{
+                    fontFamily: '"Inter", sans-serif'
+                  }}>
+                    <p className="font-medium mb-2">All EMUSKI Locations:</p>
+                    <ul className="space-y-1">
+                      <li>• Bangalore, India</li>
+                      <li>• Hyderabad, India</li>
+                      <li>• Remote (India)</li>
+                      <li>• Germany (Consultant)</li>
+                    </ul>
+                  </div>
                 </div>
 
                 {/* Employment Type */}
@@ -849,19 +850,6 @@ export default function JobPage({ params }: PageProps) {
                   </p>
                 </div>
 
-                {/* Compensation */}
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2" style={{
-                    fontFamily: '"Inter", sans-serif'
-                  }}>
-                    Compensation
-                  </h3>
-                  <p className="text-gray-900" style={{
-                    fontFamily: '"Inter", sans-serif'
-                  }}>
-                    {job.compensation || '₹8-15 LPA • Offers Performance Bonus'}
-                  </p>
-                </div>
 
                 {/* Benefits */}
                 <div>
@@ -882,9 +870,9 @@ export default function JobPage({ params }: PageProps) {
             </div>
 
             {/* Right Content Area */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 order-1 lg:order-2">
               {activeTab === 'overview' && (
-                <div className="space-y-8">
+                <div className="space-y-6">
                   
                   {/* What You'll Do */}
                   <div>
@@ -985,7 +973,7 @@ export default function JobPage({ params }: PageProps) {
                         Share This Job
                       </h3>
                       
-                      <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                         <button
                           onClick={handleShareLinkedIn}
                           className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm font-medium text-gray-700"
@@ -1030,7 +1018,7 @@ export default function JobPage({ params }: PageProps) {
                     <div className="mb-6">
                       <button
                         onClick={() => setActiveTab('application')}
-                        className="w-full bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-md font-medium transition-colors flex items-center justify-center gap-2"
+                        className="w-full bg-gray-900 hover:bg-gray-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-md font-medium transition-colors flex items-center justify-center gap-2"
                         style={{ fontFamily: '"Inter", sans-serif' }}
                       >
                         <Mail className="h-5 w-5" />
@@ -1048,7 +1036,7 @@ export default function JobPage({ params }: PageProps) {
               )}
 
               {activeTab === 'application' && (
-                <div className="space-y-8">
+                <div className="space-y-6">
                   <div className="bg-white">
                     <div className="mb-8">
                       <h2 className="text-xl font-semibold text-gray-900 mb-4" style={{
@@ -1126,7 +1114,7 @@ export default function JobPage({ params }: PageProps) {
                     </div>
 
                     <form className="space-y-6" onSubmit={handleSubmit}>
-                      <div className="grid md:grid-cols-2 gap-6">
+                      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Name
@@ -1153,7 +1141,7 @@ export default function JobPage({ params }: PageProps) {
                         </div>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-6">
+                      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Phone Number
@@ -1205,7 +1193,7 @@ export default function JobPage({ params }: PageProps) {
                           <p className="text-sm font-medium text-gray-700 mb-3">
                             Are you authorized to work in India?
                           </p>
-                          <div className="flex gap-6">
+                          <div className="flex gap-4 sm:gap-6">
                             <label className="flex items-center">
                               <input 
                                 type="radio" 
@@ -1235,7 +1223,7 @@ export default function JobPage({ params }: PageProps) {
                           <p className="text-sm font-medium text-gray-700 mb-3">
                             Are you able to come into the office four days per week?
                           </p>
-                          <div className="flex gap-6">
+                          <div className="flex gap-4 sm:gap-6">
                             <label className="flex items-center">
                               <input 
                                 type="radio" 
@@ -1416,7 +1404,7 @@ export default function JobPage({ params }: PageProps) {
                         <button 
                           type="submit"
                           disabled={isSubmitting || submitStatus === 'success'}
-                          className="w-full bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-8 py-3 rounded-md font-medium transition-colors flex items-center justify-center gap-2"
+                          className="w-full bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 sm:px-8 py-3 sm:py-4 rounded-md font-medium transition-colors flex items-center justify-center gap-2"
                         >
                           {isSubmitting ? (
                             <>
@@ -1439,6 +1427,75 @@ export default function JobPage({ params }: PageProps) {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+          
+          {/* Additional Information Section */}
+          <div className="mt-12 pt-8 border-t border-gray-200">
+            <div className="bg-gray-50 rounded-lg p-6 sm:p-8">
+              <div className="mb-6">
+                <h4 className="text-xl font-semibold text-gray-900 mb-4" style={{
+                  fontFamily: '"Inter", sans-serif'
+                }}>
+                  Additional information
+                </h4>
+              </div>
+              
+              <div className="space-y-8">
+                {/* Visas and Green Cards */}
+                <div>
+                  <h5 className="text-lg font-medium text-gray-900 mb-3" style={{
+                    fontFamily: '"Inter", sans-serif'
+                  }}>
+                    Visas and Green Cards
+                  </h5>
+                  <div className="space-y-3 text-gray-700" style={{
+                    fontFamily: '"Inter", sans-serif'
+                  }}>
+                    <p>
+                      While we're unable to provide visa sponsorship for all roles or candidates, if we decide to extend you an offer, we'll work hard to make it happen. We partner with an immigration firm to support you in the process.
+                    </p>
+                    <p>
+                      We can sponsor green cards once you are eligible.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Reapplying */}
+                <div>
+                  <h5 className="text-lg font-medium text-gray-900 mb-3" style={{
+                    fontFamily: '"Inter", sans-serif'
+                  }}>
+                    Reapplying
+                  </h5>
+                  <p className="text-gray-700" style={{
+                    fontFamily: '"Inter", sans-serif'
+                  }}>
+                    If things don't work out this time, you're welcome to apply again after 12 months; sooner if there's a significant change in your experience or skills.
+                  </p>
+                </div>
+                
+                {/* Privacy Policy */}
+                <div>
+                  <h5 className="text-lg font-medium text-gray-900 mb-3" style={{
+                    fontFamily: '"Inter", sans-serif'
+                  }}>
+                    Privacy Policy
+                  </h5>
+                  <div className="space-y-3 text-gray-700" style={{
+                    fontFamily: '"Inter", sans-serif'
+                  }}>
+                    <p>
+                      We use applicant details in our legitimate interests to process your application for employment and to evaluate your candidacy. For Singapore, we use this information for evaluative purposes and for the purposes of entering into an employment relationship with you.
+                    </p>
+                    <p>
+                      <a href="/privacy-policy" className="text-blue-600 hover:text-blue-800 underline">
+                        Complete privacy policy
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </main>
