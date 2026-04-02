@@ -245,6 +245,30 @@ const nextConfig = {
   // SEO-friendly redirects for old/incorrect URLs
   async redirects() {
     return [
+      // Careers subdomain - redirect to /careers page only
+      {
+        source: '/',
+        destination: '/careers',
+        permanent: false,
+        has: [
+          {
+            type: 'host',
+            value: 'careers.emuski.com',
+          },
+        ],
+      },
+      // Block all other pages on careers subdomain except /careers
+      {
+        source: '/((?!careers|api|_next|favicon.ico).*)',
+        destination: '/careers',
+        permanent: false,
+        has: [
+          {
+            type: 'host',
+            value: 'careers.emuski.com',
+          },
+        ],
+      },
       // Trailing slash redirects (SEO best practice: consistent URLs)
       {
         source: '/services/',

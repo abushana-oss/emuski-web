@@ -14,13 +14,62 @@ import LocationsMap from '@/components/LocationsMap'
 import { CareersNavigation } from '@/components/CareersNavigation'
 
 export const metadata: Metadata = {
-  title: 'Careers - Join Our Team | EMUSKI Manufacturing',
-  description: 'Join EMUSKI\'s dynamic team in Hyderabad. We\'re hiring PCBA Should Costing Engineer and Mechanical Should Costing Engineer. Apply now!',
-  keywords: ['careers', 'jobs', 'PCBA engineer', 'mechanical engineer', 'should costing', 'Hyderabad', 'EMUSKI'],
+  title: 'Careers at EMUSKI - Engineering Jobs in Manufacturing & AI | EMUSKI',
+  description: 'Join EMUSKI\'s global team of engineers and innovators. Open positions in AI, manufacturing, cost engineering, and software development across Bangalore, Hyderabad, and remote locations.',
+  keywords: [
+    'engineering jobs',
+    'manufacturing careers',
+    'AI engineer jobs',
+    'cost engineering jobs',
+    'software engineer jobs',
+    'data scientist jobs',
+    'Bangalore jobs',
+    'Hyderabad jobs',
+    'precision manufacturing',
+    'EMUSKI careers',
+    'remote engineering jobs',
+    'manufacturing technology jobs'
+  ],
   openGraph: {
-    title: 'Careers - Join Our Team | EMUSKI Manufacturing',
-    description: 'Join EMUSKI\'s dynamic team in Hyderabad. We\'re hiring PCBA Should Costing Engineer and Mechanical Should Costing Engineer.',
-    images: ['/assets/emuski-logo-optimized.webp'],
+    title: 'Careers at EMUSKI - Engineering Jobs in Manufacturing & AI',
+    description: 'Join EMUSKI\'s global team of engineers and innovators. Open positions in AI, manufacturing, cost engineering, and software development.',
+    url: 'https://careers.emuski.com',
+    siteName: 'EMUSKI Careers',
+    images: [
+      {
+        url: '/social-banner.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'EMUSKI Careers - Engineering Jobs in Manufacturing & AI',
+      }
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Careers at EMUSKI - Engineering Jobs in Manufacturing & AI',
+    description: 'Join EMUSKI\'s global team of engineers and innovators. Open positions in AI, manufacturing, cost engineering, and software development.',
+    images: ['/social-banner.jpg'],
+    creator: '@emuski_official',
+    site: '@emuski_official',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://careers.emuski.com',
+  },
+  other: {
+    'application-name': 'EMUSKI Careers',
   },
 }
 
@@ -399,8 +448,87 @@ const values = [
 ]
 
 export default function CareersPage() {
+  // Structured data for Job Postings
+  const jobPostingStructuredData = {
+    "@context": "https://schema.org/",
+    "@type": "ItemList",
+    "itemListElement": jobOpenings.map((job, index) => ({
+      "@type": "JobPosting",
+      "position": index + 1,
+      "title": job.title,
+      "description": job.description,
+      "employmentType": "FULL_TIME",
+      "hiringOrganization": {
+        "@type": "Organization",
+        "name": "EMUSKI",
+        "sameAs": "https://www.emuski.com",
+        "logo": "https://www.emuski.com/assets/emuski-logo-optimized.webp"
+      },
+      "jobLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": job.location,
+          "addressCountry": "IN"
+        }
+      },
+      "baseSalary": {
+        "@type": "MonetaryAmount",
+        "currency": "INR",
+        "value": {
+          "@type": "QuantitativeValue",
+          "minValue": 600000,
+          "maxValue": 2500000,
+          "unitText": "YEAR"
+        }
+      },
+      "datePosted": "2026-04-01",
+      "validThrough": "2026-06-01"
+    }))
+  };
+
+  const organizationStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "EMUSKI",
+    "url": "https://www.emuski.com",
+    "logo": "https://www.emuski.com/assets/emuski-logo-optimized.webp",
+    "description": "Leading precision manufacturing and cost engineering company specializing in AI-driven manufacturing solutions",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "RNS Plaza, Electronic City",
+      "addressLocality": "Bangalore",
+      "addressRegion": "Karnataka",
+      "postalCode": "560100",
+      "addressCountry": "IN"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-80-4096-5000",
+      "contactType": "customer service"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/emuski",
+      "https://twitter.com/emuski_official"
+    ]
+  };
+
   return (
     <>
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jobPostingStructuredData)
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationStructuredData)
+        }}
+      />
+
       <div className="min-h-screen bg-background scroll-smooth" style={{ scrollPaddingTop: '120px' }}>
         {/* Perplexity-style Navigation with Dropdowns */}
         <CareersNavigation />

@@ -9,6 +9,7 @@ Allow: /
 Allow: /manufacturing-services
 Allow: /cost-engineering
 Allow: /solutions/ai
+Allow: /careers
 Allow: /blog
 Allow: /contact
 Allow: /gallery
@@ -103,3 +104,4 @@ Crawl-delay: 2
 
 # Sitemaps
 Sitemap: https://www.emuski.com/sitemap.xml
+Sitemap: https://careers.emuski.com/sitemap.xml

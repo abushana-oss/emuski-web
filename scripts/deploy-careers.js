@@ -5,8 +5,11 @@
  * This script prepares the Next.js app for careers subdomain deployment
  */
 
-const fs = require('fs').promises;
-const path = require('path');
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function deployToCareersDomain() {
   console.log('🚀 Preparing deployment for careers.emuski.com...');
