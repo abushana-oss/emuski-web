@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import Script from 'next/script'
 
 export function AIOptimizedStructuredData() {
   // Comprehensive organization schema optimized for AI understanding
@@ -317,7 +318,8 @@ export function AIOptimizedStructuredData() {
   return (
     <>
       {/* Enhanced Organization Schema */}
-      <script
+      <Script
+        id="ai-org-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(organizationSchema, null, 0)
@@ -325,7 +327,8 @@ export function AIOptimizedStructuredData() {
       />
       
       {/* Enhanced Services Schema */}
-      <script
+      <Script
+        id="ai-services-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(servicesSchema, null, 0)

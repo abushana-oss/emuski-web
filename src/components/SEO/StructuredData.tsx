@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import Script from 'next/script'
 
 interface StructuredDataProps {
   data: Record<string, any>
@@ -18,7 +19,8 @@ export function StructuredData({ data, type }: StructuredDataProps) {
   }
 
   return (
-    <script
+    <Script
+      id={`schema-${type || 'default'}`}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 0) }}
     />

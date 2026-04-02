@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, Search, MessageCircle, HelpCircle } from 'lucide-react';
+import Script from 'next/script';
 import { getFAQsForPage, getFAQMetaForPage, type FAQItem } from '../data/pageSpecificFAQs';
 
 // Remove duplicate interface - using the one from pageSpecificFAQs.ts
@@ -234,7 +235,8 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
     <>
       {/* Enhanced Structured Data for SEO and AI Chatbots - Only render if not skipped */}
       {!skipSchema && (
-        <script
+        <Script
+          id="faq-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

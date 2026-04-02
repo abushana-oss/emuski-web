@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaWhatsapp, FaTimes, FaRobot, FaEnvelope, FaChevronRight } from 'react-icons/fa';
+import { MessageCircle, X, Bot, Mail, ChevronRight } from 'lucide-react';
 
 interface WhatsAppWidgetProps {
   phoneNumber: string;
@@ -35,7 +35,7 @@ const WhatsAppWidget: React.FC<WhatsAppWidgetProps> = ({
           className="bg-black text-white cursor-pointer flex items-center justify-center w-12 h-8 hover:bg-gray-800 transition-colors"
           onClick={toggleMinimize}
         >
-          <FaChevronRight className={`w-2 h-2 transform transition-transform duration-300 ${isMinimized ? '' : 'rotate-180'}`} />
+          <ChevronRight className={`w-2 h-2 transform transition-transform duration-300 ${isMinimized ? '' : 'rotate-180'}`} />
         </div>
 
         {/* WhatsApp & Email Buttons */}
@@ -53,7 +53,7 @@ const WhatsAppWidget: React.FC<WhatsAppWidgetProps> = ({
               data-mobile-behavior="disable"
               data-flyout="disable"
             >
-              <FaWhatsapp className="w-4 h-4" />
+              <MessageCircle className="w-4 h-4" />
               <div className="absolute right-12 top-0 h-10 bg-[#25D366] group-hover:bg-[#20b85c] flex items-center px-3 rounded-l-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
                 <span className="text-sm font-medium">WhatsApp</span>
               </div>
@@ -69,7 +69,7 @@ const WhatsAppWidget: React.FC<WhatsAppWidgetProps> = ({
               data-mobile-behavior="disable"
               data-flyout="disable"
             >
-              <FaEnvelope className="w-4 h-4" />
+              <Mail className="w-4 h-4" />
               <div className="absolute right-12 top-0 h-10 bg-emuski-teal group-hover:bg-emuski-teal-darker flex items-center px-3 rounded-l-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
                 <span className="text-sm font-medium">Mail us</span>
               </div>

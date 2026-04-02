@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { ArrowLeft, Twitter, Linkedin, Facebook, Mail, Menu, Share2, Bookmark, Clock, Calendar, ChevronRight } from "lucide-react";
 import { BlogPost } from "@/lib/api/blogger";
 import { useBlogTracking } from "@/lib/hooks/useAnalytics";
@@ -466,14 +467,16 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
   return (
     <article ref={articleRef} className="min-h-screen bg-white" itemScope itemType="https://schema.org/Article">
       {/* Article Schema - PRIMARY SEO */}
-      <script
+      <Script
+        id="article-schema"
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
 
       {/* Breadcrumb Schema - Rich Snippets */}
-      <script
+      <Script
+        id="breadcrumb-schema"
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
@@ -481,7 +484,8 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
 
       {/* FAQ Schema - If FAQs exist */}
       {faqSchema && (
-        <script
+        <Script
+          id="faq-schema"
           type="application/ld+json"
           nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
@@ -489,7 +493,8 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       )}
 
       {/* WebPage Schema - Additional Context */}
-      <script
+      <Script
+        id="webpage-schema"
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}

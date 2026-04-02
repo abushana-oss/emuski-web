@@ -5,6 +5,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Script from 'next/script'
 import { ChevronRight, Home } from 'lucide-react'
 
 interface BreadcrumbItem {
@@ -52,7 +53,8 @@ export function BreadcrumbSchema({
   return (
     <>
       {/* JSON-LD Schema */}
-      <script
+      <Script
+        id={`breadcrumb-${fullItems[fullItems.length - 1]?.name.toLowerCase().replace(/\s+/g, '-') || 'schema'}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />

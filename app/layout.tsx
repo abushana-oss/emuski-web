@@ -293,14 +293,6 @@ export default function RootLayout({
         {/* AI-Optimized Structured Data for Business Recommendations */}
         <AIOptimizedStructuredData />
 
-        {/* Minimal Error Suppression - Carbon Optimized */}
-        <Script
-          id="minimal-error-handler"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(){const e=console.error;console.error=function(...r){const o=r.join(' ');if(o.includes('extension')||o.includes('chrome-extension'))return;e.apply(console,r)};window.addEventListener('unhandledrejection',e=>{if(String(e.reason).includes('extension'))e.preventDefault()})})();`
-          }}
-        />
       </head>
       <body className={inter.className}>
         <ProductionErrorBoundary>

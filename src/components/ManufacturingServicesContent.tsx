@@ -1,5 +1,6 @@
 import { CheckCircle, Zap, Layers, Cog, TrendingUp, Clock, Target, Award } from "lucide-react";
 import Image from "next/image";
+import Script from "next/script";
 
 export const ManufacturingServicesContent = () => {
   const videoSchemas = [
@@ -27,7 +28,8 @@ export const ManufacturingServicesContent = () => {
 
   return (
     <div className="space-y-0">
-      <script
+      <Script
+        id="manufacturing-video-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchemas) }}
       />
