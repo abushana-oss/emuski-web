@@ -18,6 +18,7 @@
     "security:audit": "npm audit --audit-level=moderate",
     "security:fix": "npm audit fix --force",
     "security:check": "npm audit --audit-level=high --dry-run",
+    "deploy:careers": "node scripts/deploy-careers.js",
     "security:update": "npm update && npm audit fix --force",
     "preinstall": "npm config set audit-level moderate"
   },

@@ -7,7 +7,10 @@
   # Use the latest Ubuntu 22.04 (Jammy) build image instead of deprecated Focal
   AWS_LAMBDA_JS_RUNTIME = "nodejs22.x"
   # Force clear build cache
-  NETLIFY_CACHE_ID = "v2"
+  NETLIFY_CACHE_ID = "v3"
+  # Disable Next.js telemetry
+  NEXT_TELEMETRY_DISABLED = "1"
+  TURBOPACK = "0"
 
 # Use Ubuntu 22.04 (Jammy) build image
 [build.processing]
@@ -29,6 +32,35 @@
   to = "https://www.emuski.com/:splat"
   status = 301
   force = true
+
+# Careers subdomain redirect (if deploying as separate site)
+[[redirects]]
+  from = "https://emuski-careers.netlify.app/*"
+  to = "https://careers.emuski.com/:splat"
+  status = 301
+  force = true
+
+# Security headers for all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Cache static assets
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/favicon.ico"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
 
 # Functions configuration
 [functions]

@@ -166,23 +166,37 @@ export const BlogQuerySchema = z.object({
 export const AnalyticsEventSchema = z.object({
   eventName: z.string()
     .min(1, 'Event name required')
-    .max(100, 'Event name too long')
-    .regex(/^[a-zA-Z0-9_ \-\.]+$/, 'Invalid event name format'),
+    .max(40, 'Event name too long') // GA4 limit is 40 characters
+    .regex(/^[a-zA-Z][a-zA-Z0-9_]*$/, 'Event name must start with letter and contain only alphanumeric and underscore'),
 
   eventParams: z.record(z.any())
     .refine(
       val => Object.keys(val).length <= 25,
       'Too many event parameters (max 25)'
-    ),
+    )
+    .refine(
+      val => Object.keys(val).every(key => key.length <= 40),
+      'Parameter names must be 40 characters or less'
+    )
+    .optional()
+    .default({}),
 
   clientId: z.string()
-    .min(1, 'Required')
-    .max(255, 'Client ID too long')
-    .trim()
-    .refine(val => !/<script|javascript:|data:|vbscript:/i.test(val), 'Potentially unsafe content')
+    .regex(/^[0-9]+\.[0-9]+$/, 'Client ID must be in format: timestamp.random')
     .optional(),
 
-  userId: SecuritySchemas.uuid.optional()
+  userId: z.string()
+    .max(256, 'User ID too long')
+    .optional(),
+
+  // Optional session data
+  sessionId: z.string().optional(),
+  timestamp: z.number().optional(),
+  
+  // Page data
+  page_location: z.string().url().optional(),
+  page_title: z.string().max(300).optional(),
+  page_referrer: z.string().optional()
 });
 
 // File upload validation schema

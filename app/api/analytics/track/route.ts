@@ -69,6 +69,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
   try {
     // Security check - ensure analytics is properly configured
     if (!GA4_MEASUREMENT_ID || !GA4_API_SECRET) {
+      console.warn('[GA4] Analytics not configured properly')
       return NextResponse.json(
         { success: false, error: 'Analytics not configured' },
         { status: 503 }
@@ -79,17 +80,27 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     const validation = await validateRequest(request, AnalyticsEventSchema);
 
     if (!validation.success) {
+      console.error('[GA4] Validation failed:', validation.error)
       return NextResponse.json(
         {
           success: false,
           error: 'Invalid analytics data',
-          details: 'error' in validation ? validation.error : 'Validation failed'
+          details: validation.error
         },
         { status: 400 }
       );
     }
 
-    const { eventName, eventParams, clientId: providedClientId } = validation.data;
+    const { 
+      eventName, 
+      eventParams = {}, 
+      clientId: providedClientId,
+      userId,
+      sessionId,
+      page_location,
+      page_title,
+      page_referrer
+    } = validation.data;
 
     // Get or generate client ID
     const clientId = providedClientId || getClientId(request)
@@ -101,51 +112,67 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     // Build GA4 Measurement Protocol payload
     const payload = {
       client_id: clientId,
-      user_id: validation.data.userId || undefined,
+      user_id: userId || undefined,
       timestamp_micros: Date.now() * 1000,
       non_personalized_ads: false,
       events: [
         {
           name: eventName,
           params: {
+            // Merge provided parameters first
             ...eventParams,
 
-            // Server-side tracking marker
-            tracking_method: 'server_side',
-
-            // Session info
-            session_id: eventParams.session_id || `${Date.now()}`,
+            // Override/add standard parameters
+            session_id: sessionId || eventParams.session_id || `${Date.now()}`,
             engagement_time_msec: eventParams.engagement_time_msec || 100,
 
-            // Page info
-            page_location: eventParams.page_location || '',
-            page_referrer: eventParams.page_referrer || '',
-            page_title: eventParams.page_title || '',
+            // Page info (prioritize schema validation data)
+            page_location: page_location || eventParams.page_location || '',
+            page_title: page_title || eventParams.page_title || '',
+            page_referrer: page_referrer || eventParams.page_referrer || document?.referrer || '',
 
-            // Traffic source (important for bot detection)
-            traffic_type: eventParams.traffic_type || 'organic',
-
-            // User properties for bot detection
-            user_agent: userAgent,
-            client_ip_country: eventParams.country || 'IN',
+            // Clean up any undefined values
+            ...(eventParams.traffic_type && { traffic_type: eventParams.traffic_type }),
+            ...(eventParams.country && { country: eventParams.country }),
           },
         },
       ],
     }
 
-    // Send to GA4 asynchronously (fire-and-forget for better performance)
+    // Remove any undefined values from params to prevent GA4 errors
+    if (payload.events[0].params) {
+      Object.keys(payload.events[0].params).forEach(key => {
+        if (payload.events[0].params[key] === undefined || payload.events[0].params[key] === null) {
+          delete payload.events[0].params[key]
+        }
+      })
+    }
+
+    // Send to GA4 asynchronously with better error handling
     fetch(GA4_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'User-Agent': userAgent,
       },
       body: JSON.stringify(payload),
-    }).then(response => {
+    }).then(async response => {
       if (!response.ok) {
-        console.error('[GA4 Server] Failed to send event:', response.statusText)
+        const errorText = await response.text()
+        console.error('[GA4 Server] Failed to send event:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText,
+          payload: JSON.stringify(payload, null, 2)
+        })
+      } else {
+        console.log('[GA4 Server] Event sent successfully:', eventName)
       }
     }).catch(error => {
-      console.error('[GA4 Server] Network error:', error)
+      console.error('[GA4 Server] Network error:', {
+        error: error.message,
+        payload: JSON.stringify(payload, null, 2)
+      })
     })
 
     // Immediately return response without waiting for GA4

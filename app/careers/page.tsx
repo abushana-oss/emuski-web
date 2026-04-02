@@ -11,6 +11,7 @@ import { CareersHeroSection } from '@/components/CareersHeroSection'
 import { AnimatedSection, AnimatedCard } from '@/components/AnimatedSection'
 import { CountUpAnimation } from '@/components/CountUpAnimation'
 import LocationsMap from '@/components/LocationsMap'
+import { CareersNavigation } from '@/components/CareersNavigation'
 
 export const metadata: Metadata = {
   title: 'Careers - Join Our Team | EMUSKI Manufacturing',
@@ -401,78 +402,8 @@ export default function CareersPage() {
   return (
     <>
       <div className="min-h-screen bg-background scroll-smooth" style={{ scrollPaddingTop: '120px' }}>
-        {/* Perplexity-style Navigation - Fixed positioning with proper z-index */}
-        <nav className="fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 w-[92%] sm:w-auto max-w-fit flex justify-center">
-          <div className="bg-white/90 backdrop-blur-xl border border-border/50 rounded-full px-2 sm:px-3 py-1.5 shadow-lg shadow-black/5 w-full flex justify-between">
-            <div className="flex items-center justify-between sm:justify-center space-x-1 w-full">
-              {/* Logo - Properly sized */}
-              <Link
-                href="/"
-                className="flex items-center mr-1 sm:mr-2 hover:opacity-80 transition-opacity overflow-visible shrink-0"
-              >
-                <Image
-                  src="/logofull.svg"
-                  alt="EMUSKI"
-                  width={120}
-                  height={60}
-                  className="h-8 w-auto"
-                />
-              </Link>
-
-              {/* Navigation Links with proper spacing */}
-              <div className="hidden md:flex items-center space-x-0">
-                <a
-                  href="#mission"
-                  className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
-                >
-                  Mission
-                </a>
-                <a
-                  href="#values"
-                  className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
-                >
-                  Values
-                </a>
-                <a
-                  href="#benefits"
-                  className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
-                >
-                  Benefits
-                </a>
-                <a
-                  href="#locations"
-                  className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 flex items-center gap-1"
-                >
-                  Locations
-                  <ChevronDown className="h-3 w-3" />
-                </a>
-                <a
-                  href="#hiring-process"
-                  className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 flex items-center gap-1"
-                >
-                  Process
-                  <ChevronDown className="h-3 w-3" />
-                </a>
-                <a
-                  href="#open-roles"
-                  className="px-4 py-2.5 text-sm font-medium text-foreground bg-emuski-teal/15 hover:bg-emuski-teal/25 border border-emuski-teal/20 rounded-full transition-all duration-200 whitespace-nowrap"
-                >
-                  Open Roles
-                </a>
-              </div>
-
-              {/* Mobile menu button */}
-              <div className="md:hidden">
-                <a
-                  href="#open-roles"
-                  className="px-4 py-2.5 text-sm font-medium text-white bg-emuski-teal hover:bg-emuski-teal-dark rounded-full transition-all duration-200"
-                >
-                  Jobs
-                </a>
-              </div>
-            </div>
-          </div>
-        </nav>
+        {/* Perplexity-style Navigation with Dropdowns */}
+        <CareersNavigation />
 
         {/* Animated 3D Hero Section */}
         <CareersHeroSection />
