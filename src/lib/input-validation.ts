@@ -166,10 +166,10 @@ export const BlogQuerySchema = z.object({
 export const AnalyticsEventSchema = z.object({
   eventName: z.string()
     .min(1, 'Event name required')
-    .max(40, 'Event name too long')
-    .regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/, 'Invalid event name format'),
+    .max(100, 'Event name too long')
+    .regex(/^[a-zA-Z0-9_ \-\.]+$/, 'Invalid event name format'),
   
-  eventParams: z.record(z.union([z.string(), z.number(), z.boolean()]))
+  eventParams: z.record(z.any())
     .refine(
       val => Object.keys(val).length <= 25,
       'Too many event parameters (max 25)'

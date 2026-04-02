@@ -41,7 +41,8 @@ export const Footer = () => {
               <li><Link href="/solutions/ai" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Mithran AI Platform</Link></li>
               <li><Link href="/solutions/ai#mithran-overview" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Smart Sourcing</Link></li>
               <li><Link href="/solutions/ai" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Supply Chain Optimization</Link></li>
-
+              <li><Link href="/tools/3d-cad-analysis" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">3D CAD Analysis Tool</Link></li>
+              <li><Link href="/tools/2d-balloon-diagram" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">2D Balloon Diagram Tool</Link></li>
             </ul>
           </div>
 
@@ -50,8 +51,9 @@ export const Footer = () => {
             <h4 className="text-foreground font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
               <li><Link href="/gallery" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Gallery</Link></li>
-              <li><Link href="/contact" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Contact Us</Link></li>
+              <li><Link href="/careers" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Careers</Link></li>
               <li><Link href="/blog" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Blog & Insights</Link></li>
+              <li><Link href="/contact" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Contact Us</Link></li>
               <li><Link href="/contact" className="text-muted-foreground hover:text-emuski-teal-darker transition-colors text-sm block py-1">Get a Quote</Link></li>
             </ul>
           </div>

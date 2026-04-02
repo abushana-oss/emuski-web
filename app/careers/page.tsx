@@ -10,7 +10,7 @@ import { OpenRoles } from '@/components/OpenRoles'
 import { CareersHeroSection } from '@/components/CareersHeroSection'
 import { AnimatedSection, AnimatedCard } from '@/components/AnimatedSection'
 import { CountUpAnimation } from '@/components/CountUpAnimation'
-
+import LocationsMap from '@/components/LocationsMap'
 
 export const metadata: Metadata = {
   title: 'Careers - Join Our Team | EMUSKI Manufacturing',
@@ -406,8 +406,8 @@ export default function CareersPage() {
           <div className="bg-white/90 backdrop-blur-xl border border-border/50 rounded-full px-2 sm:px-3 py-1.5 shadow-lg shadow-black/5 w-full flex justify-between">
             <div className="flex items-center justify-between sm:justify-center space-x-1 w-full">
               {/* Logo - Properly sized */}
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="flex items-center mr-1 sm:mr-2 hover:opacity-80 transition-opacity overflow-visible shrink-0"
               >
                 <Image
@@ -418,52 +418,52 @@ export default function CareersPage() {
                   className="h-8 w-auto"
                 />
               </Link>
-              
+
               {/* Navigation Links with proper spacing */}
               <div className="hidden md:flex items-center space-x-0">
-                <a 
+                <a
                   href="#mission"
                   className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
                 >
                   Mission
                 </a>
-                <a 
+                <a
                   href="#values"
                   className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
                 >
                   Values
                 </a>
-                <a 
+                <a
                   href="#benefits"
                   className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
                 >
                   Benefits
                 </a>
-                <a 
+                <a
                   href="#locations"
                   className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 flex items-center gap-1"
                 >
                   Locations
                   <ChevronDown className="h-3 w-3" />
                 </a>
-                <a 
+                <a
                   href="#hiring-process"
                   className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 flex items-center gap-1"
                 >
                   Process
                   <ChevronDown className="h-3 w-3" />
                 </a>
-                <a 
+                <a
                   href="#open-roles"
                   className="px-4 py-2.5 text-sm font-medium text-foreground bg-emuski-teal/15 hover:bg-emuski-teal/25 border border-emuski-teal/20 rounded-full transition-all duration-200 whitespace-nowrap"
                 >
                   Open Roles
                 </a>
               </div>
-              
+
               {/* Mobile menu button */}
               <div className="md:hidden">
-                <a 
+                <a
                   href="#open-roles"
                   className="px-4 py-2.5 text-sm font-medium text-white bg-emuski-teal hover:bg-emuski-teal-dark rounded-full transition-all duration-200"
                 >
@@ -492,7 +492,7 @@ export default function CareersPage() {
 
               {/* Main Mission Content - Two Column Layout */}
               <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-                
+
                 {/* Left Side - Mission Statement */}
                 <AnimatedSection animationType="fadeInLeft" delay={200}>
                   <div className="space-y-8">
@@ -501,8 +501,8 @@ export default function CareersPage() {
                         "Striving for Value-Driven Empowerment"
                       </h3>
                       <p className="text-lg text-muted-foreground leading-relaxed">
-                        We empower manufacturing leaders to unlock extraordinary value through intelligent cost engineering, 
-                        precision manufacturing excellence, and transformative digital solutions that drive sustainable growth 
+                        We empower manufacturing leaders to unlock extraordinary value through intelligent cost engineering,
+                        precision manufacturing excellence, and transformative digital solutions that drive sustainable growth
                         and competitive advantage.
                       </p>
                     </div>
@@ -514,12 +514,12 @@ export default function CareersPage() {
                   <div className="relative">
                     {/* College Style Layout - Group Photo as Full Width Top */}
                     <div className="space-y-3">
-                      
+
                       {/* Group Photo - Full Width Top */}
                       <div className="relative rounded-xl overflow-hidden shadow-xl bg-gradient-to-r from-emuski-teal/5 to-transparent">
-                        <img 
-                          src="/assets/mission/groupphoto.jpeg" 
-                          alt="EMUSKI Team" 
+                        <img
+                          src="/assets/mission/groupphoto.jpeg"
+                          alt="EMUSKI Team"
                           className="w-full h-64 object-cover"
                         />
                       </div>
@@ -528,43 +528,43 @@ export default function CareersPage() {
                       <div className="grid grid-cols-4 gap-3">
                         {/* Client Image */}
                         <div className="relative rounded-lg overflow-hidden shadow-md h-24 bg-white">
-                          <img 
-                            src="/assets/mission/client.jpeg" 
-                            alt="Client Meeting" 
+                          <img
+                            src="/assets/mission/client.jpeg"
+                            alt="Client Meeting"
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        
+
                         {/* Google Meet */}
                         <div className="relative rounded-lg overflow-hidden shadow-md h-24 bg-white">
-                          <img 
-                            src="/assets/mission/googlemeet.jpeg" 
-                            alt="Google Meet Session" 
+                          <img
+                            src="/assets/mission/googlemeet.jpeg"
+                            alt="Google Meet Session"
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        
+
                         {/* Office Space */}
                         <div className="relative rounded-lg overflow-hidden shadow-md h-24 bg-white opacity-90">
-                          <img 
-                            src="/assets/mission/officepalce.jpeg" 
-                            alt="Office Space" 
+                          <img
+                            src="/assets/mission/officepalce.jpeg"
+                            alt="Office Space"
                             className="w-full h-full object-cover"
                           />
                         </div>
 
                         {/* Meeting Room */}
                         <div className="relative rounded-lg overflow-hidden shadow-md h-24 bg-white opacity-90">
-                          <img 
-                            src="/assets/mission/meeting room.jpeg" 
-                            alt="Meeting Room" 
+                          <img
+                            src="/assets/mission/meeting room.jpeg"
+                            alt="Meeting Room"
                             className="w-full h-full object-cover"
                           />
                         </div>
                       </div>
 
                     </div>
-                    
+
                     {/* Decorative elements */}
                     <div className="absolute -top-3 -right-3 w-16 h-16 bg-emuski-teal/10 rounded-full blur-lg"></div>
                     <div className="absolute -bottom-3 -left-3 w-20 h-20 bg-emuski-teal/5 rounded-full blur-xl"></div>
@@ -606,8 +606,8 @@ export default function CareersPage() {
                 <div className="text-center">
                   <div className="max-w-4xl mx-auto p-8 bg-gradient-to-r from-emuski-teal/5 to-transparent rounded-2xl border border-emuski-teal/20">
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                      <span className="font-semibold text-foreground">Join us in our mission</span> to revolutionize manufacturing through 
-                      intelligent engineering, where every project becomes an opportunity to create lasting impact, 
+                      <span className="font-semibold text-foreground">Join us in our mission</span> to revolutionize manufacturing through
+                      intelligent engineering, where every project becomes an opportunity to create lasting impact,
                       drive innovation, and build a more efficient, sustainable future for global manufacturing.
                     </p>
                   </div>
@@ -694,7 +694,7 @@ export default function CareersPage() {
               </AnimatedSection>
 
               <div className="grid lg:grid-cols-2 gap-12 items-start">
-                
+
                 {/* Benefits Grid */}
                 <div className="grid md:grid-cols-2 gap-6">
                   {benefits.map((benefit, index) => (
@@ -717,15 +717,17 @@ export default function CareersPage() {
                 <AnimatedSection animationType="fadeInLeft" delay={300}>
                   <div className="lg:sticky lg:top-8">
                     <div className="space-y-6">
-                      
+
                       {/* Precision Animation Video - Full Width */}
                       <div className="relative rounded-xl overflow-hidden shadow-2xl">
                         <video
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover pointer-events-none"
                           autoPlay
                           muted
                           loop
                           playsInline
+                          controls={false}
+                          disablePictureInPicture
                           style={{
                             minHeight: '280px',
                             maxHeight: '350px'
@@ -734,7 +736,7 @@ export default function CareersPage() {
                           <source src="/assets/animation/prcision-animation.mp4" type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
-                        
+
                         {/* Overlay gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                       </div>
@@ -743,9 +745,9 @@ export default function CareersPage() {
                       <div className="grid grid-cols-2 gap-4">
                         {/* Social Banner Image */}
                         <div className="relative rounded-xl overflow-hidden shadow-lg">
-                          <img 
-                            src="/social-banner.jpg" 
-                            alt="EMUSKI Manufacturing" 
+                          <img
+                            src="/social-banner.jpg"
+                            alt="EMUSKI Manufacturing"
                             className="w-full h-56 object-cover"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
@@ -753,15 +755,15 @@ export default function CareersPage() {
 
                         {/* New Image */}
                         <div className="relative rounded-xl overflow-hidden shadow-lg">
-                          <img 
-                            src="/image.png" 
-                            alt="EMUSKI Technology" 
+                          <img
+                            src="/image.png"
+                            alt="EMUSKI Technology"
                             className="w-full h-56 object-cover"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                         </div>
                       </div>
-                      
+
                       {/* Decorative elements */}
                       <div className="absolute -top-4 -right-4 w-20 h-20 bg-emuski-teal/10 rounded-full blur-xl"></div>
                       <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-emuski-teal/5 rounded-full blur-2xl"></div>
@@ -779,83 +781,16 @@ export default function CareersPage() {
         {/* Locations Section */}
         <section id="locations" className="py-24 px-6 sm:px-8 lg:px-12 bg-muted/20">
           <div className="max-w-7xl mx-auto">
-            
+
             <div className="grid lg:grid-cols-2 gap-16 items-center">
-              
+
               {/* Left Side - Interactive Globe */}
-              <div className="relative flex justify-center lg:justify-start">
-                <div className="relative w-[520px] h-[520px] max-w-full">
-                  {/* Simplified Earth Globe */}
-                  <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 shadow-2xl relative overflow-hidden border-4 border-white/10">
-                    
-                    {/* Continents - simplified shapes */}
-                    <div className="absolute inset-0 rounded-full">
-                      {/* Asia/India region */}
-                      <div className="absolute top-[35%] left-[55%] w-16 h-20 bg-green-500 rounded-full opacity-80 transform rotate-12"></div>
-                      <div className="absolute top-[42%] left-[58%] w-8 h-12 bg-green-600 rounded-full opacity-90"></div>
-                      
-                      {/* Europe */}
-                      <div className="absolute top-[25%] left-[45%] w-12 h-8 bg-green-500 rounded-full opacity-70 transform rotate-45"></div>
-                      
-                      {/* Africa */}
-                      <div className="absolute top-[45%] left-[48%] w-10 h-16 bg-green-600 rounded-full opacity-75"></div>
-                      
-                      {/* Americas */}
-                      <div className="absolute top-[30%] left-[20%] w-8 h-20 bg-green-500 rounded-full opacity-70"></div>
-                      <div className="absolute top-[50%] left-[25%] w-12 h-16 bg-green-600 rounded-full opacity-80"></div>
-                      
-                      {/* Australia */}
-                      <div className="absolute top-[65%] left-[75%] w-6 h-4 bg-green-500 rounded-full opacity-70"></div>
-                    </div>
-                    
-                    {/* Location markers for India */}
-                    {/* Bangalore HQ */}
-                    <div className="absolute top-[42%] left-[60%] w-6 h-6 bg-red-500 rounded-full animate-pulse shadow-lg border-2 border-white z-10">
-                      <div className="absolute inset-0 bg-red-500 rounded-full animate-ping"></div>
-                      <div className="absolute -top-8 -left-12 text-xs font-semibold text-white bg-black/70 px-2 py-1 rounded whitespace-nowrap">
-                        Bangalore HQ
-                      </div>
-                    </div>
-                    
-                    {/* Hyderabad Office */}
-                    <div className="absolute top-[38%] left-[61%] w-5 h-5 bg-blue-500 rounded-full animate-pulse shadow-lg border-2 border-white z-10">
-                      <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping"></div>
-                      <div className="absolute -top-8 -left-10 text-xs font-semibold text-white bg-black/70 px-2 py-1 rounded whitespace-nowrap">
-                        Hyderabad
-                      </div>
-                    </div>
-                    
-                    {/* Hosur Manufacturing */}
-                    <div className="absolute top-[45%] left-[59%] w-5 h-5 bg-green-500 rounded-full animate-pulse shadow-lg border-2 border-white z-10">
-                      <div className="absolute inset-0 bg-green-500 rounded-full animate-ping"></div>
-                      <div className="absolute -top-8 -left-8 text-xs font-semibold text-white bg-black/70 px-2 py-1 rounded whitespace-nowrap">
-                        Hosur
-                      </div>
-                    </div>
-                    
-                    {/* Global client markers */}
-                    <div className="absolute top-[35%] left-[25%] w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-                    <div className="absolute top-[30%] left-[48%] w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-                    <div className="absolute top-[45%] left-[78%] w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-                    
-                    {/* 3D lighting */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/20 rounded-full pointer-events-none"></div>
-                    
-                    {/* Atmosphere */}
-                    <div className="absolute inset-0 rounded-full shadow-inner pointer-events-none" style={{boxShadow: 'inset 0 0 80px rgba(99, 179, 237, 0.4)'}}></div>
-                  </div>
-                  
-                  {/* Orbit rings */}
-                  <div className="absolute inset-4 border-2 border-white/20 rounded-full animate-spin pointer-events-none" style={{animationDuration: '20s'}}></div>
-                  <div className="absolute inset-8 border border-white/15 rounded-full animate-spin pointer-events-none" style={{animationDuration: '30s', animationDirection: 'reverse'}}></div>
-                  
-                  {/* Outer glow */}
-                  <div className="absolute -inset-12 bg-gradient-to-r from-blue-400/20 to-green-400/20 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
-                </div>
+              <div className="relative flex justify-center lg:justify-start w-full h-[400px] md:h-[520px] order-2 lg:order-1 mt-10 lg:mt-0">
+                <LocationsMap />
               </div>
 
               {/* Right Side - Content */}
-              <div className="space-y-8">
+              <div className="space-y-8 order-1 lg:order-2">
                 <div className="space-y-6">
                   <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
                     We're building<br />
@@ -864,19 +799,19 @@ export default function CareersPage() {
 
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
-                      Our home base is <span className="font-medium text-emuski-teal">Bangalore</span>, but EMUSKI is truly global. 
-                      You'll find our teams collaborating across <span className="font-medium text-emuski-teal">Electronic City</span>, 
+                      Our home base is <span className="font-medium text-emuski-teal">Bangalore</span>, but EMUSKI is truly global.
+                      You'll find our teams collaborating across <span className="font-medium text-emuski-teal">Electronic City</span>,
                       <span className="font-medium text-emuski-teal"> Hyderabad</span>, <span className="font-medium text-emuski-teal"> Hosur</span>, and serving clients worldwide.
                     </p>
 
                     <p>
-                      We believe the best work happens when brilliant minds come together, so our 
-                      in-person team members collaborate closely—creating, innovating, and pushing 
+                      We believe the best work happens when brilliant minds come together, so our
+                      in-person team members collaborate closely—creating, innovating, and pushing
                       manufacturing boundaries side by side.
                     </p>
 
                     <p>
-                      Not sure which location works for you? No worries! Just apply to the role 
+                      Not sure which location works for you? No worries! Just apply to the role
                       that matches your expertise and we'll figure out the rest together.
                     </p>
                   </div>
@@ -946,56 +881,86 @@ export default function CareersPage() {
 
         {/* Hiring Process Section */}
         <section id="hiring-process" className="py-24 px-6 sm:px-8 lg:px-12">
+          <style>{`
+            @keyframes flowRight {
+              0% { left: 0%; opacity: 0; }
+              10% { opacity: 1; }
+              90% { opacity: 1; }
+              100% { left: 100%; opacity: 0; }
+            }
+            .animate-line-flow {
+              animation: flowRight 2s infinite linear;
+            }
+          `}</style>
           <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16 space-y-6">
-              <h2 className="text-4xl lg:text-5xl font-bold">Our Hiring Process</h2>
-              <p className="text-xl text-muted-foreground">
-                A streamlined process designed to find the best talent and ensure mutual fit.
-              </p>
-            </div>
+            <AnimatedSection animationType="fadeInUp" delay={200}>
+              <div className="text-center mb-16 space-y-6">
+                <h2 className="text-4xl lg:text-5xl font-bold">Our Hiring Process</h2>
+                <p className="text-xl text-muted-foreground">
+                  A streamlined process designed to find the best talent and ensure mutual fit.
+                </p>
+              </div>
+            </AnimatedSection>
 
             <div className="grid md:grid-cols-3 gap-12">
-              <div className="text-center space-y-6">
-                <div className="relative">
-                  <div className="w-16 h-16 bg-emuski-teal/10 rounded-2xl flex items-center justify-center mx-auto">
-                    <span className="text-2xl font-bold text-emuski-teal">1</span>
+              <AnimatedSection animationType="fadeInUp" delay={300}>
+                <div className="text-center space-y-6">
+                  <div className="relative mx-auto w-16 h-16">
+                    <div className="absolute inset-0 rounded-full bg-emuski-teal/40 animate-pulse" style={{ animationDuration: '2s' }}></div>
+                    <div className="relative z-10 w-full h-full rounded-full bg-gradient-to-br from-emuski-teal to-emuski-teal-darker flex items-center justify-center shadow-lg">
+                      <span className="text-white text-2xl font-bold">1</span>
+                    </div>
+                    {/* Connecting Line to 2 */}
+                    <div className="hidden md:block absolute top-[31px] left-[50%] w-[100%] h-[2px] bg-border overflow-hidden rounded-full">
+                      <div className="absolute top-0 w-8 h-full bg-emuski-teal shadow-[0_0_8px_rgba(20,184,166,0.8)] animate-line-flow"></div>
+                    </div>
                   </div>
-                  <div className="hidden md:block absolute top-8 left-full w-full h-px bg-border"></div>
-                </div>
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold">Application</h3>
-                  <p className="text-muted-foreground">
-                    Submit your resume and cover letter. We review every application carefully and respond within 48 hours.
-                  </p>
-                </div>
-              </div>
-
-              <div className="text-center space-y-6">
-                <div className="relative">
-                  <div className="w-16 h-16 bg-emuski-teal/10 rounded-2xl flex items-center justify-center mx-auto">
-                    <span className="text-2xl font-bold text-emuski-teal">2</span>
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-semibold">Application</h3>
+                    <p className="text-muted-foreground">
+                      Submit your resume and cover letter. We review every application carefully and respond within 48 hours.
+                    </p>
                   </div>
-                  <div className="hidden md:block absolute top-8 left-full w-full h-px bg-border"></div>
                 </div>
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold">Interview Process</h3>
-                  <p className="text-muted-foreground">
-                    Technical assessment and cultural fit interviews with our engineering team and leadership.
-                  </p>
-                </div>
-              </div>
+              </AnimatedSection>
 
-              <div className="text-center space-y-6">
-                <div className="w-16 h-16 bg-emuski-teal/10 rounded-2xl flex items-center justify-center mx-auto">
-                  <span className="text-2xl font-bold text-emuski-teal">3</span>
+              <AnimatedSection animationType="fadeInUp" delay={400}>
+                <div className="text-center space-y-6">
+                  <div className="relative mx-auto w-16 h-16">
+                    <div className="absolute inset-0 rounded-full bg-emuski-teal/40 animate-pulse" style={{ animationDuration: '2s', animationDelay: '200ms' }}></div>
+                    <div className="relative z-10 w-full h-full rounded-full bg-gradient-to-br from-emuski-teal to-emuski-teal-darker flex items-center justify-center shadow-lg">
+                      <span className="text-white text-2xl font-bold">2</span>
+                    </div>
+                    {/* Connecting Line to 3 */}
+                    <div className="hidden md:block absolute top-[31px] left-[50%] w-[100%] h-[2px] bg-border overflow-hidden rounded-full">
+                      <div className="absolute top-0 w-8 h-full bg-emuski-teal shadow-[0_0_8px_rgba(20,184,166,0.8)] animate-line-flow" style={{ animationDelay: '1s' }}></div>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-semibold">Interview Process</h3>
+                    <p className="text-muted-foreground">
+                      Technical assessment and cultural fit interviews with our engineering team and leadership.
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold">Welcome Aboard</h3>
-                  <p className="text-muted-foreground">
-                    Comprehensive onboarding program to get you up to speed and integrated with your team.
-                  </p>
+              </AnimatedSection>
+
+              <AnimatedSection animationType="fadeInUp" delay={500}>
+                <div className="text-center space-y-6">
+                  <div className="relative mx-auto w-16 h-16">
+                    <div className="absolute inset-0 rounded-full bg-emuski-teal/40 animate-pulse" style={{ animationDuration: '2s', animationDelay: '400ms' }}></div>
+                    <div className="relative z-10 w-full h-full rounded-full bg-gradient-to-br from-emuski-teal to-emuski-teal-darker flex items-center justify-center shadow-lg">
+                      <span className="text-white text-2xl font-bold">3</span>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-semibold">Welcome Aboard</h3>
+                    <p className="text-muted-foreground">
+                      Comprehensive onboarding program to get you up to speed and integrated with your team.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </AnimatedSection>
             </div>
           </div>
         </section>
