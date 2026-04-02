@@ -24,7 +24,7 @@ export default function LocationsMap() {
   return (
     <div className="w-full h-[400px] md:h-[520px] rounded-3xl overflow-hidden shadow-2xl border border-gray-100 z-10 relative">
       <MapContainer
-        center={[35.0, 20.0]}
+        center={[35.0, 20.0] as [number, number]}
         zoom={2}
         scrollWheelZoom={false}
         className="w-full h-full z-10"
