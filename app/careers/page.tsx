@@ -816,7 +816,7 @@ export default function CareersPage() {
             <div className="grid lg:grid-cols-2 gap-10 items-center">
 
               {/* Left Side - Interactive Globe */}
-              <div className="relative flex justify-center lg:justify-start w-full h-[400px] md:h-[520px] order-2 lg:order-1 mt-10 lg:mt-0">
+              <div className="relative flex justify-center lg:justify-start w-full h-[350px] sm:h-[400px] md:h-[520px] order-2 lg:order-1 mt-0">
                 <LocationsMap />
               </div>
 

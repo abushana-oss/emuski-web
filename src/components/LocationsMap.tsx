@@ -282,8 +282,30 @@ export default function LocationsMap() {
       
       const handlePointerDown = (event: any) => {
         isDragging = true;
-        previousPointerPosition = { x: event.clientX, y: event.clientY };
+        const clientX = event.clientX;
+        const clientY = event.clientY;
+        previousPointerPosition = { x: clientX, y: clientY };
         renderer.domElement.setPointerCapture(event.pointerId);
+
+        // Let mobile taps instantly detect markers
+        const rect = renderer.domElement.getBoundingClientRect();
+        const mouseX = ((clientX - rect.left) / rect.width) * 2 - 1;
+        const mouseY = -((clientY - rect.top) / rect.height) * 2 + 1;
+        mouse.x = mouseX;
+        mouse.y = mouseY;
+        setMousePosition({ x: clientX, y: clientY });
+        
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(markersRef.current);
+        if (intersects.length > 0) {
+          const intersectedMarker = intersects[0].object;
+          const locationData = intersectedMarker.userData.location;
+          setHoveredLocation(locationData);
+          isHoveringRef.current = true;
+        } else {
+          setHoveredLocation(null);
+          isHoveringRef.current = false;
+        }
       };
       
       const handlePointerMove = (event: any) => {
@@ -296,16 +318,14 @@ export default function LocationsMap() {
         mouse.x = mouseX;
         mouse.y = mouseY;
         
-        // Update mouse position for tooltip (only reliable for mouse)
-        if (event.pointerType === 'mouse') {
-          setMousePosition({ x: clientX, y: clientY });
-        }
+        // Always update mouse position so tooltips render where the finger/cursor is
+        setMousePosition({ x: clientX, y: clientY });
         
         // Check for marker intersections
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(markersRef.current);
         
-        if (intersects.length > 0 && !isDragging) {
+        if (intersects.length > 0) {
           const intersectedMarker = intersects[0].object;
           const locationData = intersectedMarker.userData.location;
           setHoveredLocation(locationData);
@@ -392,7 +412,7 @@ export default function LocationsMap() {
 
   if (!isClient) {
     return (
-      <div className="w-full h-[500px] md:h-[650px] flex items-center justify-center">
+      <div className="w-full h-full min-h-[350px] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading globe...</p>
@@ -402,7 +422,7 @@ export default function LocationsMap() {
   }
 
   return (
-    <div className="w-full h-[500px] md:h-[650px] flex items-center justify-center relative">
+    <div className="w-full h-full min-h-[350px] flex items-center justify-center relative">
       <div 
         ref={containerRef} 
         className="w-full h-full max-w-[650px] max-h-[650px]"
@@ -412,25 +432,28 @@ export default function LocationsMap() {
       {/* Hover Tooltip */}
       {hoveredLocation && (
         <div 
-          className="fixed pointer-events-none z-50 bg-white border border-gray-200 rounded-lg shadow-xl p-4 max-w-xs"
+          className="fixed pointer-events-none z-50 bg-white border border-gray-200 rounded-lg shadow-xl p-3 sm:p-4 w-[240px] max-w-[85vw]"
           style={{
-            left: mousePosition.x + 10,
-            top: mousePosition.y - 10,
-            transform: mousePosition.x > window.innerWidth - 200 ? 'translateX(-100%) translateX(-20px)' : 'none'
+            left: typeof window !== 'undefined' && mousePosition.x > window.innerWidth / 2 
+               ? mousePosition.x - 260 
+               : mousePosition.x + 10,
+            top: typeof window !== 'undefined' && mousePosition.y > window.innerHeight / 2 
+               ? mousePosition.y - 180 
+               : mousePosition.y + 10,
           }}
         >
           <div className="flex flex-col space-y-2">
             <img 
               src={hoveredLocation.image} 
               alt={hoveredLocation.name}
-              className="w-full h-24 object-cover rounded-md"
+              className="w-full h-24 sm:h-28 object-cover rounded-md"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
             <div>
-              <h3 className="font-semibold text-sm text-gray-900">{hoveredLocation.name}</h3>
-              <p className="text-xs text-gray-600 mt-1">{hoveredLocation.description}</p>
+              <h3 className="font-semibold text-sm sm:text-base text-gray-900">{hoveredLocation.name}</h3>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1">{hoveredLocation.description}</p>
             </div>
           </div>
         </div>
