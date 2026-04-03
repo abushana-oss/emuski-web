@@ -1,0 +1,15 @@
+# AI Sales Agent — required
+GROQ_API_KEY=                          # free at console.groq.com
+
+# AI fallback — optional, paid
+ANTHROPIC_API_KEY=                     # optional: claude.ai/settings
+
+# Rate limiting — optional
+REDIS_URL=                             # optional: upstash.com (free tier)
+
+# Lead notifications — optional
+RESEND_API_KEY=                        # optional: resend.com (free tier)
+SALES_NOTIFICATION_EMAIL=             # where to send lead alerts
+
+# Feature flag
+NEXT_PUBLIC_AI_AGENT_ENABLED=true

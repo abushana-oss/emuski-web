@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 import { Metadata, Viewport } from 'next'
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import '@/index.css'
 import { initializeCacheSystem } from '@/lib/cache'
 import '../src/app/globals' // Import PDF.js global config early
@@ -14,6 +14,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { ClientErrorWrapper } from '@/components/ClientErrorWrapper'
 import { ProductionErrorBoundary } from '@/components/ProductionErrorBoundary'
 import { AIOptimizedStructuredData } from '@/components/SEO/AIOptimizedStructuredData'
+import AISalesAgentClient from '@/components/AISalesAgentClient'
 import Script from 'next/script'
 
 const inter = Inter({
@@ -191,6 +192,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+        {/* Google Tag Manager */}
+        <script dangerouslySetInnerHTML={{
+          __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-N27V6HNK');`
+        }} />
 
         {/* Minimal DNS Prefetch - Carbon Optimized */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
@@ -295,6 +304,16 @@ export default function RootLayout({
 
       </head>
       <body className={inter.className}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-N27V6HNK"
+            height="0" 
+            width="0" 
+            style={{display:'none',visibility:'hidden'}}
+          />
+        </noscript>
+
         <ProductionErrorBoundary>
           <ClientErrorWrapper>
             <ErrorBoundary>
@@ -302,9 +321,6 @@ export default function RootLayout({
             </ErrorBoundary>
           </ClientErrorWrapper>
         </ProductionErrorBoundary>
-        {process.env.NEXT_PUBLIC_GTM_ID && (
-          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
-        )}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
@@ -366,6 +382,10 @@ export default function RootLayout({
             __html: `window.addEventListener('unhandledrejection',e=>e.preventDefault());`
           }}
         />
+        
+        {/* AI Sales Agent Widget */}
+        <AISalesAgentClient />
+        
       </body>
     </html>
   )
