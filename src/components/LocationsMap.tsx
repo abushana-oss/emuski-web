@@ -43,9 +43,12 @@ export default function LocationsMap() {
       camera = new Three.PerspectiveCamera(75, 1, 0.1, 1000);
       
       renderer = new Three.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(650, 650);
       renderer.setClearColor(0x000000, 0);
-      containerRef.current?.appendChild(renderer.domElement);
+      if (containerRef.current) {
+        containerRef.current.appendChild(renderer.domElement);
+        // Important for mobile drag to not scroll the page
+        renderer.domElement.style.touchAction = 'none';
+      }
 
       // Create globe geometry
       const geometry = new Three.SphereGeometry(2.5, 64, 64);
@@ -261,25 +264,42 @@ export default function LocationsMap() {
       // Camera position
       camera.position.z = 5;
 
-      // Mouse interaction with hover detection
+      const handleResize = () => {
+        if (!containerRef.current || !renderer || !camera) return;
+        const width = containerRef.current.clientWidth;
+        const height = containerRef.current.clientHeight;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      };
+      // Initial sizing
+      handleResize();
+      window.addEventListener('resize', handleResize);
+
+      // Pointer interaction with hover detection
       let isDragging = false;
-      let previousMousePosition = { x: 0, y: 0 };
+      let previousPointerPosition = { x: 0, y: 0 };
       
-      const handleMouseDown = (event: MouseEvent) => {
+      const handlePointerDown = (event: any) => {
         isDragging = true;
-        previousMousePosition = { x: event.clientX, y: event.clientY };
+        previousPointerPosition = { x: event.clientX, y: event.clientY };
+        renderer.domElement.setPointerCapture(event.pointerId);
       };
       
-      const handleMouseMove = (event: MouseEvent) => {
+      const handlePointerMove = (event: any) => {
         const rect = renderer.domElement.getBoundingClientRect();
-        const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        const clientX = event.clientX;
+        const clientY = event.clientY;
+        const mouseX = ((clientX - rect.left) / rect.width) * 2 - 1;
+        const mouseY = -((clientY - rect.top) / rect.height) * 2 + 1;
         
         mouse.x = mouseX;
         mouse.y = mouseY;
         
-        // Update mouse position for tooltip
-        setMousePosition({ x: event.clientX, y: event.clientY });
+        // Update mouse position for tooltip (only reliable for mouse)
+        if (event.pointerType === 'mouse') {
+          setMousePosition({ x: clientX, y: clientY });
+        }
         
         // Check for marker intersections
         raycaster.setFromCamera(mouse, camera);
@@ -300,25 +320,31 @@ export default function LocationsMap() {
         if (!isDragging) return;
         
         const deltaMove = {
-          x: event.clientX - previousMousePosition.x,
-          y: event.clientY - previousMousePosition.y
+          x: clientX - previousPointerPosition.x,
+          y: clientY - previousPointerPosition.y
         };
         
         // Rotate the entire globe (including markers) together
         globe.rotation.y += deltaMove.x * 0.005;
         globe.rotation.x += deltaMove.y * 0.005;
         
-        previousMousePosition = { x: event.clientX, y: event.clientY };
+        previousPointerPosition = { x: clientX, y: clientY };
       };
       
-      const handleMouseUp = () => {
+      const handlePointerUp = (event: any) => {
         isDragging = false;
         renderer.domElement.style.cursor = 'grab';
+        try {
+          renderer.domElement.releasePointerCapture(event.pointerId);
+        } catch (e) {
+          // Ignore if pointer is already released
+        }
       };
       
-      renderer.domElement.addEventListener('mousedown', handleMouseDown);
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      renderer.domElement.addEventListener('pointerdown', handlePointerDown);
+      renderer.domElement.addEventListener('pointermove', handlePointerMove);
+      renderer.domElement.addEventListener('pointerup', handlePointerUp);
+      renderer.domElement.addEventListener('pointercancel', handlePointerUp);
 
       // Animation loop
       function animate() {
@@ -337,9 +363,13 @@ export default function LocationsMap() {
       sceneRef.current = {
         cleanup: () => {
           if (animationId) cancelAnimationFrame(animationId);
-          renderer.domElement.removeEventListener('mousedown', handleMouseDown);
-          document.removeEventListener('mousemove', handleMouseMove);
-          document.removeEventListener('mouseup', handleMouseUp);
+          window.removeEventListener('resize', handleResize);
+          if (renderer && renderer.domElement) {
+            renderer.domElement.removeEventListener('pointerdown', handlePointerDown);
+            renderer.domElement.removeEventListener('pointermove', handlePointerMove);
+            renderer.domElement.removeEventListener('pointerup', handlePointerUp);
+            renderer.domElement.removeEventListener('pointercancel', handlePointerUp);
+          }
           if (containerRef.current && renderer.domElement) {
             containerRef.current.removeChild(renderer.domElement);
           }
@@ -375,7 +405,7 @@ export default function LocationsMap() {
     <div className="w-full h-[500px] md:h-[650px] flex items-center justify-center relative">
       <div 
         ref={containerRef} 
-        className="w-[650px] h-[650px]"
+        className="w-full h-full max-w-[650px] max-h-[650px]"
         style={{ cursor: 'grab' }}
       />
       
