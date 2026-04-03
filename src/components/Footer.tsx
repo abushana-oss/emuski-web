@@ -8,9 +8,9 @@ const emuskiLogo = "/assets/emuski-logo-optimized.webp";
 
 export const Footer = () => {
   return (
-    <footer className="bg-background border-t border-border py-8 sm:py-12">
+    <footer className="bg-background border-t border-border py-6 sm:py-8">
       <div className="w-full px-4 sm:px-6 lg:px-8 text-left max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-4 sm:mb-6">
           {/* Manufacturing Excellences */}
           <div>
             <h4 className="text-foreground font-semibold mb-4">Manufacturing Excellences</h4>

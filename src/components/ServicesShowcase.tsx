@@ -172,7 +172,7 @@ const ProjectCard = memo(({ project, projectIndex }: { project: any; projectInde
 
 // Skeleton loading component
 const ServiceSkeleton = memo(() => (
-  <div className="space-y-10">
+  <div className="space-y-6">
     {[1, 2].map((index) => (
       <div key={index} className="animate-pulse">
         <div className="lg:hidden mb-6">
@@ -288,7 +288,7 @@ const ServicesShowcase = memo(() => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-8 sm:py-10 bg-gradient-to-br from-slate-50 via-white to-slate-50"
+      className="relative py-6 sm:py-8 bg-gradient-to-br from-slate-50 via-white to-slate-50"
     >
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -302,7 +302,7 @@ const ServicesShowcase = memo(() => {
           <ServiceSkeleton />
         ) : (
           /* Services Sections */
-          <div className="space-y-10">
+          <div className="space-y-6">
           {servicesData.map((service, serviceIndex) => {
             const filteredProjects = getFilteredShowcaseItems(service.relatedCategories);
 

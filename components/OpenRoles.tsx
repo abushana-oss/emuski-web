@@ -41,10 +41,10 @@ export function OpenRoles({ jobOpenings }: OpenRolesProps) {
   }
 
   return (
-    <section id="open-roles" className="py-24 px-6 sm:px-8 lg:px-12" style={{backgroundColor: '#F4F3EA'}}>
+    <section id="open-roles" className="py-8 px-6 sm:px-8 lg:px-12" style={{backgroundColor: '#F4F3EA'}}>
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16 space-y-6">
+        <div className="text-center mb-8 space-y-3">
           <h1 className="font-black text-center tracking-tight leading-none capitalize" style={{
             fontFamily: '"GT Canon VF Variable L Black", sans-serif',
             fontWeight: 900,

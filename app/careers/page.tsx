@@ -538,11 +538,11 @@ export default function CareersPage() {
 
         {/* Mission Section */}
         <AnimatedSection animationType="fadeInUp" delay={200}>
-          <section id="mission" className="py-24 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background to-muted/30">
+          <section id="mission" className="py-12 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background to-muted/30">
             <div className="max-w-7xl mx-auto">
               {/* Mission Header */}
               <AnimatedSection animationType="fadeInUp" delay={100}>
-                <div className="text-center mb-16">
+                <div className="text-center mb-10">
                   <h2 className="text-4xl lg:text-5xl font-bold mb-12">
                     Our <span className="text-emuski-teal">Mission</span>
                   </h2>
@@ -550,7 +550,7 @@ export default function CareersPage() {
               </AnimatedSection>
 
               {/* Main Mission Content - Two Column Layout */}
-              <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+              <div className="grid lg:grid-cols-2 gap-8 items-center mb-10">
 
                 {/* Left Side - Mission Statement */}
                 <AnimatedSection animationType="fadeInLeft" delay={200}>
@@ -632,34 +632,6 @@ export default function CareersPage() {
 
               </div>
 
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <AnimatedSection animationType="fadeInLeft" delay={200}>
-                  <div className="text-center space-y-4">
-                    <h4 className="text-xl font-bold text-emuski-teal">Empowerment</h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      We believe in empowering our partners with the knowledge, tools, and capabilities to transform their manufacturing operations and achieve unprecedented success.
-                    </p>
-                  </div>
-                </AnimatedSection>
-
-                <AnimatedSection animationType="slideInUp" delay={300}>
-                  <div className="text-center space-y-4">
-                    <h4 className="text-xl font-bold text-emuski-teal">Value Creation</h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Every solution we deliver is designed to create tangible, measurable value that directly impacts your bottom line and accelerates your path to market leadership.
-                    </p>
-                  </div>
-                </AnimatedSection>
-
-                <AnimatedSection animationType="fadeInRight" delay={400}>
-                  <div className="text-center space-y-4">
-                    <h4 className="text-xl font-bold text-emuski-teal">Driven Excellence</h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Our relentless pursuit of excellence drives us to continuously innovate, optimize, and deliver solutions that exceed expectations and redefine industry standards.
-                    </p>
-                  </div>
-                </AnimatedSection>
-              </div>
 
               <AnimatedSection animationType="fadeInUp" delay={500}>
                 <div className="text-center">
@@ -678,10 +650,10 @@ export default function CareersPage() {
 
         {/* Values Section */}
         <AnimatedSection animationType="fadeInUp" delay={200}>
-          <section id="values" className="py-24 px-6 sm:px-8 lg:px-12 border-t border-border bg-muted/30">
+          <section id="values" className="py-12 px-6 sm:px-8 lg:px-12 border-t border-border bg-muted/30">
             <div className="max-w-7xl mx-auto">
               <AnimatedSection animationType="fadeInUp" delay={100}>
-                <div className="text-center mb-16 space-y-6">
+                <div className="text-center mb-10 space-y-6">
                   <h2 className="text-4xl lg:text-5xl font-bold">
                     Our Core <span className="text-emuski-teal">Values</span>
                   </h2>
@@ -691,7 +663,7 @@ export default function CareersPage() {
                 </div>
               </AnimatedSection>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 {values.map((value, index) => (
                   <AnimatedSection key={index} animationType="scaleIn" delay={index * 100}>
                     <AnimatedCard className="p-6 border-0 bg-white/60 backdrop-blur-sm rounded-xl h-full">
@@ -739,12 +711,12 @@ export default function CareersPage() {
 
         {/* Benefits Section */}
         <AnimatedSection animationType="fadeInUp" delay={300}>
-          <section id="benefits" className="py-24 px-6 sm:px-8 lg:px-12">
+          <section id="benefits" className="py-12 px-6 sm:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <AnimatedSection animationType="fadeInUp" delay={100}>
-                <div className="text-center mb-16 space-y-6">
+                <div className="text-center mb-10 space-y-6">
                   <h2 className="text-4xl lg:text-5xl font-bold">
-                    Why choose <span className="text-emuski-teal">EMUSKI</span>?
+                    Why choose <span className="text-black">EMUSKI</span>?
                   </h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
                     We offer an exceptional work environment where innovation meets excellence, and your career can truly flourish.
@@ -838,10 +810,10 @@ export default function CareersPage() {
         </AnimatedSection>
 
         {/* Locations Section */}
-        <section id="locations" className="py-24 px-6 sm:px-8 lg:px-12 bg-muted/20">
+        <section id="locations" className="py-12 px-6 sm:px-8 lg:px-12 bg-muted/20">
           <div className="max-w-7xl mx-auto">
 
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="grid lg:grid-cols-2 gap-10 items-center">
 
               {/* Left Side - Interactive Globe */}
               <div className="relative flex justify-center lg:justify-start w-full h-[400px] md:h-[520px] order-2 lg:order-1 mt-10 lg:mt-0">
@@ -879,98 +851,82 @@ export default function CareersPage() {
                   </div>
                 </div>
 
-                {/* Location Cards */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                  <Card className="p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-0 space-y-3">
+                {/* Location Cards - Responsive */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 mt-6">
+                  <Card className="p-3 sm:p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300 min-h-[100px] flex flex-col">
+                    <CardContent className="p-0 space-y-2 sm:space-y-3 flex-grow flex flex-col justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-emuski-teal rounded-full"></div>
-                        <h3 className="text-sm font-semibold">Headquarters</h3>
+                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emuski-teal rounded-full flex-shrink-0"></div>
+                        <h3 className="text-xs sm:text-sm font-semibold">Headquarters</h3>
                       </div>
                       <div className="space-y-1 text-xs text-muted-foreground">
                         <div className="flex items-start gap-2">
                           <MapPin className="h-3 w-3 mt-0.5 text-emuski-teal flex-shrink-0" />
-                          <div>
-                            <p className="font-medium">RNS Plaza</p>
-                            <p>Electronic City, Bangalore</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-xs sm:text-sm">RNS Plaza</p>
+                            <p className="text-xs leading-tight">Electronic City, Bangalore</p>
                           </div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-0 space-y-3">
+                  <Card className="p-3 sm:p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300 min-h-[100px] flex flex-col">
+                    <CardContent className="p-0 space-y-2 sm:space-y-3 flex-grow flex flex-col justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold">Hyderabad Office</h3>
+                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-blue-500 rounded-full flex-shrink-0"></div>
+                        <h3 className="text-xs sm:text-sm font-semibold">Hyderabad Office</h3>
                       </div>
                       <div className="space-y-1 text-xs text-muted-foreground">
                         <div className="flex items-start gap-2">
                           <MapPin className="h-3 w-3 mt-0.5 text-emuski-teal flex-shrink-0" />
-                          <div>
-                            <p className="font-medium">Tech Hub</p>
-                            <p>Hyderabad, Telangana</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-xs sm:text-sm">Tech Hub</p>
+                            <p className="text-xs leading-tight">Hyderabad, Telangana</p>
                           </div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-0 space-y-3">
+                  <Card className="p-3 sm:p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300 min-h-[100px] flex flex-col">
+                    <CardContent className="p-0 space-y-2 sm:space-y-3 flex-grow flex flex-col justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold">Manufacturing</h3>
+                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+                        <h3 className="text-xs sm:text-sm font-semibold">Manufacturing</h3>
                       </div>
                       <div className="space-y-1 text-xs text-muted-foreground">
                         <div className="flex items-start gap-2">
                           <MapPin className="h-3 w-3 mt-0.5 text-emuski-teal flex-shrink-0" />
-                          <div>
-                            <p className="font-medium">Production Facility</p>
-                            <p>Hosur, Tamil Nadu</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-xs sm:text-sm">Production Facility</p>
+                            <p className="text-xs leading-tight">Hosur, Tamil Nadu</p>
                           </div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-0 space-y-3">
+                  <Card className="p-3 sm:p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300 min-h-[100px] flex flex-col">
+                    <CardContent className="p-0 space-y-2 sm:space-y-3 flex-grow flex flex-col justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold">Europe Consultant</h3>
+                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-purple-500 rounded-full flex-shrink-0"></div>
+                        <h3 className="text-xs sm:text-sm font-semibold">Europe Consultant</h3>
                       </div>
                       <div className="space-y-1 text-xs text-muted-foreground">
                         <div className="flex items-start gap-2">
                           <MapPin className="h-3 w-3 mt-0.5 text-emuski-teal flex-shrink-0" />
-                          <div>
-                            <p className="font-medium">Regional Office</p>
-                            <p>Germany</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-xs sm:text-sm">Regional Office</p>
+                            <p className="text-xs leading-tight">Germany</p>
                           </div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="p-4 bg-white/80 backdrop-blur border-0 shadow-md hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-0 space-y-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold">USA Operations</h3>
-                      </div>
-                      <div className="space-y-1 text-xs text-muted-foreground">
-                        <div className="flex items-start gap-2">
-                          <MapPin className="h-3 w-3 mt-0.5 text-emuski-teal flex-shrink-0" />
-                          <div>
-                            <p className="font-medium">Regional Office</p>
-                            <p>North America</p>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
+
               </div>
 
             </div>
@@ -978,87 +934,81 @@ export default function CareersPage() {
         </section>
 
         {/* Hiring Process Section */}
-        <section id="hiring-process" className="py-24 px-6 sm:px-8 lg:px-12">
-          <style>{`
-            @keyframes flowRight {
-              0% { left: 0%; opacity: 0; }
-              10% { opacity: 1; }
-              90% { opacity: 1; }
-              100% { left: 100%; opacity: 0; }
-            }
-            .animate-line-flow {
-              animation: flowRight 2s infinite linear;
-            }
-          `}</style>
-          <div className="max-w-5xl mx-auto">
-            <AnimatedSection animationType="fadeInUp" delay={200}>
-              <div className="text-center mb-16 space-y-6">
-                <h2 className="text-4xl lg:text-5xl font-bold">Our Hiring Process</h2>
-                <p className="text-xl text-muted-foreground">
-                  A streamlined process designed to find the best talent and ensure mutual fit.
-                </p>
+        <section id="hiring-process" className="py-10 px-6 sm:px-8 lg:px-12 bg-white">
+          <div className="max-w-7xl mx-auto">
+            {/* Section Header */}
+            <div className="mb-8">
+              <h3 className="text-sm font-medium text-gray-500 tracking-wider uppercase mb-6">
+                HIRING PROCESS
+              </h3>
+            </div>
+            
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              {/* Left Column - Content */}
+              <div className="space-y-6">
+                <h2 className="text-4xl lg:text-5xl font-serif text-gray-900 leading-tight">
+                  What to know when applying to EMUSKI.
+                </h2>
+                
+                <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
+                  <p>
+                    We value hands-on contribution, diverse skill sets, and merit-based evaluation. 
+                    Our interview process reflects these principles, prioritizing speed and 
+                    transparency throughout your candidacy experience.
+                  </p>
+                  
+                  <p>
+                    Discover how our streamlined application and interview process works, get 
+                    preparation advice, and find role-specific tips in our comprehensive Interview Guide.
+                  </p>
+                </div>
+                
+                <div className="pt-4">
+                  <a 
+                    href="/interview-guide" 
+                    className="inline-flex items-center px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    Interview Guide
+                  </a>
+                </div>
               </div>
-            </AnimatedSection>
-
-            <div className="grid md:grid-cols-3 gap-12">
-              <AnimatedSection animationType="fadeInUp" delay={300}>
-                <div className="text-center space-y-6">
-                  <div className="relative mx-auto w-16 h-16">
-                    <div className="absolute inset-0 rounded-full bg-emuski-teal/40 animate-pulse" style={{ animationDuration: '2s' }}></div>
-                    <div className="relative z-10 w-full h-full rounded-full bg-gradient-to-br from-emuski-teal to-emuski-teal-darker flex items-center justify-center shadow-lg">
-                      <span className="text-white text-2xl font-bold">1</span>
-                    </div>
-                    {/* Connecting Line to 2 */}
-                    <div className="hidden md:block absolute top-[31px] left-[50%] w-[100%] h-[2px] bg-border overflow-hidden rounded-full">
-                      <div className="absolute top-0 w-8 h-full bg-emuski-teal shadow-[0_0_8px_rgba(20,184,166,0.8)] animate-line-flow"></div>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-semibold">Application</h3>
-                    <p className="text-muted-foreground">
-                      Submit your resume and cover letter. We review every application carefully and respond within 48 hours.
+              
+              {/* Right Column - Process Steps */}
+              <div className="space-y-8">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-3 h-3 bg-teal-600 rounded-full mt-2"></div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Application</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Submit your application and we'll review it carefully. If you're a potential fit, 
+                      we'll reach out within two weeks to discuss next steps.
                     </p>
                   </div>
                 </div>
-              </AnimatedSection>
-
-              <AnimatedSection animationType="fadeInUp" delay={400}>
-                <div className="text-center space-y-6">
-                  <div className="relative mx-auto w-16 h-16">
-                    <div className="absolute inset-0 rounded-full bg-emuski-teal/40 animate-pulse" style={{ animationDuration: '2s', animationDelay: '200ms' }}></div>
-                    <div className="relative z-10 w-full h-full rounded-full bg-gradient-to-br from-emuski-teal to-emuski-teal-darker flex items-center justify-center shadow-lg">
-                      <span className="text-white text-2xl font-bold">2</span>
-                    </div>
-                    {/* Connecting Line to 3 */}
-                    <div className="hidden md:block absolute top-[31px] left-[50%] w-[100%] h-[2px] bg-border overflow-hidden rounded-full">
-                      <div className="absolute top-0 w-8 h-full bg-emuski-teal shadow-[0_0_8px_rgba(20,184,166,0.8)] animate-line-flow" style={{ animationDelay: '1s' }}></div>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-semibold">Interview Process</h3>
-                    <p className="text-muted-foreground">
-                      Technical assessment and cultural fit interviews with our engineering team and leadership.
+                
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-3 h-3 bg-teal-600 rounded-full mt-2"></div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Interview Process</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Connect with our engineering team and leadership through structured interviews. 
+                      Technical roles include hands-on assessments to evaluate your skills. 
+                      <a href="/interview-guide" className="text-teal-600 hover:text-teal-700 underline ml-1">View our Interview Guide</a>
                     </p>
                   </div>
                 </div>
-              </AnimatedSection>
-
-              <AnimatedSection animationType="fadeInUp" delay={500}>
-                <div className="text-center space-y-6">
-                  <div className="relative mx-auto w-16 h-16">
-                    <div className="absolute inset-0 rounded-full bg-emuski-teal/40 animate-pulse" style={{ animationDuration: '2s', animationDelay: '400ms' }}></div>
-                    <div className="relative z-10 w-full h-full rounded-full bg-gradient-to-br from-emuski-teal to-emuski-teal-darker flex items-center justify-center shadow-lg">
-                      <span className="text-white text-2xl font-bold">3</span>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-semibold">Welcome Aboard</h3>
-                    <p className="text-muted-foreground">
-                      Comprehensive onboarding program to get you up to speed and integrated with your team.
+                
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-3 h-3 bg-teal-600 rounded-full mt-2"></div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Decision & Offer</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Receive feedback within one week of your final interview. If you're selected, 
+                      we'll present a comprehensive offer package and support your transition to EMUSKI.
                     </p>
                   </div>
                 </div>
-              </AnimatedSection>
+              </div>
             </div>
           </div>
         </section>
@@ -1067,16 +1017,16 @@ export default function CareersPage() {
         <OpenRoles jobOpenings={jobOpenings} />
         
         {/* Additional Information Section */}
-        <section className="py-16 bg-white">
+        <section className="py-10 bg-white">
           <div className="max-w-6xl mx-auto px-6">
             {/* Section Header */}
-            <div className="border-t border-gray-300 pt-12 mb-16">
-              <h2 className="text-sm font-medium text-gray-600 tracking-wider uppercase mb-12">
+            <div className="border-t border-gray-300 pt-8 mb-10">
+              <h2 className="text-sm font-medium text-gray-600 tracking-wider uppercase mb-8">
                 ADDITIONAL INFORMATION
               </h2>
               
               {/* Content Grid */}
-              <div className="grid lg:grid-cols-2 gap-16">
+              <div className="grid lg:grid-cols-2 gap-10">
                 {/* Left Column */}
                 <div>
                   <h3 className="text-2xl font-serif text-gray-900 mb-6">Visas and Green Cards</h3>
@@ -1100,7 +1050,7 @@ export default function CareersPage() {
               </div>
               
               {/* Privacy Policy Section */}
-              <div className="mt-16">
+              <div className="mt-10">
                 <h3 className="text-2xl font-serif text-gray-900 mb-6">Privacy Policy</h3>
                 <div className="space-y-4 text-gray-700 leading-relaxed max-w-3xl">
                   <p>
@@ -1119,12 +1069,12 @@ export default function CareersPage() {
         </section>
         
         {/* Join Us Call to Action Section */}
-        <section className="py-20 bg-teal-600">
+        <section className="py-12 bg-teal-600">
           <div className="max-w-4xl mx-auto px-6 text-center">
-            <h2 className="text-4xl md:text-5xl font-serif text-white mb-8 leading-tight">
+            <h2 className="text-4xl md:text-5xl font-serif text-white mb-6 leading-tight">
               Join Us
             </h2>
-            <p className="text-xl text-teal-50 mb-12 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-xl text-teal-50 mb-8 leading-relaxed max-w-2xl mx-auto">
               Ready to shape the future of manufacturing? Explore our open positions and become part of our innovative team.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">

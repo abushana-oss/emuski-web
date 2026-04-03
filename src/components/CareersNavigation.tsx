@@ -54,40 +54,40 @@ export const CareersNavigation = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 max-w-fit justify-center">
-        <div className="bg-white border border-gray-200 rounded-full px-2 sm:px-3 py-1.5 shadow-lg flex justify-between">
+      <nav className="hidden lg:flex fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 w-auto max-w-[calc(100vw-2rem)] justify-center">
+        <div className="bg-white border border-gray-200 rounded-full px-2 lg:px-4 xl:px-6 py-1.5 shadow-lg flex items-center justify-center w-fit min-w-max max-w-full overflow-hidden">
           <div className="flex items-center space-x-1">
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center mr-1 sm:mr-2 hover:opacity-80 transition-opacity overflow-visible shrink-0"
+              className="flex items-center mr-1 lg:mr-2 hover:opacity-80 transition-opacity overflow-visible shrink-0"
             >
               <Image
                 src="/logofull.svg"
                 alt="EMUSKI"
                 width={120}
                 height={60}
-                className="h-8 w-auto"
+                className="h-6 lg:h-8 w-auto"
               />
             </Link>
 
             {/* Navigation Links */}
-            <div className="flex items-center space-x-0">
+            <div className="flex items-center space-x-1 lg:space-x-2 xl:space-x-3 flex-shrink-0">
             <a
               href="#mission"
-              className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
+              className="px-2 lg:px-3 py-1.5 text-xs lg:text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 whitespace-nowrap"
             >
               Mission
             </a>
             <a
               href="#values"
-              className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
+              className="px-2 lg:px-3 py-1.5 text-xs lg:text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 whitespace-nowrap"
             >
               Values
             </a>
             <a
               href="#benefits"
-              className="px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200"
+              className="px-2 lg:px-3 py-1.5 text-xs lg:text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 whitespace-nowrap"
             >
               Benefits
             </a>
@@ -106,7 +106,7 @@ export const CareersNavigation = () => {
                   setShowHiringProcessDropdown(false)
                   setShowLocationsDropdown(true)
                 }}
-                className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 flex items-center gap-1"
+                className="px-2 lg:px-3 py-2.5 text-xs lg:text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 flex items-center gap-1 whitespace-nowrap"
               >
                 Locations
                 <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${showLocationsDropdown ? 'rotate-180' : ''}`} />
@@ -159,7 +159,7 @@ export const CareersNavigation = () => {
                   setShowLocationsDropdown(false)
                   setShowHiringProcessDropdown(true)
                 }}
-                className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 flex items-center gap-1"
+                className="px-2 lg:px-3 py-2.5 text-xs lg:text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted/60 transition-all duration-200 flex items-center gap-1 whitespace-nowrap"
               >
                 Process
                 <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${showHiringProcessDropdown ? 'rotate-180' : ''}`} />
@@ -200,7 +200,7 @@ export const CareersNavigation = () => {
 
             <a
               href="#open-roles"
-              className="px-4 py-2.5 text-sm font-medium text-foreground bg-teal-100 hover:bg-teal-200 border border-teal-200 rounded-full transition-all duration-200 whitespace-nowrap"
+              className="px-3 lg:px-4 xl:px-5 py-2.5 text-xs lg:text-sm font-medium text-foreground bg-teal-100 hover:bg-teal-200 border border-teal-200 rounded-full transition-all duration-200 whitespace-nowrap ml-1 lg:ml-2 flex-shrink-0"
             >
               Open Roles
             </a>
@@ -210,7 +210,7 @@ export const CareersNavigation = () => {
       </nav>
 
       {/* Mobile Navigation */}
-      <nav className="md:hidden fixed top-4 left-4 right-4 z-50">
+      <nav className="lg:hidden fixed top-4 left-4 right-4 z-50">
         <div className="flex items-center justify-between w-full">
           {/* Logo Container */}
           <Link

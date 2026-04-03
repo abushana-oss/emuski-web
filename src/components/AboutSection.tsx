@@ -163,13 +163,13 @@ const AboutSection = () => {
     };
 
     return (
-        <section className="py-16 relative overflow-hidden" style={{backgroundColor: '#121A21'}}>
+        <section className="py-12 relative overflow-hidden" style={{backgroundColor: '#121A21'}}>
             <div className="absolute inset-0 opacity-10 pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#4fd3d4_1px,transparent_1px),linear-gradient(to_bottom,#4fd3d4_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
             </div>
             
             <div className="w-full px-4 sm:px-6 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                     <div className="lg:col-span-1 space-y-4">
                         <h2 className="text-3xl font-bold text-white">
                             About EMUSKI

@@ -349,7 +349,7 @@ export default function InterviewGuidePage() {
         </div>
 
         {/* Join Us Call to Action */}
-        <section className="py-20 bg-teal-600">
+        <section className="py-12 bg-teal-600">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-4xl md:text-5xl font-serif text-white mb-8 leading-tight">
               Ready to Join Us?
