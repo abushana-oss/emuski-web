@@ -1100,10 +1100,12 @@ export default function AISalesAgent({
                 transition: 'all 0.2s ease'
               }}
               onMouseOver={(e) => {
-                e.target.style.background = 'rgba(23, 184, 186, 0.2)'
+                const target = e.target as HTMLButtonElement
+                target.style.background = 'rgba(23, 184, 186, 0.2)'
               }}
               onMouseOut={(e) => {
-                e.target.style.background = 'rgba(23, 184, 186, 0.1)'
+                const target = e.target as HTMLButtonElement
+                target.style.background = 'rgba(23, 184, 186, 0.1)'
               }}
             >
               <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
@@ -1143,10 +1145,12 @@ export default function AISalesAgent({
                 transition: 'all 0.2s ease'
               }}
               onMouseOver={(e) => {
-                e.target.style.background = 'rgba(23, 184, 186, 0.2)'
+                const target = e.target as HTMLButtonElement
+                target.style.background = 'rgba(23, 184, 186, 0.2)'
               }}
               onMouseOut={(e) => {
-                e.target.style.background = 'rgba(23, 184, 186, 0.1)'
+                const target = e.target as HTMLButtonElement
+                target.style.background = 'rgba(23, 184, 186, 0.1)'
               }}
             >
               <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
