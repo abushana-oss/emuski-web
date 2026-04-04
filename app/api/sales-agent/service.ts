@@ -127,9 +127,9 @@ class GroqService {
     const isFirstMessage = messages.length === 1 && messages[0].role === 'user'
     
     if (isFirstMessage) {
-      systemContent += `\n\nFIRST MESSAGE ONLY: Start your response with exactly "I'm Heena, EMUSKI's assistant - how can I help you today?" then continue with your response about EMUSKI's services.`
+      systemContent += `\n\nFIRST MESSAGE ONLY: Start with "Hi! I'm Heena from EMUSKI. What manufacturing challenges can I help you with?" - then continue naturally based on their question. Be conversational and friendly.`
     } else {
-      systemContent += `\n\nNEVER introduce yourself again. You are already known as Heena. Jump straight into helping with EMUSKI manufacturing services.`
+      systemContent += `\n\nBe conversational and natural. NEVER introduce yourself again - jump straight into helping with their manufacturing needs. Respond like you're having a friendly business conversation.`
     }
     
     systemContent += `\n\nFOCUS: This is a pure sales conversation. Focus 100% on selling EMUSKI's manufacturing services, capabilities, and competitive advantages. Ask about their manufacturing needs and explain how EMUSKI can help solve their challenges.`

@@ -130,12 +130,12 @@ export function useVoice(): UseVoiceReturn {
       currentUtteranceRef.current = null
       setIsSpeaking(false)
 
-      // Enhanced browser TTS with natural settings
+      // Enhanced browser TTS with natural, human-like settings
       const utterance = new SpeechSynthesisUtterance(text)
       utterance.lang = 'en-US'
-      utterance.rate = 0.85 // Slower, more conversational
-      utterance.pitch = 1.15 // Higher pitch for female voice
-      utterance.volume = 0.9 // Slightly lower volume for softer tone
+      utterance.rate = 0.9 // Natural speaking pace
+      utterance.pitch = 1.0 // Natural pitch for more human sound
+      utterance.volume = 0.95 // Clear but not overwhelming
       
       // Track utterance reference and speaking state
       currentUtteranceRef.current = utterance
@@ -161,18 +161,22 @@ export function useVoice(): UseVoiceReturn {
       const setVoiceAndSpeak = () => {
         const voices = window.speechSynthesis.getVoices()
         
-        // Prioritize the best female voices
-        const femaleVoice = voices.find(voice => 
+        // Prioritize natural, high-quality voices
+        const naturalVoice = voices.find(voice => 
           voice.lang.includes('en') && 
-          (voice.name.toLowerCase().includes('microsoft zira') ||
-           voice.name.toLowerCase().includes('microsoft hazel') ||
+          (voice.name.toLowerCase().includes('zira') ||
+           voice.name.toLowerCase().includes('aria') ||
+           voice.name.toLowerCase().includes('jenny') ||
            voice.name.toLowerCase().includes('samantha') ||
-           voice.name.toLowerCase().includes('karen') ||
-           voice.name.toLowerCase().includes('female'))
+           voice.name.toLowerCase().includes('allison') ||
+           voice.name.toLowerCase().includes('ava') ||
+           voice.name.toLowerCase().includes('serena') ||
+           voice.name.toLowerCase().includes('female') ||
+           voice.name.toLowerCase().includes('natural'))
         )
         
-        if (femaleVoice) {
-          utterance.voice = femaleVoice
+        if (naturalVoice) {
+          utterance.voice = naturalVoice
         }
         
         window.speechSynthesis.speak(utterance)
