@@ -65,12 +65,16 @@ export type UseVoiceReturn = {
   clearTranscript: () => void
   speak: (text: string, onEnd?: () => void) => void
   cancelSpeech: () => void
+  isSpeaking: boolean
+  stopSpeechAndListen: () => void
 }
 
 export function useVoice(): UseVoiceReturn {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState('')
+  const [isSpeaking, setIsSpeaking] = useState(false)
   const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
   const prefersReducedMotion =
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -123,6 +127,8 @@ export function useVoice(): UseVoiceReturn {
       
       // Stop any currently playing speech
       window.speechSynthesis?.cancel()
+      currentUtteranceRef.current = null
+      setIsSpeaking(false)
 
       // Enhanced browser TTS with natural settings
       const utterance = new SpeechSynthesisUtterance(text)
@@ -130,8 +136,26 @@ export function useVoice(): UseVoiceReturn {
       utterance.rate = 0.85 // Slower, more conversational
       utterance.pitch = 1.15 // Higher pitch for female voice
       utterance.volume = 0.9 // Slightly lower volume for softer tone
-      utterance.onend = () => onEnd?.()
-      utterance.onerror = () => onEnd?.()
+      
+      // Track utterance reference and speaking state
+      currentUtteranceRef.current = utterance
+      setIsSpeaking(true)
+      
+      utterance.onstart = () => {
+        setIsSpeaking(true)
+      }
+      
+      utterance.onend = () => {
+        setIsSpeaking(false)
+        currentUtteranceRef.current = null
+        onEnd?.()
+      }
+      
+      utterance.onerror = () => {
+        setIsSpeaking(false)
+        currentUtteranceRef.current = null
+        onEnd?.()
+      }
       
       // Wait for voices to load if needed
       const setVoiceAndSpeak = () => {
@@ -166,13 +190,29 @@ export function useVoice(): UseVoiceReturn {
 
   const cancelSpeech = useCallback(() => {
     window.speechSynthesis?.cancel()
+    setIsSpeaking(false)
+    currentUtteranceRef.current = null
   }, [])
+
+  const stopSpeechAndListen = useCallback(() => {
+    // Stop any currently playing speech immediately
+    window.speechSynthesis?.cancel()
+    setIsSpeaking(false)
+    currentUtteranceRef.current = null
+    
+    // Start listening for next user input
+    if (isSupported) {
+      startListening()
+    }
+  }, [isSupported, startListening])
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       recognitionRef.current?.stop()
       window.speechSynthesis?.cancel()
+      setIsSpeaking(false)
+      currentUtteranceRef.current = null
     }
   }, [])
 
@@ -185,5 +225,7 @@ export function useVoice(): UseVoiceReturn {
     clearTranscript: () => setTranscript(''),
     speak,
     cancelSpeech,
+    isSpeaking,
+    stopSpeechAndListen,
   }
 }

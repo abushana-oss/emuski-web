@@ -7,9 +7,7 @@ import type { AISalesAgentProps } from './AISalesAgent.types'
 export default function AISalesAgent({
   systemPromptExtra,
   buttonLabel = 'ASK AI',
-  leadCaptureAfter = 3,
   position = 'bottom-right',
-  onLeadCaptured,
 }: AISalesAgentProps) {
   const {
     isOpen,
@@ -17,8 +15,6 @@ export default function AISalesAgent({
     widgetState,
     messages,
     chatInput,
-    showLeadCapture,
-    leadSubmitted,
     voice,
     openWidget,
     closeWidget,
@@ -26,21 +22,8 @@ export default function AISalesAgent({
     setChatInput,
     handleChatSend,
     handleVoiceResult,
-    handleLeadSubmit,
-  } = useAISalesAgent({ systemPromptExtra, leadCaptureAfter, onLeadCaptured })
+  } = useAISalesAgent({ systemPromptExtra })
 
-  const [leadName, setLeadName] = useState('')
-  const [leadEmail, setLeadEmail] = useState('')
-  const [leadCompany, setLeadCompany] = useState('')
-  const [leadPhone, setLeadPhone] = useState('')
-  const [currentFormStep, setCurrentFormStep] = useState(1) // 1=name, 2=company, 3=email, 4=phone
-  const [showCallout, setShowCallout] = useState(false)
-
-  // Show callout after 5 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => setShowCallout(true), 5000)
-    return () => clearTimeout(timer)
-  }, [])
 
 
   // Handle voice recognition results
@@ -596,148 +579,6 @@ export default function AISalesAgent({
                   I could not transcribe that. Please try again.
                 </div>
               )}
-
-              {/* Show form fields ONLY in voice mode */}
-              {showLeadCapture && !leadSubmitted && panelMode === 'voice' && (
-                <div className="lh-lead-fields">
-                  <div className="lh-lead-field-vertical">
-                    
-                    {/* Step 1: Name */}
-                    {currentFormStep === 1 && (
-                      <div className="lh-step-container">
-                        <input 
-                          className="lh-lead-input"
-                          type="text" 
-                          placeholder="Your name" 
-                          value={leadName}
-                          onChange={(e) => setLeadName(e.target.value)}
-                          autoComplete="name"
-                        />
-                        <div className="lh-step-buttons">
-                          <button 
-                            type="button" 
-                            className="lh-step-button lh-next-button"
-                            onClick={() => leadName && setCurrentFormStep(2)}
-                            disabled={!leadName}
-                          >
-                            Next
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Step 2: Company */}
-                    {currentFormStep === 2 && (
-                      <div className="lh-step-container">
-                        <input 
-                          className="lh-lead-input"
-                          type="text" 
-                          placeholder="Company name" 
-                          value={leadCompany}
-                          onChange={(e) => setLeadCompany(e.target.value)}
-                          autoComplete="organization"
-                        />
-                        <div className="lh-step-buttons">
-                          <button 
-                            type="button" 
-                            className="lh-step-button lh-back-button"
-                            onClick={() => setCurrentFormStep(1)}
-                          >
-                            Back
-                          </button>
-                          <button 
-                            type="button" 
-                            className="lh-step-button lh-next-button"
-                            onClick={() => leadCompany && setCurrentFormStep(3)}
-                            disabled={!leadCompany}
-                          >
-                            Next
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Step 3: Email */}
-                    {currentFormStep === 3 && (
-                      <div className="lh-step-container">
-                        <input 
-                          className="lh-lead-input"
-                          type="email" 
-                          placeholder="Work email address" 
-                          value={leadEmail}
-                          onChange={(e) => setLeadEmail(e.target.value)}
-                          autoComplete="email"
-                        />
-                        <div className="lh-step-buttons">
-                          <button 
-                            type="button" 
-                            className="lh-step-button lh-back-button"
-                            onClick={() => setCurrentFormStep(2)}
-                          >
-                            Back
-                          </button>
-                          <button 
-                            type="button" 
-                            className="lh-step-button lh-next-button"
-                            onClick={() => leadEmail && setCurrentFormStep(4)}
-                            disabled={!leadEmail}
-                          >
-                            Next
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Step 4: Phone */}
-                    {currentFormStep === 4 && (
-                      <div className="lh-step-container">
-                        <input 
-                          className="lh-lead-input"
-                          type="tel" 
-                          placeholder="Phone number" 
-                          value={leadPhone}
-                          onChange={(e) => setLeadPhone(e.target.value)}
-                          autoComplete="tel"
-                        />
-                        <div className="lh-step-buttons">
-                          <button 
-                            type="button" 
-                            className="lh-step-button lh-back-button"
-                            onClick={() => setCurrentFormStep(3)}
-                          >
-                            Back
-                          </button>
-                          <button 
-                            type="button" 
-                            className="lh-lead-submit"
-                            onClick={() => leadPhone && handleLeadSubmit({ 
-                              name: leadName,
-                              email: leadEmail, 
-                              company: leadCompany, 
-                              phone: leadPhone
-                            })}
-                            disabled={!leadPhone}
-                          >
-                            Get Quote
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    
-                  </div>
-                </div>
-              )}
-
-              {leadSubmitted && (
-                <div style={{ textAlign: 'center', padding: '20px', color: '#17B8BA' }}>
-                  <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>
-                    Thank you!
-                  </div>
-                  <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
-                    We have received your requirements and will get back to you within 24 hours with a detailed quote.
-                  </div>
-                </div>
-              )}
             </div>
 
           </div>
@@ -779,7 +620,8 @@ export default function AISalesAgent({
                         console.log('Voice clicked:', { 
                           panelMode, 
                           isSupported: voice.isSupported, 
-                          isListening: voice.isListening 
+                          isListening: voice.isListening,
+                          isSpeaking: voice.isSpeaking
                         })
                         
                         // First ensure we're in voice mode
@@ -790,6 +632,12 @@ export default function AISalesAgent({
                         // Check if voice is supported
                         if (!voice.isSupported) {
                           alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.')
+                          return
+                        }
+                        
+                        // If AI is currently speaking, stop speech and start listening
+                        if (voice.isSpeaking) {
+                          voice.stopSpeechAndListen()
                           return
                         }
                         
@@ -845,7 +693,7 @@ export default function AISalesAgent({
                       style={{ cursor: 'pointer', padding: '4px' }}
                     >
                       <span className="lh-voice-label-text">
-                        {voice.isListening ? 'Listening...' : 'Tap and Ask AI'}
+                        {voice.isListening ? 'Listening...' : voice.isSpeaking ? 'Tap to interrupt' : 'Tap and Ask AI'}
                       </span>
                       {voice.transcript && (
                         <div className="lh-transcript">"{voice.transcript}"</div>
@@ -974,7 +822,8 @@ export default function AISalesAgent({
                         console.log('Voice clicked:', { 
                           panelMode, 
                           isSupported: voice.isSupported, 
-                          isListening: voice.isListening 
+                          isListening: voice.isListening,
+                          isSpeaking: voice.isSpeaking
                         })
                         
                         // First ensure we're in voice mode
@@ -985,6 +834,12 @@ export default function AISalesAgent({
                         // Check if voice is supported
                         if (!voice.isSupported) {
                           alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.')
+                          return
+                        }
+                        
+                        // If AI is currently speaking, stop speech and start listening
+                        if (voice.isSpeaking) {
+                          voice.stopSpeechAndListen()
                           return
                         }
                         
@@ -1040,7 +895,7 @@ export default function AISalesAgent({
                       style={{ cursor: 'pointer', padding: '4px' }}
                     >
                       <span className="lh-voice-label-text">
-                        {voice.isListening ? 'Listening...' : 'Tap and Ask AI'}
+                        {voice.isListening ? 'Listening...' : voice.isSpeaking ? 'Tap to interrupt' : 'Tap and Ask AI'}
                       </span>
                       {voice.transcript && (
                         <div className="lh-transcript">"{voice.transcript}"</div>

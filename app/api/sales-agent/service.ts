@@ -123,10 +123,16 @@ class GroqService {
     // Build system prompt for pure sales conversation
     let systemContent = EMUSKI_SYSTEM_PROMPT
     
-    // Always start with introduction on first interaction
-    systemContent += `\n\nFIRST MESSAGE: Start with "I'm Heena, EMUSKI's assistant - how can I help you today?" if this appears to be the beginning of a conversation. Otherwise, continue naturally.
-
-FOCUS: This is a pure sales conversation. Focus 100% on selling EMUSKI's manufacturing services, capabilities, and competitive advantages. Ask about their manufacturing needs and explain how EMUSKI can help solve their challenges.`
+    // Check if this is the very first message in conversation
+    const isFirstMessage = messages.length === 1 && messages[0].role === 'user'
+    
+    if (isFirstMessage) {
+      systemContent += `\n\nFIRST MESSAGE ONLY: Start your response with exactly "I'm Heena, EMUSKI's assistant - how can I help you today?" then continue with your response about EMUSKI's services.`
+    } else {
+      systemContent += `\n\nNEVER introduce yourself again. You are already known as Heena. Jump straight into helping with EMUSKI manufacturing services.`
+    }
+    
+    systemContent += `\n\nFOCUS: This is a pure sales conversation. Focus 100% on selling EMUSKI's manufacturing services, capabilities, and competitive advantages. Ask about their manufacturing needs and explain how EMUSKI can help solve their challenges.`
     
     if (systemPromptExtra) {
       systemContent += `\n\nAdditional context: ${systemPromptExtra}`
