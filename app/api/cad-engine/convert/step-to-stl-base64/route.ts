@@ -83,6 +83,19 @@ async function handleStepToStlConversion(req: NextRequest) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ detail: 'Service temporarily unavailable' }));
+      
+      // Handle 413 error specifically for file size limit
+      if (response.status === 413) {
+        return NextResponse.json({
+          error: 'File is too large for the CAD conversion service. The CAD engine service has a file size limit. Please try a smaller file or contact support for large file processing.',
+          details: ['CAD engine service file size limit exceeded'],
+          supportEmail: 'support@emuski.com'
+        }, { 
+          status: 413,
+          headers 
+        });
+      }
+      
       return NextResponse.json(errorData, { 
         status: response.status,
         headers 

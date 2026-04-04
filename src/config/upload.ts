@@ -41,9 +41,10 @@ export const SUPPORTED_FILE_TYPES = {
 export function validateFileSize(file: File, maxSizeBytes: number): { valid: boolean; error?: string } {
   if (file.size > maxSizeBytes) {
     const maxSizeMB = (maxSizeBytes / (1024 * 1024)).toFixed(0)
+    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1)
     return {
       valid: false,
-      error: `File size must be less than ${maxSizeMB}MB`
+      error: `File size (${fileSizeMB}MB) exceeds the ${maxSizeMB}MB limit. For larger files, please contact support@emuski.com`
     }
   }
   return { valid: true }
