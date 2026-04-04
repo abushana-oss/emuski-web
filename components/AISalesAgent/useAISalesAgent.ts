@@ -24,7 +24,7 @@ type UseAISalesAgentReturn = {
   setChatInput: (v: string) => void
   handleChatSend: () => void
   handleVoiceResult: (text: string) => void
-  handleLeadSubmit: (email: string) => Promise<void>
+  handleLeadSubmit: (leadData: { name: string; email: string; company: string; phone: string }) => Promise<void>
 }
 
 export function useAISalesAgent({
