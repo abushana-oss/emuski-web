@@ -8,33 +8,59 @@ const REQUESTS_PER_MINUTE = 15 // Allow 15 requests per minute per IP
 const HIGH_USAGE_THRESHOLD = 8 // After 8 requests, show call-to-action
 const WINDOW_MS = 60 * 1000 // 1 minute window
 
-// Spam protection patterns
-const SPAM_PATTERNS = [
-  /(.)\1{10,}/i, // Repeated characters (aaaaaaaaaa)
-  /^[^a-zA-Z0-9\s]{20,}/, // Too many special characters
-  /<script|javascript:|data:|vbscript:/i, // XSS attempts
-  /\b(viagra|casino|loan|crypto|bitcoin)\b/i // Common spam keywords
+// Security patterns for prompt injection and spam protection
+const SECURITY_PATTERNS = [
+  // Repeated characters (potential spam)
+  /(.)\1{10,}/i,
+  
+  // Too many special characters
+  /^[^a-zA-Z0-9\s]{20,}/,
+  
+  // XSS and injection attempts
+  /<script|javascript:|data:|vbscript:/i,
+  
+  // Common spam keywords
+  /\b(viagra|casino|loan|crypto|bitcoin)\b/i,
+  
+  // Prompt injection attempts
+  /ignore\s+(previous|above|all|these|your)\s+(instructions?|prompts?|rules?)/i,
+  /forget\s+(everything|all|previous|above)/i,
+  /(you\s+are\s+now|act\s+as|pretend\s+to\s+be|role\s*play)/i,
+  /(system\s*:|assistant\s*:|user\s*:)/i,
+  /\[\s*(system|assistant|user)\s*\]/i,
+  /(reveal|show|tell\s+me)\s+(your\s+)?(prompt|instructions?|system\s+message)/i,
+  /\b(jailbreak|break\s+out|escape\s+from)\b/i,
+  /\b(override|bypass|circumvent)\s+(security|safety|rules)/i
 ]
 
-function isSpamMessage(message: string): boolean {
-  return SPAM_PATTERNS.some(pattern => pattern.test(message))
+function isSecurityThreat(message: string): boolean {
+  return SECURITY_PATTERNS.some(pattern => pattern.test(message))
+}
+
+function sanitizeInput(input: string): string {
+  // Remove potentially dangerous characters and normalize input
+  return input
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, '') // Remove control characters
+    .replace(/[^\w\s\-.,!?@#$%&*()+={}[\]|\\:";'<>\/`~]/g, '') // Keep only safe characters
+    .trim()
+    .substring(0, 2000) // Enforce length limit
 }
 
 async function checkRateLimit(ip: string, message?: string): Promise<{ 
   allowed: boolean; 
   showCallToAction: boolean;
-  isSpam: boolean;
+  isSecurityThreat: boolean;
   retryAfter?: number;
 }> {
   const now = Date.now()
   const key = `sales-agent:${ip}`
   
-  // Check for spam
-  if (message && isSpamMessage(message)) {
+  // Check for security threats (spam and prompt injection)
+  if (message && isSecurityThreat(message)) {
     return { 
       allowed: false, 
       showCallToAction: true, 
-      isSpam: true 
+      isSecurityThreat: true 
     }
   }
   
@@ -48,7 +74,7 @@ async function checkRateLimit(ip: string, message?: string): Promise<{
   if (!entry) {
     // First request in window
     rateLimitMap.set(key, { count: 1, resetTime: now + WINDOW_MS, isHighUsage: false })
-    return { allowed: true, showCallToAction: false, isSpam: false }
+    return { allowed: true, showCallToAction: false, isSecurityThreat: false }
   }
   
   // Check if this is high usage - show call to action
@@ -57,7 +83,7 @@ async function checkRateLimit(ip: string, message?: string): Promise<{
     return { 
       allowed: true, 
       showCallToAction: true, 
-      isSpam: false 
+      isSecurityThreat: false 
     }
   }
   
@@ -67,7 +93,7 @@ async function checkRateLimit(ip: string, message?: string): Promise<{
     return { 
       allowed: false, 
       showCallToAction: true, 
-      isSpam: false,
+      isSecurityThreat: false,
       retryAfter 
     }
   }
@@ -77,7 +103,7 @@ async function checkRateLimit(ip: string, message?: string): Promise<{
   return { 
     allowed: true, 
     showCallToAction: entry.isHighUsage, 
-    isSpam: false 
+    isSecurityThreat: false 
   }
 }
 
@@ -99,16 +125,16 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // 3. Rate limit with smart call-to-action
+  // 3. Sanitize input and check for security threats
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ?? 'unknown'
-  const userMessage = parsed.data.messages[0]?.content || ''
-  const { allowed, showCallToAction, isSpam, retryAfter } = await checkRateLimit(ip, userMessage)
+  const userMessage = sanitizeInput(parsed.data.messages[0]?.content || '')
+  const { allowed, showCallToAction, isSecurityThreat, retryAfter } = await checkRateLimit(ip, userMessage)
   
-  // Handle spam with conversion opportunity
-  if (isSpam) {
+  // Handle security threats (spam/injection) with conversion opportunity
+  if (isSecurityThreat) {
     return NextResponse.json({
       data: { 
-        reply: "I'm here to help with EMUSKI's precision manufacturing services! We specialize in CNC machining, rapid prototyping, and cost engineering. For serious manufacturing inquiries, please contact us directly at enquiries@emuski.com or call +91-86670-88060. Our team is ready to help with your manufacturing needs.",
+        reply: "I focus exclusively on EMUSKI's precision manufacturing services. We specialize in CNC machining, rapid prototyping, and cost engineering with 15-35% typical cost savings. What type of manufacturing challenges are you facing? For detailed discussions, contact us directly at enquiries@emuski.com or call +91-86670-88060.",
         callToAction: {
           email: "enquiries@emuski.com",
           phone: "+91-86670-88060",
@@ -135,11 +161,17 @@ export async function POST(req: NextRequest) {
     })
   }
 
-  // 4. Call AI for pure sales conversation (no memory needed)
+  // 4. Call AI for pure sales conversation (sanitize input)
   const { messages, model, systemPromptExtra } = parsed.data
   
+  // Sanitize all message content before sending to AI
+  const sanitizedMessages = messages.map(msg => ({
+    ...msg,
+    content: sanitizeInput(msg.content)
+  }))
+  
   const startTime = Date.now()
-  const result = await callAI(messages, model, systemPromptExtra)
+  const result = await callAI(sanitizedMessages, model, systemPromptExtra)
   const duration = Date.now() - startTime
 
   if ('error' in result) {
