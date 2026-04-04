@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SalesAgentRequestSchema } from './schema'
 import { callAI } from './service'
-import { createClient } from '@supabase/supabase-js'
 
 // Simple in-memory rate limiter (use ioredis if REDIS_URL is set)
 // Build the full ioredis version if REDIS_URL exists in env
@@ -43,25 +42,11 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // 4. Get conversation memory
-  const { messages, model, systemPromptExtra, sessionId } = parsed.data
+  // 4. Call AI for pure sales conversation (no memory needed)
+  const { messages, model, systemPromptExtra } = parsed.data
   
-  
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  )
-  
-  const { data: conversationMemory, error: memoryError } = await supabase
-    .from('conversation_memory')
-    .select('*')
-    .eq('session_id', sessionId)
-    .single()
-    
-  
-  // 5. Call AI with memory context
   const startTime = Date.now()
-  const result = await callAI(messages, model, systemPromptExtra, conversationMemory)
+  const result = await callAI(messages, model, systemPromptExtra)
   const duration = Date.now() - startTime
 
   if ('error' in result) {

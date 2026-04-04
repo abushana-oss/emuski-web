@@ -14,8 +14,6 @@ type UseAISalesAgentReturn = {
   widgetState: WidgetState
   messages: Message[]
   chatInput: string
-  showLeadCapture: boolean
-  leadSubmitted: boolean
   voice: ReturnType<typeof useVoice>
   // Actions
   openWidget: () => void
@@ -24,21 +22,17 @@ type UseAISalesAgentReturn = {
   setChatInput: (v: string) => void
   handleChatSend: () => void
   handleVoiceResult: (text: string) => void
-  handleLeadSubmit: (leadData: { name: string; email: string; company: string; phone: string }) => Promise<void>
 }
 
 export function useAISalesAgent({
   systemPromptExtra,
-  leadCaptureAfter = 3,
-  onLeadCaptured,
-}: Pick<AISalesAgentProps, 'systemPromptExtra' | 'leadCaptureAfter' | 'onLeadCaptured'>): UseAISalesAgentReturn {
+}: Pick<AISalesAgentProps, 'systemPromptExtra'>): UseAISalesAgentReturn {
   const [isOpen, setIsOpen] = useState(false)
   const [panelMode, setPanelMode] = useState<PanelMode>('voice')
   const [widgetState, setWidgetState] = useState<WidgetState>('idle')
   const [messages, setMessages] = useState<Message[]>([])
   const [chatInput, setChatInput] = useState('')
-  const [showLeadCapture, setShowLeadCapture] = useState(false)
-  const [leadSubmitted, setLeadSubmitted] = useState(false)
+  // Removed lead capture - focus on pure sales conversation
 
   const sessionId = useRef(crypto.randomUUID())
   const aiReplyCount = useRef(0)
@@ -46,103 +40,7 @@ export function useAISalesAgent({
 
   const voice = useVoice()
 
-  // Helper function to extract lead info and update database  
-  const updateConversationMemory = useCallback(async (userMessage: string, mode: PanelMode = panelMode) => {
-    try {
-      // Skip data extraction in voice mode - use forms instead
-      if (mode === 'voice') {
-        return
-      }
-      
-      // IMPROVED: Better company vs name detection
-      const msgLower = userMessage.toLowerCase()
-      
-      // Get existing memory to determine context
-      const memoryResponse = await fetch('/api/conversation-memory?' + new URLSearchParams({ sessionId: sessionId.current }))
-      const { data: existingMemory } = await memoryResponse.json()
-      
-      let nameMatch = null
-      let companyMatch = null
-      
-      // Company indicators - if message contains these, treat as company
-      const isCompany = msgLower.includes('company') || 
-                       msgLower.includes('corp') || 
-                       msgLower.includes('inc') || 
-                       msgLower.includes('ltd') ||
-                       msgLower.includes('tata') ||  // Known company
-                       msgLower.includes('power') ||
-                       msgLower.includes('solutions') ||
-                       msgLower.includes('systems') ||
-                       msgLower.includes('tech') ||
-                       msgLower.includes('group')
-      
-      // Context-aware extraction based on existing memory
-      if (existingMemory?.name && !existingMemory?.company && !isCompany) {
-        // We have name but no company, so this might be company
-        companyMatch = [null, userMessage.trim()]
-      } else if (isCompany || (existingMemory?.name && !existingMemory?.company)) {
-        // Treat as company
-        companyMatch = userMessage.match(/(?:from|at|work\s+at|company\s+is|with)\s+([a-zA-Z0-9\s&.,'-]+?)(?:\.|$|,|\s+and|\s+i|\s+my)/i) ||
-                      [null, userMessage.trim()]  // Standalone company
-      } else {
-        // Treat as name (only if explicit intro or single short word)
-        nameMatch = userMessage.match(/(?:i'm|my name is|i am|this is|call me)\s+([a-zA-Z\s]+?)(?:\s+from|\s+at|\s+and|$)/i) ||
-                   (userMessage.length < 15 && 
-                    /^[a-zA-Z\s]{2,12}$/.test(userMessage.trim()) && 
-                    !userMessage.includes(' ') ? [null, userMessage.trim()] : null)  // Single word names only
-      }
-      const emailMatch = userMessage.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i)
-      const phoneMatch = userMessage.match(/(?:phone|call|reach|contact)\s*(?:me\s*)?(?:at\s*)?([+]?[\d\s\-\(\)]{7,})/i)
-
-
-      const updates: any = {}
-      if (nameMatch) {
-        updates.name = nameMatch[1].trim()
-      }
-      if (companyMatch) {
-        updates.company = companyMatch[1].trim()
-      }
-      if (emailMatch) {
-        updates.email = emailMatch[1].trim()
-      }
-      if (phoneMatch) {
-        updates.phone = phoneMatch[1].replace(/\D/g, '')
-      }
-
-      // Determine next step based on what we have after this update
-      const currentName = updates.name || existingMemory?.name
-      const currentCompany = updates.company || existingMemory?.company
-      const currentEmail = updates.email || existingMemory?.email
-      const currentPhone = updates.phone || existingMemory?.phone
-      
-      if (currentPhone && currentEmail && currentCompany && currentName) {
-        updates.lastStep = 'complete'
-      } else if (currentEmail && currentCompany && currentName) {
-        updates.lastStep = 'phone'
-      } else if (currentCompany && currentName) {
-        updates.lastStep = 'email'
-      } else if (currentName) {
-        updates.lastStep = 'company'
-      } else {
-        updates.lastStep = 'name'
-      }
-
-
-      if (Object.keys(updates).length > 0) {
-        const response = await fetch('/api/conversation-memory', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sessionId: sessionId.current,
-            ...updates,
-          }),
-        })
-        const result = await response.json()
-      }
-    } catch (error) {
-      console.error('Error in updateConversationMemory:', error)
-    }
-  }, [])
+  // No longer collecting personal data - focus purely on EMUSKI sales
 
   const sendMessage = useCallback(async (text: string) => {
     setWidgetState('processing')
@@ -154,14 +52,13 @@ export function useAISalesAgent({
       timestamp: Date.now(),
     }
 
-    // Extract and store conversation memory
-    await updateConversationMemory(text, panelMode)
+    // No longer collecting personal data - removed conversation memory
 
     abortRef.current?.abort()
     abortRef.current = new AbortController()
 
     try {
-      // Only send the current user message for context-free responses
+      // Send user message for pure sales conversation
       const res = await fetch('/api/sales-agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -169,7 +66,6 @@ export function useAISalesAgent({
           messages: [{ role: 'user', content: text }],
           model: panelMode,
           systemPromptExtra,
-          sessionId: sessionId.current,
         }),
         signal: abortRef.current.signal,
       })
@@ -205,9 +101,7 @@ export function useAISalesAgent({
       setMessages([assistantMessage])
 
       aiReplyCount.current += 1
-      if (aiReplyCount.current >= leadCaptureAfter && !leadSubmitted) {
-        setShowLeadCapture(true)
-      }
+      // Removed lead capture - focus on pure sales conversation
 
       setWidgetState('speaking')
       voice.speak(reply, () => setWidgetState('idle'))
@@ -217,7 +111,7 @@ export function useAISalesAgent({
       toast.error('Could not reach AI. Please try again.')
       setTimeout(() => setWidgetState('idle'), 2000)
     }
-  }, [messages, panelMode, systemPromptExtra, leadCaptureAfter, leadSubmitted, voice])
+  }, [messages, panelMode, systemPromptExtra, voice])
 
   const handleChatSend = useCallback(() => {
     const text = chatInput.trim()
@@ -233,38 +127,7 @@ export function useAISalesAgent({
     }
   }, [sendMessage])
 
-  const handleLeadSubmit = useCallback(async (leadData: { name: string; email: string; company: string; phone: string }) => {
-    try {
-      const res = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: leadData.name,
-          email: leadData.email,
-          company: leadData.company,
-          phone: leadData.phone,
-          requirements: messages.map(m => m.content).join(' | '),
-          sessionId: sessionId.current,
-          messageCount: aiReplyCount.current,
-          pageUrl: window.location.href,
-        }),
-      })
-      if (!res.ok) throw new Error('Failed')
-      setLeadSubmitted(true)
-      onLeadCaptured?.({
-        name: leadData.name,
-        email: leadData.email,
-        company: leadData.company,
-        phone: leadData.phone,
-        requirements: messages.map(m => m.content).join(' | '),
-        sessionId: sessionId.current,
-        messageCount: aiReplyCount.current,
-        pageUrl: window.location.href,
-      })
-    } catch {
-      toast.error('Could not save your details. Please try again.')
-    }
-  }, [onLeadCaptured, messages])
+  // Removed lead submission - pure sales conversation only
 
   // Abort in-flight request on unmount
   useEffect(() => () => { abortRef.current?.abort() }, [])
@@ -275,8 +138,6 @@ export function useAISalesAgent({
     widgetState,
     messages,
     chatInput,
-    showLeadCapture,
-    leadSubmitted,
     voice,
     openWidget: () => {
       // Only open if there are messages to show
@@ -289,6 +150,5 @@ export function useAISalesAgent({
     setChatInput,
     handleChatSend,
     handleVoiceResult,
-    handleLeadSubmit,
   }
 }

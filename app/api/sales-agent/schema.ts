@@ -10,8 +10,8 @@ export const SalesAgentRequestSchema = z.object({
   model: z.enum(['voice', 'chat']).default('chat'),
   // Optional — page-specific system prompt override (max 500 chars)
   systemPromptExtra: z.string().max(500).optional(),
-  // Session ID for conversation memory
-  sessionId: z.string().uuid(),
+  // Session ID for conversation memory (optional since we removed lead collection)
+  sessionId: z.string().uuid().optional(),
 })
 
 export const SalesAgentResponseSchema = z.object({

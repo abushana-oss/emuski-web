@@ -101,7 +101,6 @@ class GroqService {
     messages: Message[],
     modelKey: ModelKey,
     systemPromptExtra?: string,
-    conversationMemory?: any,
     signal?: AbortSignal
   ): Promise<Result<string>> {
     // Check circuit breaker
@@ -121,57 +120,13 @@ class GroqService {
       }
     }
 
-    // Build system prompt with memory context
+    // Build system prompt for pure sales conversation
     let systemContent = EMUSKI_SYSTEM_PROMPT
     
-    if (conversationMemory) {
-      // Check if this is a brand new session (no collected information yet)
-      const isFirstInteraction = !conversationMemory.name && !conversationMemory.company && 
-                                !conversationMemory.email && !conversationMemory.phone &&
-                                conversationMemory.last_step === 'name'
-      
-      // Check if all required information is collected
-      const hasAllInfo = conversationMemory.name && conversationMemory.company && 
-                        conversationMemory.email && conversationMemory.phone
-      
-      const memoryContext = `\n\nMODE: ${modelKey.toUpperCase()} MODE
+    // Always start with introduction on first interaction
+    systemContent += `\n\nFIRST MESSAGE: Start with "I'm Heena, EMUSKI's assistant - how can I help you today?" if this appears to be the beginning of a conversation. Otherwise, continue naturally.
 
-CURRENT LEAD INFORMATION ALREADY COLLECTED:
-- Name: ${conversationMemory.name || 'NOT COLLECTED'}
-- Company: ${conversationMemory.company || 'NOT COLLECTED'} 
-- Email: ${conversationMemory.email || 'NOT COLLECTED'}
-- Phone: ${conversationMemory.phone || 'NOT COLLECTED'}
-- Current step: ${conversationMemory.last_step}
-
-${hasAllInfo ? 
-  `LEAD INFORMATION COMPLETE! You have collected all required information for ${conversationMemory.name} from ${conversationMemory.company}.
-
-IMPORTANT: DO NOT ask for name, company, email, or phone again. Move to SALES CONVERSATION:
-- Discuss EMUSKI's manufacturing services and competitive advantages
-- Ask about their manufacturing challenges and requirements
-- Explain how EMUSKI can save them 15-35% on manufacturing costs
-- Talk about rapid prototyping (3-7 days), precision CNC machining, cost engineering
-- Focus on qualifying their specific needs and positioning EMUSKI as the best solution
-- Continue building rapport and moving toward a quote/consultation` :
-  
-  `${modelKey === 'voice' ? 
-    'VOICE MODE DATA COLLECTION: When you need personal details, say "I\'d like to get your contact information. Please fill out the form that will appear." Do NOT ask for specific fields - the form handles this.' :
-    `CHAT MODE DATA COLLECTION: Ask for missing information one at a time:
-${!conversationMemory.name ? '- Ask for NAME first' : ''}
-${conversationMemory.name && !conversationMemory.company ? '- Ask for COMPANY next' : ''}
-${conversationMemory.company && !conversationMemory.email ? '- Ask for EMAIL next' : ''}
-${conversationMemory.email && !conversationMemory.phone ? '- Ask for PHONE next' : ''}`
-  }`
-}
-
-${isFirstInteraction ? 
-  'THIS IS THE VERY FIRST INTERACTION: Start with "I\'m Heena, EMUSKI\'s assistant - how can I help you today?" THEN ask for missing information.' :
-  'THIS IS NOT THE FIRST INTERACTION: DO NOT mention "I\'m Heena" or introduce yourself. You are already mid-conversation.'
-}`
-      systemContent += memoryContext
-    } else {
-      systemContent += `\n\nTHIS IS THE VERY FIRST INTERACTION: Start with "I'm Heena, EMUSKI's assistant - how can I help you today?" THEN ask for missing information.`
-    }
+FOCUS: This is a pure sales conversation. Focus 100% on selling EMUSKI's manufacturing services, capabilities, and competitive advantages. Ask about their manufacturing needs and explain how EMUSKI can help solve their challenges.`
     
     if (systemPromptExtra) {
       systemContent += `\n\nAdditional context: ${systemPromptExtra}`
@@ -265,13 +220,11 @@ export async function callAI(
   messages: Message[],
   modelKey: ModelKey,
   systemPromptExtra?: string,
-  conversationMemory?: any,
 ): Promise<Result<string>> {
   return groqService.chatCompletion(
     messages,
     modelKey,
-    systemPromptExtra,
-    conversationMemory
+    systemPromptExtra
   )
 }
 
