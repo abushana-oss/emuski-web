@@ -351,16 +351,16 @@ export default function AISalesAgent({
           font-weight: 500;
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
           position: relative;
-          min-width: 280px;
-          max-width: 360px;
+          min-width: 350px;
+          max-width: 450px;
           width: 100%;
           border: 2px solid #333;
         }
         
         @media (max-width: 768px) {
           .lh-bar {
-            min-width: 250px;
-            max-width: 320px;
+            min-width: 320px;
+            max-width: 400px;
             padding: 8px 12px;
             border-radius: 25px;
           }
@@ -368,8 +368,8 @@ export default function AISalesAgent({
         
         @media (max-width: 480px) {
           .lh-bar {
-            min-width: 200px;
-            max-width: 280px;
+            min-width: 280px;
+            max-width: 350px;
             padding: 6px 10px;
             border-radius: 20px;
             gap: 6px;
@@ -683,454 +683,224 @@ export default function AISalesAgent({
               )}
             </div>
 
-            {/* Mute/Unmute Button at bottom */}
-            <div style={{ padding: '12px', borderTop: '1px solid #333', textAlign: 'center' }}>
-              <button 
-                type="button" 
-                style={{
-                  background: 'rgba(23, 184, 186, 0.1)',
-                  border: '1px solid rgba(23, 184, 186, 0.3)',
-                  borderRadius: '20px',
-                  padding: '6px 12px',
-                  color: '#17B8BA',
-                  fontSize: '12px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s ease',
-                  opacity: voice.isSpeaking || voice.isMuted ? 1 : 0.6,
-                  margin: '0 auto'
-                }}
-                aria-label={voice.isMuted ? "Unmute voice" : "Mute voice"}
-                onClick={() => voice.toggleMute()}
-                onMouseOver={(e) => {
-                  const target = e.target as HTMLButtonElement
-                  target.style.background = 'rgba(23, 184, 186, 0.2)'
-                }}
-                onMouseOut={(e) => {
-                  const target = e.target as HTMLButtonElement
-                  target.style.background = 'rgba(23, 184, 186, 0.1)'
-                }}
-              >
-                {voice.isMuted ? (
-                  <>
-                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                    </svg>
-                    <span>Unmute</span>
-                  </>
-                ) : voice.isSpeaking ? (
-                  <>
-                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6 10H4a1 1 0 00-1 1v2a1 1 0 001 1h2l4 4V6l-4 4z" />
-                    </svg>
-                    <span>Mute</span>
-                  </>
-                ) : (
-                  <>
-                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6 10H4a1 1 0 00-1 1v2a1 1 0 001 1h2l4 4V6l-4 4z" />
-                    </svg>
-                    <span>Voice</span>
-                  </>
-                )}
-              </button>
-            </div>
-
           </div>
         )}
 
         {/* Interactive bar positioned separately below modal, centered */}
-        {isOpen && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0px', maxWidth: '360px', margin: '0px auto 0' }}>
-            <div className="lh-bar">
-              {/* Left Side - Voice Toggle */}
-              <button 
-                type="button" 
-                className={`lh-side-toggle ${panelMode === 'voice' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (panelMode !== 'voice') {
-                    setPanelMode('voice')
-                    voice.stopListening()
-                  } else if (voice.isSupported && !voice.isListening) {
-                    voice.startListening()
-                  }
-                }}
-              >
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                </svg>
-              </button>
-              
-              {/* Content Area with Swipe Animation */}
-              <div className="lh-content-area">
-                <div className={`lh-content-slider ${panelMode === 'voice' ? 'voice-mode' : 'chat-mode'}`}>
-                  {/* Voice Panel */}
-                  <div className="lh-content-panel">
-                    <div 
-                      className="lh-voice-label"
-                      onClick={async (e) => {
-                        e.stopPropagation()
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px', maxWidth: '360px', margin: '12px auto 0' }}>
+          <div className="lh-bar">
+            {/* Left Side - Voice Toggle */}
+            <button 
+              type="button" 
+              className={`lh-side-toggle ${panelMode === 'voice' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation()
+                if (panelMode !== 'voice') {
+                  setPanelMode('voice')
+                  voice.stopListening()
+                } else if (voice.isSupported && !voice.isListening) {
+                  voice.startListening()
+                }
+              }}
+            >
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+              </svg>
+            </button>
+            
+            {/* Content Area with Swipe Animation */}
+            <div className="lh-content-area">
+              <div className={`lh-content-slider ${panelMode === 'voice' ? 'voice-mode' : 'chat-mode'}`}>
+                {/* Voice Panel */}
+                <div className="lh-content-panel">
+                  <div 
+                    className="lh-voice-label"
+                    onClick={async (e) => {
+                      e.stopPropagation()
+                      
+                      // First ensure we're in voice mode
+                      if (panelMode !== 'voice') {
+                        setPanelMode('voice')
+                      }
+                      
+                      // Check if voice is supported
+                      if (!voice.isSupported) {
+                        alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.')
+                        return
+                      }
+                      
+                      // If AI is currently speaking, stop speech and start listening
+                      if (voice.isSpeaking) {
+                        voice.stopSpeechAndListen()
+                        return
+                      }
+                      
+                      // Check protocol first
+                      if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                        alert('Voice recognition requires HTTPS. Please access the site via https:// or use localhost for development.')
+                        return
+                      }
+                      
+                      // Request microphone access first
+                      try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+                        stream.getTracks().forEach(track => track.stop())
                         
-                        // First ensure we're in voice mode
-                        if (panelMode !== 'voice') {
-                          setPanelMode('voice')
+                        // Start listening if not already listening
+                        if (!voice.isListening) {
+                          voice.startListening()
                         }
-                        
-                        // Check if voice is supported
-                        if (!voice.isSupported) {
-                          alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.')
-                          return
-                        }
-                        
-                        // If AI is currently speaking, stop speech and start listening
-                        if (voice.isSpeaking) {
-                          voice.stopSpeechAndListen()
-                          return
-                        }
-                        
-                        // Check protocol first
-                        if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-                          alert('Voice recognition requires HTTPS. Please access the site via https:// or use localhost for development.')
-                          return
-                        }
-                        
-                        // Request microphone access first
-                        try {
-                          const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-                          stream.getTracks().forEach(track => track.stop())
+                      } catch (error) {
+                        console.error('Microphone access denied:', error)
+                        if (error.name === 'NotAllowedError') {
+                          // Show detailed instructions for enabling microphone
+                          const isChrome = navigator.userAgent.includes('Chrome')
+                          const isEdge = navigator.userAgent.includes('Edg')
+                          const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
                           
-                          // Start listening if not already listening
-                          if (!voice.isListening) {
-                            voice.startListening()
-                          }
-                        } catch (error) {
-                          console.error('Microphone access denied:', error)
-                          if (error.name === 'NotAllowedError') {
-                            // Show detailed instructions for enabling microphone
-                            const isChrome = navigator.userAgent.includes('Chrome')
-                            const isEdge = navigator.userAgent.includes('Edg')
-                            const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
-                            
-                            let instructions = 'To enable microphone access:\n\n'
-                            
-                            if (isChrome || isEdge) {
-                              instructions += '1. Click the lock/shield icon in the address bar\n'
-                              instructions += '2. Click "Site settings" or "Permissions"\n'
-                              instructions += '3. Find "Microphone" and change to "Allow"\n'
-                              instructions += '4. Refresh the page and try again'
-                            } else if (isSafari) {
-                              instructions += '1. Safari menu > Settings > Websites\n'
-                              instructions += '2. Click "Microphone" in the left sidebar\n'
-                              instructions += '3. Find this website and change to "Allow"\n'
-                              instructions += '4. Refresh the page and try again'
-                            } else {
-                              instructions += '1. Click the icon in your address bar\n'
-                              instructions += '2. Look for microphone permissions\n'
-                              instructions += '3. Change to "Allow"\n'
-                              instructions += '4. Refresh the page and try again'
-                            }
-                            
-                            alert(instructions)
+                          let instructions = 'To enable microphone access:\n\n'
+                          
+                          if (isChrome || isEdge) {
+                            instructions += '1. Click the lock/shield icon in the address bar\n'
+                            instructions += '2. Click "Site settings" or "Permissions"\n'
+                            instructions += '3. Find "Microphone" and change to "Allow"\n'
+                            instructions += '4. Refresh the page and try again'
+                          } else if (isSafari) {
+                            instructions += '1. Safari menu > Settings > Websites\n'
+                            instructions += '2. Click "Microphone" in the left sidebar\n'
+                            instructions += '3. Find this website and change to "Allow"\n'
+                            instructions += '4. Refresh the page and try again'
                           } else {
-                            alert('Microphone access is required for voice recognition. Please allow microphone access and try again.')
+                            instructions += '1. Click the icon in your address bar\n'
+                            instructions += '2. Look for microphone permissions\n'
+                            instructions += '3. Change to "Allow"\n'
+                            instructions += '4. Refresh the page and try again'
                           }
+                          
+                          alert(instructions)
+                        } else {
+                          alert('Microphone access is required for voice recognition. Please allow microphone access and try again.')
                         }
-                      }}
-                      style={{ cursor: 'pointer', padding: '4px' }}
-                    >
-                      <span className="lh-voice-label-text">
-                        {voice.isListening ? 'Listening...' : voice.isSpeaking ? 'Tap to interrupt' : 'Tap and Ask AI'}
-                      </span>
-                      {voice.transcript && (
-                        <div className="lh-transcript">"{voice.transcript}"</div>
-                      )}
-                    </div>
-
-                    {voice.isListening && (
-                      <div className="lh-listening-group">
-                        <div className="lh-wave-bar" style={{height: '12px', background: '#421b39', animationDelay: '0s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '16px', background: '#684961', animationDelay: '0.1s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '20px', background: '#d9d1d7', animationDelay: '0.2s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '24px', background: '#ffffff', animationDelay: '0.3s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '20px', background: '#a6a6a6', animationDelay: '0.4s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '16px', background: '#7a7a7a', animationDelay: '0.5s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '12px', background: '#575757', animationDelay: '0.6s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '8px', background: '#383838', animationDelay: '0.7s'}}></div>
-                      </div>
+                      }
+                    }}
+                    style={{ cursor: 'pointer', padding: '4px' }}
+                  >
+                    <span className="lh-voice-label-text">
+                      {voice.isListening ? 'Listening...' : voice.isSpeaking ? 'Tap to interrupt' : 'Tap and Ask AI'}
+                    </span>
+                    {voice.transcript && (
+                      <div className="lh-transcript">"{voice.transcript}"</div>
                     )}
+                  </div>
 
-                    {voice.isListening && (
+                  {voice.isListening && (
+                    <div className="lh-listening-group">
+                      <div className="lh-wave-bar" style={{height: '12px', background: '#421b39', animationDelay: '0s'}}></div>
+                      <div className="lh-wave-bar" style={{height: '16px', background: '#684961', animationDelay: '0.1s'}}></div>
+                      <div className="lh-wave-bar" style={{height: '20px', background: '#d9d1d7', animationDelay: '0.2s'}}></div>
+                      <div className="lh-wave-bar" style={{height: '24px', background: '#ffffff', animationDelay: '0.3s'}}></div>
+                      <div className="lh-wave-bar" style={{height: '20px', background: '#a6a6a6', animationDelay: '0.4s'}}></div>
+                      <div className="lh-wave-bar" style={{height: '16px', background: '#7a7a7a', animationDelay: '0.5s'}}></div>
+                      <div className="lh-wave-bar" style={{height: '12px', background: '#575757', animationDelay: '0.6s'}}></div>
+                      <div className="lh-wave-bar" style={{height: '8px', background: '#383838', animationDelay: '0.7s'}}></div>
+                    </div>
+                  )}
+
+                  {voice.isListening && (
+                    <button 
+                      type="button" 
+                      className="lh-voice-send-cancel"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        voice.stopListening()
+                      }}
+                      aria-label="Cancel sending voice message"
+                    >
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                {/* Chat Panel */}
+                <div className="lh-content-panel">
+                  {panelMode === 'chat' && (
+                    <div className="lh-chat-form">
+                      <input 
+                        className="lh-input"
+                        type="text" 
+                        placeholder="Ask me anything..."
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleChatSend()}
+                        disabled={widgetState === 'processing'}
+                        autoComplete="off"
+                        onClick={(e) => e.stopPropagation()}
+                      />
                       <button 
                         type="button" 
-                        className="lh-voice-send-cancel"
+                        className="lh-send"
                         onClick={(e) => {
                           e.stopPropagation()
-                          voice.stopListening()
+                          handleChatSend()
                         }}
-                        aria-label="Cancel sending voice message"
+                        disabled={widgetState === 'processing'}
                       >
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
-                        </svg>
+                        {widgetState === 'processing' ? (
+                          <div className="lh-loader" style={{width: '14px', height: '14px'}} />
+                        ) : (
+                          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                          </svg>
+                        )}
                       </button>
-                    )}
-                  </div>
-
-                  {/* Chat Panel */}
-                  <div className="lh-content-panel">
-                    {panelMode === 'chat' && (
-                      <div className="lh-chat-form">
-                        <input 
-                          className="lh-input"
-                          type="text" 
-                          placeholder="Ask me anything..."
-                          value={chatInput}
-                          onChange={(e) => setChatInput(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && handleChatSend()}
-                          disabled={widgetState === 'processing'}
-                          autoComplete="off"
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <button 
-                          type="button" 
-                          className="lh-send"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleChatSend()
-                          }}
-                          disabled={widgetState === 'processing'}
-                        >
-                          {widgetState === 'processing' ? (
-                            <div className="lh-loader" style={{width: '14px', height: '14px'}} />
-                          ) : (
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Side - Chat Toggle */}
-              <button 
-                type="button" 
-                className={`lh-side-toggle ${panelMode === 'chat' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setPanelMode('chat')
-                  voice.stopListening()
-                }}
-              >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Interactive bar when modal is closed */}
-        {!isOpen && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px', maxWidth: '360px', margin: '12px auto 0' }}>
-            <div className="lh-bar">
-              {/* Left Side - Voice Toggle */}
-              <button 
-                type="button" 
-                className={`lh-side-toggle ${panelMode === 'voice' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (panelMode !== 'voice') {
-                    setPanelMode('voice')
-                    voice.stopListening()
-                  } else if (voice.isSupported && !voice.isListening) {
-                    voice.startListening()
-                  }
-                }}
-              >
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                </svg>
-              </button>
-              
-              {/* Content Area with Swipe Animation */}
-              <div className="lh-content-area">
-                <div className={`lh-content-slider ${panelMode === 'voice' ? 'voice-mode' : 'chat-mode'}`}>
-                  {/* Voice Panel */}
-                  <div className="lh-content-panel">
-                    <div 
-                      className="lh-voice-label"
-                      onClick={async (e) => {
-                        e.stopPropagation()
-                        
-                        // First ensure we're in voice mode
-                        if (panelMode !== 'voice') {
-                          setPanelMode('voice')
-                        }
-                        
-                        // Check if voice is supported
-                        if (!voice.isSupported) {
-                          alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.')
-                          return
-                        }
-                        
-                        // If AI is currently speaking, stop speech and start listening
-                        if (voice.isSpeaking) {
-                          voice.stopSpeechAndListen()
-                          return
-                        }
-                        
-                        // Check protocol first
-                        if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-                          alert('Voice recognition requires HTTPS. Please access the site via https:// or use localhost for development.')
-                          return
-                        }
-                        
-                        // Request microphone access first
-                        try {
-                          const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-                          stream.getTracks().forEach(track => track.stop())
-                          
-                          // Start listening if not already listening
-                          if (!voice.isListening) {
-                            voice.startListening()
-                          }
-                        } catch (error) {
-                          console.error('Microphone access denied:', error)
-                          if (error.name === 'NotAllowedError') {
-                            // Show detailed instructions for enabling microphone
-                            const isChrome = navigator.userAgent.includes('Chrome')
-                            const isEdge = navigator.userAgent.includes('Edg')
-                            const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
-                            
-                            let instructions = 'To enable microphone access:\n\n'
-                            
-                            if (isChrome || isEdge) {
-                              instructions += '1. Click the lock/shield icon in the address bar\n'
-                              instructions += '2. Click "Site settings" or "Permissions"\n'
-                              instructions += '3. Find "Microphone" and change to "Allow"\n'
-                              instructions += '4. Refresh the page and try again'
-                            } else if (isSafari) {
-                              instructions += '1. Safari menu > Settings > Websites\n'
-                              instructions += '2. Click "Microphone" in the left sidebar\n'
-                              instructions += '3. Find this website and change to "Allow"\n'
-                              instructions += '4. Refresh the page and try again'
-                            } else {
-                              instructions += '1. Click the icon in your address bar\n'
-                              instructions += '2. Look for microphone permissions\n'
-                              instructions += '3. Change to "Allow"\n'
-                              instructions += '4. Refresh the page and try again'
-                            }
-                            
-                            alert(instructions)
-                          } else {
-                            alert('Microphone access is required for voice recognition. Please allow microphone access and try again.')
-                          }
-                        }
-                      }}
-                      style={{ cursor: 'pointer', padding: '4px' }}
-                    >
-                      <span className="lh-voice-label-text">
-                        {voice.isListening ? 'Listening...' : voice.isSpeaking ? 'Tap to interrupt' : 'Tap and Ask AI'}
-                      </span>
-                      {voice.transcript && (
-                        <div className="lh-transcript">"{voice.transcript}"</div>
-                      )}
                     </div>
-
-                    {voice.isListening && (
-                      <div className="lh-listening-group">
-                        <div className="lh-wave-bar" style={{height: '12px', background: '#421b39', animationDelay: '0s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '16px', background: '#684961', animationDelay: '0.1s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '20px', background: '#d9d1d7', animationDelay: '0.2s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '24px', background: '#ffffff', animationDelay: '0.3s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '20px', background: '#a6a6a6', animationDelay: '0.4s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '16px', background: '#7a7a7a', animationDelay: '0.5s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '12px', background: '#575757', animationDelay: '0.6s'}}></div>
-                        <div className="lh-wave-bar" style={{height: '8px', background: '#383838', animationDelay: '0.7s'}}></div>
-                      </div>
-                    )}
-
-                    {voice.isListening && (
-                      <button 
-                        type="button" 
-                        className="lh-voice-send-cancel"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          voice.stopListening()
-                        }}
-                        aria-label="Cancel sending voice message"
-                      >
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Chat Panel */}
-                  <div className="lh-content-panel">
-                    {panelMode === 'chat' && (
-                      <div className="lh-chat-form">
-                        <input 
-                          className="lh-input"
-                          type="text" 
-                          placeholder="Ask me anything..."
-                          value={chatInput}
-                          onChange={(e) => setChatInput(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && handleChatSend()}
-                          disabled={widgetState === 'processing'}
-                          autoComplete="off"
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <button 
-                          type="button" 
-                          className="lh-send"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleChatSend()
-                          }}
-                          disabled={widgetState === 'processing'}
-                        >
-                          {widgetState === 'processing' ? (
-                            <div className="lh-loader" style={{width: '14px', height: '14px'}} />
-                          ) : (
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
-
-              {/* Right Side - Chat Toggle */}
-              <button 
-                type="button" 
-                className={`lh-side-toggle ${panelMode === 'chat' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setPanelMode('chat')
-                  voice.stopListening()
-                }}
-              >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                </svg>
-              </button>
             </div>
+
+            {/* Right Side - Chat Toggle */}
+            <button 
+              type="button" 
+              className={`lh-side-toggle ${panelMode === 'chat' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation()
+                setPanelMode('chat')
+                voice.stopListening()
+              }}
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+            </button>
+
+            {/* Mute/Unmute Button */}
+            <button 
+              type="button" 
+              className="lh-side-toggle"
+              style={{
+                opacity: voice.isSpeaking || voice.isMuted ? 1 : 0.6,
+                marginLeft: '8px'
+              }}
+              aria-label={voice.isMuted ? "Unmute voice" : "Mute voice"}
+              onClick={() => voice.toggleMute()}
+            >
+              {voice.isMuted ? (
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                </svg>
+              ) : (
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6 10H4a1 1 0 00-1 1v2a1 1 0 001 1h2l4 4V6l-4 4z" />
+                </svg>
+              )}
+            </button>
           </div>
-        )}
+        </div>
 
 
       </div>
