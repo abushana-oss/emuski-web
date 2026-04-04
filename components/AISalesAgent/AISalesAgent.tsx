@@ -117,6 +117,23 @@ export default function AISalesAgent({
           flex-direction: column;
         }
         
+        @media (max-width: 768px) {
+          .lh-answer {
+            width: 90vw;
+            max-width: none;
+            border-radius: 12px;
+            max-height: 70vh;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .lh-answer {
+            width: 95vw;
+            border-radius: 8px;
+            max-height: 65vh;
+          }
+        }
+        
         .lh-answer-close {
           position: absolute;
           top: 12px;
@@ -152,6 +169,20 @@ export default function AISalesAgent({
           scrollbar-color: rgba(23, 184, 186, 0.5) transparent;
         }
         
+        @media (max-width: 768px) {
+          .lh-answer-body {
+            padding: 16px;
+            max-height: 400px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .lh-answer-body {
+            padding: 12px;
+            max-height: 350px;
+          }
+        }
+        
         .lh-answer-body::-webkit-scrollbar {
           width: 6px;
         }
@@ -177,6 +208,24 @@ export default function AISalesAgent({
           hyphens: auto;
           margin-bottom: 10px;
           padding-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+          .lh-current-message {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .lh-current-message {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+          }
         }
         
         .lh-lead-fields {
@@ -303,6 +352,25 @@ export default function AISalesAgent({
           max-width: 360px;
           width: 100%;
           border: 2px solid #333;
+        }
+        
+        @media (max-width: 768px) {
+          .lh-bar {
+            min-width: 250px;
+            max-width: 320px;
+            padding: 8px 12px;
+            border-radius: 25px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .lh-bar {
+            min-width: 200px;
+            max-width: 280px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            gap: 6px;
+          }
         }
         
         .lh-bar:hover {
