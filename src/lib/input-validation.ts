@@ -182,7 +182,7 @@ export const AnalyticsEventSchema = z.object({
     .default({}),
 
   clientId: z.string()
-    .regex(/^[0-9]+\.[0-9]+$/, 'Client ID must be in format: timestamp.random')
+    .refine(val => !val || /^[0-9]+\.[a-z0-9]+$/.test(val), 'Client ID must be in format: timestamp.random')
     .optional(),
 
   userId: z.string()

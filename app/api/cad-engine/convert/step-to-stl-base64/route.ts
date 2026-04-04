@@ -20,8 +20,8 @@ const CAD_ENGINE_URL = _raw_url.endsWith('/') ? _raw_url.slice(0, -1) : _raw_url
 // File validation schema for STEP to STL conversion
 const StepConversionSchema = z.object({
   file: z.instanceof(File).refine(
-    (file) => file.size <= 100 * 1024 * 1024, // 100MB limit
-    'File size must be less than 100MB'
+    (file) => file.size <= 500 * 1024 * 1024, // 500MB limit (increased for large industrial CAD models)
+    'File size must be less than 500MB'
   ).refine(
     (file) => /\.(step|stp)$/i.test(file.name),
     'File must be a STEP file (.step, .stp)'

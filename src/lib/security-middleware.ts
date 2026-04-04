@@ -7,7 +7,7 @@ import { authenticateRequest } from '@/lib/jwt-auth';
  */
 export const SECURITY_CONFIGS = {
   DFM_ANALYSIS: {
-    maxFileSize: 10 * 1024 * 1024, // 10MB - industry standard for CAD files
+    maxFileSize: 500 * 1024 * 1024, // 500MB - increased for large industrial CAD models
     allowedFileTypes: ['stl', 'obj', 'ply', 'step', 'stp'],
     requireAuth: true,
     rateLimitKey: '/api/dfm-analysis'

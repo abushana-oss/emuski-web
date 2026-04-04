@@ -199,7 +199,7 @@ export async function GET() {
       authentication: 'required',
     },
     limits: {
-      maxFileSize: '100MB',
+      maxFileSize: '500MB',
       allowedTypes: ['STEP', 'IGES', 'STL', 'OBJ'],
       uploadRate: '10 files per hour per user',
     },

@@ -210,8 +210,8 @@ export default function BalloonDiagramInterface() {
       return;
     }
 
-    if (file.size > 50 * 1024 * 1024) { // 50MB limit
-      setError('File size must be less than 50MB');
+    if (file.size > 500 * 1024 * 1024) { // 500MB limit (increased for large industrial CAD models)
+      setError('File size must be less than 500MB');
       return;
     }
 

@@ -14,6 +14,9 @@ const serverSchema = z.object({
   // Email — OPTIONAL (lead notifications)
   RESEND_API_KEY: z.string().optional(),
   SALES_NOTIFICATION_EMAIL: z.string().email().optional(),
+
+  // File Upload Limits — OPTIONAL (defaults to 500MB)
+  MAX_UPLOAD_SIZE_MB: z.string().transform(v => parseInt(v) || 500).optional(),
 })
 
 const publicSchema = z.object({

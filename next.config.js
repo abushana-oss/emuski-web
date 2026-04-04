@@ -140,7 +140,7 @@ const nextConfig = {
     ],
     // Server actions configuration
     serverActions: {
-      bodySizeLimit: '2mb', // Prevent large payload attacks
+      bodySizeLimit: '500mb', // Increased for large CAD file uploads
     },
   },
 
