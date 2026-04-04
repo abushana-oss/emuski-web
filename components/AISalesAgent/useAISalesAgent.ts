@@ -46,9 +46,13 @@ export function useAISalesAgent({
 
   const voice = useVoice()
 
-  // Helper function to extract lead info and update database
-  const updateConversationMemory = useCallback(async (userMessage: string) => {
+  // Helper function to extract lead info and update database  
+  const updateConversationMemory = useCallback(async (userMessage: string, mode: PanelMode = panelMode) => {
     try {
+      // Skip data extraction in voice mode - use forms instead
+      if (mode === 'voice') {
+        return
+      }
       
       // IMPROVED: Better company vs name detection
       const msgLower = userMessage.toLowerCase()
@@ -151,7 +155,7 @@ export function useAISalesAgent({
     }
 
     // Extract and store conversation memory
-    await updateConversationMemory(text)
+    await updateConversationMemory(text, panelMode)
 
     abortRef.current?.abort()
     abortRef.current = new AbortController()

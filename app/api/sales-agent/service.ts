@@ -134,7 +134,9 @@ class GroqService {
       const hasAllInfo = conversationMemory.name && conversationMemory.company && 
                         conversationMemory.email && conversationMemory.phone
       
-      const memoryContext = `\n\nCURRENT LEAD INFORMATION ALREADY COLLECTED:
+      const memoryContext = `\n\nMODE: ${modelKey.toUpperCase()} MODE
+
+CURRENT LEAD INFORMATION ALREADY COLLECTED:
 - Name: ${conversationMemory.name || 'NOT COLLECTED'}
 - Company: ${conversationMemory.company || 'NOT COLLECTED'} 
 - Email: ${conversationMemory.email || 'NOT COLLECTED'}
@@ -152,11 +154,14 @@ IMPORTANT: DO NOT ask for name, company, email, or phone again. Move to SALES CO
 - Focus on qualifying their specific needs and positioning EMUSKI as the best solution
 - Continue building rapport and moving toward a quote/consultation` :
   
-  `CRITICAL: DO NOT ask for information that is already collected above. Only ask for the next missing piece:
+  `${modelKey === 'voice' ? 
+    'VOICE MODE DATA COLLECTION: When you need personal details, say "I\'d like to get your contact information. Please fill out the form that will appear." Do NOT ask for specific fields - the form handles this.' :
+    `CHAT MODE DATA COLLECTION: Ask for missing information one at a time:
 ${!conversationMemory.name ? '- Ask for NAME first' : ''}
 ${conversationMemory.name && !conversationMemory.company ? '- Ask for COMPANY next' : ''}
 ${conversationMemory.company && !conversationMemory.email ? '- Ask for EMAIL next' : ''}
 ${conversationMemory.email && !conversationMemory.phone ? '- Ask for PHONE next' : ''}`
+  }`
 }
 
 ${isFirstInteraction ? 
