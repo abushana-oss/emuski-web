@@ -179,15 +179,15 @@ export default function AISalesAgent({
         
         .lh-answer {
           background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 100%);
-          border-radius: 20px;
-          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(23, 184, 186, 0.1);
-          max-width: 700px;
-          width: 95vw;
-          margin-bottom: 12px;
+          border-radius: 12px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 0 0 1px rgba(23, 184, 186, 0.1);
+          max-width: 450px;
+          width: 90vw;
+          margin-bottom: 6px;
           position: relative;
           color: white;
           border: 1px solid rgba(51, 51, 51, 0.8);
-          max-height: 80vh;
+          max-height: 180px;
           display: flex;
           flex-direction: column;
           backdrop-filter: blur(10px);
@@ -196,17 +196,18 @@ export default function AISalesAgent({
         @media (max-width: 768px) {
           .lh-answer {
             width: 90vw;
-            max-width: none;
+            max-width: 480px;
             border-radius: 12px;
-            max-height: 70vh;
+            max-height: 240px;
           }
         }
         
         @media (max-width: 480px) {
           .lh-answer {
             width: 95vw;
-            border-radius: 8px;
-            max-height: 65vh;
+            max-width: 420px;
+            border-radius: 10px;
+            max-height: 200px;
           }
         }
         
@@ -233,33 +234,33 @@ export default function AISalesAgent({
 
         
         .lh-answer-body {
-          padding: 24px;
+          padding: 14px 20px;
           text-align: left;
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
-          min-height: 100px;
-          max-height: 600px;
+          min-height: 60px;
+          max-height: 220px;
           overflow-y: auto;
           overflow-x: hidden;
           scrollbar-width: thin;
           scrollbar-color: rgba(23, 184, 186, 0.5) transparent;
-          gap: 12px;
+          gap: 6px;
         }
         
         @media (max-width: 768px) {
           .lh-answer-body {
-            padding: 18px;
-            max-height: 450px;
-            gap: 10px;
+            padding: 12px 18px;
+            max-height: 180px;
+            gap: 4px;
           }
         }
         
         @media (max-width: 480px) {
           .lh-answer-body {
-            padding: 16px;
-            max-height: 400px;
-            gap: 8px;
+            padding: 10px 16px;
+            max-height: 140px;
+            gap: 4px;
           }
         }
         
@@ -417,19 +418,19 @@ export default function AISalesAgent({
         
         .lh-bar {
           background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 100%);
-          border-radius: 30px;
-          padding: 12px 16px;
+          border-radius: 20px;
+          padding: 6px 10px;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 6px;
           cursor: pointer;
           transition: all 0.3s ease;
           color: white;
           font-weight: 500;
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(23, 184, 186, 0.1);
+          box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(23, 184, 186, 0.1);
           position: relative;
-          min-width: 350px;
-          max-width: 450px;
+          min-width: 240px;
+          max-width: 320px;
           width: 100%;
           border: 1px solid rgba(51, 51, 51, 0.8);
           backdrop-filter: blur(10px);
@@ -437,20 +438,21 @@ export default function AISalesAgent({
         
         @media (max-width: 768px) {
           .lh-bar {
-            min-width: 320px;
-            max-width: 400px;
-            padding: 8px 12px;
-            border-radius: 25px;
+            min-width: 220px;
+            max-width: 280px;
+            padding: 5px 8px;
+            border-radius: 16px;
+            gap: 4px;
           }
         }
         
         @media (max-width: 480px) {
           .lh-bar {
-            min-width: 280px;
-            max-width: 350px;
-            padding: 6px 10px;
-            border-radius: 20px;
-            gap: 6px;
+            min-width: 200px;
+            max-width: 260px;
+            padding: 4px 6px;
+            border-radius: 14px;
+            gap: 3px;
           }
         }
         
@@ -463,15 +465,15 @@ export default function AISalesAgent({
           background: rgba(23, 184, 186, 0.15);
           border: 1px solid rgba(23, 184, 186, 0.2);
           border-radius: 50%;
-          padding: 8px;
+          padding: 6px;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           transition: all 0.3s ease;
           color: #17B8BA;
-          width: 32px;
-          height: 32px;
+          width: 26px;
+          height: 26px;
           flex-shrink: 0;
         }
 
@@ -489,8 +491,8 @@ export default function AISalesAgent({
         }
 
         .lh-side-toggle svg {
-          width: 16px;
-          height: 16px;
+          width: 14px;
+          height: 14px;
         }
 
         .lh-content-area {
@@ -499,7 +501,7 @@ export default function AISalesAgent({
           align-items: center;
           overflow: hidden;
           position: relative;
-          height: 40px;
+          height: 30px;
         }
 
         .lh-content-slider {
@@ -521,7 +523,7 @@ export default function AISalesAgent({
           width: 50%;
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 4px;
           flex-shrink: 0;
         }
 
@@ -537,7 +539,7 @@ export default function AISalesAgent({
         }
 
         .lh-voice-label-text {
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 500;
           white-space: nowrap;
           overflow: hidden;
@@ -588,9 +590,9 @@ export default function AISalesAgent({
           display: flex;
           align-items: center;
           background: rgba(255, 255, 255, 0.1);
-          border-radius: 16px;
-          padding-right: 4px;
-          min-width: 245px;
+          border-radius: 14px;
+          padding-right: 3px;
+          min-width: 200px;
           width: 100%;
         }
 
@@ -599,10 +601,10 @@ export default function AISalesAgent({
           border: none;
           background: transparent;
           outline: none;
-          font-size: 14px;
+          font-size: 13px;
           color: white;
-          padding: 8px 12px;
-          min-width: 140px;
+          padding: 6px 10px;
+          min-width: 100px;
           width: 100%;
         }
 
@@ -769,7 +771,7 @@ export default function AISalesAgent({
         )}
 
         {/* Interactive bar positioned separately below modal, centered */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px', maxWidth: '360px', margin: '12px auto 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '6px', maxWidth: '320px', margin: '6px auto 0' }}>
           <div className="lh-bar">
             {/* Left Side - Voice Toggle */}
             <button 
