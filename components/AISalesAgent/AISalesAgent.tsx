@@ -456,8 +456,7 @@ export default function AISalesAgent({
         
         .lh-bar:hover {
           transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(23, 184, 186, 0.3), 0 0 0 2px rgba(23, 184, 186, 0.2);
-          border-color: rgba(23, 184, 186, 0.3);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
         }
 
         .lh-side-toggle {
