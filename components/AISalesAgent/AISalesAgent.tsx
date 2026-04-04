@@ -112,6 +112,9 @@ export default function AISalesAgent({
           position: relative;
           color: white;
           border: 1px solid #333;
+          max-height: 80vh;
+          display: flex;
+          flex-direction: column;
         }
         
         .lh-answer-close {
@@ -140,20 +143,40 @@ export default function AISalesAgent({
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: center;
-          min-height: 60px;
-          max-height: 400px;
+          justify-content: flex-start;
+          min-height: 80px;
+          max-height: 450px;
           overflow-y: auto;
+          overflow-x: hidden;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(23, 184, 186, 0.5) transparent;
+        }
+        
+        .lh-answer-body::-webkit-scrollbar {
+          width: 6px;
+        }
+        
+        .lh-answer-body::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        
+        .lh-answer-body::-webkit-scrollbar-thumb {
+          background-color: rgba(23, 184, 186, 0.5);
+          border-radius: 3px;
         }
         
         .lh-current-message {
           font-size: 16px;
           color: white;
-          line-height: 1.5;
+          line-height: 1.6;
           text-align: left;
           width: 100%;
           white-space: pre-wrap;
           word-wrap: break-word;
+          overflow-wrap: break-word;
+          hyphens: auto;
+          margin-bottom: 10px;
+          padding-bottom: 10px;
         }
         
         .lh-lead-fields {
@@ -567,7 +590,14 @@ export default function AISalesAgent({
                         )
                       }
                       return (
-                        <p key={i} style={{ margin: '0 0 8px', fontSize: '15px', lineHeight: '1.6', color: '#f0f0f0' }}>
+                        <p key={i} style={{ 
+                          margin: '0 0 12px', 
+                          fontSize: '15px', 
+                          lineHeight: '1.6', 
+                          color: '#f0f0f0',
+                          wordBreak: 'break-word',
+                          overflowWrap: 'break-word'
+                        }}>
                           {line}
                         </p>
                       )
