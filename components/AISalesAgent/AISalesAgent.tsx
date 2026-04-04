@@ -24,7 +24,8 @@ export default function AISalesAgent({
     handleVoiceResult,
   } = useAISalesAgent({ systemPromptExtra })
 
-
+  // State for hiding/showing voice bar
+  const [isVoiceBarHidden, setIsVoiceBarHidden] = useState(false)
 
   // Handle voice recognition results
   useEffect(() => {
@@ -683,7 +684,7 @@ export default function AISalesAgent({
         )}
 
         {/* Interactive bar positioned separately below modal, centered */}
-        {isOpen && (
+        {isOpen && !isVoiceBarHidden && (
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px', maxWidth: '360px', margin: '12px auto 0' }}>
             <div className="lh-bar">
               {/* Left Side - Voice Toggle */}
@@ -1069,6 +1070,88 @@ export default function AISalesAgent({
                 </svg>
               </button>
             </div>
+          </div>
+        )}
+
+        {/* Footer with Hide/Show Voice Bar Button */}
+        {isOpen && !isVoiceBarHidden && (
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            marginTop: '8px',
+            paddingBottom: '8px'
+          }}>
+            <button
+              type="button"
+              onClick={() => setIsVoiceBarHidden(!isVoiceBarHidden)}
+              style={{
+                background: 'rgba(23, 184, 186, 0.1)',
+                border: '1px solid rgba(23, 184, 186, 0.3)',
+                borderRadius: '20px',
+                padding: '6px 12px',
+                color: '#17B8BA',
+                fontSize: '12px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = 'rgba(23, 184, 186, 0.2)'
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = 'rgba(23, 184, 186, 0.1)'
+              }}
+            >
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                {isVoiceBarHidden ? (
+                  <path d="M7 14l5-5 5 5z" />
+                ) : (
+                  <path d="M7 10l5 5 5-5z" />
+                )}
+              </svg>
+              {isVoiceBarHidden ? 'Show Voice' : 'Hide Voice'}
+            </button>
+          </div>
+        )}
+
+        {/* Show Voice Bar Button (when hidden) */}
+        {isOpen && isVoiceBarHidden && (
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            marginTop: '8px',
+            paddingBottom: '8px'
+          }}>
+            <button
+              type="button"
+              onClick={() => setIsVoiceBarHidden(false)}
+              style={{
+                background: 'rgba(23, 184, 186, 0.1)',
+                border: '1px solid rgba(23, 184, 186, 0.3)',
+                borderRadius: '20px',
+                padding: '6px 12px',
+                color: '#17B8BA',
+                fontSize: '12px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = 'rgba(23, 184, 186, 0.2)'
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = 'rgba(23, 184, 186, 0.1)'
+              }}
+            >
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 14l5-5 5 5z" />
+              </svg>
+              Show Voice
+            </button>
           </div>
         )}
       </div>

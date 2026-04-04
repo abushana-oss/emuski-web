@@ -130,12 +130,18 @@ export function useVoice(): UseVoiceReturn {
       currentUtteranceRef.current = null
       setIsSpeaking(false)
 
-      // Enhanced browser TTS with natural, human-like settings
-      const utterance = new SpeechSynthesisUtterance(text)
+      // Clean text for natural speech - remove special characters
+      const cleanText = text
+        .replace(/[+\-*/=<>@#$%^&*()_+\[\]{}|\\:";'<>?,./]/g, ' ') // Remove special chars
+        .replace(/\s+/g, ' ') // Clean up extra spaces
+        .trim()
+
+      // Enhanced browser TTS with natural human-like settings
+      const utterance = new SpeechSynthesisUtterance(cleanText)
       utterance.lang = 'en-US'
-      utterance.rate = 0.9 // Natural speaking pace
-      utterance.pitch = 1.0 // Natural pitch for more human sound
-      utterance.volume = 0.95 // Clear but not overwhelming
+      utterance.rate = 1.1 // Natural speaking pace - not too slow
+      utterance.pitch = 1.1 // Higher pitch for friendliness
+      utterance.volume = 0.95 // Clear volume
       
       // Track utterance reference and speaking state
       currentUtteranceRef.current = utterance
