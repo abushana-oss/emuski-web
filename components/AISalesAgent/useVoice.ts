@@ -17,7 +17,6 @@ export function useVoice(): UseVoiceReturn {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState('')
   const recognitionRef = useRef<SpeechRecognition | null>(null)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
   const prefersReducedMotion =
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -44,76 +43,74 @@ export function useVoice(): UseVoiceReturn {
 
     recognition.onstart = () => setIsListening(true)
     recognition.onend = () => setIsListening(false)
-    recognition.onerror = () => setIsListening(false)
+    recognition.onerror = () => {
+      setIsListening(false)
+      setTranscript('')
+    }
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       const text = Array.from(event.results)
         .map((r) => r[0].transcript)
         .join('')
-      setTranscript(text)
+        .trim()
+      
+      if (text.length > 0) {
+        setTranscript(text)
+      }
     }
     recognition.start()
   }, [isSupported])
 
   const speak = useCallback(
-    async (text: string, onEnd?: () => void) => {
+    (text: string, onEnd?: () => void) => {
       if (prefersReducedMotion || typeof window === 'undefined') {
         onEnd?.()
         return
       }
       
-      // Stop anything that's currently playing
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.src = ''
-      }
-      window.speechSynthesis?.cancel() // fallback cancel
+      // Stop any currently playing speech
+      window.speechSynthesis?.cancel()
 
-      try {
-        const response = await fetch('/api/tts', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text }),
-        })
-
-        if (!response.ok) throw new Error('Failed to fetch audio')
-
-        const blob = await response.blob()
-        const url = URL.createObjectURL(blob)
+      // Enhanced browser TTS with natural settings
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = 'en-US'
+      utterance.rate = 0.85 // Slower, more conversational
+      utterance.pitch = 1.15 // Higher pitch for female voice
+      utterance.volume = 0.9 // Slightly lower volume for softer tone
+      utterance.onend = () => onEnd?.()
+      utterance.onerror = () => onEnd?.()
+      
+      // Wait for voices to load if needed
+      const setVoiceAndSpeak = () => {
+        const voices = window.speechSynthesis.getVoices()
         
-        const audio = new Audio(url)
-        audioRef.current = audio
+        // Prioritize the best female voices
+        const femaleVoice = voices.find(voice => 
+          voice.lang.includes('en') && 
+          (voice.name.toLowerCase().includes('microsoft zira') ||
+           voice.name.toLowerCase().includes('microsoft hazel') ||
+           voice.name.toLowerCase().includes('samantha') ||
+           voice.name.toLowerCase().includes('karen') ||
+           voice.name.toLowerCase().includes('female'))
+        )
         
-        audio.onended = () => {
-          URL.revokeObjectURL(url)
-          onEnd?.()
+        if (femaleVoice) {
+          utterance.voice = femaleVoice
         }
         
-        audio.onerror = () => {
-          URL.revokeObjectURL(url)
-          onEnd?.()
-        }
-        
-        await audio.play()
-      } catch (error) {
-        console.error('Text to speech failed:', error)
-        // Fallback to browser TTS if ElevenLabs fails
-        const utterance = new SpeechSynthesisUtterance(text)
-        utterance.lang = 'en-US'
-        utterance.rate = 1.05
-        utterance.onend = () => onEnd?.()
         window.speechSynthesis.speak(utterance)
+      }
+      
+      // Some browsers need time to load voices
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', setVoiceAndSpeak, { once: true })
+      } else {
+        setVoiceAndSpeak()
       }
     },
     [prefersReducedMotion],
   )
 
   const cancelSpeech = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.src = ''
-    }
     window.speechSynthesis?.cancel()
   }, [])
 
@@ -121,10 +118,6 @@ export function useVoice(): UseVoiceReturn {
   useEffect(() => {
     return () => {
       recognitionRef.current?.stop()
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.src = ''
-      }
       window.speechSynthesis?.cancel()
     }
   }, [])

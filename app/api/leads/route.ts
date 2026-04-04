@@ -5,7 +5,11 @@ import { Resend } from 'resend'
 import { serverEnv } from '@/config/env'
 
 const LeadSchema = z.object({
+  name: z.string().min(1),
   email: z.string().email(),
+  company: z.string().min(1),
+  phone: z.string().min(1),
+  requirements: z.string().optional(),
   sessionId: z.string().uuid(),
   messageCount: z.number().int().min(1),
   pageUrl: z.string().url().optional(),
@@ -22,7 +26,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid lead data' }, { status: 422 })
   }
 
-  const { email, sessionId, messageCount, pageUrl } = parsed.data
+  const { name, email, company, phone, requirements, sessionId, messageCount, pageUrl } = parsed.data
 
   // Save to Supabase
   const supabase = createClient(
@@ -31,7 +35,11 @@ export async function POST(req: NextRequest) {
   )
 
   const { error: dbError } = await supabase.from('leads').insert({
+    name,
     email,
+    company,
+    phone,
+    requirements: requirements ?? '',
     session_id: sessionId,
     message_count: messageCount,
     source: 'ai-widget',
@@ -49,9 +57,13 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: 'EMUSKI AI Widget <noreply@emuski.com>',
       to: serverEnv.SALES_NOTIFICATION_EMAIL,
-      subject: `New AI widget lead`,
+      subject: `New AI widget lead: ${name} from ${company}`,
       text: [
+        `Name: ${name}`,
+        `Company: ${company}`,
         `Email: ${email}`,
+        `Phone: ${phone}`,
+        `Requirements: ${requirements || 'Based on conversation'}`,
         `Messages exchanged: ${messageCount}`,
         `Page: ${pageUrl ?? 'unknown'}`,
         `Time: ${new Date().toISOString()}`,

@@ -29,9 +29,12 @@ export default function AISalesAgent({
     handleLeadSubmit,
   } = useAISalesAgent({ systemPromptExtra, leadCaptureAfter, onLeadCaptured })
 
+  const [leadName, setLeadName] = useState('')
   const [leadEmail, setLeadEmail] = useState('')
+  const [leadCompany, setLeadCompany] = useState('')
+  const [leadPhone, setLeadPhone] = useState('')
+  const [currentFormStep, setCurrentFormStep] = useState(1) // 1=name, 2=company, 3=email, 4=phone
   const [showCallout, setShowCallout] = useState(false)
-  const [isScrolling, setIsScrolling] = useState(false)
 
   // Show callout after 5 seconds
   useEffect(() => {
@@ -39,26 +42,6 @@ export default function AISalesAgent({
     return () => clearTimeout(timer)
   }, [])
 
-  // Hide widget on scroll
-  useEffect(() => {
-    let scrollTimer: NodeJS.Timeout
-    
-    const handleScroll = () => {
-      if (!isScrolling) {
-        setIsScrolling(true)
-      }
-      clearTimeout(scrollTimer)
-      scrollTimer = setTimeout(() => {
-        setIsScrolling(false)
-      }, 500)
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      clearTimeout(scrollTimer)
-    }
-  }, [isScrolling])
 
   // Handle voice recognition results
   useEffect(() => {
@@ -85,11 +68,6 @@ export default function AISalesAgent({
           transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .lh-root.hidden {
-          transform: translateX(-50%) translateY(100px);
-          opacity: 0;
-          pointer-events: none;
-        }
 
         .lh-compact-trigger {
           background: #1a1a1a;
@@ -145,8 +123,8 @@ export default function AISalesAgent({
           background: #1a1a1a;
           border-radius: 16px;
           box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-          max-width: 500px;
-          width: 90vw;
+          max-width: 700px;
+          width: 95vw;
           margin-bottom: 12px;
           position: relative;
           color: white;
@@ -181,12 +159,18 @@ export default function AISalesAgent({
           align-items: center;
           justify-content: center;
           min-height: 60px;
+          max-height: 400px;
+          overflow-y: auto;
         }
         
         .lh-current-message {
           font-size: 16px;
           color: white;
-          line-height: 1.4;
+          line-height: 1.5;
+          text-align: left;
+          width: 100%;
+          white-space: pre-wrap;
+          word-wrap: break-word;
         }
         
         .lh-lead-fields {
@@ -198,6 +182,12 @@ export default function AISalesAgent({
           align-items: center;
           gap: 12px;
           margin-bottom: 0;
+        }
+        
+        .lh-lead-field-vertical {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
         }
         
         .lh-lead-input {
@@ -218,6 +208,12 @@ export default function AISalesAgent({
           border-color: #17B8BA;
         }
         
+        .lh-textarea {
+          resize: vertical;
+          min-height: 80px;
+          font-family: inherit;
+        }
+        
         .lh-lead-submit {
           background: linear-gradient(135deg, #17B8BA 0%, #2ACDCF 100%);
           color: white;
@@ -235,6 +231,53 @@ export default function AISalesAgent({
         
         .lh-lead-submit:hover {
           transform: translateY(-1px);
+        }
+        
+        .lh-step-container {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        
+        .lh-step-buttons {
+          display: flex;
+          gap: 8px;
+          justify-content: space-between;
+        }
+        
+        .lh-step-button {
+          padding: 8px 16px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        }
+        
+        .lh-back-button {
+          background: #444;
+          color: white;
+          flex: 1;
+        }
+        
+        .lh-back-button:hover {
+          background: #555;
+        }
+        
+        .lh-next-button {
+          background: linear-gradient(135deg, #17B8BA 0%, #2ACDCF 100%);
+          color: white;
+          flex: 1;
+        }
+        
+        .lh-next-button:hover:not(:disabled) {
+          transform: translateY(-1px);
+        }
+        
+        .lh-next-button:disabled {
+          background: #666;
+          cursor: not-allowed;
         }
         
         .lh-bar {
@@ -490,7 +533,7 @@ export default function AISalesAgent({
         }
       `}</style>
 
-      <div className={`lh-root ${isScrolling ? 'hidden' : ''}`}>
+      <div className="lh-root">
         {/* Modal with AI response and interactive bar */}
         {isOpen && (
           <div className="lh-answer" style={{ display: 'block' }}>
@@ -554,31 +597,145 @@ export default function AISalesAgent({
                 </div>
               )}
 
-              {showLeadCapture && !leadSubmitted && (
+              {/* Show form fields ONLY in voice mode */}
+              {showLeadCapture && !leadSubmitted && panelMode === 'voice' && (
                 <div className="lh-lead-fields">
-                  <div className="lh-lead-field">
-                    <input 
-                      className="lh-lead-input"
-                      type="email" 
-                      placeholder="Email address" 
-                      value={leadEmail}
-                      onChange={(e) => setLeadEmail(e.target.value)}
-                      autoComplete="email"
-                    />
-                    <button 
-                      type="button" 
-                      className="lh-lead-submit"
-                      onClick={() => leadEmail && handleLeadSubmit(leadEmail)}
-                    >
-                      Send
-                    </button>
+                  <div className="lh-lead-field-vertical">
+                    
+                    {/* Step 1: Name */}
+                    {currentFormStep === 1 && (
+                      <div className="lh-step-container">
+                        <input 
+                          className="lh-lead-input"
+                          type="text" 
+                          placeholder="Your name" 
+                          value={leadName}
+                          onChange={(e) => setLeadName(e.target.value)}
+                          autoComplete="name"
+                        />
+                        <div className="lh-step-buttons">
+                          <button 
+                            type="button" 
+                            className="lh-step-button lh-next-button"
+                            onClick={() => leadName && setCurrentFormStep(2)}
+                            disabled={!leadName}
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Step 2: Company */}
+                    {currentFormStep === 2 && (
+                      <div className="lh-step-container">
+                        <input 
+                          className="lh-lead-input"
+                          type="text" 
+                          placeholder="Company name" 
+                          value={leadCompany}
+                          onChange={(e) => setLeadCompany(e.target.value)}
+                          autoComplete="organization"
+                        />
+                        <div className="lh-step-buttons">
+                          <button 
+                            type="button" 
+                            className="lh-step-button lh-back-button"
+                            onClick={() => setCurrentFormStep(1)}
+                          >
+                            Back
+                          </button>
+                          <button 
+                            type="button" 
+                            className="lh-step-button lh-next-button"
+                            onClick={() => leadCompany && setCurrentFormStep(3)}
+                            disabled={!leadCompany}
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Step 3: Email */}
+                    {currentFormStep === 3 && (
+                      <div className="lh-step-container">
+                        <input 
+                          className="lh-lead-input"
+                          type="email" 
+                          placeholder="Work email address" 
+                          value={leadEmail}
+                          onChange={(e) => setLeadEmail(e.target.value)}
+                          autoComplete="email"
+                        />
+                        <div className="lh-step-buttons">
+                          <button 
+                            type="button" 
+                            className="lh-step-button lh-back-button"
+                            onClick={() => setCurrentFormStep(2)}
+                          >
+                            Back
+                          </button>
+                          <button 
+                            type="button" 
+                            className="lh-step-button lh-next-button"
+                            onClick={() => leadEmail && setCurrentFormStep(4)}
+                            disabled={!leadEmail}
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Step 4: Phone */}
+                    {currentFormStep === 4 && (
+                      <div className="lh-step-container">
+                        <input 
+                          className="lh-lead-input"
+                          type="tel" 
+                          placeholder="Phone number" 
+                          value={leadPhone}
+                          onChange={(e) => setLeadPhone(e.target.value)}
+                          autoComplete="tel"
+                        />
+                        <div className="lh-step-buttons">
+                          <button 
+                            type="button" 
+                            className="lh-step-button lh-back-button"
+                            onClick={() => setCurrentFormStep(3)}
+                          >
+                            Back
+                          </button>
+                          <button 
+                            type="button" 
+                            className="lh-lead-submit"
+                            onClick={() => leadPhone && handleLeadSubmit({ 
+                              name: leadName,
+                              email: leadEmail, 
+                              company: leadCompany, 
+                              phone: leadPhone
+                            })}
+                            disabled={!leadPhone}
+                          >
+                            Get Quote
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
                   </div>
                 </div>
               )}
 
               {leadSubmitted && (
-                <div style={{ textAlign: 'center', padding: '20px', color: '#667eea' }}>
-                  Thanks! We have your details and will follow up with you.
+                <div style={{ textAlign: 'center', padding: '20px', color: '#17B8BA' }}>
+                  <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>
+                    Thank you!
+                  </div>
+                  <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                    We have received your requirements and will get back to you within 24 hours with a detailed quote.
+                  </div>
                 </div>
               )}
             </div>

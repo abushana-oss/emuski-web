@@ -9,7 +9,11 @@ export type Message = {
 }
 
 export type LeadData = {
+  name: string
   email: string
+  company: string
+  phone: string
+  requirements?: string
   sessionId: string
   messageCount: number
   pageUrl?: string

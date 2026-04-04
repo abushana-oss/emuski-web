@@ -7,6 +7,7 @@ const serverSchema = z.object({
   // Anthropic — OPTIONAL paid fallback
   ANTHROPIC_API_KEY: z.string().optional(),
 
+
   // Redis — OPTIONAL (rate limiting). Falls back to no rate limiting if absent.
   REDIS_URL: z.string().url().optional(),
 

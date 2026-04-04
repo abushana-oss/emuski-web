@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SalesAgentRequestSchema } from './schema'
 import { callAI } from './service'
+import { createClient } from '@supabase/supabase-js'
 
 // Simple in-memory rate limiter (use ioredis if REDIS_URL is set)
 // Build the full ioredis version if REDIS_URL exists in env
@@ -42,21 +43,53 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // 4. Call AI
-  const { messages, model, systemPromptExtra } = parsed.data
-  const result = await callAI(messages, model, systemPromptExtra)
+  // 4. Get conversation memory
+  const { messages, model, systemPromptExtra, sessionId } = parsed.data
+  
+  
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  )
+  
+  const { data: conversationMemory, error: memoryError } = await supabase
+    .from('conversation_memory')
+    .select('*')
+    .eq('session_id', sessionId)
+    .single()
+    
+  
+  // 5. Call AI with memory context
+  const startTime = Date.now()
+  const result = await callAI(messages, model, systemPromptExtra, conversationMemory)
+  const duration = Date.now() - startTime
 
   if ('error' in result) {
-    return NextResponse.json({ error: result.error }, { status: 503 })
+    // Return appropriate status based on error type
+    const status = result.retryAfter ? 429 : 503
+    const headers: Record<string, string> = {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+    }
+    
+    if (result.retryAfter) {
+      headers['Retry-After'] = String(result.retryAfter)
+    }
+    
+    return NextResponse.json(
+      { error: result.error },
+      { status, headers }
+    )
   }
 
-  // 5. Return
+  // Return successful response
   return NextResponse.json(
     { data: { reply: result.data } },
     {
       headers: {
         'X-Content-Type-Options': 'nosniff',
         'X-Frame-Options': 'DENY',
+        'X-Response-Time': String(duration),
       },
     },
   )
