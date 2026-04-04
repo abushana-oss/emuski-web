@@ -156,33 +156,6 @@ export default function AISalesAgent({
           height: 16px;
         }
 
-        .lh-answer-mute {
-          position: absolute;
-          top: 12px;
-          right: 52px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 4px;
-          color: #17B8BA;
-          z-index: 1;
-          transition: all 0.2s ease;
-        }
-        
-        .lh-answer-mute:hover {
-          color: #2ACDCF;
-          opacity: 1 !important;
-        }
-        
-        .lh-answer-mute:disabled {
-          cursor: not-allowed;
-          opacity: 0.3 !important;
-        }
-        
-        .lh-answer-mute svg {
-          width: 18px;
-          height: 18px;
-        }
         
         .lh-answer-body {
           padding: 24px;
@@ -654,31 +627,6 @@ export default function AISalesAgent({
               </svg>
             </button>
 
-            {/* Mute/Unmute Button */}
-            <button 
-              type="button" 
-              className="lh-answer-mute" 
-              aria-label={voice.isSpeaking ? "Mute voice" : "Voice is muted"}
-              onClick={() => {
-                if (voice.isSpeaking) {
-                  voice.cancelSpeech()
-                }
-              }}
-              style={{ opacity: voice.isSpeaking ? 1 : 0.5 }}
-            >
-              {voice.isSpeaking ? (
-                // Volume on icon
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6 10H4a1 1 0 00-1 1v2a1 1 0 001 1h2l4 4V6l-4 4z" />
-                </svg>
-              ) : (
-                // Volume off icon
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                </svg>
-              )}
-            </button>
 
             <div className="lh-answer-body">
               {widgetState === 'processing' ? (
@@ -735,6 +683,62 @@ export default function AISalesAgent({
                   I could not transcribe that. Please try again.
                 </div>
               )}
+            </div>
+
+            {/* Mute/Unmute Button at bottom */}
+            <div style={{ padding: '12px', borderTop: '1px solid #333', textAlign: 'center' }}>
+              <button 
+                type="button" 
+                style={{
+                  background: 'rgba(23, 184, 186, 0.1)',
+                  border: '1px solid rgba(23, 184, 186, 0.3)',
+                  borderRadius: '20px',
+                  padding: '6px 12px',
+                  color: '#17B8BA',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s ease',
+                  opacity: voice.isSpeaking || voice.isMuted ? 1 : 0.6,
+                  margin: '0 auto'
+                }}
+                aria-label={voice.isMuted ? "Unmute voice" : "Mute voice"}
+                onClick={() => voice.toggleMute()}
+                onMouseOver={(e) => {
+                  const target = e.target as HTMLButtonElement
+                  target.style.background = 'rgba(23, 184, 186, 0.2)'
+                }}
+                onMouseOut={(e) => {
+                  const target = e.target as HTMLButtonElement
+                  target.style.background = 'rgba(23, 184, 186, 0.1)'
+                }}
+              >
+                {voice.isMuted ? (
+                  <>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                    <span>Unmute</span>
+                  </>
+                ) : voice.isSpeaking ? (
+                  <>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6 10H4a1 1 0 00-1 1v2a1 1 0 001 1h2l4 4V6l-4 4z" />
+                    </svg>
+                    <span>Mute</span>
+                  </>
+                ) : (
+                  <>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6 10H4a1 1 0 00-1 1v2a1 1 0 001 1h2l4 4V6l-4 4z" />
+                    </svg>
+                    <span>Voice</span>
+                  </>
+                )}
+              </button>
             </div>
 
           </div>

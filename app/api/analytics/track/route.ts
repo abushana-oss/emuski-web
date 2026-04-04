@@ -130,7 +130,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
             // Page info (prioritize schema validation data)
             page_location: page_location || eventParams.page_location || '',
             page_title: page_title || eventParams.page_title || '',
-            page_referrer: page_referrer || eventParams.page_referrer || document?.referrer || '',
+            page_referrer: page_referrer || eventParams.page_referrer || '',
 
             // Clean up any undefined values
             ...(eventParams.traffic_type && { traffic_type: eventParams.traffic_type }),

@@ -126,11 +126,7 @@ class GroqService {
     // Check if this is the very first message in conversation
     const isFirstMessage = messages.length === 1 && messages[0].role === 'user'
     
-    if (isFirstMessage) {
-      systemContent += `\n\nFIRST MESSAGE ONLY: Start with "Hi! I'm Heena from EMUSKI. What manufacturing challenges can I help you with?" - keep it SHORT.`
-    } else {
-      systemContent += `\n\nKeep responses SHORT - 1-2 sentences max. NEVER introduce yourself again. Always end with a simple question.`
-    }
+    systemContent += `\n\nKeep responses SHORT - 1-2 sentences max. Always end with a simple question.`
     
     systemContent += `\n\nFOCUS: This is a pure sales conversation. Focus 100% on selling EMUSKI's manufacturing services, capabilities, and competitive advantages. Ask about their manufacturing needs and explain how EMUSKI can help solve their challenges.`
     

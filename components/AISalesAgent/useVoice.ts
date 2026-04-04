@@ -67,14 +67,20 @@ export type UseVoiceReturn = {
   cancelSpeech: () => void
   isSpeaking: boolean
   stopSpeechAndListen: () => void
+  isMuted: boolean
+  toggleMute: () => void
+  resumeCurrentSpeech: () => void
 }
 
 export function useVoice(): UseVoiceReturn {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState('')
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
   const recognitionRef = useRef<SpeechRecognition | null>(null)
   const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
+  const currentTextRef = useRef<string>('')
+  const currentOnEndRef = useRef<(() => void) | undefined>(undefined)
   const prefersReducedMotion =
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -120,8 +126,17 @@ export function useVoice(): UseVoiceReturn {
 
   const speak = useCallback(
     (text: string, onEnd?: () => void) => {
+      // Store current text and callback for potential resume
+      currentTextRef.current = text
+      currentOnEndRef.current = onEnd
+      
       if (prefersReducedMotion || typeof window === 'undefined') {
         onEnd?.()
+        return
+      }
+      
+      // If muted, don't start speaking but keep the text stored
+      if (isMuted) {
         return
       }
       
@@ -198,14 +213,39 @@ export function useVoice(): UseVoiceReturn {
         setVoiceAndSpeak()
       }
     },
-    [prefersReducedMotion],
+    [prefersReducedMotion, isMuted],
   )
 
   const cancelSpeech = useCallback(() => {
     window.speechSynthesis?.cancel()
     setIsSpeaking(false)
     currentUtteranceRef.current = null
+    // Clear stored text when canceling
+    currentTextRef.current = ''
+    currentOnEndRef.current = undefined
   }, [])
+
+  const toggleMute = useCallback(() => {
+    if (isMuted) {
+      // Unmuting - resume speech if there's stored text
+      setIsMuted(false)
+      if (currentTextRef.current) {
+        speak(currentTextRef.current, currentOnEndRef.current)
+      }
+    } else {
+      // Muting - stop current speech
+      setIsMuted(true)
+      window.speechSynthesis?.cancel()
+      setIsSpeaking(false)
+      currentUtteranceRef.current = null
+    }
+  }, [isMuted, speak])
+
+  const resumeCurrentSpeech = useCallback(() => {
+    if (currentTextRef.current && !isSpeaking && !isMuted) {
+      speak(currentTextRef.current, currentOnEndRef.current)
+    }
+  }, [speak, isSpeaking, isMuted])
 
   const stopSpeechAndListen = useCallback(() => {
     // Stop any currently playing speech immediately
@@ -240,5 +280,8 @@ export function useVoice(): UseVoiceReturn {
     cancelSpeech,
     isSpeaking,
     stopSpeechAndListen,
+    isMuted,
+    toggleMute,
+    resumeCurrentSpeech,
   }
 }
