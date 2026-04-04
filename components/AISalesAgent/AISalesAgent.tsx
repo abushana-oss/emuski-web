@@ -162,7 +162,7 @@ export default function AISalesAgent({
           flex-direction: column;
           justify-content: flex-start;
           min-height: 100px;
-          max-height: 500px;
+          max-height: 600px;
           overflow-y: auto;
           overflow-x: hidden;
           scrollbar-width: thin;
