@@ -102,18 +102,19 @@ export default function AISalesAgent({
         }
         
         .lh-answer {
-          background: #1a1a1a;
-          border-radius: 16px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+          background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 100%);
+          border-radius: 20px;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(23, 184, 186, 0.1);
           max-width: 700px;
           width: 95vw;
           margin-bottom: 12px;
           position: relative;
           color: white;
-          border: 1px solid #333;
+          border: 1px solid rgba(51, 51, 51, 0.8);
           max-height: 80vh;
           display: flex;
           flex-direction: column;
+          backdrop-filter: blur(10px);
         }
         
         @media (max-width: 768px) {
@@ -339,22 +340,23 @@ export default function AISalesAgent({
         }
         
         .lh-bar {
-          background: #1a1a1a;
+          background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 100%);
           border-radius: 30px;
-          padding: 10px 14px;
+          padding: 12px 16px;
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           color: white;
           font-weight: 500;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(23, 184, 186, 0.1);
           position: relative;
           min-width: 350px;
           max-width: 450px;
           width: 100%;
-          border: 2px solid #333;
+          border: 1px solid rgba(51, 51, 51, 0.8);
+          backdrop-filter: blur(10px);
         }
         
         @media (max-width: 768px) {
@@ -377,33 +379,38 @@ export default function AISalesAgent({
         }
         
         .lh-bar:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(23, 184, 186, 0.4);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(23, 184, 186, 0.3), 0 0 0 2px rgba(23, 184, 186, 0.2);
+          border-color: rgba(23, 184, 186, 0.3);
         }
 
         .lh-side-toggle {
-          background: rgba(23, 184, 186, 0.1);
-          border: none;
+          background: rgba(23, 184, 186, 0.15);
+          border: 1px solid rgba(23, 184, 186, 0.2);
           border-radius: 50%;
-          padding: 6px;
+          padding: 8px;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           color: #17B8BA;
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           flex-shrink: 0;
         }
 
         .lh-side-toggle:hover {
-          background: rgba(23, 184, 186, 0.2);
+          background: rgba(23, 184, 186, 0.25);
+          border-color: rgba(23, 184, 186, 0.4);
+          transform: scale(1.05);
         }
 
         .lh-side-toggle.active {
-          background: rgba(23, 184, 186, 0.3);
+          background: rgba(23, 184, 186, 0.4);
+          border-color: rgba(23, 184, 186, 0.6);
           color: #ffffff;
+          box-shadow: 0 0 10px rgba(23, 184, 186, 0.3);
         }
 
         .lh-side-toggle svg {
