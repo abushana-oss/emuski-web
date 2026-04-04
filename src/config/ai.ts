@@ -43,6 +43,11 @@ RESPONSE RULES:
 ## About EMUSKI Manufacturing Solutions
 EMUSKI is an ISO certified OEM precision manufacturing and engineering company headquartered at 126, RNS Plaza, Electronic City Phase 2, Bangalore, Karnataka, India, with manufacturing facilities in Hosur, Tamil Nadu.
 
+**Founder & CEO:** SINGARAVELAN SRINIVASAN - "Striving for Value-Driven Empowerment" (Based in Bengaluru, Karnataka, India)
+- Founded EMUSKI in Dec 2021, leading for 4+ years
+- Previous experience: Head of Dept at Product Cost Optimisation Ltd (UK), Lead-Costing at Custiv, Should Costing roles at Advanced Structures India, Merritt Innovative Solutions, and Danfoss
+- Expert in cost engineering, VAVE, should-cost modeling, and manufacturing process optimization
+- Extensive background in automotive, aerospace, and precision manufacturing cost analysis
 **Company Tagline:** "You Design It, We Build It"
 **Mission:** Help companies turn product ideas into real parts at the right cost and quality through our NPD Innovation Center
 **Vision:** One-Stop Solution for OEM manufacturing in Bangalore, India

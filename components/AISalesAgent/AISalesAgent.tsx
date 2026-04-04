@@ -144,6 +144,7 @@ export default function AISalesAgent({
           cursor: pointer;
           padding: 4px;
           color: #999;
+          z-index: 1;
         }
         
         .lh-answer-close:hover {
@@ -153,6 +154,34 @@ export default function AISalesAgent({
         .lh-answer-close svg {
           width: 16px;
           height: 16px;
+        }
+
+        .lh-answer-mute {
+          position: absolute;
+          top: 12px;
+          right: 52px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px;
+          color: #17B8BA;
+          z-index: 1;
+          transition: all 0.2s ease;
+        }
+        
+        .lh-answer-mute:hover {
+          color: #2ACDCF;
+          opacity: 1 !important;
+        }
+        
+        .lh-answer-mute:disabled {
+          cursor: not-allowed;
+          opacity: 0.3 !important;
+        }
+        
+        .lh-answer-mute svg {
+          width: 18px;
+          height: 18px;
         }
         
         .lh-answer-body {
@@ -623,6 +652,32 @@ export default function AISalesAgent({
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
               </svg>
+            </button>
+
+            {/* Mute/Unmute Button */}
+            <button 
+              type="button" 
+              className="lh-answer-mute" 
+              aria-label={voice.isSpeaking ? "Mute voice" : "Voice is muted"}
+              onClick={() => {
+                if (voice.isSpeaking) {
+                  voice.cancelSpeech()
+                }
+              }}
+              style={{ opacity: voice.isSpeaking ? 1 : 0.5 }}
+            >
+              {voice.isSpeaking ? (
+                // Volume on icon
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6 10H4a1 1 0 00-1 1v2a1 1 0 001 1h2l4 4V6l-4 4z" />
+                </svg>
+              ) : (
+                // Volume off icon
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                </svg>
+              )}
             </button>
 
             <div className="lh-answer-body">
