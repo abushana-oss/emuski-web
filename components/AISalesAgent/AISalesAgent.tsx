@@ -24,6 +24,67 @@ export default function AISalesAgent({
     handleVoiceResult,
   } = useAISalesAgent({ systemPromptExtra })
 
+  // Scroll-based hiding with UX best practices
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+  const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      const scrollDifference = Math.abs(currentScrollY - lastScrollY)
+      
+      // Only react to significant scroll movements (UX principle: avoid jittery behavior)
+      if (scrollDifference < 15) return
+      
+      // Clear existing timeout
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+      
+      // Determine scroll direction and distance
+      const isScrollingDown = currentScrollY > lastScrollY
+      const isSignificantScroll = scrollDifference > 30
+      
+      if (isSignificantScroll) {
+        if (isScrollingDown && currentScrollY > 100) {
+          // Don't hide if modal is open or voice is active (UX principle: don't interrupt active usage)
+          if (!isOpen && !voice.isListening && !voice.isSpeaking) {
+            setIsVisible(false)
+          }
+        } else if (!isScrollingDown) {
+          // Show on any upward scroll
+          setIsVisible(true)
+        }
+      }
+      
+      // Auto-show after scroll stops (UX principle: always accessible)
+      const newTimeout = setTimeout(() => {
+        setIsVisible(true)
+      }, 800)
+      setScrollTimeout(newTimeout)
+      
+      setLastScrollY(currentScrollY)
+    }
+
+    // Throttle scroll events for performance
+    let ticking = false
+    const throttledScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', throttledScroll, { passive: true })
+    
+    return () => {
+      window.removeEventListener('scroll', throttledScroll)
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+    }
+  }, [lastScrollY, scrollTimeout])
+
 
   // Handle voice recognition results
   useEffect(() => {
@@ -47,7 +108,22 @@ export default function AISalesAgent({
           transform: translateX(-50%);
           z-index: 2147483647;
           font-family: system-ui, -apple-system, sans-serif;
-          transition: transform 0.3s ease, opacity 0.3s ease;
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .lh-root.hidden {
+          transform: translateX(-50%) translateY(120%);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        .lh-root.visible {
+          transform: translateX(-50%) translateY(0);
+          opacity: 1;
+          visibility: visible;
+          transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
         }
 
 
@@ -617,7 +693,7 @@ export default function AISalesAgent({
         }
       `}</style>
 
-      <div className="lh-root">
+      <div className={`lh-root ${isVisible ? 'visible' : 'hidden'}`}>
         {/* Modal with AI response and interactive bar */}
         {isOpen && (
           <div className="lh-answer" style={{ display: 'block' }}>
