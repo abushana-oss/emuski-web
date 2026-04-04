@@ -418,7 +418,7 @@ export default function AISalesAgent({
         
         .lh-bar {
           background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 100%);
-          border-radius: 20px;
+          border-radius: 24px;
           padding: 6px 10px;
           display: flex;
           align-items: center;
@@ -434,6 +434,7 @@ export default function AISalesAgent({
           width: 100%;
           border: 1px solid rgba(51, 51, 51, 0.8);
           backdrop-filter: blur(10px);
+          overflow: hidden;
         }
         
         @media (max-width: 768px) {
@@ -967,7 +968,7 @@ export default function AISalesAgent({
               className="lh-side-toggle"
               style={{
                 opacity: voice.isSpeaking || voice.isMuted ? 1 : 0.6,
-                marginLeft: '8px'
+                marginLeft: '6px'
               }}
               aria-label={voice.isMuted ? "Unmute voice" : "Mute voice"}
               onClick={() => voice.toggleMute()}
