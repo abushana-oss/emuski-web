@@ -187,7 +187,10 @@ ${isFirstInteraction ?
             temperature: REQUEST_SETTINGS.temperature,
             messages: [
               { role: 'system', content: systemContent },
-              ...messages
+              ...messages.map(msg => ({
+                role: msg.role as 'user' | 'assistant',
+                content: msg.content
+              }))
             ],
           },
           { signal }
