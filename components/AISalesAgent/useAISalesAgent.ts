@@ -28,7 +28,7 @@ export function useAISalesAgent({
   systemPromptExtra,
 }: Pick<AISalesAgentProps, 'systemPromptExtra'>): UseAISalesAgentReturn {
   const [isOpen, setIsOpen] = useState(false)
-  const [panelMode, setPanelMode] = useState<PanelMode>('voice')
+  const [panelMode, setPanelMode] = useState<PanelMode>('chat')
   const [widgetState, setWidgetState] = useState<WidgetState>('idle')
   const [messages, setMessages] = useState<Message[]>([])
   const [chatInput, setChatInput] = useState('')
