@@ -377,7 +377,6 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
   try {
     // Parse multipart form data
     const formData = await request.formData();
-    console.log('Received form data keys:', Array.from(formData.keys()));
 
     // Extract and prepare form fields for validation
     const formFields = {
@@ -401,7 +400,6 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     
     let formFieldsWithAttachments: any = formFields;
     if (files.length > 0) {
-      console.log('Files found:', files.map(f => ({ name: f.name, type: f.type, size: f.size })));
       formFieldsWithAttachments = {
         ...formFields,
         attachments: files.map(file => ({

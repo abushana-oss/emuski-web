@@ -167,7 +167,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
           payload: JSON.stringify(payload, null, 2)
         })
       } else {
-        console.log('[GA4 Server] Event sent successfully:', eventName)
+        // Event sent successfully to GA4
       }
     }).catch(error => {
       console.error('[GA4 Server] Network error:', {

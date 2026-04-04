@@ -617,12 +617,6 @@ export default function AISalesAgent({
                       className="lh-voice-label"
                       onClick={async (e) => {
                         e.stopPropagation()
-                        console.log('Voice clicked:', { 
-                          panelMode, 
-                          isSupported: voice.isSupported, 
-                          isListening: voice.isListening,
-                          isSpeaking: voice.isSpeaking
-                        })
                         
                         // First ensure we're in voice mode
                         if (panelMode !== 'voice') {
@@ -651,7 +645,6 @@ export default function AISalesAgent({
                         try {
                           const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
                           stream.getTracks().forEach(track => track.stop())
-                          console.log('Microphone access granted & stream released')
                           
                           // Start listening if not already listening
                           if (!voice.isListening) {
@@ -819,12 +812,6 @@ export default function AISalesAgent({
                       className="lh-voice-label"
                       onClick={async (e) => {
                         e.stopPropagation()
-                        console.log('Voice clicked:', { 
-                          panelMode, 
-                          isSupported: voice.isSupported, 
-                          isListening: voice.isListening,
-                          isSpeaking: voice.isSpeaking
-                        })
                         
                         // First ensure we're in voice mode
                         if (panelMode !== 'voice') {
@@ -853,7 +840,6 @@ export default function AISalesAgent({
                         try {
                           const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
                           stream.getTracks().forEach(track => track.stop())
-                          console.log('Microphone access granted & stream released')
                           
                           // Start listening if not already listening
                           if (!voice.isListening) {
