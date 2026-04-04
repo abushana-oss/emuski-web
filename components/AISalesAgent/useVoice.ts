@@ -130,10 +130,13 @@ export function useVoice(): UseVoiceReturn {
       currentUtteranceRef.current = null
       setIsSpeaking(false)
 
-      // Clean text for natural speech - remove special characters
+      // Clean text for natural speech - remove ALL special characters and formatting
       const cleanText = text
-        .replace(/[+\-*/=<>@#$%^&*()_+\[\]{}|\\:";'<>?,./]/g, ' ') // Remove special chars
+        .replace(/[+\-*/=<>@#$%^&*()_+\[\]{}|\\:";'<>?,.!~/`]/g, ' ') // Remove special chars
+        .replace(/\d+\./g, '') // Remove numbered list formatting (1. 2. etc)
+        .replace(/[★✅❌🔒💡🏭🎯📞]/g, '') // Remove emojis and symbols
         .replace(/\s+/g, ' ') // Clean up extra spaces
+        .replace(/^\s*-\s*/gm, '') // Remove bullet points
         .trim()
 
       // Enhanced browser TTS with natural human-like settings

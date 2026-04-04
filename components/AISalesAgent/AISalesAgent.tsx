@@ -156,31 +156,33 @@ export default function AISalesAgent({
         }
         
         .lh-answer-body {
-          padding: 20px;
-          text-align: center;
+          padding: 24px;
+          text-align: left;
           display: flex;
           flex-direction: column;
-          align-items: center;
           justify-content: flex-start;
-          min-height: 80px;
-          max-height: 450px;
+          min-height: 100px;
+          max-height: 500px;
           overflow-y: auto;
           overflow-x: hidden;
           scrollbar-width: thin;
           scrollbar-color: rgba(23, 184, 186, 0.5) transparent;
+          gap: 12px;
         }
         
         @media (max-width: 768px) {
           .lh-answer-body {
-            padding: 16px;
-            max-height: 400px;
+            padding: 18px;
+            max-height: 450px;
+            gap: 10px;
           }
         }
         
         @media (max-width: 480px) {
           .lh-answer-body {
-            padding: 12px;
-            max-height: 350px;
+            padding: 16px;
+            max-height: 400px;
+            gap: 8px;
           }
         }
         
