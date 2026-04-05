@@ -939,24 +939,11 @@ export default function AISalesAgent({
                         onKeyDown={(e) => e.key === 'Enter' && handleChatSend()}
                         disabled={widgetState === 'processing'}
                         autoComplete="off"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                        }}
-                        onTouchStart={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                        }}
-                        onTouchEnd={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                        }}
-                        onFocus={(e) => {
-                          e.stopPropagation()
-                        }}
-                        onInput={(e) => {
-                          e.stopPropagation()
-                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        onFocus={(e) => e.stopPropagation()}
+                        onInput={(e) => e.stopPropagation()}
                       />
                       <button 
                         type="button" 
