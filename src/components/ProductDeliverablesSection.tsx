@@ -1,6 +1,6 @@
 import React from 'react';
 import { FileText } from 'lucide-react';
-import { LazyPDFViewer } from './LazyPDFViewer';
+import { ProjectDeliveryCarousel } from './ProjectDeliveryCarousel';
 
 const deliverables = [
   "Project Details",
@@ -292,11 +292,11 @@ const ProductDeliverablesSection = () => {
                 </div>
               </div>
             </div>
-            <LazyPDFViewer
-              src="/docs/Project_Delivery_Report.pdf"
-              title="Case Study -"
-              ariaLabel="Interactive PDF viewer displaying comprehensive project delivery report with manufacturing deliverables and quality assurance documentation"
-              minHeight="600px"
+            <ProjectDeliveryCarousel 
+              className=""
+              height="h-[800px] xl:h-[900px] 2xl:h-[1000px]"
+              showDownload={false}
+              autoplay={true}
             />
           </div>
         </div>
