@@ -912,7 +912,11 @@ export default function AISalesAgent({
                 {/* Chat Panel */}
                 <div className="lh-content-panel">
                   {panelMode === 'chat' && (
-                    <div className="lh-chat-form">
+                    <div 
+                      className="lh-chat-form"
+                      onClick={(e) => e.stopPropagation()}
+                      onTouchStart={(e) => e.stopPropagation()}
+                    >
                       <input 
                         className="lh-input"
                         type="text" 
@@ -923,6 +927,9 @@ export default function AISalesAgent({
                         disabled={widgetState === 'processing'}
                         autoComplete="off"
                         onClick={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        onFocus={(e) => e.stopPropagation()}
                       />
                       <button 
                         type="button" 
