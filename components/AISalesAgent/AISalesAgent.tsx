@@ -111,6 +111,12 @@ export default function AISalesAgent({
           opacity: 1;
           visibility: visible;
         }
+        
+        @media (max-width: 768px) {
+          .lh-root {
+            bottom: 10px;
+          }
+        }
 
         .lh-root.hidden {
           transform: translateX(-50%) translateY(120%);
@@ -608,6 +614,16 @@ export default function AISalesAgent({
           min-width: 100px;
           width: 100%;
         }
+        
+        @media (max-width: 768px) {
+          .lh-input {
+            font-size: 16px;
+            padding: 8px 10px;
+            -webkit-appearance: none;
+            -webkit-border-radius: 0;
+            border-radius: 0;
+          }
+        }
 
         .lh-input::placeholder {
           color: rgba(255, 255, 255, 0.7);
@@ -942,8 +958,18 @@ export default function AISalesAgent({
                         onClick={(e) => e.stopPropagation()}
                         onTouchStart={(e) => e.stopPropagation()}
                         onTouchEnd={(e) => e.stopPropagation()}
-                        onFocus={(e) => e.stopPropagation()}
+                        onFocus={(e) => {
+                          e.stopPropagation()
+                          // Prevent page scroll on mobile when keyboard opens
+                          if (window.innerWidth <= 768) {
+                            setTimeout(() => {
+                              e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                            }, 300)
+                          }
+                        }}
                         onInput={(e) => e.stopPropagation()}
+                        inputMode="text"
+                        enterKeyHint="send"
                       />
                       <button 
                         type="button" 
