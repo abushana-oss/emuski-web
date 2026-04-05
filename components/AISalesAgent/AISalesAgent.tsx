@@ -94,6 +94,35 @@ export default function AISalesAgent({
     }
   }, [voice.transcript, voice.isListening, handleVoiceResult, voice.clearTranscript])
 
+  // Handle mobile keyboard visibility
+  useEffect(() => {
+    const handleResize = () => {
+      // On mobile, when keyboard opens, prevent auto-hiding
+      if (window.innerWidth <= 768) {
+        setIsVisible(true)
+        if (scrollTimeout) clearTimeout(scrollTimeout)
+        
+        // Disable scroll hiding when keyboard is likely open
+        const viewportHeight = window.visualViewport?.height || window.innerHeight
+        const isKeyboardOpen = viewportHeight < window.screen.height * 0.75
+        
+        if (isKeyboardOpen && isOpen) {
+          // Keep widget visible when keyboard is open
+          setIsVisible(true)
+        }
+      }
+    }
+
+    // Use visual viewport API if available (better for mobile keyboards)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize)
+      return () => window.visualViewport.removeEventListener('resize', handleResize)
+    } else {
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+    }
+  }, [isOpen, scrollTimeout])
+
   const positionClasses = position === 'bottom-right' 
     ? 'bottom-4 right-4' 
     : 'bottom-4 left-4'
@@ -114,7 +143,17 @@ export default function AISalesAgent({
         
         @media (max-width: 768px) {
           .lh-root {
-            bottom: 10px;
+            position: fixed;
+            bottom: env(keyboard-inset-height, 10px);
+            transition: bottom 0.3s ease;
+          }
+        }
+        
+        @supports (bottom: env(keyboard-inset-height)) {
+          @media (max-width: 768px) {
+            .lh-root {
+              bottom: calc(env(keyboard-inset-height, 0px) + 10px);
+            }
           }
         }
 
@@ -962,9 +1001,28 @@ export default function AISalesAgent({
                           e.stopPropagation()
                           // Prevent page scroll on mobile when keyboard opens
                           if (window.innerWidth <= 768) {
+                            // Prevent body scroll
+                            document.body.style.position = 'fixed'
+                            document.body.style.top = `-${window.scrollY}px`
+                            document.body.style.width = '100%'
+                            
                             setTimeout(() => {
-                              e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                            }, 300)
+                              // Gently bring input into view without aggressive scrolling
+                              const rect = e.target.getBoundingClientRect()
+                              if (rect.bottom > window.innerHeight - 100) {
+                                window.scrollBy(0, rect.bottom - window.innerHeight + 100)
+                              }
+                            }, 150)
+                          }
+                        }}
+                        onBlur={(e) => {
+                          // Restore body scroll on mobile
+                          if (window.innerWidth <= 768) {
+                            const scrollY = document.body.style.top
+                            document.body.style.position = ''
+                            document.body.style.top = ''
+                            document.body.style.width = ''
+                            window.scrollTo(0, parseInt(scrollY || '0') * -1)
                           }
                         }}
                         onInput={(e) => e.stopPropagation()}
