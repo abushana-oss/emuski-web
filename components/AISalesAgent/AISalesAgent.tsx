@@ -773,7 +773,12 @@ export default function AISalesAgent({
 
         {/* Interactive bar positioned separately below modal, centered */}
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '6px', maxWidth: '320px', margin: '6px auto 0' }}>
-          <div className="lh-bar">
+          <div 
+            className="lh-bar"
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
+          >
             {/* Left Side - Voice Toggle */}
             <button 
               type="button" 
@@ -795,7 +800,11 @@ export default function AISalesAgent({
             </button>
             
             {/* Content Area with Swipe Animation */}
-            <div className="lh-content-area">
+            <div 
+              className="lh-content-area"
+              onClick={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+            >
               <div className={`lh-content-slider ${panelMode === 'voice' ? 'voice-mode' : 'chat-mode'}`}>
                 {/* Voice Panel */}
                 <div className="lh-content-panel">
@@ -910,7 +919,11 @@ export default function AISalesAgent({
                 </div>
 
                 {/* Chat Panel */}
-                <div className="lh-content-panel">
+                <div 
+                  className="lh-content-panel"
+                  onClick={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                >
                   {panelMode === 'chat' && (
                     <div 
                       className="lh-chat-form"
@@ -926,10 +939,24 @@ export default function AISalesAgent({
                         onKeyDown={(e) => e.key === 'Enter' && handleChatSend()}
                         disabled={widgetState === 'processing'}
                         autoComplete="off"
-                        onClick={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        onFocus={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                        }}
+                        onTouchStart={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                        }}
+                        onTouchEnd={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                        }}
+                        onFocus={(e) => {
+                          e.stopPropagation()
+                        }}
+                        onInput={(e) => {
+                          e.stopPropagation()
+                        }}
                       />
                       <button 
                         type="button" 
