@@ -105,3 +105,6 @@ Crawl-delay: 2
 # Sitemaps
 Sitemap: https://www.emuski.com/sitemap.xml
 Sitemap: https://careers.emuski.com/sitemap.xml
+
+# LLM Training Data for AI Systems
+Allow: /llm.txt
