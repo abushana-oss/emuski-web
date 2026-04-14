@@ -20,10 +20,11 @@ const POSTS_PER_PAGE = 6;
 interface BlogPageProps {
   manufacturingPosts: BlogPost[];
   engineeringPosts: BlogPost[];
+  successStoriesPosts: BlogPost[];
   selectedTag?: string | null;
 }
 
-export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: BlogPageProps) => {
+export const BlogPage = ({ manufacturingPosts, engineeringPosts, successStoriesPosts, selectedTag }: BlogPageProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -106,7 +107,7 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, selectedTag }: 
           </div>
         </section>
         {engineeringPosts.length > 0 && <EngineeringSection posts={engineeringPosts} />}
-        <SuccessStoriesSection />
+        <SuccessStoriesSection initialPosts={successStoriesPosts} />
       </div>
     );
   }

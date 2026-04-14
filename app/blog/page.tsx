@@ -61,7 +61,7 @@ export default async function Blog({
   searchParams: Promise<{ tag?: string }>;
 }) {
   // Server-side data fetching with caching - now fetches ALL posts automatically
-  const { manufacturing, engineering, all } = await fetchAllBlogs(true)
+  const { manufacturing, engineering, successStories, all } = await fetchAllBlogs(true)
   const { tag } = await searchParams
 
   // Organization schema - defined first for proper referencing
@@ -262,6 +262,7 @@ export default async function Blog({
       <BlogPage
         manufacturingPosts={manufacturing}
         engineeringPosts={engineering}
+        successStoriesPosts={successStories}
         selectedTag={tag}
       />
       <Footer />

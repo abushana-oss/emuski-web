@@ -1,17 +1,64 @@
 'use client'
 
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Clock, User, Loader2 } from "lucide-react";
 import { Card } from "./ui/card";
 import { useSuccessStoriesPosts } from "../hooks/useBlogData";
 
-export function SuccessStoriesSection() {
-  // Fetch success stories from dedicated Blogger blog (emuski-stories.blogspot.com)
-  const { posts: displayPosts, loading: isLoading, error } = useSuccessStoriesPosts({ maxResults: 6 });
+const POSTS_PER_PAGE = 6;
+
+// Minimal shape this component actually reads — satisfied by both the hook's
+// BlogPost and the server-side BlogPost from @/lib/api/blogger.
+type StoryPost = {
+  id: string;
+  slug: string;
+  image: string;
+  title: string;
+  readTime: string;
+  category: string;
+  excerpt: string;
+  author: string;
+};
+
+interface SuccessStoriesSectionProps {
+  initialPosts?: StoryPost[];
+}
+
+export function SuccessStoriesSection({ initialPosts }: SuccessStoriesSectionProps = {}) {
+  const hasInitialData = initialPosts !== undefined && initialPosts.length > 0;
+
+  // Hook must always be called (Rules of Hooks). Its result is only used when
+  // no server-side data was passed in — i.e. as a client-side fallback.
+  const { posts: hookPosts, loading: hookLoading, error: hookError } = useSuccessStoriesPosts({ maxResults: 50 });
+
+  const allPosts: StoryPost[] = hasInitialData ? initialPosts : hookPosts;
+  const isLoading = hasInitialData ? false : hookLoading;
+  const error = hasInitialData ? null : hookError;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+  const displayPosts = allPosts.slice(
+    (currentPage - 1) * POSTS_PER_PAGE,
+    currentPage * POSTS_PER_PAGE
+  );
+
+  const scrollToSection = useCallback(() => {
+    const element = document.getElementById('success-stories-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentPage > 1) {
+      scrollToSection();
+    }
+  }, [currentPage, scrollToSection]);
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-white">
+      <section id="success-stories-section" className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center space-x-3 mb-8">
@@ -28,9 +75,9 @@ export function SuccessStoriesSection() {
     );
   }
 
-  if (error || !displayPosts || displayPosts.length === 0) {
+  if (error || !allPosts || allPosts.length === 0) {
     return (
-      <section className="py-16 bg-white">
+      <section id="success-stories-section" className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center space-x-3 mb-8">
@@ -39,7 +86,9 @@ export function SuccessStoriesSection() {
             </div>
             <div className="text-center py-20">
               <p className="text-gray-600">
-                {error ? 'Unable to load success stories. Please try again later.' : 'No success stories available. Please add posts to emuski-stories.blogspot.com'}
+                {error
+                  ? 'Unable to load success stories. Please try again later.'
+                  : 'No success stories available. Please add posts to emuski-stories.blogspot.com'}
               </p>
             </div>
           </div>
@@ -49,7 +98,7 @@ export function SuccessStoriesSection() {
   }
 
   return (
-    <section className="py-16 bg-white">
+    <section id="success-stories-section" className="py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center space-x-3 mb-8">
@@ -58,7 +107,7 @@ export function SuccessStoriesSection() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
-            {displayPosts.map((story, index) => (
+            {displayPosts.map((story) => (
               <Link
                 key={story.id}
                 href={`/blog/${story.slug}`}
@@ -117,14 +166,100 @@ export function SuccessStoriesSection() {
             ))}
           </div>
 
-          {displayPosts && displayPosts.length >= 6 && (
-            <div className="text-center mt-10">
-              <Link href="/blog?category=case-study">
-                <button className="bg-emuski-teal-dark text-white px-6 py-3 rounded-lg font-semibold hover:bg-emuski-teal-darker transition-colors">
-                  View All Success Stories
-                </button>
-              </Link>
-            </div>
+          {/* Pagination — identical logic to BlogPage */}
+          {totalPages > 1 && (
+            <nav
+              className="mt-16 flex flex-col sm:flex-row justify-center items-center gap-6"
+              aria-label="Success Stories Pagination"
+            >
+              {/* Previous Button */}
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                aria-label="Previous page"
+              >
+                ← Previous
+              </button>
+
+              {/* Page Numbers — Smart Display */}
+              <div className="flex items-center gap-2">
+                {(() => {
+                  const pages: (number | string)[] = [];
+                  const showEllipsis = totalPages > 7;
+
+                  if (!showEllipsis) {
+                    for (let i = 1; i <= totalPages; i++) {
+                      pages.push(i);
+                    }
+                  } else {
+                    pages.push(1);
+
+                    if (currentPage > 3) {
+                      pages.push('ellipsis-start');
+                    }
+
+                    const startPage = Math.max(2, currentPage - 1);
+                    const endPage = Math.min(totalPages - 1, currentPage + 1);
+
+                    for (let i = startPage; i <= endPage; i++) {
+                      pages.push(i);
+                    }
+
+                    if (currentPage < totalPages - 2) {
+                      pages.push('ellipsis-end');
+                    }
+
+                    if (totalPages > 1) {
+                      pages.push(totalPages);
+                    }
+                  }
+
+                  return pages.map((page, index) => {
+                    if (typeof page === 'string') {
+                      return (
+                        <span
+                          key={`${page}-${index}`}
+                          className="w-12 h-12 flex items-center justify-center text-gray-400 font-medium"
+                          aria-hidden="true"
+                        >
+                          •••
+                        </span>
+                      );
+                    }
+
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`relative w-12 h-12 rounded-lg font-bold transition-all ${
+                          currentPage === page
+                            ? 'bg-gradient-to-br from-emuski-teal to-emuski-teal-dark text-white shadow-lg scale-110'
+                            : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-emuski-teal hover:text-emuski-teal-dark hover:scale-105'
+                        }`}
+                        aria-current={currentPage === page ? 'page' : undefined}
+                        aria-label={`Page ${page}`}
+                      >
+                        {page}
+                        {currentPage === page && (
+                          <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-white rounded-full opacity-80" />
+                        )}
+                      </button>
+                    );
+                  });
+                })()}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-emuski-teal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                aria-label="Next page"
+              >
+                Next →
+              </button>
+            </nav>
           )}
         </div>
       </div>
