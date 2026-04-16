@@ -398,6 +398,23 @@ const nextConfig = {
         destination: '/',
         permanent: false,
       },
+
+      // Google Search Console 404 fixes
+      { source: '/precision-engineering', destination: '/cost-engineering', permanent: true },
+      { source: '/about', destination: '/', permanent: true },
+      { source: '/contact-us', destination: '/contact', permanent: true },
+      { source: '/oem-manufacturing-bangalore', destination: '/manufacturing-services', permanent: true },
+      { source: '/industries', destination: '/manufacturing-services', permanent: true },
+      { source: '/industries/aerospace', destination: '/manufacturing-services', permanent: true },
+      { source: '/industries/automotive', destination: '/manufacturing-services', permanent: true },
+      { source: '/tools', destination: '/tools/3d-cad-analysis', permanent: true },
+      { source: '/tools/', destination: '/tools/3d-cad-analysis', permanent: true },
+      { source: '/ae', destination: '/', permanent: true },
+      { source: '/ae/', destination: '/', permanent: true },
+      { source: '/br', destination: '/', permanent: true },
+      { source: '/br/', destination: '/', permanent: true },
+      { source: '/au', destination: '/', permanent: true },
+      { source: '/au/', destination: '/', permanent: true },
     ];
   },
 
