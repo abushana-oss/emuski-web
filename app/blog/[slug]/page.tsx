@@ -208,7 +208,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       url: 'https://www.emuski.com',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.emuski.com/logo.jpg',
+        url: 'https://www.emuski.com/logo.webp',
         width: 600,
         height: 60,
       },

@@ -24,7 +24,36 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': ['Organization', 'LocalBusiness'],
+          name: 'EMUSKI',
+          url: 'https://www.emuski.com',
+          logo: 'https://www.emuski.com/logo.webp',
+          description: 'ISO 9001:2015 certified OEM precision manufacturing and cost engineering partner in Bangalore, India',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: '126, RNS Plaza, Electronic City Phase 2',
+            addressLocality: 'Bangalore',
+            addressRegion: 'Karnataka',
+            addressCountry: 'IN',
+          },
+          telephone: '+91-86670-88060',
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: 12.8456,
+            longitude: 77.6603,
+          },
+          sameAs: [
+            'https://www.linkedin.com/company/emuski',
+            'https://www.indiamart.com/emuski',
+          ],
+        }) }}
+      />
+      <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-16">
         <h1 className="sr-only">
@@ -67,5 +96,6 @@ export default function Home() {
       </main>
       <Footer />
     </div>
+    </>
   )
 }
