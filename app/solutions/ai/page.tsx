@@ -1,29 +1,23 @@
-'use client'
-
+import { Metadata } from 'next'
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { AIServicesContent } from "@/components/AIServicesContent"
-import { useEffect } from "react"
+import { HashScrollHandler } from './hash-scroll-handler'
 import Link from "next/link"
 
-export default function AISolutions() {
-  useEffect(() => {
-    const hash = window.location.hash
-    if (hash) {
-      setTimeout(() => {
-        const element = document.querySelector(hash)
-        if (element) {
-          const offset = 80
-          const elementPosition = element.getBoundingClientRect().top
-          const offsetPosition = elementPosition + window.pageYOffset - offset
-          window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
-        }
-      }, 100)
-    }
-  }, [])
+export const metadata: Metadata = {
+  title: 'AI-Powered Manufacturing Solutions | Mithran AI Platform | EMUSKI',
+  description: 'AI-powered manufacturing intelligence for OEMs. Automated BOM generation, AI cost estimation, smart supplier sourcing and real-time project tracking. Built by EMUSKI, Bangalore.',
+  alternates: {
+    canonical: 'https://www.emuski.com/solutions/ai',
+  },
+  robots: { index: true, follow: true },
+}
 
+export default function AISolutions() {
   return (
     <div className="min-h-screen bg-background">
+      <HashScrollHandler />
       <Navbar />
       <main className="pt-20">
         <section className="relative py-12 sm:py-14 md:py-16 lg:py-20 border-b border-border/30 overflow-hidden" style={{backgroundColor: 'rgb(18, 26, 33)'}}>

@@ -1,85 +1,26 @@
-'use client'
-
+import { Metadata } from 'next'
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { FAQSection } from "@/components/FAQSection"
 import Link from "next/link"
 import Image from "next/image"
-import { useEffect } from "react"
 import Script from "next/script"
+import { HashScrollHandler } from './hash-scroll-handler'
 
 import { EngineeringServicesTabs } from "@/components/EngineeringServicesTabs"
 import SectorsServedSection from "@/components/SectorsServedSection"
 import { EngineeringServicesContent } from "@/components/EngineeringServicesContent"
 
+export const metadata: Metadata = {
+  title: 'Cost Engineering Services | Product Cost Estimation, VAVE & Strategic Sourcing | EMUSKI',
+  description: 'India\'s leading cost engineering services — product cost estimation with ±5% accuracy, VAVE analysis saving 20-30%, strategic sourcing from 500+ suppliers. ISO certified. Based in Bangalore.',
+  alternates: {
+    canonical: 'https://www.emuski.com/cost-engineering',
+  },
+  robots: { index: true, follow: true },
+}
+
 export default function CostEngineering() {
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '')
-      if (hash) {
-        const tabMap: { [key: string]: string } = {
-          'cost-estimation': 'cost-estimation',
-          'vave': 'vave',
-          'sourcing': 'sourcing',
-          'expert-support': 'expert-support'
-        }
-
-        if (tabMap[hash]) {
-          setTimeout(() => {
-            let tabButton = document.querySelector(`button[value="${tabMap[hash]}"]`) as HTMLButtonElement
-
-            if (!tabButton) {
-              tabButton = document.querySelector(`button[role="tab"][id*="${tabMap[hash]}"]`) as HTMLButtonElement
-            }
-
-            if (!tabButton) {
-              tabButton = document.querySelector(`[data-state][id*="${tabMap[hash]}"]`) as HTMLButtonElement
-            }
-
-            if (tabButton) {
-              tabButton.click()
-
-              setTimeout(() => {
-                const detailElement = document.querySelector(`#${hash}-details`)
-                if (detailElement) {
-                  const offset = 80
-                  const elementPosition = detailElement.getBoundingClientRect().top
-                  const offsetPosition = elementPosition + window.pageYOffset - offset
-                  window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
-                } else {
-                  const element = document.querySelector('#engineering-services')
-                  if (element) {
-                    const offset = 80
-                    const elementPosition = element.getBoundingClientRect().top
-                    const offsetPosition = elementPosition + window.pageYOffset - offset
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
-                  }
-                }
-              }, 100)
-            }
-          }, 300)
-        } else {
-          setTimeout(() => {
-            const element = document.querySelector(`#${hash}`)
-            if (element) {
-              const offset = 80
-              const elementPosition = element.getBoundingClientRect().top
-              const offsetPosition = elementPosition + window.pageYOffset - offset
-              window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
-            }
-          }, 100)
-        }
-      }
-    }
-
-    handleHashChange()
-    window.addEventListener('hashchange', handleHashChange)
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange)
-    }
-  }, [])
-
   const schemaOrgData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -600,6 +541,7 @@ export default function CostEngineering() {
 
   return (
     <div className="min-h-screen bg-background">
+      <HashScrollHandler />
       <Script
         id="schema-cost-engineering"
         type="application/ld+json"
