@@ -1,3 +1,5 @@
+'use client'
+
 import { Brain, Sparkles, Database, Network, FileText, Zap, CheckCircle, TrendingUp, Shield, Clock, Target, Cpu } from "lucide-react";
 import Image from "next/image";
 
