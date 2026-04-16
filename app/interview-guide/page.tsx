@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     description: 'Learn about EMUSKI\'s interview process, our philosophy, timeline, and tips to help you succeed.',
     images: ['/assets/emuski-logo-optimized.webp'],
   },
+  alternates: {
+    canonical: 'https://www.emuski.com/interview-guide',
+  },
 }
 
 export default function InterviewGuidePage() {

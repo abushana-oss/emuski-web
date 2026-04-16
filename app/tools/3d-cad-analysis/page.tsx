@@ -5,15 +5,10 @@ import { Suspense } from 'react';
 import { DynamicCadAnalysis } from '@/components/DynamicCadAnalysis';
 
 export const metadata: Metadata = {
-  title: '3D CAD Analysis Tool',
-  description: 'Basic CAD file viewer for internal use.',
-  robots: {
-    index: false,
-    follow: false,
-    googleBot: {
-      index: false,
-      follow: false,
-    },
+  title: 'AI-Powered 3D DFM Analysis Tool with Instant Design for Manufacturing Check',
+  description: 'Free AI-powered 3D DFM analysis tool. Upload your CAD file and instantly get design-for-manufacturing feedback. No install required. By EMUSKI, Bangalore.',
+  alternates: {
+    canonical: 'https://www.emuski.com/tools/3d-cad-analysis',
   },
 };
 

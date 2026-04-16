@@ -5,15 +5,10 @@ import { Suspense } from 'react';
 import DynamicBalloonAnalysis from '@/components/DynamicBalloonAnalysis';
 
 export const metadata: Metadata = {
-  title: '2D Balloon Diagram Tool',
-  description: 'Internal drawing annotation tool.',
-  robots: {
-    index: false,
-    follow: false,
-    googleBot: {
-      index: false,
-      follow: false,
-    },
+  title: '2D Balloon Diagram Tool: Annotate Engineering Drawings Online',
+  description: 'Free online 2D balloon diagram tool for engineering drawings. Create FAI balloons and DFM review annotations instantly. By EMUSKI, Bangalore.',
+  alternates: {
+    canonical: 'https://www.emuski.com/tools/2d-balloon-diagram',
   },
 };
 
@@ -44,7 +39,7 @@ export default function BalloonDiagramPage() {
 
                 {/* Title */}
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight px-2">
-                  2D Balloon Diagram Tool with Annotate Engineering Drawings Online
+                  2D Balloon Diagram Tool: Annotate Engineering Drawings Online
                 </h1>
 
                 {/* Description */}
