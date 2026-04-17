@@ -85,8 +85,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.93, // International market focus
     },
-    // Innovation and technology pages - Lower priority than core services
-    // Note: AI solutions page excluded from sitemap to focus SEO on manufacturing and cost engineering
+    // Innovation and technology pages
+    {
+      url: `${baseUrl}/solutions/ai`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
     {
       url: `${baseUrl}/contact`,
       lastModified: STATIC_PAGES_LASTMOD,
@@ -110,6 +115,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
       priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tools/3d-cad-analysis`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tools/2d-balloon-diagram`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/interview-guide`,
+      lastModified: STATIC_PAGES_LASTMOD,
+      changeFrequency: 'monthly',
+      priority: 0.6,
     },
     {
       url: `${baseUrl}/privacy-policy`,
