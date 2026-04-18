@@ -100,7 +100,7 @@ const engineeringTestimonials: Testimonial[] = [
     location: "Hyderabad",
     industry: "Robotics Engineering",
     quote: "EMUSKI's precision engineering and innovative solutions helped us meet critical project deadlines.",
-    avatar: "/assets/testmonials/nonexistent.jpg",
+    avatar: "/assets/testmonials/boy.jpg",
     rating: 5
   }
 ]

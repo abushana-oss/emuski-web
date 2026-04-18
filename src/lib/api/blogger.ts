@@ -14,6 +14,8 @@
 
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
+import type { BlogPost as LocalDataPost } from '../../api/types';
+import { allBlogPosts } from '../../data/blogData';
 
 // Environment Variables (backend only)
 const BLOGGER_API_KEY = process.env.BLOGGER_API_KEY || '';
@@ -78,6 +80,25 @@ export interface BlogPost {
   challengeImage?: string;
   solutionImage?: string;
   outcomeImage?: string;
+}
+
+function normalizeLocalPost(p: LocalDataPost): BlogPost {
+  return {
+    id: String(p.id),
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    fullContent: p.fullContent,
+    category: p.category,
+    tags: p.tags,
+    author: p.author,
+    authorImage: p.authorImage,
+    publishDate: p.publishDate,
+    readTime: p.readTime,
+    image: p.image,
+    seoTitle: p.seoTitle,
+    metaDescription: p.metaDescription,
+  };
 }
 
 /**
@@ -536,11 +557,33 @@ export async function fetchAllBlogs(fetchAll: boolean = true): Promise<{
     fetchBlogPosts('successStories', 100, fetchAll),
   ]);
 
+  const localPosts = allBlogPosts.map(normalizeLocalPost);
+  const localSlugs = new Set(localPosts.map(p => p.slug));
+
+  const localManufacturing = localPosts.filter(p => p.category === 'Manufacturing');
+  const localEngineering = localPosts.filter(p => p.category === 'Engineering');
+  const localSuccessStories = localPosts.filter(
+    p => p.category === 'Case Study' || p.category === 'Success Story'
+  );
+
+  const mergedManufacturing = [
+    ...localManufacturing,
+    ...manufacturing.filter(p => !localSlugs.has(p.slug)),
+  ];
+  const mergedEngineering = [
+    ...localEngineering,
+    ...engineering.filter(p => !localSlugs.has(p.slug)),
+  ];
+  const mergedSuccessStories = [
+    ...localSuccessStories,
+    ...successStories.filter(p => !localSlugs.has(p.slug)),
+  ];
+
   return {
-    manufacturing,
-    engineering,
-    successStories,
-    all: [...manufacturing, ...engineering, ...successStories],
+    manufacturing: mergedManufacturing,
+    engineering: mergedEngineering,
+    successStories: mergedSuccessStories,
+    all: [...mergedManufacturing, ...mergedEngineering, ...mergedSuccessStories],
   };
 }
 
