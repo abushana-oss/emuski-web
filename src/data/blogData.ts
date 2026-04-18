@@ -1281,56 +1281,45 @@ export const blogPosts: BlogPost[] = [
     title: "75 Units to the USA in Just 3 Days: Delivering Against the Clock",
     excerpt: "A leading aerospace company needed 75 precision components delivered to the USA within 3 days. After other vendors failed, EMUSKI completed end-to-end manufacturing in 24 hours with zero defects.",
     content: "A leading aerospace company needed 75 precision components delivered to the USA within 3 days. After evaluating vendors across Europe and the United States, they hit a dead end due to production delays. EMUSKI stepped in and completed end-to-end manufacturing in just 24 hours, meeting all aerospace tolerances and the international deadline.",
-    fullContent: `## 75 Units. 24 Hours. Zero Margin for Error
-
-### Who the Client Was
-
-A leading aerospace company requiring high-precision components for a mission-critical program.
-
-### The Challenge
-
-The client needed 75 precision components delivered to the USA within 3 days — a timeline most suppliers couldn't commit to.
-
-After evaluating vendors across Europe and the United States, they hit a dead end due to production delays and scheduling constraints.
-
-This wasn't just urgent — it was extreme:
-
-- The shipment was already booked before production began
-- The components demanded ultra-high precision
-- New fixtures and tooling had to be created from scratch
-- The client had to book flight tickets to physically carry and validate the parts
-- There was absolutely no room for delays or errors
-
-Every second counted. Every mistake would cost heavily.
-
-### How We Helped
-
-EMUSKI stepped in as a true execution partner, operating at maximum speed and precision.
-
-- **24-Hour Turnaround:** Completed end-to-end manufacturing in just one day
-- **Rapid Tooling:** Designed and developed new fixtures and tooling in record time
-- **Precision First:** Maintained strict aerospace tolerances under extreme pressure
-- **Parallel Execution:** Tooling, machining, and quality checks ran simultaneously
-- **Perfect Timing:** Production aligned exactly with the pre-booked shipment and travel plans
-
-Our team worked in a fully synchronized, high-intensity environment because failure was not an option.
-
-### Outcome
-
-We successfully:
-
-- Delivered 75 high-precision components within 24 hours
-- Enabled the client to carry parts via flight for immediate validation
-- Met all stringent aerospace quality requirements
-- Ensured the 3-day international deadline was achieved without compromise
-
-### Client Feedback
-
-*"With no margin for error and time running out, EMUSKI delivered flawlessly. From new tooling to final precision components in 24 hours, it was an exceptional execution under pressure"*`,
-    category: "Manufacturing",
+    fullContent: `<h2>75 Units. 24 Hours. Zero Margin for Error</h2>
+<h3>Who the Client Was</h3>
+<p>A leading aerospace company requiring high-precision components for a mission-critical program.</p>
+<h3>The Challenge</h3>
+<p>The client needed 75 precision components delivered to the USA within 3 days — a timeline most suppliers couldn't commit to.</p>
+<p>After evaluating vendors across Europe and the United States, they hit a dead end due to production delays and scheduling constraints.</p>
+<p>This wasn't just urgent — it was extreme:</p>
+<ul>
+<li>The shipment was already booked before production began</li>
+<li>The components demanded ultra-high precision</li>
+<li>New fixtures and tooling had to be created from scratch</li>
+<li>The client had to book flight tickets to physically carry and validate the parts</li>
+<li>There was absolutely no room for delays or errors</li>
+</ul>
+<p>Every second counted. Every mistake would cost heavily.</p>
+<h3>How We Helped</h3>
+<p>EMUSKI stepped in as a true execution partner, operating at maximum speed and precision.</p>
+<ul>
+<li><strong>24-Hour Turnaround:</strong> Completed end-to-end manufacturing in just one day</li>
+<li><strong>Rapid Tooling:</strong> Designed and developed new fixtures and tooling in record time</li>
+<li><strong>Precision First:</strong> Maintained strict aerospace tolerances under extreme pressure</li>
+<li><strong>Parallel Execution:</strong> Tooling, machining, and quality checks ran simultaneously</li>
+<li><strong>Perfect Timing:</strong> Production aligned exactly with the pre-booked shipment and travel plans</li>
+</ul>
+<p>Our team worked in a fully synchronized, high-intensity environment because failure was not an option.</p>
+<h3>Outcome</h3>
+<p>We successfully:</p>
+<ul>
+<li>Delivered 75 high-precision components within 24 hours</li>
+<li>Enabled the client to carry parts via flight for immediate validation</li>
+<li>Met all stringent aerospace quality requirements</li>
+<li>Ensured the 3-day international deadline was achieved without compromise</li>
+</ul>
+<h3>Client Feedback</h3>
+<p><em>"With no margin for error and time running out, EMUSKI delivered flawlessly. From new tooling to final precision components in 24 hours, it was an exceptional execution under pressure"</em></p>`,
+    category: "Case Study",
     author: "EMUSKI",
     authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
-    authorImage: "/assets/authors/default.jpg",
+    authorImage: "/logo.webp",
     publishDate: "2026-03-28T00:00:00Z",
     readTime: "2 min read",
     image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjNZY3X5cYmxUTDO7_D8oZYPPYzripyGxetZAoWtJVGCwqmSgRkrAim88DV3JG6h6qTDNvmYp7bqhPmYdIuigLMN11UZgz2brySPoVGjfmVm2AFTZgPD9OO_BkHkl7lkco5XhaGssg0ZMP10MaEZp0ij87vhE79Q0IMZRPbMoTpq4qOK3wmglKrf1LDCnP2/s1600/WhatsApp%20Image%202026-03-27%20at%206.07.13%20PM.jpeg",
@@ -1339,6 +1328,198 @@ We successfully:
     seoTitle: "75 Units to the USA in Just 3 Days: Delivering Against the Clock | EMUSKI",
     metaDescription: "A leading aerospace company needed 75 precision components delivered to the USA in 3 days. EMUSKI completed manufacturing in 24 hours with zero defects. Read the full case study.",
     keywords: ["aerospace components", "rapid manufacturing", "precision components", "urgent manufacturing", "made in India"],
+  },
+  {
+    id: 1002,
+    slug: "german-automotive-manufacturer-optimize-costs-for-india-facelift-model-70-poc-ideas-in-3-days",
+    title: "German Automotive Manufacturer Optimize Costs for India Facelift Model: 70 POC Ideas in 3 Days",
+    excerpt: "EMUSKI generated 70 actionable POC ideas for a German automotive client in 3 days, enabling cost optimization for their India facelift model.",
+    content: "A leading German automotive manufacturer needed innovative cost optimization strategies for their India facelift model. Facing tight production budgets and regulatory standards, they required fast and practical ideas. EMUSKI designed a 3-day workshop sprint: Day 1 for discovery and analysis, Day 2 for collaborative ideation, and Day 3 for feasibility and prioritization. The result was 70 actionable POC ideas covering material optimization, energy efficiency, supplier consolidation, and process improvements.",
+    fullContent: `<h2>EMUSKI enabled product cost optimization for a European automotive facelift program</h2>
+<h3>Who the Client Was</h3>
+<p>A leading German automotive manufacturer planning the launch of a new facelift model for the Indian market. They faced tight production budgets and needed innovative strategies to reduce costs without compromising quality.</p>
+<h3>The Challenge</h3>
+<p>The client needed a structured approach to generate actionable cost optimization ideas for multiple vehicle components and manufacturing processes:</p>
+<ul>
+<li>Ensuring production cost reductions for the India facelift model</li>
+<li>Maintaining global quality and regulatory standards</li>
+<li>Generating enough implementable ideas to prioritize high-impact initiatives</li>
+<li>Avoiding delays or costly trial-and-error experiments</li>
+</ul>
+<p>Traditional approaches produced only a handful of suggestions, which wasn't enough. The client needed fast, creative, and practical POC ideas.</p>
+<h3>How EMUSKI Helped</h3>
+<p>EMUSKI designed a 3-day workshop sprint to deliver immediate results:</p>
+<h3>Day 1 – Discovery &amp; Analysis</h3>
+<ul>
+<li>Reviewed production processes, supplier contracts, material usage, and energy consumption</li>
+<li>Identified high-cost areas and potential opportunities for savings</li>
+</ul>
+<h3>Day 2 – Collaborative Ideation</h3>
+<ul>
+<li>Conducted intensive brainstorming sessions with cross-functional teams</li>
+<li>Focused on practical, high-impact cost-saving ideas tailored to the India facelift project</li>
+</ul>
+<h3>Day 3 – Feasibility, Prioritization &amp; Roadmap</h3>
+<ul>
+<li>Screened ideas based on potential impact, ease of implementation, and ROI</li>
+<li>Delivered 70 actionable POC ideas, including:</li>
+</ul>
+<ul>
+<li>Material optimization and waste reduction</li>
+<li>Energy and utility efficiency</li>
+<li>Supplier benchmarking and consolidation</li>
+<li>Production workflow improvements</li>
+<li>Automation and process streamlining</li>
+</ul>
+<h3>Outcome</h3>
+<ul>
+<li><strong>70 Ready-to-Test POCs:</strong> A large pool of ideas ready for pilot implementation</li>
+<li><strong>Rapid Prioritization:</strong> Client could identify high-impact cost optimization strategies quickly</li>
+<li><strong>Accelerated Decision-Making:</strong> Workshop enabled fast alignment across teams</li>
+<li><strong>Foundation for Long Term Savings:</strong> Many POCs had the potential to scale into significant cost reductions</li>
+</ul>
+<h3>Client Feedback</h3>
+<p><em>"In just three days, we went from uncertainty to a portfolio of 70 actionable POC ideas. Their structured and hands-on approach gave us clarity and confidence to implement cost-saving measures for our India facelift project"</em></p>`,
+    category: "Case Study",
+    author: "EMUSKI",
+    authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
+    authorImage: "/logo.webp",
+    publishDate: "2026-03-28T00:00:00Z",
+    readTime: "2 min read",
+    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjzq5CkCn6n2JEBfpIWCJw2EPWY_E8dlwCeTfR4MT-WRiRPYMSAdaa07hKkvSBHnrrTg89x9PUF4Mfj6E8lGirbSO7PRR46DIDzat5gjHcwT7qdvy4fQ8FlNYMjhFJh4zevhd1Jzzq-njJiitwnJCNyZBRl8bDa4VgHfg6yetsYlzgCwKY6qG2hxGpcD49n/s1280/WhatsApp%20Image%202026-03-27%20at%203.44.32%20PM.jpeg",
+    tags: ["Automotive", "Cost Optimization", "India Market", "Manufacturing Efficiency", "POC Ideas"],
+    featured: false,
+    seoTitle: "German Automotive Manufacturer Optimize Costs for India Facelift Model: 70 POC Ideas in 3 Days | EMUSKI",
+    metaDescription: "EMUSKI generated 70 actionable POC ideas for a German automotive client in 3 days, enabling cost optimization for their India facelift model.",
+    keywords: ["automotive", "cost optimization", "india market", "manufacturing efficiency", "poc ideas"],
+  },
+  {
+    id: 1003,
+    slug: "satellite-broadcast-sensor-components",
+    title: "Satellite Broadcast & Sensor Components",
+    excerpt: "EMUSKI prototyped a space-grade satellite barrel with 1mm wall thickness and complex grooves in 3 days, leading to a full manufacturing partnership.",
+    content: "An organization specializing in satellite brackets, sensors, and broadcast components needed a manufacturer for a complex barrel component featuring multiple grooves and an incredibly thin 1mm wall thickness. Unable to find a capable supplier, they turned to EMUSKI's NPD Center. Within just three days, EMUSKI developed and delivered the first prototype, demonstrating mastery of space-grade thin-wall geometries. The success expanded the partnership to cover the client's entire component range.",
+    fullContent: `<h2>Breaking the Barrier: Rapid Prototyping for Space-Grade Complexity</h2>
+<h3>Who the Client Was</h3>
+<p>An organization specializing in advanced satellite brackets, sensors, and broadcast components.</p>
+<h3>The Challenge</h3>
+<p>The client needed manufacturing of a specific satellite component: a barrel. The specification involved multiple grooves and an incredibly thin 1mm wall thickness. They struggled locating a manufacturer capable of prototype production.</p>
+<h3>How We Helped</h3>
+<p>Upon client engagement, EMUSKI's NPD Center prioritized speed and accuracy, developing and manufacturing the first prototype within an impressive three-day span of time. This demonstrated capability for space-grade thin-wall geometries and complex grooving.</p>
+<h3>Outcome</h3>
+<p>Post-prototype success expanded the partnership scope. The organization now manufactures the entire range of components for satellite production and partners with the client to scale their operations, building the entire flow from prototype to scalable manufacturing.</p>`,
+    category: "Case Study",
+    author: "EMUSKI",
+    authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
+    authorImage: "/logo.webp",
+    publishDate: "2025-12-11T00:00:00Z",
+    readTime: "1 min read",
+    image: "https://blogger.googleusercontent.com/img/a/AVvXsEjVINUG4fn25C17YVUfS5fiVILvFIoHfvIup-yfqi4YbxINcbvFkpv23HAKE0a-sXWXkFKlBsBpzHRqaCuoFdsr6Z47qBBAsAfEg2j9vmcxxQFrbEDUt6yulMfdhK7Z1n8jmN_DwRXv3lL9sTXHTamfkDKXk-RcpkWLKVqccYXUes_j2CXffV69SX32TR2B=s1600",
+    tags: ["Rapid Prototyping", "Satellite Components", "Space Manufacturing", "Thin-Wall Machining", "NPD"],
+    featured: false,
+    seoTitle: "Satellite Broadcast & Sensor Components | EMUSKI",
+    metaDescription: "EMUSKI prototyped a space-grade satellite barrel with 1mm wall thickness and complex grooves in 3 days, leading to a full manufacturing partnership.",
+    keywords: ["rapid prototyping", "satellite components", "space manufacturing", "thin-wall machining", "npd"],
+  },
+  {
+    id: 1004,
+    slug: "advanced-graphite-machining",
+    title: "Advanced Graphite Machining",
+    excerpt: "EMUSKI sourced proprietary Tokai Carbon within India, ran 9 mechanical tests, and delivered final components where no local supplier could.",
+    content: "A high-performance products company required proprietary Tokai Carbon but could find no local supplier in India. EMUSKI identified the right manufacturer, executed all 9 required mechanical tests including tensile strength, thermal conductivity, and hardness validation, then manufactured the final components needed for the client's high-performance application, providing an end-to-end supply chain solution.",
+    fullContent: `<h2>Sourcing the Impossible</h2>
+<h3>Who the Client Was</h3>
+<p>A company that relies on specialized, exotic materials for its high-performance products.</p>
+<h3>The Challenge</h3>
+<p>The client required a specific, high-performance graphite material. Crucially, they could not find a manufacturer or supplier capable of producing the proprietary Tokai Carbon material within India. This sourcing gap was a significant impediment to their product development and domestic production goals.</p>
+<h3>How We Helped</h3>
+<p>EMUSKI became an extension of the client's internal team, functioning as a concurrent design and procurement partner. Our primary step was to use our network and expertise to identify the right supplier who could reliably manufacture the Tokai Carbon in India. Following material sourcing, we executed the entire project, which included all 9 necessary mechanical tests required to validate the chosen material:</p>
+<ul>
+<li>Ultimate Tensile Strength</li>
+<li>Thermal Conductivity</li>
+<li>Grain Size</li>
+<li>Compressive Strength</li>
+<li>Flexural Strength</li>
+<li>Electrical Resistivity</li>
+<li>Shore D Hardness</li>
+<li>Bulk Density</li>
+<li>Porosity</li>
+</ul>
+<p>Finally, we manufactured the actual components required for their final product using the sourced material, ensuring a seamless supply chain.</p>
+<h3>Outcome</h3>
+<p>We successfully filled a critical supply chain void by sourcing and qualifying the production of Tokai Carbon within India. This led to the successful execution and manufacturing of the final components needed for their application. Our comprehensive approach — from sourcing an exotic material to final component manufacturing and testing — provided a complete solution.</p>
+<h3>Client Feedback</h3>
+<p><em>"The challenge was finding a reliable local supplier for our specialized material. EMUSKI became our partner, not just manufacturing the final components, but successfully sourcing and executing the entire project, including all required mechanical testing."</em></p>`,
+    category: "Case Study",
+    author: "EMUSKI",
+    authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
+    authorImage: "/logo.webp",
+    publishDate: "2025-12-11T00:00:00Z",
+    readTime: "2 min read",
+    image: "https://blogger.googleusercontent.com/img/a/AVvXsEiCEoWEX9LGlwOhnXUO-1V1fQqwpet1E_2lDr70ShXdbakM5Muku1WZsxTMoRUi1otg0WGEKrz8-ZtTPhWkawDl6xWDT2Nadc46YrIc5rNMdIBMJVSqKK0a6hM4gbRH-ndjNwut6NlJkeqE16Oi8WzE6qhlznT_lIU6XhwyfBjd32hzNo4lT-D_gkOKOjCx=s1600",
+    tags: ["Advanced Materials", "Graphite Machining", "Made in India", "Supply Chain", "Mechanical Testing"],
+    featured: false,
+    seoTitle: "Advanced Graphite Machining | EMUSKI",
+    metaDescription: "EMUSKI sourced proprietary Tokai Carbon within India, ran 9 mechanical tests, and delivered final components where no local supplier could.",
+    keywords: ["advanced materials", "graphite machining", "made in india", "supply chain", "mechanical testing"],
+  },
+  {
+    id: 1005,
+    slug: "defense-sector",
+    title: "Defense Sector",
+    excerpt: "EMUSKI achieved zero-zero tolerance on defense components by controlling anodization thickness, enabling flawless assembly after other suppliers failed.",
+    content: "A defense manufacturer needed turret rotation and barrel mount components with extremely tight tolerances. Previous suppliers failed to meet specs before and after anodization, halting assembly. EMUSKI's NPD Center conducted anodization R&D, measuring coating thickness to understand dimensional impacts. By freezing precise tolerance values, EMUSKI manufactured components achieving zero-zero tolerance mating, eliminating production failures and enabling reliable delivery of the mission-critical device.",
+    fullContent: `<h2>Zero-Zero Tolerance: Engineering Solutions for Defense Criticality</h2>
+<h3>Who the Client Was</h3>
+<p>A major player in the highly regulated defense sector, responsible for manufacturing sensitive and mission-critical hardware.</p>
+<h3>The Challenge</h3>
+<p>The client was developing a crucial device that included components for turret rotation, receivers and barrel mount blocks. The primary challenge involved achieving extremely tight criticality and tolerance levels throughout manufacturing. Previous suppliers failed to consistently meet required tolerances, particularly critical specifications before and after the anodization process. This inconsistency halted final dovetail assembly.</p>
+<h3>How We Helped</h3>
+<p>EMUSKI's NPD Center performed extensive research and development focused on the anodization process. The team measured anodization thickness during R&D to understand dimensional impacts. This analysis enabled determination and freezing of precise values for both anodization thickness and component tolerance before final plating, ensuring part integrity throughout production stages.</p>
+<h3>Outcome</h3>
+<p>By implementing precise manufacturing and process-control methodology combined with anodization R&D, components were successfully manufactured to achieve zero-zero tolerance mating in final assembly. Production failures were eliminated, enabling reliable delivery of the high-stakes defense device.</p>
+<h3>Client Feedback</h3>
+<p><em>"EMUSKI successfully delivered where others had failed, mastering the critical tolerances required before and after anodization to ensure final assembly perfection."</em></p>`,
+    category: "Case Study",
+    author: "EMUSKI",
+    authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
+    authorImage: "/logo.webp",
+    publishDate: "2025-12-11T00:00:00Z",
+    readTime: "2 min read",
+    image: "https://blogger.googleusercontent.com/img/a/AVvXsEhrpYNX50faLLTIAT54bfbwTOdc0oWxfefTxmn-8QepP6a9piPFDRddD6C9DCUPfyv-p7YYwiGjHvqoykGSoZglLbVCURWANzZu9WAjrAew6SYwmj0Vy_hDB_oDweZlSx5aTYps4ctVF6HxeR0Xq6Cf2n2TfGzYNeQ2dR0_ri_hlaujjk3kMgcicLuGHrm_=s1600",
+    tags: ["Defense Manufacturing", "Precision Tolerances", "Anodization", "Zero Tolerance", "NPD"],
+    featured: false,
+    seoTitle: "Defense Sector | EMUSKI",
+    metaDescription: "EMUSKI achieved zero-zero tolerance on defense components by controlling anodization thickness, enabling flawless assembly after other suppliers failed.",
+    keywords: ["defense manufacturing", "precision tolerances", "anodization", "zero tolerance", "npd"],
+  },
+  {
+    id: 1006,
+    slug: "opto-imaging-pioneer",
+    title: "Opto Imaging Pioneer",
+    excerpt: "EMUSKI manufactured 500 precision components and assembled 10 complete opto imaging devices within one month, dramatically accelerating time-to-market.",
+    content: "A leading opto imaging company needed end-to-end manufacturing and assembly of a new device with 500 intricate mechanical components, aiming to produce 10 finished devices in one month. EMUSKI's NPD Center managed the entire project — manufacturing all 500 components and integrating them into complete assemblies. All 10 devices were delivered within the one-month deadline, demonstrating EMUSKI's ability to handle complex, multi-component projects under extreme time pressure.",
+    fullContent: `<h2>Accelerating Innovation: 500 Components in 30 Days</h2>
+<h3>Who the Client Was</h3>
+<p>A leading company operating within the highly specialized opto imaging industry. They are focused on cutting-edge technology but faced a significant hurdle in bringing their next-generation hardware to market.</p>
+<h3>The Challenge</h3>
+<p>The client required the complete end-to-end building and assembly of a new device. This assembly was exceptionally complex, involving approximately <strong>500 intricate mechanical components</strong>. Their goal was ambitious: to produce a batch of <strong>10 finished devices</strong> and launch within a critical <strong>one-month timeframe</strong>. They needed a partner who could manage the entire supply chain, manufacturing and assembly process under extreme time pressure.</p>
+<h3>How We Helped</h3>
+<p>The client approached EMUSKI's NPD Center for this critical task. Leveraging our comprehensive NPD capabilities, we took on the entire project. Our focus was on manufacturing and delivering all 500 mechanical components and integrating them to build the complete assembly. Our strategic process ensured the client could get their product into a faster market.</p>
+<h3>Outcome</h3>
+<p>We successfully manufactured all required components and completed the entire assembly process. The project resulted in the delivery of <strong>10 fully functioning devices</strong> within the demanding <strong>one-month deadline</strong>. This partnership proved our ability to manage complex, multi-component projects and drastically reduce time-to-market for innovative hardware.</p>`,
+    category: "Case Study",
+    author: "EMUSKI",
+    authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
+    authorImage: "/logo.webp",
+    publishDate: "2025-12-11T00:00:00Z",
+    readTime: "2 min read",
+    image: "https://blogger.googleusercontent.com/img/a/AVvXsEgrku0QZNTk8RpeWI2NYacXn3iq0UZP1LAxWtqRmCGmTgl8aA96A4s1JSiaNiUJHwYVXahLcuuI6EUTNVVZeubp863TySKAuv0Y0HgEppewDPGDNMdmsl-PJ259mtuMNCVBTcPsTPIWSYts3i6MazKQ8GaWQ0qjtKu-ynLCaoUqkAlCeTEWoMIJgFFkuIXA=s1600",
+    tags: ["Opto Imaging", "Assembly", "Rapid Manufacturing", "NPD", "Supply Chain"],
+    featured: false,
+    seoTitle: "Opto Imaging Pioneer | EMUSKI",
+    metaDescription: "EMUSKI manufactured 500 precision components and assembled 10 complete opto imaging devices within one month, dramatically accelerating time-to-market.",
+    keywords: ["opto imaging", "assembly", "rapid manufacturing", "npd", "supply chain"],
   },
 ];
 
