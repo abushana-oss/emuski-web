@@ -551,11 +551,9 @@ export async function fetchAllBlogs(fetchAll: boolean = true): Promise<{
   successStories: BlogPost[];
   all: BlogPost[];
 }> {
-  const [manufacturing, engineering, successStories] = await Promise.all([
-    fetchBlogPosts('manufacturing', 100, fetchAll),
-    fetchBlogPosts('engineering', 100, fetchAll),
-    fetchBlogPosts('successStories', 100, fetchAll),
-  ]);
+  // Blogger API disabled — all posts served from blogData.ts
+  // To re-enable: replace the line below with the original Promise.all() call
+  const [manufacturing, engineering, successStories]: [BlogPost[], BlogPost[], BlogPost[]] = [[], [], []];
 
   const localPosts = allBlogPosts.map(normalizeLocalPost);
   const localSlugs = new Set(localPosts.map(p => p.slug));
