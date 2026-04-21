@@ -61,6 +61,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
   const contentRef = useRef<HTMLDivElement>(null);
   const articleRef = useRef<HTMLElement>(null);
   const tocNavRef = useRef<HTMLElement>(null);
@@ -300,6 +301,12 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
   };
 
   const faqs = useMemo(() => extractFAQs(), [post, isMounted]);
+
+  useEffect(() => {
+    if (isMounted) {
+      setFaqItems(extractFAQs());
+    }
+  }, [isMounted, post]);
 
   // Split fullContent at the FAQ h2 so the accordion renders separately
   const bodyHtml = useMemo(() => {
@@ -990,7 +997,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                   />
 
                   {/* FAQ Accordion */}
-                  {faqs.length > 0 && isMounted && <FAQAccordion faqs={faqs} />}
+                  {faqItems.length > 0 && <FAQAccordion faqs={faqItems} />}
 
                   {/* Tags - SEO Keywords */}
                   {post.tags && Array.isArray(post.tags) && post.tags.length > 0 && (
