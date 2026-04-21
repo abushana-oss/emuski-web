@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import Script from "next/script";
-import { ArrowLeft, Twitter, Linkedin, Facebook, Mail, Menu, Share2, Bookmark, Clock, Calendar, ChevronRight } from "lucide-react";
+import { ArrowLeft, Twitter, Linkedin, Facebook, Mail, Menu, Share2, Bookmark, Clock, Calendar, ChevronRight, ChevronDown } from "lucide-react";
 import { BlogPost } from "@/lib/api/blogger";
 import { useBlogTracking } from "@/lib/hooks/useAnalytics";
 import { trackClick, trackBlogEngagement } from "@/lib/analytics";
@@ -14,6 +14,44 @@ import "../styles/blog-content.css";
 interface BlogPostComponentProps {
   post: BlogPost;
   allPosts: BlogPost[];
+}
+
+type FAQItem = { question: string; answer: string };
+
+function FAQAccordion({ faqs }: { faqs: FAQItem[] }) {
+  const [openIndex, setOpenIndex] = useState<number>(0);
+
+  return (
+    <div className="mt-8 pt-8 border-t border-gray-200">
+      <h2 className="text-[24px] sm:text-[28px] lg:text-[32px] font-extrabold text-[#171A22] mb-6 pb-3 border-b border-gray-200">
+        Frequently Asked Questions
+      </h2>
+      <div className="divide-y divide-gray-200">
+        {faqs.map((faq, i) => {
+          const isOpen = openIndex === i;
+          return (
+            <div key={i}>
+              <button
+                onClick={() => setOpenIndex(isOpen ? -1 : i)}
+                className={`w-full flex items-center justify-between gap-4 py-4 px-3 text-left transition-colors hover:bg-gray-50 rounded-sm ${isOpen ? 'bg-teal-50/60' : ''}`}
+                aria-expanded={isOpen}
+              >
+                <span className="font-bold text-[#171A22] text-base sm:text-lg leading-snug">{faq.question}</span>
+                <ChevronDown
+                  className={`h-5 w-5 flex-shrink-0 text-teal-600 transition-transform duration-200 ${isOpen ? '' : '-rotate-90'}`}
+                />
+              </button>
+              {isOpen && (
+                <div className="px-3 pb-5 pt-1 text-gray-700 text-base leading-relaxed">
+                  {faq.answer}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) => {
@@ -262,6 +300,12 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
   };
 
   const faqs = useMemo(() => extractFAQs(), [post, isMounted]);
+
+  // Split fullContent at the FAQ h2 so the accordion renders separately
+  const bodyHtml = useMemo(() => {
+    const markerIndex = post.fullContent.search(/<h2[^>]*>\s*Frequently Asked Questions\s*<\/h2>/i);
+    return markerIndex === -1 ? post.fullContent : post.fullContent.substring(0, markerIndex);
+  }, [post.fullContent]);
 
   // ENHANCED Article Schema with ALL SEO fields
   const articleSchema = {
@@ -733,7 +777,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                     }}
                     dangerouslySetInnerHTML={{
                       __html: (() => {
-                        let html = post.fullContent;
+                        let html = bodyHtml;
 
                         // STEP 1: Preserve bold formatting - Convert all bold indicators to <strong>
                         // This must happen BEFORE we remove inline styles
@@ -944,6 +988,9 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                       })()
                     }}
                   />
+
+                  {/* FAQ Accordion */}
+                  {faqs.length > 0 && isMounted && <FAQAccordion faqs={faqs} />}
 
                   {/* Tags - SEO Keywords */}
                   {post.tags && Array.isArray(post.tags) && post.tags.length > 0 && (
