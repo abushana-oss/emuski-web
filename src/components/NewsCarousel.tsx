@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import Link from "next/link";
 import Image from "next/image";
-import { useSuccessStoriesPosts } from "../hooks/useBlogData";
+import { allBlogPosts } from "../data/blogData";
 
 // Include all partner logos - 6 priority partners + 16 manufacturing partners
 const clientLogos = [
@@ -24,8 +24,8 @@ const clientLogos = [
 export const NewsCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Fetch success stories from Blogger
-  const { posts: successStories, loading, error } = useSuccessStoriesPosts({ maxResults: 10 });
+  const successStories = allBlogPosts.filter(p => p.category === 'Case Study').slice(0, 10);
+  const loading = false;
 
   const scroll = (direction: "left" | "right") => {
     if (containerRef.current) {

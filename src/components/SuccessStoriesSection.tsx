@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Clock, User, Loader2 } from "lucide-react";
 import { Card } from "./ui/card";
-import { useSuccessStoriesPosts } from "../hooks/useBlogData";
+import { allBlogPosts } from "../data/blogData";
 
 const POSTS_PER_PAGE = 6;
 
@@ -30,11 +30,11 @@ export function SuccessStoriesSection({ initialPosts }: SuccessStoriesSectionPro
 
   // Hook must always be called (Rules of Hooks). Its result is only used when
   // no server-side data was passed in — i.e. as a client-side fallback.
-  const { posts: hookPosts, loading: hookLoading, error: hookError } = useSuccessStoriesPosts({ maxResults: 50 });
+  const localPosts = allBlogPosts.filter(p => p.category === 'Case Study') as StoryPost[];
 
-  const allPosts: StoryPost[] = hasInitialData ? initialPosts : hookPosts;
-  const isLoading = hasInitialData ? false : hookLoading;
-  const error = hasInitialData ? null : hookError;
+  const allPosts: StoryPost[] = hasInitialData ? initialPosts : localPosts;
+  const isLoading = false;
+  const error = null;
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
