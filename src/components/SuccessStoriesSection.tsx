@@ -30,7 +30,9 @@ export function SuccessStoriesSection({ initialPosts }: SuccessStoriesSectionPro
 
   // Hook must always be called (Rules of Hooks). Its result is only used when
   // no server-side data was passed in — i.e. as a client-side fallback.
-  const localPosts = allBlogPosts.filter(p => p.category === 'Case Study') as StoryPost[];
+  const localPosts = allBlogPosts
+    .filter(p => p.category === 'Case Study')
+    .map(p => ({ ...p, id: String(p.id) })) as StoryPost[];
 
   const allPosts: StoryPost[] = hasInitialData ? initialPosts : localPosts;
   const isLoading = false;
