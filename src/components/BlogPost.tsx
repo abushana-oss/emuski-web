@@ -1091,7 +1091,6 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
                       : 'lg:sticky lg:top-20 lg:self-start'
                   }`}
                   style={{ maxHeight: 'calc(100vh - 5rem)' }}
-                  style={{ maxHeight: 'calc(100vh - 5rem)' }}
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* Mobile Close Button */}
