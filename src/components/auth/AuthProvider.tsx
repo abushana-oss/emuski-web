@@ -1,6 +1,8 @@
 'use client'
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { supabase } from '@/lib/supabase'
+import { clearSupabaseStorage } from '@/lib/storage'
 import { isAdminUser } from '@/lib/auth-config'
 import type { AuthUser } from '@/types/auth'
 
@@ -17,14 +19,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
   const mountedRef = useRef(true)
-  const subscriptionRef = useRef<{ unsubscribe: () => void } | null>(null)
 
   useEffect(() => {
     mountedRef.current = true
 
-    import('@/lib/supabase').then(({ supabase }) => {
-      // 1. Get initial session — source of truth on mount
-      supabase.auth.getSession().then(({ data: { session } }) => {
+    // 1. Get initial session — source of truth on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mountedRef.current) return
+      const user = session?.user ? {
+        ...session.user,
+        name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0],
+        isAdmin: isAdminUser(session.user.email || '')
+      } : null
+      setUser(user)
+      setLoading(false)
+    })
+
+    // 2. Subscribe to ALL future auth state changes — this handles
+    //    sign-in, sign-out, token refresh, and account switches
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
         if (!mountedRef.current) return
         const user = session?.user ? {
           ...session.user,
@@ -33,29 +47,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } : null
         setUser(user)
         setLoading(false)
-      })
-
-      // 2. Subscribe to ALL future auth state changes — this handles
-      //    sign-in, sign-out, token refresh, and account switches
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        (_event, session) => {
-          if (!mountedRef.current) return
-          const user = session?.user ? {
-            ...session.user,
-            name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0],
-            isAdmin: isAdminUser(session.user.email || '')
-          } : null
-          setUser(user)
-          setLoading(false)
-        }
-      )
-
-      subscriptionRef.current = subscription
-    })
+      }
+    )
 
     return () => {
       mountedRef.current = false
-      subscriptionRef.current?.unsubscribe()
+      subscription.unsubscribe()
     }
   }, [])
 
@@ -71,13 +68,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.warn('Failed to clear session cache:', cacheError)
     }
 
-    const { supabase } = await import('@/lib/supabase')
     const { error } = await supabase.auth.signOut()
     if (error) {
       // Fallback: clear local state even if server call failed
       setUser(null)
       // Clear storage as fallback when server signOut fails
-      const { clearSupabaseStorage } = await import('@/lib/storage')
       clearSupabaseStorage()
       return { error: error as Error }
     }
