@@ -84,6 +84,7 @@ export interface BlogPost {
   content?: string;
   authorBio?: string;
   keywords?: string[];
+  featured?: boolean;
 }
 
 function normalizeLocalPost(p: LocalDataPost): BlogPost {
