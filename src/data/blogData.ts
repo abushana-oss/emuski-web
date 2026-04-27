@@ -1093,34 +1093,6 @@ export const blogPosts: BlogPost[] = [
     keywords: ["defense manufacturing", "precision tolerances", "anodization", "zero tolerance", "npd"],
   },
   {
-    id: 1006,
-    slug: "opto-imaging-pioneer",
-    title: "Opto Imaging Pioneer",
-    excerpt: "EMUSKI manufactured 500 precision components and assembled 10 complete opto imaging devices within one month, dramatically accelerating time-to-market.",
-    content: "A leading opto imaging company needed end-to-end manufacturing and assembly of a new device with 500 intricate mechanical components, aiming to produce 10 finished devices in one month. EMUSKI's NPD Center managed the entire project — manufacturing all 500 components and integrating them into complete assemblies. All 10 devices were delivered within the one-month deadline, demonstrating EMUSKI's ability to handle complex, multi-component projects under extreme time pressure.",
-    fullContent: `<h2>Accelerating Innovation: 500 Components in 30 Days</h2>
-<h3>Who the Client Was</h3>
-<p>A leading company operating within the highly specialized opto imaging industry. They are focused on cutting-edge technology but faced a significant hurdle in bringing their next-generation hardware to market.</p>
-<h3>The Challenge</h3>
-<p>The client required the complete end-to-end building and assembly of a new device. This assembly was exceptionally complex, involving approximately <strong>500 intricate mechanical components</strong>. Their goal was ambitious: to produce a batch of <strong>10 finished devices</strong> and launch within a critical <strong>one-month timeframe</strong>. They needed a partner who could manage the entire supply chain, manufacturing and assembly process under extreme time pressure.</p>
-<h3>How We Helped</h3>
-<p>The client approached EMUSKI's NPD Center for this critical task. Leveraging our comprehensive NPD capabilities, we took on the entire project. Our focus was on manufacturing and delivering all 500 mechanical components and integrating them to build the complete assembly. Our strategic process ensured the client could get their product into a faster market.</p>
-<h3>Outcome</h3>
-<p>We successfully manufactured all required components and completed the entire assembly process. The project resulted in the delivery of <strong>10 fully functioning devices</strong> within the demanding <strong>one-month deadline</strong>. This partnership proved our ability to manage complex, multi-component projects and drastically reduce time-to-market for innovative hardware.</p>`,
-    category: "Case Study",
-    author: "EMUSKI",
-    authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
-    authorImage: "/logo.webp",
-    publishDate: "2025-12-11T00:00:00Z",
-    readTime: "2 min read",
-    image: "/blog/images/opto-imaging-pioneer.jpg",
-    tags: ["Opto Imaging", "Assembly", "Rapid Manufacturing", "NPD", "Supply Chain"],
-    featured: false,
-    seoTitle: "Opto Imaging Pioneer | EMUSKI",
-    metaDescription: "EMUSKI manufactured 500 precision components and assembled 10 complete opto imaging devices within one month, dramatically accelerating time-to-market.",
-    keywords: ["opto imaging", "assembly", "rapid manufacturing", "npd", "supply chain"],
-  },
-  {
     id: 1007,
     slug: "dfm-secrets-how-smart-design-can-save-30-40-of-your-manufacturing-cost",
     title: "DFM Secrets: How Smart Design Can Save 30-40% of Your Manufacturing Cost",

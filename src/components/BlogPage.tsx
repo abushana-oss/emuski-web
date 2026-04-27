@@ -471,7 +471,7 @@ export const BlogPage = ({ manufacturingPosts, engineeringPosts, successStoriesP
       {/* Independent Engineering Articles Section */}
       {engineeringPosts.length > 0 && <EngineeringSection posts={engineeringPosts} />}
 
-      <SuccessStoriesSection />
+      <SuccessStoriesSection initialPosts={successStoriesPosts} />
 
       {/* Topics + Newsletter */}
       <section className="bg-white py-12 border-t border-gray-100">

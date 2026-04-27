@@ -7,6 +7,7 @@ import { Card } from "./ui/card";
 import Link from "next/link";
 import Image from "next/image";
 import { allBlogPosts } from "../data/blogData";
+import type { BlogPost } from "../lib/api/blogger";
 
 // Include all partner logos - 6 priority partners + 16 manufacturing partners
 const clientLogos = [
@@ -21,10 +22,15 @@ const clientLogos = [
   }))
 ];
 
-export const NewsCarousel = () => {
+interface NewsCarouselProps {
+  initialPosts?: BlogPost[];
+}
+
+export const NewsCarousel = ({ initialPosts }: NewsCarouselProps = {}) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const successStories = allBlogPosts.filter(p => p.category === 'Case Study').slice(0, 10);
+  const successStories = initialPosts
+    ?? allBlogPosts.filter(p => p.category === 'Case Study').slice(0, 10);
   const loading = false;
 
   const scroll = (direction: "left" | "right") => {

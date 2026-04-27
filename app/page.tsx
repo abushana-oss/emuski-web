@@ -12,6 +12,7 @@ import { ContactSection } from "@/components/ContactSection"
 import { FAQSection } from "@/components/FAQSection"
 import { TestimonialsSection } from "@/components/TestimonialsSection"
 import { ManufacturingNPDSection } from "@/components/ManufacturingNPDSection"
+import { fetchAllBlogs } from "@/lib/api/blogger"
 
 export const metadata: Metadata = {
   title: 'ISO Certified OEM Manufacturing & Precision Engineering | EMUSKI Bangalore',
@@ -22,7 +23,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
-export default function Home() {
+export default async function Home() {
+  const { successStories } = await fetchAllBlogs()
   return (
     <>
       <script
@@ -66,7 +68,7 @@ export default function Home() {
         </LazyRender>
 
         <LazyRender minHeight="300px">
-          <NewsCarousel />
+          <NewsCarousel initialPosts={successStories} />
         </LazyRender>
 
         <LazyRender minHeight="400px">
