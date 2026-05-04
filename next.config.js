@@ -68,6 +68,11 @@ const imageConfig = {
       pathname: '/**',
     },
     {
+      protocol: 'https',                                                          
+      hostname: 'i.ibb.co',                                                       
+      pathname: '/**', 
+    },
+    {
       protocol: 'https',
       hostname: 'plus.unsplash.com',
       pathname: '/**',
