@@ -113,7 +113,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <section className="relative w-full min-h-[70vh] lg:min-h-[80vh] overflow-hidden bg-black">
+    <section className="relative w-full min-h-[calc(100vh-64px)] overflow-hidden bg-black">
       {/* Slides Container */}
       {slides.map((slide, index) => {
         // Only render current slide and adjacent slides for performance

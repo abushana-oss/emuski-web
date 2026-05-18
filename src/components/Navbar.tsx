@@ -130,7 +130,7 @@ export const Navbar = () => {
     const baseClasses = "transition-colors text-lg font-medium whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
     const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
-    
+
     return `${baseClasses} ${isActiveLink(path) ? activeClasses : inactiveClasses}`;
   };
 
@@ -138,7 +138,7 @@ export const Navbar = () => {
     const baseClasses = "transition-colors text-lg font-medium flex items-center space-x-1 whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
     const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
-    
+
     return `${baseClasses} ${isActiveServiceLink() ? activeClasses : inactiveClasses}`;
   };
 
@@ -149,43 +149,45 @@ export const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
       <div className="w-full px-4 sm:px-6">
-        <div className="flex items-center justify-between h-20">
-          <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-1.5 group">
-              <Image
-                src={emuskiLogoMobile}
-                alt="EMUSKI Manufacturing Solutions Logo"
-                width={88}
-                height={88}
-                sizes="44px"
-                className="h-11 w-auto object-contain"
-                style={{ 
-                  width: "44px", 
-                  height: "44px", 
-                  maxWidth: "44px", 
-                  maxHeight: "44px",
-                  imageRendering: "crisp-edges",
-                  WebkitImageSmoothing: false,
-                  msInterpolationMode: "nearest-neighbor"
-                } as React.CSSProperties}
-                quality={100}
-                priority
-                unoptimized={true}
-              />
-              <span className="text-xl sm:text-2xl font-bold text-foreground">EMUSKI</span>
-            </Link>
+        <div className="flex items-center justify-between h-16">
+          {/* Logo — left */}
+          <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
+            <Image
+              src={emuskiLogoMobile}
+              alt="EMUSKI Manufacturing Solutions Logo"
+              width={44}
+              height={44}
+              sizes="44px"
+              className="h-11 w-auto object-contain"
+              style={{
+                width: "44px",
+                height: "44px",
+                maxWidth: "44px",
+                maxHeight: "44px",
+                imageRendering: "crisp-edges",
+                WebkitImageSmoothing: false,
+                msInterpolationMode: "nearest-neighbor"
+              } as React.CSSProperties}
+              quality={100}
+              priority
+              unoptimized={true}
+            />
+            <span className="text-xl sm:text-2xl font-bold text-foreground">EMUSKI</span>
+          </Link>
 
-            {/* Navigation near logo */}
+          {/* Right side — all nav + mobile controls */}
+          <div className="flex items-center gap-6">
+            {/* Desktop nav — all items right-aligned */}
             <div className="hidden md:flex items-center space-x-6" ref={servicesRef}>
               <Link
                 href="/"
                 className={getLinkClasses("/")}
                 title="Home"
               >
-                <Home className="h-5 w-5" />
+                <Home className="h-4 w-4" />
               </Link>
 
-              {/* Individual Service Dropdowns */}
+              {/* Service dropdowns */}
               {Object.entries(servicesDropdown).map(([key, service]) => (
                 <div
                   key={key}
@@ -203,11 +205,7 @@ export const Navbar = () => {
                         {service.name}
                       </Link>
                     ) : (
-                      <div className="flex items-center">
-                        <span className={getLinkClasses("#")}>
-                          {service.name}
-                        </span>
-                      </div>
+                      <span className={getLinkClasses("#")}>{service.name}</span>
                     )}
                     <button
                       onClick={(e) => {
@@ -221,9 +219,7 @@ export const Navbar = () => {
                   </div>
 
                   {activeServiceDropdown === key && (
-                    <div
-                      className="absolute top-full left-0 pt-2 w-64 z-[60]"
-                    >
+                    <div className="absolute top-full right-0 pt-2 w-64 z-[60]">
                       <div
                         className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
                         style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
@@ -238,7 +234,7 @@ export const Navbar = () => {
                               {service.name} Overview
                             </Link>
                           )}
-                          {service.subItems.map((subItem, index) => (
+                          {service.subItems.map((subItem) => (
                             <Link
                               key={subItem.path}
                               href={subItem.path}
@@ -262,31 +258,18 @@ export const Navbar = () => {
                 </div>
               ))}
 
-
-
-              {navigationConfig.leftMenu.map((item) => (
-                <Link 
+              {[...navigationConfig.leftMenu, ...navigationConfig.rightMenu].map((item) => (
+                <Link
                   key={item.path}
-                  href={item.path} 
-                  className={getLinkClasses(item.path)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-
-              {navigationConfig.rightMenu.map((item) => (
-                <Link 
-                  key={item.path}
-                  href={item.path} 
+                  href={item.path}
                   className={getLinkClasses(item.path)}
                 >
                   {item.name}
                 </Link>
               ))}
             </div>
-          </div>
 
-          <div className="flex items-center space-x-4">
+            {/* Mobile: current page name + hamburger */}
             <span className="sm:hidden transition-colors text-lg font-medium text-emuski-teal-darker">
               {getCurrentPageName()}
             </span>
