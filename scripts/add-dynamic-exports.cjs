@@ -6,14 +6,8 @@ const fs = require('fs');
 const path = require('path');
 
 const API_ROUTES = [
-  'app/api/credits/status/route.ts',
   'app/api/image-proxy/route.ts',
   'app/api/blog/route.ts',
-  'app/api/cad-engine/health/route.ts',
-  'app/api/cad-engine/memory/usage-report/route.ts',
-  'app/api/cad-engine/analyze/geometry/route.ts',
-  'app/api/s3/signed-url/route.ts',
-  'app/api/balloon-diagrams/export/route.ts',
   'app/api/contact/route.ts',
   'app/api/blog/[postId]/route.ts',
   'app/api/analytics/track/route.ts'

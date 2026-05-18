@@ -315,6 +315,29 @@ export function AIOptimizedStructuredData() {
     }
   }
 
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': 'https://www.emuski.com/#website',
+    url: 'https://www.emuski.com',
+    name: 'EMUSKI Manufacturing Solutions',
+    description: 'ISO certified OEM precision manufacturing and cost engineering partner in Bangalore, India',
+    publisher: { '@id': 'https://www.emuski.com/#organization' },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://www.emuski.com/blog?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', 'h2', '[data-speakable]'],
+    },
+    mainEntity: { '@id': 'https://www.emuski.com/#organization' },
+  }
+
   return (
     <>
       {/* Enhanced Organization Schema */}
@@ -325,13 +348,22 @@ export function AIOptimizedStructuredData() {
           __html: JSON.stringify(organizationSchema, null, 0)
         }}
       />
-      
+
       {/* Enhanced Services Schema */}
       <Script
         id="ai-services-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(servicesSchema, null, 0)
+        }}
+      />
+
+      {/* WebSite Schema with SearchAction and SpeakableSpecification for AI voice interfaces */}
+      <Script
+        id="ai-website-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(websiteSchema, null, 0)
         }}
       />
     </>

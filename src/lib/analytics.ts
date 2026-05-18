@@ -61,9 +61,6 @@ function getServiceCategory(url: string): string {
   if (url.includes('manufacturing-services')) return 'Precision Manufacturing Services';
   if (url.includes('cost-engineering')) return 'Cost Engineering Services';
   if (url.includes('solutions/ai')) return 'AI Solutions';
-  if (url.includes('tools/2d-balloon-diagram')) return 'Engineering Tools - 2D Balloon Diagram';
-  if (url.includes('tools/3d-cad-analysis')) return 'Engineering Tools - 3D CAD Analysis';
-  if (url.includes('tools/')) return 'Engineering Tools';
   if (url.includes('blog')) return 'Blog & Resources';
   if (url.includes('gallery')) return 'Portfolio Gallery';
   if (url.includes('contact')) return 'Contact & Inquiries';

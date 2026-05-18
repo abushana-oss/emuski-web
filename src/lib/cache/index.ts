@@ -64,13 +64,6 @@ export async function initializeCacheSystem(): Promise<void> {
     if (!isHealthy) {
     }
 
-    // Set up cache dependencies
-    invalidationManager.addDependency(
-      'dfm-analysis-v2',
-      ['algorithm-version', 'geometry-data'],
-      '2.1.0'
-    )
-
     // Initialize monitoring (this will subscribe to the health coordinator)
     // cacheMonitor is initialized in its constructor
     

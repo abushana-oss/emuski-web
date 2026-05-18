@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import UserMenu from "./auth/UserMenu";
 const emuskiLogo = "/logo.svg";
 const emuskiLogoMobile = "/logo.webp";
 
@@ -38,14 +37,6 @@ const servicesDropdown = {
       { name: "Mithran AI", path: "/solutions/ai", beta: true }
     ]
   },
-  tools: {
-    name: "Tools",
-    path: "#",
-    subItems: [
-      { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" },
-      { name: "2D Balloon Diagram", path: "/tools/2d-balloon-diagram" }
-    ]
-  }
 };
 
 
@@ -79,13 +70,6 @@ const navigationConfig = {
       ]
     },
     {
-      title: "Tools",
-      items: [
-        { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" },
-        { name: "2D Balloon Diagram", path: "/tools/2d-balloon-diagram" }
-      ]
-    },
-    {
       title: "Solutions",
       items: [
         { name: "Next-GenAI", path: "/solutions/ai" },
@@ -105,10 +89,7 @@ const routeToPageName: Record<string, string> = {
   "/blog": "Blog",
   "/gallery": "Gallery",
   "/contact": "Contact",
-  "/solutions/ai": "Next-GenAI",
-  "/tools": "Tools",
-  "/tools/3d-cad-analysis": "3D CAD Analysis",
-  "/tools/2d-balloon-diagram": "2D Balloon Diagram"
+  "/solutions/ai": "Next-GenAI"
 };
 
 export const Navbar = () => {
@@ -306,11 +287,6 @@ export const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* User Menu */}
-            <div className="hidden md:block">
-              <UserMenu />
-            </div>
-
             <span className="sm:hidden transition-colors text-lg font-medium text-emuski-teal-darker">
               {getCurrentPageName()}
             </span>
@@ -350,9 +326,6 @@ export const Navbar = () => {
                       <div>
                         <p className="text-xs font-semibold text-gray-700 leading-tight">One-stop solution for OEMs</p>
                       </div>
-                    </div>
-                    <div className="md:hidden w-full pt-3 flex items-center justify-center border-t border-emuski-teal/10">
-                      <UserMenu />
                     </div>
                   </div>
                   <div className="py-2 max-h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">

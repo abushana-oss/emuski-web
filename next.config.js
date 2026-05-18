@@ -237,16 +237,6 @@ const nextConfig = {
     ];
   },
 
-  // Proxy CAD engine requests to avoid CORS issues
-  async rewrites() {
-    return [
-      {
-        source: '/api/cad-engine/:path*',
-        destination: `${process.env.CAD_ENGINE_URL || 'http://localhost:5000'}/:path*`,
-      },
-    ];
-  },
-
   // SEO-friendly redirects for old/incorrect URLs
   async redirects() {
     return [
@@ -314,20 +304,6 @@ const nextConfig = {
         source: '/contact/',
         destination: '/contact',
         permanent: true,
-      },
-
-      // Auth callback redirect to prevent indexing
-      {
-        source: '/auth/callback',
-        destination: '/',
-        permanent: false, // Temporary redirect as auth callback is functional
-        has: [
-          {
-            type: 'header',
-            key: 'user-agent',
-            value: '(.*bot.*|.*crawler.*|.*spider.*)',
-          }
-        ]
       },
 
       // Old service URLs to current pages
@@ -412,8 +388,6 @@ const nextConfig = {
       { source: '/industries', destination: '/manufacturing-services', permanent: true },
       { source: '/industries/aerospace', destination: '/manufacturing-services', permanent: true },
       { source: '/industries/automotive', destination: '/manufacturing-services', permanent: true },
-      { source: '/tools', destination: '/tools/3d-cad-analysis', permanent: true },
-      { source: '/tools/', destination: '/tools/3d-cad-analysis', permanent: true },
       { source: '/ae', destination: '/', permanent: true },
       { source: '/ae/', destination: '/', permanent: true },
       { source: '/br', destination: '/', permanent: true },

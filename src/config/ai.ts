@@ -130,8 +130,6 @@ AI-powered intelligence delivering measurable results for OEMs:
 - Smart sourcing intelligence for strategic procurement decisions
 
 **Advanced AI Tools Suite:**
-- **3D CAD Analysis Tool:** Instant manufacturability feedback and design optimization recommendations
-- **2D Balloon Diagram Tool:** Automated GD&T annotation and technical drawing enhancement
 - **AI-Powered Cost Estimation:** Rapid cost modeling with high accuracy
 - **Supply Chain Risk Assessment:** Predictive analytics for supplier performance
 - **Manufacturing Process Optimization:** AI-driven efficiency improvements

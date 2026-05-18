@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fixed dates for static pages - only update when pages actually change
   // This prevents unnecessary crawling and crawl budget waste
-  const STATIC_PAGES_LASTMOD = '2026-01-08'; // Update this when you modify static pages
+  const STATIC_PAGES_LASTMOD = '2026-05-18'; // Update this when you modify static pages
   const LEGAL_PAGES_LASTMOD = '2024-11-01'; // Update this when legal pages change
   const currentDate = new Date().toISOString(); // Only for dynamic blog listing
 
@@ -117,18 +117,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/tools/3d-cad-analysis`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/tools/2d-balloon-diagram`,
-      lastModified: STATIC_PAGES_LASTMOD,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
       url: `${baseUrl}/interview-guide`,
       lastModified: STATIC_PAGES_LASTMOD,
       changeFrequency: 'monthly',
@@ -167,9 +155,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
-    console.log(`Sitemap generated with ${blogPages.length} blog posts`);
-  } catch (error) {
-    console.error('Error generating blog sitemap entries:', error);
+  } catch {
     // Return static pages even if blog fetch fails
   }
 

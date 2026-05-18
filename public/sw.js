@@ -1,12 +1,10 @@
-/* Emuski Service Worker - Enhanced for 3D CAD Analysis */
+/* Emuski Service Worker */
 
 const CACHE_NAME = 'emuski-cache-v3';
 const STATIC_CACHE_NAME = 'emuski-static-v3';
 
-// Critical assets for 3D CAD analysis
 const ASSETS_TO_CACHE = [
   '/',
-  '/tools/3d-cad-analysis',
   '/favicon.ico',
   '/manifest.json',
   '/fonts/InterVariable.woff2',
@@ -15,11 +13,9 @@ const ASSETS_TO_CACHE = [
 
 // API patterns for caching
 const CACHE_FIRST_APIS = [
-  /^\/api\/credits\/status/,
 ];
 
 const NETWORK_FIRST_APIS = [
-  /^\/api\/dfm-analysis/,
   /^\/api\/upload/,
 ];
 
@@ -48,12 +44,12 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   // Never try to cache chrome-extension or non-http requests
   if (!event.request.url.startsWith('http')) return;
-  
+
   // Only cache GET requests
   if (event.request.method !== 'GET') return;
-  
+
   const url = new URL(event.request.url);
-  
+
   // Only cache same-origin requests - don't intercept cross-origin requests we don't control
   if (url.origin !== self.location.origin) return;
 
@@ -69,7 +65,7 @@ self.addEventListener('fetch', (event) => {
             }).catch(() => {});
             return cachedResponse;
           }
-          
+
           return fetch(event.request).then(response => {
             cache.put(event.request, response.clone());
             return response;

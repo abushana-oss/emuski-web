@@ -6,12 +6,6 @@ import { authenticateRequest } from '@/lib/jwt-auth';
  * Implements defense-in-depth security model
  */
 export const SECURITY_CONFIGS = {
-  DFM_ANALYSIS: {
-    maxFileSize: 500 * 1024 * 1024, // 500MB - increased for large industrial CAD models
-    allowedFileTypes: ['stl', 'obj', 'ply', 'step', 'stp'],
-    requireAuth: true,
-    rateLimitKey: '/api/dfm-analysis'
-  },
   API_DEFAULT: {
     maxFileSize: 1 * 1024 * 1024, // 1MB
     allowedFileTypes: [],
