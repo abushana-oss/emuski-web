@@ -48,7 +48,7 @@ const navigationConfig = {
   ],
   rightMenu: [
     { name: "Gallery", path: "/gallery" },
-    { name: "Contact", path: "/contact", hideOnMobile: true }
+    { name: "Contact", path: "/contact" },
   ],
   mobileMenuSections: [
     {
@@ -75,7 +75,7 @@ const navigationConfig = {
         { name: "Next-GenAI", path: "/solutions/ai" },
         { name: "Blog", path: "/blog" },
         { name: "Gallery", path: "/gallery" },
-        { name: "Contact", path: "/contact" }
+        { name: "Request Quote", path: "/contact" }
       ]
     }
   ]
@@ -88,7 +88,7 @@ const routeToPageName: Record<string, string> = {
   "/cost-engineering": "Cost Engineering",
   "/blog": "Blog",
   "/gallery": "Gallery",
-  "/contact": "Contact",
+  "/contact": "Request Quote",
   "/solutions/ai": "Next-GenAI"
 };
 
@@ -127,7 +127,7 @@ export const Navbar = () => {
   };
 
   const getLinkClasses = (path: string) => {
-    const baseClasses = "transition-colors duration-150 text-[15px] font-medium tracking-wide whitespace-nowrap";
+    const baseClasses = "transition-colors duration-150 text-[16px] font-medium tracking-wide whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
     const inactiveClasses = "text-gray-900 hover:text-emuski-teal-darker";
 
@@ -135,7 +135,7 @@ export const Navbar = () => {
   };
 
   const getServicesButtonClasses = () => {
-    const baseClasses = "transition-colors duration-150 text-[15px] font-medium tracking-wide flex items-center space-x-1 whitespace-nowrap";
+    const baseClasses = "transition-colors duration-150 text-[16px] font-medium tracking-wide flex items-center space-x-1 whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
     const inactiveClasses = "text-gray-900 hover:text-emuski-teal-darker";
 
@@ -148,28 +148,28 @@ export const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
-      <div className="w-full px-4 sm:px-6">
+      <div className="w-full px-8 sm:px-14">
         <div className="flex items-center justify-between h-16">
-          {/* Logo — left */}
-          <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
+          {/* Logo — far left */}
+          <Link href="/" className="flex items-center space-x-[9px] flex-shrink-0">
             <Image
               src={emuskiLogo}
               alt="EMUSKI Manufacturing Solutions Logo"
               width={44}
               height={44}
               sizes="44px"
-              className="h-11 w-auto object-contain"
+              className="h-12 w-auto object-contain"
               quality={100}
               priority
               unoptimized={true}
             />
-            <span className="text-2xl font-bold text-foreground tracking-tight">EMUSKI</span>
+            <span className="text-3xl font-bold text-gray-900 tracking-tight">EMUSKI</span>
           </Link>
 
-          {/* Right side — all nav + mobile controls */}
-          <div className="flex items-center gap-6">
-            {/* Desktop nav — all items right-aligned */}
-            <div className="hidden md:flex items-center space-x-6" ref={servicesRef}>
+          {/* Right side — centered nav + CTA + mobile controls */}
+          <div className="flex items-center flex-1">
+            {/* Desktop nav — centered */}
+            <div className="hidden md:flex items-center gap-8 flex-1 justify-center" ref={servicesRef}>
               <Link
                 href="/"
                 className={getLinkClasses("/")}
@@ -260,8 +260,17 @@ export const Navbar = () => {
               ))}
             </div>
 
+            {/* Request Quote CTA — far right corner */}
+            <Link
+              href="/contact#request-form"
+              className="hidden md:inline-flex items-center gap-2 flex-shrink-0 bg-emuski-teal text-white text-[13px] font-bold tracking-widest uppercase px-5 py-2.5 rounded-full shadow-md hover:bg-emuski-teal-dark hover:shadow-lg hover:scale-[1.03] active:scale-[0.98] transition-all duration-150"
+            >
+              Request Quote
+              <span className="text-base leading-none">→</span>
+            </Link>
+
             {/* Mobile: current page name + hamburger */}
-            <span className="sm:hidden transition-colors text-lg font-medium text-emuski-teal-darker">
+            <span className="sm:hidden transition-colors text-lg font-medium text-gray-900">
               {getCurrentPageName()}
             </span>
 
