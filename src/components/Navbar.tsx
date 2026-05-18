@@ -175,7 +175,7 @@ export const Navbar = () => {
                 className={getLinkClasses("/")}
                 title="Home"
               >
-                <Home className="h-4 w-4" />
+                <Home className="h-5 w-5" />
               </Link>
 
               {/* Service dropdowns */}
