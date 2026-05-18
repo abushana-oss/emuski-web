@@ -278,29 +278,20 @@ export const Navbar = () => {
               {/* Dropdown Menu */}
               {isMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-[70]" style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
-                  <div className="relative z-20 p-4 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 border-b border-gray-100 flex flex-col space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <Image
-                        src={emuskiLogoMobile}
-                        alt="EMUSKI Manufacturing Solutions Logo"
-                        width={72}
-                        height={72}
-                        sizes="22px"
-                        className="h-[18px] w-auto object-contain opacity-80"
-                        style={{ 
-                          width: "22px", 
-                          height: "22px", 
-                          maxWidth: "22px", 
-                          maxHeight: "22px",
-                          imageRendering: "-webkit-optimize-contrast"
-                        } as React.CSSProperties}
-                        quality={100}
-                        unoptimized={true}
-                        priority
-                      />
-                      <div>
-                        <p className="text-xs font-semibold text-gray-700 leading-tight">One-stop solution for OEMs</p>
-                      </div>
+                  <div className="relative z-20 px-4 py-3 bg-white border-b border-gray-100 flex items-center space-x-3">
+                    <Image
+                      src={emuskiLogoMobile}
+                      alt="EMUSKI Manufacturing Solutions Logo"
+                      width={36}
+                      height={36}
+                      sizes="36px"
+                      className="h-9 w-9 object-contain flex-shrink-0"
+                      quality={100}
+                      priority
+                    />
+                    <div>
+                      <p className="text-sm font-bold text-gray-900 leading-tight">EMUSKI</p>
+                      <p className="text-[11px] font-medium text-emuski-teal-darker leading-tight">One-stop solution for OEMs</p>
                     </div>
                   </div>
                   <div className="py-2 max-h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
