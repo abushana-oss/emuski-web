@@ -1,6 +1,6 @@
 'use client'
 
-import { Menu, ChevronDown, Home } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -75,7 +75,7 @@ const navigationConfig = {
         { name: "Next-GenAI", path: "/solutions/ai" },
         { name: "Blog", path: "/blog" },
         { name: "Gallery", path: "/gallery" },
-        { name: "Request Quote", path: "/contact" }
+        { name: "Contact", path: "/contact" }
       ]
     }
   ]
@@ -163,21 +163,13 @@ export const Navbar = () => {
               priority
               unoptimized={true}
             />
-            <span className="text-3xl font-bold text-gray-900 tracking-tight">EMUSKI</span>
+            <span className="text-2xl font-bold text-gray-900 tracking-tight">EMUSKI</span>
           </Link>
 
           {/* Right side — centered nav + CTA + mobile controls */}
           <div className="flex items-center flex-1">
             {/* Desktop nav — centered */}
             <div className="hidden md:flex items-center gap-8 flex-1 justify-center" ref={servicesRef}>
-              <Link
-                href="/"
-                className={getLinkClasses("/")}
-                title="Home"
-              >
-                <Home className="h-5 w-5" />
-              </Link>
-
               {/* Service dropdowns */}
               {Object.entries(servicesDropdown).map(([key, service]) => (
                 <div
@@ -269,12 +261,13 @@ export const Navbar = () => {
               <span className="text-base leading-none">→</span>
             </Link>
 
-            {/* Mobile: current page name + hamburger */}
+            {/* Mobile: current page name + hamburger — pushed to far right */}
+            <div className="flex items-center gap-2 md:hidden ml-auto" ref={menuRef}>
             <span className="sm:hidden transition-colors text-lg font-medium text-gray-900">
               {getCurrentPageName()}
             </span>
 
-            <div className="flex items-center space-x-2 relative md:hidden" ref={menuRef}>
+            <div className="flex items-center space-x-2 relative">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent h-10 w-10 text-foreground hover:text-emuski-teal-darker"
@@ -344,7 +337,7 @@ export const Navbar = () => {
                               <Link
                                 key={item.path}
                                 href={item.path}
-                                className="block px-3 py-1.5 text-[13px] text-gray-700 hover:bg-emuski-teal/5 hover:text-emuski-teal-darker transition-colors"
+                                className="block pl-5 pr-3 py-1.5 text-[13px] text-gray-700 hover:bg-emuski-teal/5 hover:text-emuski-teal-darker transition-colors"
                                 onClick={() => setIsMenuOpen(false)}
                               >
                                 {item.name}
@@ -357,6 +350,7 @@ export const Navbar = () => {
                   </div>
                 </div>
               )}
+            </div>
             </div>
           </div>
         </div>

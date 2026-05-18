@@ -307,7 +307,7 @@ export const EngineeringServicesContent = () => {
       </section>
 
       {/* Automotive Case Study */}
-      <section id="automotive-case-study" aria-labelledby="expert-support-heading" className="py-16 md:py-20 bg-white">
+      <section id="expert-support-details" aria-labelledby="expert-support-heading" className="py-16 md:py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
