@@ -995,31 +995,12 @@ export default function AISalesAgent({
                         onTouchEnd={(e) => e.stopPropagation()}
                         onFocus={(e) => {
                           e.stopPropagation()
-                          // Prevent page scroll on mobile when keyboard opens
-                          if (window.innerWidth <= 768) {
-                            // Prevent body scroll
-                            document.body.style.position = 'fixed'
-                            document.body.style.top = `-${window.scrollY}px`
-                            document.body.style.width = '100%'
-                            
-                            setTimeout(() => {
-                              // Gently bring input into view without aggressive scrolling
-                              const rect = e.target.getBoundingClientRect()
-                              if (rect.bottom > window.innerHeight - 100) {
-                                window.scrollBy(0, rect.bottom - window.innerHeight + 100)
-                              }
-                            }, 150)
-                          }
+                          setIsInputFocused(true)
+                          setIsVisible(true)
                         }}
                         onBlur={(e) => {
-                          // Restore body scroll on mobile
-                          if (window.innerWidth <= 768) {
-                            const scrollY = document.body.style.top
-                            document.body.style.position = ''
-                            document.body.style.top = ''
-                            document.body.style.width = ''
-                            window.scrollTo(0, parseInt(scrollY || '0') * -1)
-                          }
+                          e.stopPropagation()
+                          setIsInputFocused(false)
                         }}
                         onInput={(e) => e.stopPropagation()}
                         inputMode="text"
