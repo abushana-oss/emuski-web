@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Linkedin, ArrowRight } from 'lucide-react';
+import { Linkedin, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -190,27 +190,6 @@ const AboutSection = () => {
                     </div>
 
                     <div className="lg:col-span-2">
-                        <div className="hidden lg:flex justify-end mb-4">
-                            <div className="flex space-x-2">
-                                <button
-                                    onClick={prevSlide}
-                                    disabled={currentIndex === 0}
-                                    className="h-10 w-10 bg-emuski-teal-darker hover:shadow-lg text-white disabled:opacity-50 inline-flex items-center justify-center rounded-md transition-all duration-300"
-                                    aria-label="Previous slide"
-                                >
-                                    <ChevronLeft className="h-4 w-4" />
-                                </button>
-                                <button
-                                    onClick={nextSlide}
-                                    disabled={currentIndex === maxIndex}
-                                    className="h-10 w-10 bg-emuski-teal-darker hover:shadow-lg text-white disabled:opacity-50 inline-flex items-center justify-center rounded-md transition-all duration-300"
-                                    aria-label="Next slide"
-                                >
-                                    <ChevronRight className="h-4 w-4" />
-                                </button>
-                            </div>
-                        </div>
-
                         <div className="relative">
                             <div
                                 className={`absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-emuski-teal via-emuski-teal-dark to-transparent pointer-events-none z-10 transition-opacity duration-500 ${showLeftGradient ? 'opacity-30' : 'opacity-0'}`}
@@ -332,26 +311,6 @@ const AboutSection = () => {
                             </div>
                         </div>
 
-                        <div className="lg:hidden flex justify-center mt-4">
-                            <div className="flex space-x-2">
-                                <button
-                                    onClick={prevSlide}
-                                    disabled={currentIndex === 0}
-                                    className="h-10 w-10 bg-emuski-teal-darker hover:shadow-lg text-white disabled:opacity-50 inline-flex items-center justify-center rounded-md transition-all duration-300"
-                                    aria-label="Previous slide"
-                                >
-                                    <ChevronLeft className="h-4 w-4" />
-                                </button>
-                                <button
-                                    onClick={nextSlide}
-                                    disabled={currentIndex === maxIndex}
-                                    className="h-10 w-10 bg-emuski-teal-darker hover:shadow-lg text-white disabled:opacity-50 inline-flex items-center justify-center rounded-md transition-all duration-300"
-                                    aria-label="Next slide"
-                                >
-                                    <ChevronRight className="h-4 w-4" />
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
