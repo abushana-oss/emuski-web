@@ -84,7 +84,7 @@ const navigationConfig = {
 // Map of all routes to their display names
 const routeToPageName: Record<string, string> = {
   "/": "Home",
-  "/manufacturing-services": "Precision Manufacturing",
+  "/manufacturing-services": "Manufacturing",
   "/cost-engineering": "Cost Engineering",
   "/blog": "Blog",
   "/gallery": "Gallery",
@@ -262,7 +262,7 @@ export const Navbar = () => {
 
             {/* Mobile: current page name + hamburger — pushed to far right */}
             <div className="flex items-center gap-2 md:hidden ml-auto" ref={menuRef}>
-            <span className="sm:hidden transition-colors text-sm font-medium text-gray-900 truncate max-w-[130px]">
+            <span className="sm:hidden transition-colors text-sm font-medium text-gray-900">
               {getCurrentPageName()}
             </span>
 
