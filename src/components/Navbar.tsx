@@ -1,12 +1,11 @@
 'use client'
 
-import { Menu, ChevronDown, Home } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import UserMenu from "./auth/UserMenu";
 const emuskiLogo = "/logo.svg";
 const emuskiLogoMobile = "/logo.webp";
 
@@ -38,14 +37,6 @@ const servicesDropdown = {
       { name: "Mithran AI", path: "/solutions/ai", beta: true }
     ]
   },
-  tools: {
-    name: "Tools",
-    path: "#",
-    subItems: [
-      { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" },
-      { name: "2D Balloon Diagram", path: "/tools/2d-balloon-diagram" }
-    ]
-  }
 };
 
 
@@ -57,7 +48,7 @@ const navigationConfig = {
   ],
   rightMenu: [
     { name: "Gallery", path: "/gallery" },
-    { name: "Contact", path: "/contact", hideOnMobile: true }
+    { name: "Contact", path: "/contact" },
   ],
   mobileMenuSections: [
     {
@@ -79,13 +70,6 @@ const navigationConfig = {
       ]
     },
     {
-      title: "Tools",
-      items: [
-        { name: "3D CAD Analysis", path: "/tools/3d-cad-analysis" },
-        { name: "2D Balloon Diagram", path: "/tools/2d-balloon-diagram" }
-      ]
-    },
-    {
       title: "Solutions",
       items: [
         { name: "Next-GenAI", path: "/solutions/ai" },
@@ -100,15 +84,12 @@ const navigationConfig = {
 // Map of all routes to their display names
 const routeToPageName: Record<string, string> = {
   "/": "Home",
-  "/manufacturing-services": "Precision Manufacturing",
+  "/manufacturing-services": "Manufacturing",
   "/cost-engineering": "Cost Engineering",
   "/blog": "Blog",
   "/gallery": "Gallery",
-  "/contact": "Contact",
-  "/solutions/ai": "Next-GenAI",
-  "/tools": "Tools",
-  "/tools/3d-cad-analysis": "3D CAD Analysis",
-  "/tools/2d-balloon-diagram": "2D Balloon Diagram"
+  "/contact": "Request Quote",
+  "/solutions/ai": "Next-GenAI"
 };
 
 export const Navbar = () => {
@@ -146,18 +127,18 @@ export const Navbar = () => {
   };
 
   const getLinkClasses = (path: string) => {
-    const baseClasses = "transition-colors text-lg font-medium whitespace-nowrap";
+    const baseClasses = "transition-colors duration-150 text-[16px] font-medium tracking-wide whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
-    const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
-    
+    const inactiveClasses = "text-gray-900 hover:text-emuski-teal-darker";
+
     return `${baseClasses} ${isActiveLink(path) ? activeClasses : inactiveClasses}`;
   };
 
   const getServicesButtonClasses = () => {
-    const baseClasses = "transition-colors text-lg font-medium flex items-center space-x-1 whitespace-nowrap";
+    const baseClasses = "transition-colors duration-150 text-[16px] font-medium tracking-wide flex items-center space-x-1 whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
-    const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
-    
+    const inactiveClasses = "text-gray-900 hover:text-emuski-teal-darker";
+
     return `${baseClasses} ${isActiveServiceLink() ? activeClasses : inactiveClasses}`;
   };
 
@@ -167,44 +148,28 @@ export const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
-      <div className="w-full px-4 sm:px-6">
-        <div className="flex items-center justify-between h-20">
-          <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-1.5 group">
-              <Image
-                src={emuskiLogoMobile}
-                alt="EMUSKI Manufacturing Solutions Logo"
-                width={88}
-                height={88}
-                sizes="44px"
-                className="h-11 w-auto object-contain"
-                style={{ 
-                  width: "44px", 
-                  height: "44px", 
-                  maxWidth: "44px", 
-                  maxHeight: "44px",
-                  imageRendering: "crisp-edges",
-                  WebkitImageSmoothing: false,
-                  msInterpolationMode: "nearest-neighbor"
-                } as React.CSSProperties}
-                quality={100}
-                priority
-                unoptimized={true}
-              />
-              <span className="text-xl sm:text-2xl font-bold text-foreground">EMUSKI</span>
-            </Link>
+      <div className="w-full px-8 sm:px-14">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo — far left */}
+          <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
+            <Image
+              src={emuskiLogoMobile}
+              alt="EMUSKI Manufacturing Solutions Logo"
+              width={40}
+              height={40}
+              sizes="40px"
+              className="h-10 w-10 object-contain flex-shrink-0"
+              quality={100}
+              priority
+            />
+            <span className="text-2xl font-bold text-gray-900 tracking-tight">EMUSKI</span>
+          </Link>
 
-            {/* Navigation near logo */}
-            <div className="hidden md:flex items-center space-x-6" ref={servicesRef}>
-              <Link
-                href="/"
-                className={getLinkClasses("/")}
-                title="Home"
-              >
-                <Home className="h-5 w-5" />
-              </Link>
-
-              {/* Individual Service Dropdowns */}
+          {/* Right side — centered nav + CTA + mobile controls */}
+          <div className="flex items-center flex-1">
+            {/* Desktop nav — centered */}
+            <div className="hidden md:flex items-center gap-8 flex-1 justify-center" ref={servicesRef}>
+              {/* Service dropdowns */}
               {Object.entries(servicesDropdown).map(([key, service]) => (
                 <div
                   key={key}
@@ -222,27 +187,21 @@ export const Navbar = () => {
                         {service.name}
                       </Link>
                     ) : (
-                      <div className="flex items-center">
-                        <span className={getLinkClasses("#")}>
-                          {service.name}
-                        </span>
-                      </div>
+                      <span className={getLinkClasses("#")}>{service.name}</span>
                     )}
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         setActiveServiceDropdown(activeServiceDropdown === key ? null : key);
                       }}
-                      className="ml-1 p-1 text-foreground hover:text-emuski-teal-darker transition-colors"
+                      className="ml-1 p-1 text-gray-400 hover:text-emuski-teal-darker transition-colors duration-150"
                     >
                       <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${activeServiceDropdown === key ? 'rotate-180' : ''}`} />
                     </button>
                   </div>
 
                   {activeServiceDropdown === key && (
-                    <div
-                      className="absolute top-full left-0 pt-2 w-64 z-[60]"
-                    >
+                    <div className="absolute top-full right-0 pt-2 w-64 z-[60]">
                       <div
                         className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
                         style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
@@ -257,7 +216,7 @@ export const Navbar = () => {
                               {service.name} Overview
                             </Link>
                           )}
-                          {service.subItems.map((subItem, index) => (
+                          {service.subItems.map((subItem) => (
                             <Link
                               key={subItem.path}
                               href={subItem.path}
@@ -281,41 +240,33 @@ export const Navbar = () => {
                 </div>
               ))}
 
-
-
-              {navigationConfig.leftMenu.map((item) => (
-                <Link 
+              {[...navigationConfig.leftMenu, ...navigationConfig.rightMenu].map((item) => (
+                <Link
                   key={item.path}
-                  href={item.path} 
-                  className={getLinkClasses(item.path)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-
-              {navigationConfig.rightMenu.map((item) => (
-                <Link 
-                  key={item.path}
-                  href={item.path} 
+                  href={item.path}
                   className={getLinkClasses(item.path)}
                 >
                   {item.name}
                 </Link>
               ))}
             </div>
-          </div>
 
-          <div className="flex items-center space-x-4">
-            {/* User Menu */}
-            <div className="hidden md:block">
-              <UserMenu />
-            </div>
+            {/* Request Quote CTA — far right corner */}
+            <Link
+              href="/contact#request-form"
+              className="hidden md:inline-flex items-center gap-2 flex-shrink-0 bg-emuski-teal text-white text-[13px] font-bold tracking-widest uppercase px-5 py-2.5 rounded-full shadow-md hover:bg-emuski-teal-dark hover:shadow-lg hover:scale-[1.03] active:scale-[0.98] transition-all duration-150"
+            >
+              Request Quote
+              <span className="text-base leading-none">→</span>
+            </Link>
 
-            <span className="sm:hidden transition-colors text-lg font-medium text-emuski-teal-darker">
+            {/* Mobile: current page name + hamburger — pushed to far right */}
+            <div className="flex items-center gap-2 md:hidden ml-auto" ref={menuRef}>
+            <span className="sm:hidden transition-colors text-sm font-medium text-gray-900">
               {getCurrentPageName()}
             </span>
 
-            <div className="flex items-center space-x-2 relative md:hidden" ref={menuRef}>
+            <div className="flex items-center space-x-2 relative">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent h-10 w-10 text-foreground hover:text-emuski-teal-darker"
@@ -327,32 +278,20 @@ export const Navbar = () => {
               {/* Dropdown Menu */}
               {isMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-[70]" style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
-                  <div className="relative z-20 p-4 bg-gradient-to-br from-emuski-teal/5 to-emuski-teal/10 border-b border-gray-100 flex flex-col space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <Image
-                        src={emuskiLogoMobile}
-                        alt="EMUSKI Manufacturing Solutions Logo"
-                        width={72}
-                        height={72}
-                        sizes="22px"
-                        className="h-[18px] w-auto object-contain opacity-80"
-                        style={{ 
-                          width: "22px", 
-                          height: "22px", 
-                          maxWidth: "22px", 
-                          maxHeight: "22px",
-                          imageRendering: "-webkit-optimize-contrast"
-                        } as React.CSSProperties}
-                        quality={100}
-                        unoptimized={true}
-                        priority
-                      />
-                      <div>
-                        <p className="text-xs font-semibold text-gray-700 leading-tight">One-stop solution for OEMs</p>
-                      </div>
-                    </div>
-                    <div className="md:hidden w-full pt-3 flex items-center justify-center border-t border-emuski-teal/10">
-                      <UserMenu />
+                  <div className="relative z-20 px-4 py-3 bg-white border-b border-gray-100 flex items-center space-x-3">
+                    <Image
+                      src={emuskiLogoMobile}
+                      alt="EMUSKI Manufacturing Solutions Logo"
+                      width={36}
+                      height={36}
+                      sizes="36px"
+                      className="h-9 w-9 object-contain flex-shrink-0"
+                      quality={100}
+                      priority
+                    />
+                    <div>
+                      <p className="text-sm font-bold text-gray-900 leading-tight">EMUSKI</p>
+                      <p className="text-[11px] font-medium text-emuski-teal-darker leading-tight">One-stop solution for OEMs</p>
                     </div>
                   </div>
                   <div className="py-2 max-h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
@@ -388,7 +327,7 @@ export const Navbar = () => {
                               <Link
                                 key={item.path}
                                 href={item.path}
-                                className="block px-3 py-1.5 text-[13px] text-gray-700 hover:bg-emuski-teal/5 hover:text-emuski-teal-darker transition-colors"
+                                className="block pl-5 pr-3 py-1.5 text-[13px] text-gray-700 hover:bg-emuski-teal/5 hover:text-emuski-teal-darker transition-colors"
                                 onClick={() => setIsMenuOpen(false)}
                               >
                                 {item.name}
@@ -401,6 +340,7 @@ export const Navbar = () => {
                   </div>
                 </div>
               )}
+            </div>
             </div>
           </div>
         </div>

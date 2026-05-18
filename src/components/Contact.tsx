@@ -275,7 +275,7 @@ export const Contact = () => {
       </section>
 
       {/* Contact Form & Info */}
-      <section className="py-16 sm:py-20 bg-white">
+      <section id="request-form" className="py-16 sm:py-20 bg-white scroll-mt-16">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16">

@@ -28,18 +28,11 @@ export class RateLimiter {
     '/api/blog/[postId]': { minute: 30, hour: 200 },
     '/api/videos/custom-manufacturing': { minute: 20, hour: 100 },
     '/api/videos/on-demand-manufacturing': { minute: 20, hour: 100 },
-    '/api/cad-engine/health': { minute: 30, hour: 150 },
-    
     // Contact form (stricter due to email sending)
     '/api/contact': { minute: 5, hour: 20 },
-    
+
     // Authenticated/sensitive endpoints
-    '/api/credits/status': { minute: 30, hour: 150 },
-    '/api/dfm-analysis': { minute: 5, hour: 25 },
     '/api/upload/secure': { minute: 10, hour: 50 },
-    
-    // Authentication endpoints (very strict)
-    '/api/auth': { minute: 5, hour: 15 },
     
     // Webhooks and cron (moderate limits)
     '/api/blogger-webhook': { minute: 20, hour: 100 },

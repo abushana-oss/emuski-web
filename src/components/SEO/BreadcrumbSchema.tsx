@@ -145,11 +145,6 @@ export const BREADCRUMB_CONFIGS = {
     { name: 'Gallery', item: '/gallery', position: 1 }
   ],
   
-  tools: (toolName: string, toolSlug: string) => [
-    { name: 'Tools', item: '/tools', position: 1 },
-    { name: toolName, item: `/tools/${toolSlug}`, position: 2 }
-  ],
-  
   legal: (pageName: string, pageSlug: string) => [
     { name: pageName, item: `/${pageSlug}`, position: 1 }
   ]

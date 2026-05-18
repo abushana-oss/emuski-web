@@ -98,10 +98,10 @@ export const RELATED_PAGES_CONFIG = {
       category: "Manufacturing"
     },
     {
-      title: "3D CAD Analysis Tool",
-      url: "/tools/3d-cad-analysis",
-      description: "Analyze your CAD models for manufacturability and cost optimization.",
-      category: "Tools"
+      title: "AI-Powered Solutions",
+      url: "/solutions/ai",
+      description: "Mithran AI platform for intelligent cost estimation and manufacturing optimization.",
+      category: "AI & Technology"
     },
     {
       title: "Engineering Blog",

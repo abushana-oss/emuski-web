@@ -10,7 +10,6 @@ import { AboutSection } from "@/components/AboutSection"
 import { TechnicalSpecsSection } from "@/components/TechnicalSpecsSection"
 import { ContactSection } from "@/components/ContactSection"
 import { FAQSection } from "@/components/FAQSection"
-import { TestimonialsSection } from "@/components/TestimonialsSection"
 import { ManufacturingNPDSection } from "@/components/ManufacturingNPDSection"
 import { fetchAllBlogs } from "@/lib/api/blogger"
 
@@ -78,10 +77,6 @@ export default async function Home() {
         <LazyRender minHeight="600px">
           {/* Import and use the redesigned NPD component */}
           <ManufacturingNPDSection />
-        </LazyRender>
-
-        <LazyRender minHeight="100vh">
-          <TestimonialsSection />
         </LazyRender>
 
         <LazyRender minHeight="300px">

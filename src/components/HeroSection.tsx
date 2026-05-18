@@ -113,7 +113,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <section className="relative w-full min-h-[70vh] lg:min-h-[80vh] overflow-hidden bg-black">
+    <section className="relative w-full min-h-[calc(100dvh-64px)] md:min-h-[calc(100vh-64px)] overflow-hidden bg-black">
       {/* Slides Container */}
       {slides.map((slide, index) => {
         // Only render current slide and adjacent slides for performance
@@ -249,7 +249,7 @@ export const HeroSection = () => {
               <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-transparent" />
 
               {/* Content - Overlay on Top */}
-              <div className="relative z-20 h-full flex flex-col pt-20 px-6 pb-16">
+              <div className="relative z-20 h-full flex flex-col pt-16 px-6 pb-4">
                 <div className="space-y-3 pb-8">
                   <span className="text-cyan-400 text-xs font-semibold tracking-wider uppercase">
                     {slide.category}
