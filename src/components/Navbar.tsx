@@ -262,7 +262,7 @@ export const Navbar = () => {
 
             {/* Mobile: current page name + hamburger — pushed to far right */}
             <div className="flex items-center gap-2 md:hidden ml-auto" ref={menuRef}>
-            <span className="sm:hidden transition-colors text-lg font-medium text-gray-900">
+            <span className="sm:hidden transition-colors text-sm font-medium text-gray-900 truncate max-w-[130px]">
               {getCurrentPageName()}
             </span>
 
