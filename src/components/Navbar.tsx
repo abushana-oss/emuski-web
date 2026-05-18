@@ -151,14 +151,14 @@ export const Navbar = () => {
       <div className="w-full px-8 sm:px-14">
         <div className="flex items-center justify-between h-16">
           {/* Logo — far left */}
-          <Link href="/" className="flex items-center space-x-[9px] flex-shrink-0">
+          <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
             <Image
               src={emuskiLogo}
               alt="EMUSKI Manufacturing Solutions Logo"
-              width={44}
-              height={44}
-              sizes="44px"
-              className="h-12 w-auto object-contain"
+              width={40}
+              height={40}
+              sizes="40px"
+              className="h-10 w-10 object-contain flex-shrink-0"
               quality={100}
               priority
               unoptimized={true}
