@@ -153,7 +153,7 @@ export const Navbar = () => {
           {/* Logo — far left */}
           <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
             <Image
-              src={emuskiLogo}
+              src={emuskiLogoMobile}
               alt="EMUSKI Manufacturing Solutions Logo"
               width={40}
               height={40}
@@ -161,7 +161,6 @@ export const Navbar = () => {
               className="h-10 w-10 object-contain flex-shrink-0"
               quality={100}
               priority
-              unoptimized={true}
             />
             <span className="text-2xl font-bold text-gray-900 tracking-tight">EMUSKI</span>
           </Link>
