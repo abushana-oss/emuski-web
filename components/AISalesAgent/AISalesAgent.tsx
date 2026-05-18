@@ -28,6 +28,8 @@ export default function AISalesAgent({
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [isInputFocused, setIsInputFocused] = useState(false)
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,8 +48,8 @@ export default function AISalesAgent({
       
       if (isSignificantScroll) {
         if (isScrollingDown && currentScrollY > 100) {
-          // Don't hide if modal is open or voice is active (UX principle: don't interrupt active usage)
-          if (!isOpen && !voice.isListening && !voice.isSpeaking) {
+          // Don't hide if modal is open, voice is active, or input is focused
+          if (!isOpen && !voice.isListening && !voice.isSpeaking && !isInputFocused) {
             setIsVisible(false)
           }
         } else if (!isScrollingDown) {
@@ -83,7 +85,7 @@ export default function AISalesAgent({
       window.removeEventListener('scroll', throttledScroll)
       if (scrollTimeout) clearTimeout(scrollTimeout)
     }
-  }, [lastScrollY, scrollTimeout])
+  }, [lastScrollY, scrollTimeout, isInputFocused])
 
 
   // Handle voice recognition results
@@ -94,34 +96,25 @@ export default function AISalesAgent({
     }
   }, [voice.transcript, voice.isListening, handleVoiceResult, voice.clearTranscript])
 
-  // Handle mobile keyboard visibility
+  // Track keyboard height via visualViewport and keep widget visible when keyboard is open
   useEffect(() => {
-    const handleResize = () => {
-      // On mobile, when keyboard opens, prevent auto-hiding
-      if (window.innerWidth <= 768) {
-        setIsVisible(true)
-        if (scrollTimeout) clearTimeout(scrollTimeout)
-        
-        // Disable scroll hiding when keyboard is likely open
-        const viewportHeight = window.visualViewport?.height || window.innerHeight
-        const isKeyboardOpen = viewportHeight < window.screen.height * 0.75
-        
-        if (isKeyboardOpen && isOpen) {
-          // Keep widget visible when keyboard is open
-          setIsVisible(true)
-        }
-      }
+    if (typeof window === 'undefined' || !window.visualViewport) return
+    const vv = window.visualViewport
+
+    const handleVVResize = () => {
+      const kbH = window.innerHeight - vv.height - vv.offsetTop
+      const newKbHeight = kbH > 100 ? kbH : 0
+      setKeyboardHeight(newKbHeight)
+      if (newKbHeight > 0) setIsVisible(true)
     }
 
-    // Use visual viewport API if available (better for mobile keyboards)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize)
-      return () => window.visualViewport.removeEventListener('resize', handleResize)
-    } else {
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
+    vv.addEventListener('resize', handleVVResize)
+    vv.addEventListener('scroll', handleVVResize)
+    return () => {
+      vv.removeEventListener('resize', handleVVResize)
+      vv.removeEventListener('scroll', handleVVResize)
     }
-  }, [isOpen, scrollTimeout])
+  }, [])
 
   const positionClasses = position === 'bottom-right' 
     ? 'bottom-4 right-4' 
@@ -750,7 +743,10 @@ export default function AISalesAgent({
         }
       `}</style>
 
-      <div className={`lh-root ${isVisible ? 'visible' : 'hidden'}`}>
+      <div
+        className={`lh-root ${isVisible ? 'visible' : 'hidden'}`}
+        style={keyboardHeight > 0 ? { bottom: `${keyboardHeight + 10}px` } : undefined}
+      >
         {/* Modal with AI response and interactive bar */}
         {isOpen && (
           <div className="lh-answer" style={{ display: 'block' }}>
