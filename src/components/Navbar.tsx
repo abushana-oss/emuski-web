@@ -127,17 +127,17 @@ export const Navbar = () => {
   };
 
   const getLinkClasses = (path: string) => {
-    const baseClasses = "transition-colors text-lg font-medium whitespace-nowrap";
+    const baseClasses = "transition-colors duration-150 text-[15px] font-medium tracking-wide whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
-    const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
+    const inactiveClasses = "text-gray-900 hover:text-emuski-teal-darker";
 
     return `${baseClasses} ${isActiveLink(path) ? activeClasses : inactiveClasses}`;
   };
 
   const getServicesButtonClasses = () => {
-    const baseClasses = "transition-colors text-lg font-medium flex items-center space-x-1 whitespace-nowrap";
+    const baseClasses = "transition-colors duration-150 text-[15px] font-medium tracking-wide flex items-center space-x-1 whitespace-nowrap";
     const activeClasses = "text-emuski-teal-darker";
-    const inactiveClasses = "text-foreground hover:text-emuski-teal-darker";
+    const inactiveClasses = "text-gray-900 hover:text-emuski-teal-darker";
 
     return `${baseClasses} ${isActiveServiceLink() ? activeClasses : inactiveClasses}`;
   };
@@ -153,26 +153,17 @@ export const Navbar = () => {
           {/* Logo — left */}
           <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
             <Image
-              src={emuskiLogoMobile}
+              src={emuskiLogo}
               alt="EMUSKI Manufacturing Solutions Logo"
               width={44}
               height={44}
               sizes="44px"
               className="h-11 w-auto object-contain"
-              style={{
-                width: "44px",
-                height: "44px",
-                maxWidth: "44px",
-                maxHeight: "44px",
-                imageRendering: "crisp-edges",
-                WebkitImageSmoothing: false,
-                msInterpolationMode: "nearest-neighbor"
-              } as React.CSSProperties}
               quality={100}
               priority
               unoptimized={true}
             />
-            <span className="text-xl sm:text-2xl font-bold text-foreground">EMUSKI</span>
+            <span className="text-2xl font-bold text-foreground tracking-tight">EMUSKI</span>
           </Link>
 
           {/* Right side — all nav + mobile controls */}
@@ -212,7 +203,7 @@ export const Navbar = () => {
                         e.preventDefault();
                         setActiveServiceDropdown(activeServiceDropdown === key ? null : key);
                       }}
-                      className="ml-1 p-1 text-foreground hover:text-emuski-teal-darker transition-colors"
+                      className="ml-1 p-1 text-gray-400 hover:text-emuski-teal-darker transition-colors duration-150"
                     >
                       <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${activeServiceDropdown === key ? 'rotate-180' : ''}`} />
                     </button>
