@@ -390,6 +390,15 @@ const nextConfig = {
         permanent: false,
       },
 
+      // Auth/admin route 404 fixes — these pages do not exist, redirect to home
+      { source: '/auth', destination: '/', permanent: true },
+      { source: '/auth/:path*', destination: '/', permanent: true },
+      { source: '/login', destination: '/', permanent: true },
+      { source: '/signup', destination: '/', permanent: true },
+      { source: '/register', destination: '/', permanent: true },
+      { source: '/admin', destination: '/', permanent: true },
+      { source: '/admin/:path*', destination: '/', permanent: true },
+
       // Google Search Console 404 fixes
       { source: '/precision-engineering', destination: '/cost-engineering', permanent: true },
       { source: '/about', destination: '/', permanent: true },

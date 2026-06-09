@@ -3,7 +3,6 @@ import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { AIServicesContent } from "@/components/AIServicesContent"
 import { HashScrollHandler } from './hash-scroll-handler'
-import Link from "next/link"
 
 export const metadata: Metadata = {
   title: 'AI-Powered Manufacturing Solutions | Mithran AI Platform | EMUSKI',
@@ -48,15 +47,6 @@ export default function AISolutions() {
                     Our AI tools make product development, costing, and sourcing faster and simpler. They help your team reduce manual work, spot problems early, and make better decisions with real data.
                   </p>
 
-                  {/* CTA Button */}
-                  <div className="flex justify-center pt-2">
-                    <Link
-                      href="#mithran-overview"
-                      className="inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:px-8 sm:py-3 bg-emuski-teal-darker hover:bg-emuski-teal-dark text-white font-bold text-sm sm:text-base rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                    >
-                      Learn More
-                    </Link>
-                  </div>
                 </div>
               </div>
             </div>
@@ -79,9 +69,14 @@ export default function AISolutions() {
                 Discover how Mithran can revolutionize your product development, supply chain, and cost optimization.
               </p>
               <div className="pt-4">
-                <Link href="/contact" className="inline-flex items-center justify-center px-8 py-3 bg-white text-emuski-teal-darker font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl">
-                  Request a Demo
-                </Link>
+                <a
+                  href="https://emithran.emuski.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-8 py-3 bg-white text-emuski-teal-darker font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  Explore Platform
+                </a>
               </div>
             </div>
           </div>
