@@ -16,6 +16,7 @@ import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import type { BlogPost as LocalDataPost } from '../../api/types';
 import { allBlogPosts } from '../../data/blogData';
+import { fetchStrapiPosts, fetchStrapiPostBySlug } from './strapi';
 
 // Environment Variables (backend only)
 const BLOGGER_API_KEY = process.env.BLOGGER_API_KEY || '';
@@ -80,6 +81,10 @@ export interface BlogPost {
   challengeImage?: string;
   solutionImage?: string;
   outcomeImage?: string;
+  content?: string;
+  authorBio?: string;
+  keywords?: string[];
+  featured?: boolean;
 }
 
 function normalizeLocalPost(p: LocalDataPost): BlogPost {
@@ -558,6 +563,14 @@ export async function fetchAllBlogs(fetchAll: boolean = true): Promise<{
   const localPosts = allBlogPosts.map(normalizeLocalPost);
   const localSlugs = new Set(localPosts.map(p => p.slug));
 
+  const strapiPosts = await fetchStrapiPosts();
+  const strapiSlugs = new Set(strapiPosts.map(p => p.slug));
+  const strapiManufacturing = strapiPosts.filter(p => p.category === 'Manufacturing');
+  const strapiEngineering = strapiPosts.filter(p => p.category === 'Engineering');
+  const strapiSuccessStories = strapiPosts.filter(
+    p => p.category === 'Case Study' || p.category === 'Success Story'
+  );
+
   const localManufacturing = localPosts.filter(p => p.category === 'Manufacturing');
   const localEngineering = localPosts.filter(p => p.category === 'Engineering');
   const localSuccessStories = localPosts.filter(
@@ -565,16 +578,19 @@ export async function fetchAllBlogs(fetchAll: boolean = true): Promise<{
   );
 
   const mergedManufacturing = [
-    ...localManufacturing,
-    ...manufacturing.filter(p => !localSlugs.has(p.slug)),
+    ...strapiManufacturing,
+    ...localManufacturing.filter(p => !strapiSlugs.has(p.slug)),
+    ...manufacturing.filter(p => !localSlugs.has(p.slug) && !strapiSlugs.has(p.slug)),
   ];
   const mergedEngineering = [
-    ...localEngineering,
-    ...engineering.filter(p => !localSlugs.has(p.slug)),
+    ...strapiEngineering,
+    ...localEngineering.filter(p => !strapiSlugs.has(p.slug)),
+    ...engineering.filter(p => !localSlugs.has(p.slug) && !strapiSlugs.has(p.slug)),
   ];
   const mergedSuccessStories = [
-    ...localSuccessStories,
-    ...successStories.filter(p => !localSlugs.has(p.slug)),
+    ...strapiSuccessStories,
+    ...localSuccessStories.filter(p => !strapiSlugs.has(p.slug)),
+    ...successStories.filter(p => !localSlugs.has(p.slug) && !strapiSlugs.has(p.slug)),
   ];
 
   return {
@@ -594,6 +610,8 @@ export const fetchPostBySlug = cache(
   async (slug: string): Promise<BlogPost | null> => {
     return unstable_cache(
       async () => {
+        const strapiPost = await fetchStrapiPostBySlug(slug);
+        if (strapiPost) return strapiPost;
         const { all } = await fetchAllBlogs(true);
         return all.find(post => post.slug === slug) || null;
       },
