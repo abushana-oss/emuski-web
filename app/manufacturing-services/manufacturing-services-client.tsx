@@ -125,6 +125,9 @@ export function ManufacturingServicesClient() {
     if (activeTab === "Injection Molding") {
       return service.title === "Plastic Injection Molding";
     }
+    if (activeTab === "Prototyping") {
+      return service.title === "Prototyping Services";
+    }
     return service.title === activeTab;
   });
 
