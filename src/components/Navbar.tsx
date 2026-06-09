@@ -148,7 +148,7 @@ export const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
-      <div className="w-full px-8 sm:px-14">
+      <div className="w-full px-4 sm:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo — far left */}
           <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
@@ -251,13 +251,17 @@ export const Navbar = () => {
               ))}
             </div>
 
-            {/* Request Quote CTA — far right corner */}
+            {/* Request Demo CTA — far right corner */}
             <Link
-              href="/contact#request-form"
-              className="hidden md:inline-flex items-center gap-2 flex-shrink-0 bg-emuski-teal text-white text-[13px] font-bold tracking-widest uppercase px-5 py-2.5 rounded-full shadow-md hover:bg-emuski-teal-dark hover:shadow-lg hover:scale-[1.03] active:scale-[0.98] transition-all duration-150"
+              href="/request-demo"
+              className="group hidden md:inline-flex items-center gap-1.5 flex-shrink-0 text-white text-sm font-semibold px-4 py-2 rounded-md hover:opacity-85 transition-opacity whitespace-nowrap"
+              style={{ background: 'linear-gradient(135deg, oklch(0.68 0.13 180), oklch(0.55 0.16 185))' }}
             >
-              Request Quote
-              <span className="text-base leading-none">→</span>
+              Request Demo
+              <svg className="overflow-visible" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path className="origin-left transition-transform duration-200 ease-out -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100" d="M0 5h7" />
+                <path className="transition-transform duration-200 ease-out group-hover:translate-x-[3px]" d="M1 1l4 4-4 4" />
+              </svg>
             </Link>
 
             {/* Mobile: current page name + hamburger — pushed to far right */}
