@@ -251,13 +251,13 @@ export const Navbar = () => {
               ))}
             </div>
 
-            {/* Request Demo CTA — far right corner */}
+            {/* Request Quote CTA — far right corner */}
             <Link
-              href="/request-demo"
+              href="/contact"
               className="group hidden md:inline-flex items-center gap-1.5 flex-shrink-0 text-white text-sm font-semibold px-4 py-2 rounded-md hover:opacity-85 transition-opacity whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, oklch(0.68 0.13 180), oklch(0.55 0.16 185))' }}
             >
-              Request Demo
+              Request Quote
               <svg className="overflow-visible" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path className="origin-left transition-transform duration-200 ease-out -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100" d="M0 5h7" />
                 <path className="transition-transform duration-200 ease-out group-hover:translate-x-[3px]" d="M1 1l4 4-4 4" />
