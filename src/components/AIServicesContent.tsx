@@ -113,7 +113,7 @@ export const AIServicesContent = () => {
               {/* Headline */}
               <h2 className="text-[40px] sm:text-[52px] lg:text-[58px] font-extrabold tracking-tight text-[#0d1117] leading-[1.04] mb-3">
                 End-to-End<br />
-                Supplier<br />
+                OEM<br />
                 <span className="text-[#0d9e8a]">Intelligence</span>
               </h2>
 
