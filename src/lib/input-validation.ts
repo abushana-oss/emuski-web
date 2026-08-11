@@ -103,7 +103,7 @@ export const ContactFormSchema = z.object({
     .optional(),
 
   recaptchaToken: z.string()
-    .max(1000, 'Invalid reCAPTCHA token'),
+    .max(4000, 'Invalid reCAPTCHA token'),
 
   // Optional file attachments validation
   attachments: z.array(z.object({
