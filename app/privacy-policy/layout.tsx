@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy – How EMUSKI Protects Your Data',
+  title: 'Privacy Policy – How We Protect Your Data',
   description: 'Learn how EMUSKI collects, uses, and protects your personal and business information. Your privacy and security are our top priority.',
   alternates: {
     canonical: 'https://www.emuski.com/privacy-policy',

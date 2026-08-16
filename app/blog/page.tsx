@@ -14,8 +14,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Manufacturing & Precision Engineering Blog | Expert Insights | EMUSKI',
-  description: 'Discover expert insights on manufacturing excellence, precision engineering, cost optimization, VAVE methodology, value engineering, and AI-powered solutions. Learn from industry leaders about DFM/DFA, strategic sourcing, rapid prototyping, and intelligent manufacturing.',
+  title: 'Manufacturing & Precision Engineering Blog | Expert Insights',
+  description: 'Expert insights on manufacturing excellence, precision engineering, cost optimization, VAVE methodology, DFM/DFA, strategic sourcing, and AI-powered solutions.',
   keywords: 'manufacturing blog, precision engineering blog, cost optimization, VAVE methodology, value engineering, rapid prototyping, strategic sourcing, DFM DFA, AI manufacturing, industrial engineering, OEM manufacturing, precision engineering India, manufacturing cost reduction, engineering excellence, cost estimation',
   alternates: {
     canonical: 'https://www.emuski.com/blog',

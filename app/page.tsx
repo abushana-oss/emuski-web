@@ -15,9 +15,16 @@ import { fetchAllBlogs } from "@/lib/api/blogger"
 
 export const metadata: Metadata = {
   title: 'ISO Certified OEM Manufacturing & Precision Engineering | EMUSKI Bangalore',
-  description: 'ISO 9001:2015 certified OEM manufacturing and cost engineering partner in Bangalore. CNC machining, injection molding, rapid prototyping, VAVE analysis. Serving automotive, aerospace, medical devices globally.',
+  description: 'ISO 9001:2015 certified OEM manufacturing and cost engineering partner in Bangalore. CNC machining, injection molding, rapid prototyping, VAVE analysis.',
   alternates: {
     canonical: 'https://www.emuski.com',
+    languages: {
+      'en-US': 'https://www.emuski.com',
+      'en-GB': 'https://www.emuski.com',
+      'en-IN': 'https://www.emuski.com',
+      'en': 'https://www.emuski.com',
+      'x-default': 'https://www.emuski.com',
+    },
   },
   robots: { index: true, follow: true },
 }

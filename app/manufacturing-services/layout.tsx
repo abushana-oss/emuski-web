@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'OEM Manufacturing Services - CNC Machining, Injection Molding & Rapid Prototyping | EMUSKI',
-  description: 'Complete OEM manufacturing services including CNC machining, injection molding, sheet metal fabrication, and rapid prototyping. ISO 9001:2015 certified with 98.7% on-time delivery. From design to delivery, we build what you design with precision and quality.',
+  title: 'OEM Manufacturing Services - CNC Machining, Injection Molding & Rapid Prototyping',
+  description: 'Complete OEM manufacturing services: CNC machining, injection molding, sheet metal, rapid prototyping. ISO 9001:2015 certified, 98.7% on-time delivery.',
   keywords: [
     'OEM manufacturing services',
     'CNC machining Bangalore',

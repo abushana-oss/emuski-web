@@ -5,10 +5,10 @@ export const metadata: Metadata = {
     default: 'Careers at EMUSKI - Engineering Jobs in Manufacturing & AI',
     template: '%s | EMUSKI Careers'
   },
-  description: 'Join EMUSKI\'s global team of engineers and innovators. Open positions in AI, manufacturing, cost engineering, and software development across Bangalore, Hyderabad, and remote locations.',
-  metadataBase: new URL('https://careers.emuski.com'),
+  description: 'Join EMUSKI\'s global team of engineers and innovators. Open roles in AI, manufacturing, cost engineering, and software development in Bangalore & Hyderabad.',
+  metadataBase: new URL('https://www.emuski.com'),
   alternates: {
-    canonical: 'https://careers.emuski.com',
+    canonical: 'https://www.emuski.com/careers',
   },
   robots: {
     index: true,
@@ -60,7 +60,7 @@ export default function CareersLayout({
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Careers",
-                "item": "https://careers.emuski.com"
+                "item": "https://www.emuski.com/careers"
               }
             ]
           })

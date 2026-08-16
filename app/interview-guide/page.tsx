@@ -5,7 +5,7 @@ import { ArrowRight, Clock, Users, Target, Lightbulb, CheckCircle, FileText, Cal
 import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'Interview Guide - EMUSKI Manufacturing',
+  title: 'Interview Guide',
   description: 'Learn about EMUSKI\'s interview process, our philosophy, timeline, and tips to help you succeed in your application.',
   keywords: ['interview guide', 'hiring process', 'EMUSKI careers', 'job application', 'manufacturing careers'],
   openGraph: {

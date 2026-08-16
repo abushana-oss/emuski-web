@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     default: 'ISO Certified OEM Precision Manufacturing & Cost Engineering Partner | Bangalore, India',
     template: '%s | EMUSKI - Engineering & Manufacturing'
   },
-  description: 'ISO 9001:2015 certified precision manufacturing services and cost engineering services partner actively seeking new global clients. FREE consultation, FREE quotes, 35% cost savings guaranteed. 15+ years expertise serving Fortune 500 companies worldwide.',
+  description: 'ISO 9001:2015 certified precision manufacturing and cost engineering partner in Bangalore. FREE consultation, 35% cost savings, serving Fortune 500 clients.',
   keywords: [
     'ISO certified OEM manufacturing',
     'precision manufacturing partner Bangalore',
@@ -118,16 +118,9 @@ export const metadata: Metadata = {
   },
   category: 'Manufacturing and Engineering',
   classification: 'Manufacturing Solutions Provider',
-  alternates: {
-    canonical: 'https://www.emuski.com',
-    languages: {
-      'en-US': 'https://www.emuski.com',
-      'en-GB': 'https://www.emuski.com',
-      'en-IN': 'https://www.emuski.com',
-      'en': 'https://www.emuski.com',
-      'x-default': 'https://www.emuski.com',
-    },
-  },
+  // No sitewide `alternates.canonical` here — each page/layout declares its own
+  // canonical. A default here previously leaked into every page's output as a
+  // second, conflicting canonical tag pointing at the homepage.
   other: {
     'geo.region': 'IN-KA',
     'geo.placename': 'Bangalore, Karnataka, India',
@@ -280,7 +273,6 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
 
         {/* Social banner will load when needed for sharing - no preload required */}
-        <link rel="canonical" href="https://www.emuski.com/" />
 
         {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />

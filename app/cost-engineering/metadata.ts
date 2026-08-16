@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Cost Engineering Services India | Cost Estimation, VAVE & Strategic Sourcing | EMUSKI Bangalore',
-  description: 'India\'s leading cost engineering services with 15+ years experience. ISO 9001:2015 certified product cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing from 500+ global suppliers. Serving automotive, aerospace, medical devices & electronics across India and worldwide from Bangalore. Reduce manufacturing costs by 15-25%.',
+  title: 'Cost Engineering Services India | Cost Estimation, VAVE & Strategic Sourcing',
+  description: 'India\'s leading cost engineering services — cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing. ISO certified, Bangalore.',
   keywords: [
     // Primary Services - India-wide Focus 2026
     'cost engineering services india',

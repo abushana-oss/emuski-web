@@ -3,43 +3,43 @@ import { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://careers.emuski.com',
+      url: 'https://www.emuski.com/careers',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: 'https://careers.emuski.com/#mission',
+      url: 'https://www.emuski.com/careers/#mission',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://careers.emuski.com/#values',
+      url: 'https://www.emuski.com/careers/#values',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: 'https://careers.emuski.com/#benefits',
+      url: 'https://www.emuski.com/careers/#benefits',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: 'https://careers.emuski.com/#locations',
+      url: 'https://www.emuski.com/careers/#locations',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://careers.emuski.com/#hiring-process',
+      url: 'https://www.emuski.com/careers/#hiring-process',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://careers.emuski.com/#open-roles',
+      url: 'https://www.emuski.com/careers/#open-roles',
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,

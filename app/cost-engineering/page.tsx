@@ -12,8 +12,8 @@ import SectorsServedSection from "@/components/SectorsServedSection"
 import { EngineeringServicesContent } from "@/components/EngineeringServicesContent"
 
 export const metadata: Metadata = {
-  title: 'Cost Engineering Services | Product Cost Estimation, VAVE & Strategic Sourcing | EMUSKI',
-  description: 'India\'s leading cost engineering services — product cost estimation with ±5% accuracy, VAVE analysis saving 20-30%, strategic sourcing from 500+ suppliers. ISO certified. Based in Bangalore.',
+  title: 'Cost Engineering Services | Product Cost Estimation, VAVE & Strategic Sourcing',
+  description: 'India\'s leading cost engineering services — cost estimation (±5% accuracy), VAVE analysis (20-30% savings), strategic sourcing. ISO certified, Bangalore.',
   alternates: {
     canonical: 'https://www.emuski.com/cost-engineering',
   },

@@ -5,8 +5,8 @@ import { AIServicesContent } from "@/components/AIServicesContent"
 import { HashScrollHandler } from './hash-scroll-handler'
 
 export const metadata: Metadata = {
-  title: 'AI-Powered Manufacturing Solutions | Mithran AI Platform | EMUSKI',
-  description: 'AI-powered manufacturing intelligence for OEMs. Automated BOM generation, AI cost estimation, smart supplier sourcing and real-time project tracking. Built by EMUSKI, Bangalore.',
+  title: 'AI-Powered Manufacturing Solutions | Mithran AI Platform',
+  description: 'AI-powered manufacturing intelligence for OEMs. Automated BOM generation, AI cost estimation, smart supplier sourcing, real-time project tracking.',
   alternates: {
     canonical: 'https://www.emuski.com/solutions/ai',
   },

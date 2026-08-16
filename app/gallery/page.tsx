@@ -4,8 +4,8 @@ import { Gallery as GalleryComponent } from "@/components/Gallery"
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'EMUSKI Component Gallery - Manufacturing Excellence Showcase',
-  description: 'Explore EMUSKI\'s comprehensive gallery of precision manufacturing components, engineering solutions, and production excellence. Showcasing automotive, aerospace, and industrial manufacturing capabilities.',
+  title: 'Component Gallery - Manufacturing Excellence Showcase',
+  description: 'Explore EMUSKI\'s gallery of precision manufacturing components and engineering solutions, showcasing automotive, aerospace, and industrial capabilities.',
   alternates: {
     canonical: 'https://www.emuski.com/gallery',
   },

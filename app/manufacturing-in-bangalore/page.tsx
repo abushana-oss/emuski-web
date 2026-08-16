@@ -19,7 +19,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'ISO Certified Manufacturer in Bangalore | Top Manufacturing Companies Karnataka',
-  description: 'ISO 9001:2015 certified manufacturers in Bangalore. Leading manufacturing company offering OEM manufacturing, precision engineering, rapid prototyping, and custom manufacturing solutions. 15+ years experience serving automotive, aerospace, electronics. Contact +91-86670-88060',
+  description: 'ISO 9001:2015 certified manufacturer in Bangalore offering OEM manufacturing, precision engineering, rapid prototyping. 15+ years serving automotive, aerospace.',
   keywords: 'manufacturers in bangalore, manufacturing in bangalore, ISO certified manufacturers bangalore, manufacturing companies in bangalore, manufacturers in bangalore list, top manufacturers in bangalore, ISO 9001:2015 certified manufacturing bangalore, OEM manufacturers bangalore, precision engineering manufacturers bangalore, custom manufacturers bangalore, manufacturing industries bangalore, wholesale manufacturers bangalore, top 100 manufacturers in bangalore, manufacturers in bangalore with contact details, best manufacturers in bangalore, manufacturers in electronic city bangalore, manufacturers in bangalore Karnataka',
   openGraph: {
     title: 'ISO 9001:2015 Certified Manufacturers in Bangalore | EMUSKI - Top OEM Manufacturing',

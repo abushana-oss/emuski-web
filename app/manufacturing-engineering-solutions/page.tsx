@@ -20,7 +20,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'Best Manufacturing and Engineering Solutions Companies Worldwide | Top Provider Bangalore India',
-  description: 'EMUSKI - Among the best manufacturing and engineering solutions companies worldwide. Leading manufacturing engineering solution providers in Bangalore, India. Top firms for manufacturing engineering solutions serving automotive, aerospace, medical devices, electronics globally. ISO 9001:2015 certified with 15+ years excellence. Contact: +91-86670-88060',
+  description: 'EMUSKI — among the best manufacturing and engineering solutions companies worldwide, based in Bangalore. ISO 9001:2015 certified with 15+ years of excellence.',
   authors: [{ name: 'EMUSKI Engineering Team', url: 'https://www.emuski.com/about' }],
   publisher: 'EMUSKI Manufacturing Solutions',
   keywords: 'best manufacturing and engineering solutions companies worldwide, top firms manufacturing engineering solutions, leading manufacturing and engineering solution providers, companies list services manufacturing and engineering solutions, best manufacturing and engineering solutions companies in Bangalore, top manufacturing engineering solution providers Bangalore India, engineering services companies Bangalore, best engineering manufacturing solutions company Bangalore',

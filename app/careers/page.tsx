@@ -14,8 +14,8 @@ import LocationsMap from '@/components/LocationsMap'
 import { CareersNavigation } from '@/components/CareersNavigation'
 
 export const metadata: Metadata = {
-  title: 'Careers at EMUSKI - Engineering Jobs in Manufacturing & AI | EMUSKI',
-  description: 'Join EMUSKI\'s global team of engineers and innovators. Open positions in AI, manufacturing, cost engineering, and software development across Bangalore, Hyderabad, and remote locations.',
+  title: 'Careers at EMUSKI - Engineering Jobs in Manufacturing & AI',
+  description: 'Join EMUSKI\'s global team of engineers and innovators. Open roles in AI, manufacturing, cost engineering, and software development in Bangalore & Hyderabad.',
   keywords: [
     'engineering jobs',
     'manufacturing careers',
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Careers at EMUSKI - Engineering Jobs in Manufacturing & AI',
     description: 'Join EMUSKI\'s global team of engineers and innovators. Open positions in AI, manufacturing, cost engineering, and software development.',
-    url: 'https://careers.emuski.com',
-    siteName: 'EMUSKI Careers',
+    url: 'https://www.emuski.com/careers',
+    siteName: 'EMUSKI',
     images: [
       {
         url: '/social-banner.jpg',
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://careers.emuski.com',
+    canonical: 'https://www.emuski.com/careers',
   },
   other: {
     'application-name': 'EMUSKI Careers',

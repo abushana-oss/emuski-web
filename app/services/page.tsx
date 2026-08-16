@@ -20,8 +20,8 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Manufacturing & Engineering Services | ISO 9001:2015 Certified OEM Solutions | EMUSKI Bangalore',
-  description: 'ISO 9001:2015 certified manufacturing and cost engineering services in Bangalore, India. OEM manufacturing with 25-45% cost reduction, precision engineering (CNC machining, injection molding, sheet metal), rapid prototyping, VAVE consulting, AI-powered production intelligence. Serving automotive, aerospace, medical devices, electronics industries globally. 15+ years experience, 75+ clients. Contact: +91-86670-88060',
+  title: 'Manufacturing & Engineering Services | ISO 9001:2015 Certified OEM Solutions Bangalore',
+  description: 'ISO 9001:2015 certified manufacturing and cost engineering services in Bangalore. OEM manufacturing with 25-45% cost reduction, precision engineering, VAVE.',
   keywords: [
     // Primary Services - 2026 Focus
     'manufacturing services bangalore',

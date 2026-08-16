@@ -22,27 +22,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!post) {
     return {
-      title: 'Post Not Found | EMUSKI',
+      title: 'Post Not Found',
       description: 'The requested blog post could not be found.',
     };
   }
 
   // ADVANCED SEO: Optimize meta description for maximum click-through rate
   // Google displays 150-160 chars on desktop, 120 on mobile
-  const metaDescription = post.metaDescription && post.metaDescription.length > 160
-    ? post.metaDescription.substring(0, 157) + '...'
-    : (post.metaDescription || post.excerpt);
+  const rawDescription = post.metaDescription || post.excerpt;
+  const metaDescription = rawDescription.length > 160
+    ? rawDescription.substring(0, 157) + '...'
+    : rawDescription;
 
   // OG description can be longer (200 chars max for best display)
-  const ogDescription = post.metaDescription && post.metaDescription.length > 200
-    ? post.metaDescription.substring(0, 197) + '...'
-    : (post.metaDescription || post.excerpt);
+  const ogDescription = rawDescription.length > 200
+    ? rawDescription.substring(0, 197) + '...'
+    : rawDescription;
 
   // Enhanced title with power words for better CTR
   const isSuccessStory = post.category === 'Case Study' || post.category === 'Success Story';
   const seoTitle = isSuccessStory
-    ? `${post.title} | Manufacturing Success Story | EMUSKI`
-    : `${post.title} | EMUSKI Blog - Manufacturing Excellence Guide`;
+    ? `${post.title} | Manufacturing Success Story`
+    : `${post.title} | Blog - Manufacturing Excellence Guide`;
 
   // Enhanced keywords for success stories
   const keywords = isSuccessStory

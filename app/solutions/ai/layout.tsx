@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Next-GenAI | EMUSKI',
+  title: 'Next-GenAI',
   description: 'Revolutionary AI-powered intelligence transforming product development, cost engineering, and supply chain optimization in manufacturing.',
   robots: {
     index: false,
