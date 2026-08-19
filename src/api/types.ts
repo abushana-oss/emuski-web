@@ -10,6 +10,7 @@ export interface BlogPost {
   authorBio: string;
   authorImage: string;
   publishDate: string;
+  lastModified?: string;
   readTime: string;
   image: string;
   tags: string[];

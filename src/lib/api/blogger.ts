@@ -73,6 +73,7 @@ export interface BlogPost {
   author: string;
   authorImage: string;
   publishDate: string;
+  lastModified?: string;
   readTime: string;
   image: string;
   seoTitle: string;
@@ -99,6 +100,7 @@ function normalizeLocalPost(p: LocalDataPost): BlogPost {
     author: p.author,
     authorImage: p.authorImage,
     publishDate: p.publishDate,
+    lastModified: p.lastModified,
     readTime: p.readTime,
     image: p.image,
     seoTitle: p.seoTitle,

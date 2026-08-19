@@ -40,10 +40,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : rawDescription;
 
   // Enhanced title with power words for better CTR
+  // Prefer the curated seoTitle (kept close to Google's ~60-70 char display limit)
+  // over mechanically appending a long suffix to the on-page H1.
   const isSuccessStory = post.category === 'Case Study' || post.category === 'Success Story';
-  const seoTitle = isSuccessStory
+  const fallbackTitle = isSuccessStory
     ? `${post.title} | Manufacturing Success Story`
     : `${post.title} | Blog - Manufacturing Excellence Guide`;
+  const seoTitle = post.seoTitle || fallbackTitle;
+
+  const modifiedTime = post.lastModified || post.publishDate;
 
   // Enhanced keywords for success stories
   const keywords = isSuccessStory
@@ -59,7 +64,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : post.tags || [];
 
   return {
-    title: seoTitle,
+    // absolute: the curated seoTitle is already a complete title (it carries its
+    // own "| EMUSKI" suffix) — this opts out of the root layout's title template
+    // so the brand suffix isn't appended twice.
+    title: { absolute: seoTitle },
     description: metaDescription,
     keywords: keywords.join(', '),
     authors: [{ name: post.author, url: 'https://www.emuski.com/about' }],
@@ -103,7 +111,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: `https://www.emuski.com/blog/${slug}`,
       siteName: 'EMUSKI - Manufacturing Excellence',
       publishedTime: post.publishDate,
-      modifiedTime: post.publishDate,
+      modifiedTime,
       expirationTime: undefined, // Article doesn't expire
       section: post.category,
       tags: post.tags,

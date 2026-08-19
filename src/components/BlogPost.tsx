@@ -331,7 +331,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       "caption": post.title
     },
     "datePublished": post.publishDate,
-    "dateModified": post.publishDate,
+    "dateModified": post.lastModified || post.publishDate,
     "author": {
       "@type": "Person",
       "@id": "https://www.emuski.com/#author",
@@ -453,7 +453,7 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
       "@id": `https://www.emuski.com/blog/${post.slug}#primaryimage`
     },
     "datePublished": post.publishDate,
-    "dateModified": post.publishDate,
+    "dateModified": post.lastModified || post.publishDate,
     "inLanguage": "en-US",
     "potentialAction": {
       "@type": "ReadAction",

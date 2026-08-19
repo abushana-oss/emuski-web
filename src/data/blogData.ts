@@ -1093,6 +1093,240 @@ export const blogPosts: BlogPost[] = [
     keywords: ["defense manufacturing", "precision tolerances", "anodization", "zero tolerance", "npd"],
   },
   {
+    id: 1040,
+    slug: "us-tariffs-2026-why-a-25-percent-duty-still-doesnt-beat-vave-engineered-indian-sourcing",
+    title: "US Tariffs in 2026: Why a 25% Duty Still Doesn't Beat the Case for VAVE-Engineered Indian Sourcing",
+    excerpt: "Section 232 puts a 25% duty on most Indian-machined metal parts landing in the US as of August 2026, but the labor-cost gap between US and Indian CNC shops is still wide enough to win, if the part is engineered for it, not just quoted for it.",
+    content: "Most sourcing teams are should-costing Indian-machined parts against a 10% tariff assumption when the real number, under Section 232, is 25% on full customs value. Even so, the US-India CNC shop-rate gap is wide enough that landed cost after duty typically lands 50%+ below domestic machining, provided the part is classified correctly, modeled on landed cost rather than ex-works price, and engineered against the 15% metal-weight exclusion threshold where it applies.",
+    fullContent: `<blockquote><p><strong>Disclaimer:</strong> Tariff rates, HTS classifications, and legal frameworks referenced below are accurate as of August 2026 and change frequently. This article is engineering and sourcing guidance, not legal or customs advice. Confirm current rates and HTS classification for your specific part with a licensed customs broker or trade counsel before making a sourcing decision.</p></blockquote>
+<h2>Key Numbers Before We Begin (As of August 2026)</h2>
+<ul>
+<li><strong>25%:</strong> the Section 232 duty on most derivative (machined, fabricated) steel and aluminum parts imported from India, not the ~10% headline rate most procurement teams have in their head</li>
+<li><strong>15%:</strong> the metal-content-by-weight threshold below which a redesigned part escapes Section 232 metals tariffs entirely</li>
+<li><strong>2–6x:</strong> the landed-cost gap that survives between US and Indian CNC machining even after the duty is applied</li>
+<li><strong>46%:</strong> share of manufacturers already using tariff engineering as a formal 2026 cost-mitigation lever, per the Thomson Reuters Institute Global Trade Report</li>
+</ul>
+<h2>The Tariff Rate That Actually Applies to a Machined Part From India in 2026</h2>
+<p>Most of what has been written about "2026 tariffs" quotes one of two numbers: the old reciprocal-tariff headline rates that made news in 2025, or the 10% global tariff the administration imposed under Section 122 after the Supreme Court's February 2026 ruling, since replaced by tiered Section 301 duties when Section 122 hit its 150-day statutory limit in July 2026. Neither of those is the number that applies to a CNC-machined steel bracket or an aluminum enclosure coming out of a shop in Bangalore or Pune.</p>
+<p>Precision-machined metal parts are governed by Section 232, a completely separate legal authority from the reciprocal-tariff regime, and it was not touched by the Supreme Court ruling. As of the <a href="https://www.federalregister.gov/documents/2026/04/09/2026-06960/strengthening-actions-taken-to-adjust-imports-of-aluminum-steel-and-copper-into-the-united-states" target="_blank" rel="noopener noreferrer">April 6, 2026 restructuring</a> (current as of this writing in August 2026), Section 232 applies:</p>
+<ul>
+<li><strong>50%</strong> on articles wholly of steel, aluminum, or copper, calculated on full customs value</li>
+<li><strong>25%</strong> on "derivative" products: finished or semi-finished goods where the metal is a primary input but the article itself isn't classified in the raw steel/aluminum/copper chapters of the HTS</li>
+</ul>
+<p>Almost every part EMUSKI machines (brackets, housings, manifolds, structural components) falls into the derivative category. So the planning number for a typical Indian-machined steel or aluminum part landing in the US right now is <strong>25%, on full customs value</strong>, as of August 2026, not 10%, and it doesn't stack on top of the general Section 301 global tariff (10% for India as of this writing): you pay one regime or the other, not both. Section 232 is not additive to it, or to the older, longer-standing Section 301 tariffs that apply specifically to China.</p>
+<p>If your team is currently should-costing US-bound parts using a 10% assumption, you're underestimating landed cost by roughly 15 percentage points. That's the single most common and most expensive mistake we're seeing in RFQs from US buyers right now.</p>
+<figure style="margin:2.5rem 0;">
+<svg viewBox="0 0 600 190" width="100%" height="auto" role="img" aria-labelledby="chart1-title" xmlns="http://www.w3.org/2000/svg">
+<title id="chart1-title">Bar chart comparing the assumed 10% tariff rate to the actual 25% Section 232 rate on machined parts from India</title>
+<text x="0" y="18" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">The rate most teams model vs. the rate Section 232 actually charges</text>
+<text x="0" y="42" font-family="inherit" font-size="13" fill="#4b5563">Assumed: Section 301 headline rate</text>
+<path d="M0,48 H196 Q200,48 200,52 V66 Q200,70 196,70 H0 Z" fill="#2a78d6"></path>
+<text x="208" y="64" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">10%</text>
+<text x="0" y="104" font-family="inherit" font-size="13" fill="#4b5563">Actual: Section 232 rate on derivative machined parts</text>
+<path d="M0,110 H496 Q500,110 500,114 V128 Q500,132 496,132 H0 Z" fill="#eb6834"></path>
+<text x="508" y="126" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">25%</text>
+</svg>
+<figcaption>Section 232 (25%) is a separate, higher regime from the 10% Section 301 global tariff; the two do not stack.</figcaption>
+</figure>
+<h2>What the Supreme Court Ruling Actually Changed for Precision Manufacturing</h2>
+<p>Short answer: not for machined metal parts. On February 20, 2026, the <a href="https://www.congress.gov/crs-product/LSB11398" target="_blank" rel="noopener noreferrer">Supreme Court ruled 6-3</a> that the International Emergency Economic Powers Act does not grant the President authority to impose tariffs of indefinite scope, striking down both the 2025 "reciprocal tariffs" and the fentanyl-related IEEPA tariffs. Up to $175 billion in refunds are projected as a result, and the administration replaced the reciprocal regime four days later with a new 10% global tariff under Section 122. That Section 122 tariff expired on its 150-day statutory clock on July 24, 2026, and was replaced the same day by tiered Section 301 duties (10% for India, among 16 other economies in the lower tier), which is the general baseline still in effect as of August 2026.</p>
+<p>That ruling made headlines as "tariffs struck down," which led a lot of sourcing teams to assume their landed-cost math had just improved. It didn't, for metal parts specifically: the Court's decision explicitly did not touch tariffs imposed under Section 232 (steel, aluminum, copper, autos, semiconductors) or Section 301. If your product is a machined metal component, the February ruling changed which legal basis your general-merchandise duty sits on, not the duty rate on the parts you actually buy from EMUSKI.</p>
+<h2>The 15% Rule: A New Design Lever, Not Just a Legal One</h2>
+<p>Buried in the April 2026 Section 232 restructuring is a provision that most engineering teams haven't connected to their own design decisions yet: as of August 2026, products containing 15% or less steel, aluminum, or copper by weight are excluded from Section 232 metals tariffs entirely.</p>
+<p>This is where tariff exposure stops being a customs-broker problem and becomes a design problem, which is exactly the kind of cost decision EMUSKI already helps OEMs make at the design stage, the same way we approach DFM. Consider what shifts a part across that 15% line:</p>
+<ul>
+<li>An assembly where machining, electronics, or composite content is a larger share of total assembly weight than the metal housing</li>
+<li>A hybrid metal-composite structure where a smaller metal insert replaces a fully machined metal body</li>
+<li>A redesign that consolidates a multi-metal-part assembly into fewer, higher-value-add components</li>
+</ul>
+<p>None of this is a loophole. It's the same logic as <a href="/blog/design-for-manufacturing-the-complete-guide-to-dfm-and-npd-engineering">DFM cost-driver analysis</a>: you're not hiding metal content, you're reducing it because a smarter design genuinely uses less of it. Tariff engineering of this kind is legal, well-precedented (it's the same doctrine behind decades of customs rulings on things like felt-soled sneakers and split-zipper garments), and increasingly mainstream: 46% of organizations are already using it as a formal 2026 mitigation strategy, according to the Thomson Reuters Institute's 2026 Global Trade Report. The catch is that it only works if trade compliance and design engineering are in the same conversation before the part is finalized. Evaluating it after the design is frozen and tooling is cut is usually too late to claim, and any reclassification should be backed by a <a href="https://www.cbp.gov/trade/rulings" target="_blank" rel="noopener noreferrer">CBP binding ruling</a>, not just an internal opinion.</p>
+<h2>The Landed-Cost Math From India After a 25% Duty</h2>
+<p>This is the number that actually decides the sourcing question, and it's the one most tariff commentary skips because it requires actual shop-rate data, not just duty-rate data.</p>
+<figure style="margin:2.5rem 0;">
+<svg viewBox="0 0 600 250" width="100%" height="auto" role="img" aria-labelledby="chart3-title" xmlns="http://www.w3.org/2000/svg">
+<title id="chart3-title">Diagram showing landed cost is the sum of India machining cost, Section 232 duty, freight and logistics, and other landed costs</title>
+<text x="0" y="16" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">What actually lands on the invoice</text>
+<rect x="20" y="32" width="128" height="68" rx="8" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"></rect>
+<line x1="28" y1="35" x2="140" y2="35" stroke="#1baf7a" stroke-width="3"></line>
+<text x="84" y="60" text-anchor="middle" font-family="inherit" font-size="12" font-weight="600" fill="#171A22">India machining</text>
+<text x="84" y="76" text-anchor="middle" font-family="inherit" font-size="12" font-weight="600" fill="#171A22">cost (ex-works)</text>
+<text x="156" y="70" text-anchor="middle" font-family="inherit" font-size="20" font-weight="700" fill="#9ca3af">+</text>
+<rect x="164" y="32" width="128" height="68" rx="8" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"></rect>
+<line x1="172" y1="35" x2="284" y2="35" stroke="#eb6834" stroke-width="3"></line>
+<text x="228" y="60" text-anchor="middle" font-family="inherit" font-size="12" font-weight="600" fill="#171A22">Section 232 duty</text>
+<text x="228" y="76" text-anchor="middle" font-family="inherit" font-size="12" font-weight="600" fill="#171A22">(~25% of value)</text>
+<text x="300" y="70" text-anchor="middle" font-family="inherit" font-size="20" font-weight="700" fill="#9ca3af">+</text>
+<rect x="308" y="32" width="128" height="68" rx="8" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"></rect>
+<line x1="316" y1="35" x2="428" y2="35" stroke="#2a78d6" stroke-width="3"></line>
+<text x="372" y="60" text-anchor="middle" font-family="inherit" font-size="12" font-weight="600" fill="#171A22">Freight &amp;</text>
+<text x="372" y="76" text-anchor="middle" font-family="inherit" font-size="12" font-weight="600" fill="#171A22">logistics</text>
+<text x="444" y="70" text-anchor="middle" font-family="inherit" font-size="20" font-weight="700" fill="#9ca3af">+</text>
+<rect x="452" y="32" width="128" height="68" rx="8" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"></rect>
+<line x1="460" y1="35" x2="572" y2="35" stroke="#9ca3af" stroke-width="3"></line>
+<text x="516" y="60" text-anchor="middle" font-family="inherit" font-size="12" font-weight="600" fill="#171A22">Other landed</text>
+<text x="516" y="76" text-anchor="middle" font-family="inherit" font-size="12" font-weight="600" fill="#171A22">costs</text>
+<text x="300" y="140" text-anchor="middle" font-family="inherit" font-size="26" font-weight="700" fill="#9ca3af">=</text>
+<rect x="140" y="170" width="320" height="68" rx="10" fill="#0d9488"></rect>
+<text x="300" y="201" text-anchor="middle" font-family="inherit" font-size="18" font-weight="700" fill="#ffffff">US landed cost</text>
+<text x="300" y="222" text-anchor="middle" font-family="inherit" font-size="12" fill="#e6fffa">still ~57% below domestic US machining</text>
+</svg>
+<figcaption>The same build-up modeled numerically in the worked example below.</figcaption>
+</figure>
+<p>US CNC shop rates in 2026 run roughly $60–120/hr for 3-axis work and $120–250/hr for 5-axis work, with West Coast shops running toward the top of that range and Midwest shops toward the bottom. <a href="/manufacturing-in-bangalore">Indian precision shops</a> (including AS9100-certified aerospace machining and IATF 16949-compliant automotive suppliers) run $9.50–30/hr (Rs 800–2,500/hr) for comparable work.</p>
+<figure style="margin:2.5rem 0;">
+<img src="/blog/images/cnc-vmc-milling-aluminum-component-coolant.jpg" alt="A CNC vertical machining center cutting an aluminum fixture, with coolant and machined chips visible around the spindle" loading="lazy" />
+<figcaption>This is the labor-hour cost side of the model: a VMC cutting an aluminum component, the same class of work priced at $9.50–30/hr in an Indian shop versus $60–250/hr in the US.</figcaption>
+</figure>
+<p>Here's a worked, illustrative example: build your own version with real quotes for your part, but the mechanics hold. This is illustrative only, not an actual quote or verified case: a machined aluminum bracket, 0.5 hrs of machine time, moderate complexity.</p>
+<table>
+<thead>
+<tr><th>Cost Component</th><th>US Shop</th><th>India Shop</th></tr>
+</thead>
+<tbody>
+<tr><td>Machine time cost</td><td>0.5hr × $90 = $45</td><td>0.5hr × $18 = $9</td></tr>
+<tr><td>Material + overhead</td><td>~$15</td><td>~$10</td></tr>
+<tr><td>Unit cost (ex-works)</td><td>~$60</td><td>~$19</td></tr>
+<tr><td>Freight + duty admin</td><td>N/A</td><td>~$2</td></tr>
+<tr><td>Section 232 duty (25% of customs value)</td><td>N/A</td><td>~$4.75</td></tr>
+<tr><td><strong>Landed cost</strong></td><td><strong>~$60</strong></td><td><strong>~$25.75</strong></td></tr>
+</tbody>
+</table>
+<p>Even after loading the full 25% Section 232 duty onto the Indian part, the landed cost is still roughly 57% lower than the domestically machined equivalent. The duty erodes the advantage. It doesn't eliminate it. Where it does start to bite is on labor-light, high-material-cost parts (large forgings, expensive alloys) where the metal-value share is high and machine time is short. Those are the SKUs where the math needs checking case by case, and where the 15% threshold redesign lever above becomes genuinely worth pursuing.</p>
+<figure style="margin:2.5rem 0;">
+<svg viewBox="0 0 600 230" width="100%" height="auto" role="img" aria-labelledby="chart2-title" xmlns="http://www.w3.org/2000/svg">
+<title id="chart2-title">Bar chart comparing US shop landed cost of $60 to India shop landed cost of $25.75 after the 25% Section 232 duty</title>
+<text x="0" y="18" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">Landed cost after the duty: US shop vs. India shop</text>
+<text x="0" y="42" font-family="inherit" font-size="13" fill="#4b5563">US shop (ex-works, no import duty)</text>
+<path d="M0,48 H516 Q520,48 520,52 V66 Q520,70 516,70 H0 Z" fill="#2a78d6"></path>
+<text x="528" y="64" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">~$60</text>
+<text x="0" y="104" font-family="inherit" font-size="13" fill="#4b5563">India shop, landed (after 25% Section 232 duty)</text>
+<rect x="0" y="110" width="182" height="22" fill="#1baf7a"></rect>
+<path d="M184,110 H221 Q225,110 225,114 V128 Q225,132 221,132 H184 Z" fill="#eb6834"></path>
+<text x="233" y="126" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">~$25.75</text>
+<circle cx="6" cy="176" r="5" fill="#2a78d6"></circle>
+<text x="16" y="180" font-family="inherit" font-size="12" fill="#4b5563">US shop cost</text>
+<circle cx="176" cy="176" r="5" fill="#1baf7a"></circle>
+<text x="186" y="180" font-family="inherit" font-size="12" fill="#4b5563">India base landed cost</text>
+<circle cx="376" cy="176" r="5" fill="#eb6834"></circle>
+<text x="386" y="180" font-family="inherit" font-size="12" fill="#4b5563">Section 232 duty</text>
+</svg>
+<figcaption>Same figures as the landed-cost table above, drawn to scale.</figcaption>
+</figure>
+<h2>Where Aerospace and Titanium Parts Sit Differently</h2>
+<p>If you're sourcing for space, drone, or aerospace programmes, don't apply the steel/aluminum math above uncritically: two things work in your favor that most tariff content doesn't mention.</p>
+<figure style="margin:2.5rem 0;">
+<img src="/blog/images/titanium-compressor-blisk-aerospace-component.jpg" alt="A titanium compressor blisk, an integrally machined aerospace turbine component with complex 5-axis blade geometry" loading="lazy" />
+<figcaption>An integrally bladed compressor rotor (blisk): the kind of complex, 5-axis-machined titanium geometry that often sits outside Section 232's steel and aluminum coverage. Photo: Olivier Cleynen, Wikimedia Commons, CC BY-SA 3.0.</figcaption>
+</figure>
+<p>First, titanium and nickel-base superalloys largely fall outside Section 232's steel and aluminum coverage, because they're classified in different HTS chapters entirely. A lot of <a href="/blog/aerospace-component-suppliers-in-india-as9100-certification-material-traceability-what-global-oems-demand">aerospace-grade machined components</a> (landing gear fittings, engine brackets, structural titanium parts) may not carry the metals tariff at all, depending on exact HTS classification and alloy composition. This needs case-by-case confirmation, not assumption, but it's a materially different starting position than a mild-steel bracket.</p>
+<p>Second, on July 9, 2026, the administration issued a <a href="https://www.whitehouse.gov/presidential-actions/2026/07/adjusting-imports-of-commercial-aircraft-jet-engines-and-aircraft-and-engine-parts-into-the-united-states/" target="_blank" rel="noopener noreferrer">Section 232 proclamation on commercial aircraft, jet engines, and aircraft/engine parts</a> that explicitly declined to impose new tariffs, opting instead for a 180-day negotiation window. Be precise about what this covers: it protects finished aircraft, engines, and parts specifically classified as such. It does not blanket-exempt every steel or aluminum component that happens to be aerospace-adjacent if that component is classified under the general metals derivative categories rather than as an aircraft part. The <a href="https://hts.usitc.gov" target="_blank" rel="noopener noreferrer">HTS classification</a>, not the end-use industry, is what determines treatment.</p>
+<h2>VAVE + Tariff Engineering: The Combined Playbook</h2>
+<p>The teams getting this right in 2026 aren't choosing between "reshore" and "keep sourcing from India": they're running both cost engineering and trade classification as one workstream, before the part is locked:</p>
+<figure style="margin:2.5rem 0;">
+<svg viewBox="0 0 700 460" width="100%" height="auto" role="img" aria-labelledby="chart4-title" xmlns="http://www.w3.org/2000/svg">
+<title id="chart4-title">Flow diagram showing tariff exposure is set during product design and material selection, before manufacturing and landed cost are determined</title>
+<text x="0" y="18" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">Tariff exposure is a design decision, not a customs outcome</text>
+<rect x="40" y="34" width="360" height="56" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"></rect>
+<text x="220" y="67" text-anchor="middle" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">PRODUCT DESIGN</text>
+<line x1="220" y1="90" x2="220" y2="110" stroke="#9ca3af" stroke-width="2"></line>
+<path d="M215,110 L225,110 L220,118 Z" fill="#9ca3af"></path>
+<rect x="40" y="118" width="360" height="56" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"></rect>
+<text x="220" y="151" text-anchor="middle" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">MATERIAL SELECTION</text>
+<path d="M418,34 H428 M418,34 V174 M418,174 H428 M418,104 H438" stroke="#9ca3af" stroke-width="1.5" fill="none"></path>
+<text x="445" y="95" font-family="inherit" font-size="12" fill="#4b5563">Design and material</text>
+<text x="445" y="111" font-family="inherit" font-size="12" fill="#4b5563">choice set tariff exposure</text>
+<text x="445" y="127" font-family="inherit" font-size="12" fill="#4b5563">before manufacturing begins</text>
+<line x1="220" y1="174" x2="220" y2="194" stroke="#9ca3af" stroke-width="2"></line>
+<path d="M215,194 L225,194 L220,202 Z" fill="#9ca3af"></path>
+<rect x="40" y="202" width="360" height="56" rx="8" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"></rect>
+<text x="220" y="235" text-anchor="middle" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">MANUFACTURING PROCESS</text>
+<line x1="220" y1="258" x2="220" y2="278" stroke="#9ca3af" stroke-width="2"></line>
+<path d="M215,278 L225,278 L220,286 Z" fill="#9ca3af"></path>
+<rect x="40" y="286" width="360" height="56" rx="8" fill="#fff7ed" stroke="#eb6834" stroke-width="2"></rect>
+<text x="220" y="308" text-anchor="middle" font-family="inherit" font-size="15" font-weight="700" fill="#171A22">TARIFF EXPOSURE</text>
+<text x="220" y="326" text-anchor="middle" font-family="inherit" font-size="10" fill="#4b5563">(Section 232 derivative rate applies here)</text>
+<line x1="220" y1="342" x2="220" y2="362" stroke="#9ca3af" stroke-width="2"></line>
+<path d="M215,362 L225,362 L220,370 Z" fill="#9ca3af"></path>
+<rect x="40" y="370" width="360" height="56" rx="10" fill="#0d9488"></rect>
+<text x="220" y="403" text-anchor="middle" font-family="inherit" font-size="15" font-weight="700" fill="#ffffff">LANDED COST</text>
+</svg>
+<figcaption>Tariff exposure is locked in by the manufacturing stage. VAVE and material decisions earlier in the chain are what actually move it.</figcaption>
+</figure>
+<ol>
+<li><strong>Classify before you quote, not after.</strong> Get the HTS classification and Section 232 derivative status of a part before RFQ, not after the PO. Reclassifying a part that's already tooled is far more expensive than designing around it.</li>
+<li><strong>Model <a href="/blog/should-cost-analysis-the-engineer-s-guide-to-accurate-product-cost-estimation">landed cost</a>, not FOB price.</strong> Every supplier comparison should carry duty, freight, and customs admin loaded in, since an FOB comparison alone will overstate the Indian advantage and lead to a nasty surprise at customs.</li>
+<li><strong>Run the 15%-threshold test on metal-heavy assemblies.</strong> Where a design sits close to the 15% metal-weight line, a targeted <a href="/blog/what-is-vave-in-manufacturing-and-how-does-it-actually-save-oem-clients-money">VAVE pass</a> (reducing metal mass, substituting composite or plastic sub-components) can be worth more than a supplier renegotiation.</li>
+<li><strong>Get a binding ruling before you rely on a reclassification.</strong> A CBP binding ruling protects you against retroactive reclassification penalties; an internal engineering opinion doesn't.</li>
+<li><strong>Apply DFM's <a href="/cost-engineering">cost-driver discipline</a> to duty exposure the same way you'd apply it to cycle time.</strong> Duty, like cycle time and setup cost, is locked in largely at the design stage. Treat it as a fifth cost driver alongside cycle time, setup time, tooling, and scrap.</li>
+<li><strong>Dual-source tariff-sensitive SKUs.</strong> Where a part sits close to a rate boundary or classification gray area, qualify a second supplier or process route so a rate change doesn't strand a single-sourced part.</li>
+</ol>
+<h2>Tariff-Ready DFM Checklist</h2>
+<ul>
+<li>HTS classification and Section 232 derivative status confirmed before RFQ is issued</li>
+<li>Metal content modeled as % of total assembly weight, flagged if within striking distance of the 15% threshold</li>
+<li>Landed cost (unit cost + freight + duty + customs admin) used for every supplier comparison, not ex-works price</li>
+<li>CBP binding ruling requested for any part relying on a reclassification argument</li>
+<li>Titanium/superalloy components checked against Section 232 coverage separately from steel/aluminum parts</li>
+<li>Dual-source or alternate-process plan in place for tariff-sensitive, single-sourced SKUs</li>
+</ul>
+<h2>Where the Reshoring Argument Falls Apart</h2>
+<p>It's worth addressing the "just reshore to the US" advice directly, because a lot of 2026 commentary treats it as the obvious answer. Reshoring and FDI announcements have genuinely surged, from roughly 11,000 jobs announced per year in 2010 to 244,000 per year in 2025, a 25% compound annual growth rate, with tariff exposure cited 454% more often as a driver in Q1 2025 than a year earlier. That's real momentum.</p>
+<p>But announcements aren't capacity, and capacity isn't jobs: US manufacturing employment actually fell by roughly 66,000 positions over the trailing year to mid-2026, even as reshoring announcements climbed. The shop-rate gap in the worked example above is the reason why: US capacity is being added at the high-tech, high-automation end (88% of 2024 reshored jobs were classified high-tech or medium-high-tech), not in the labor-intensive precision machining EMUSKI competes in. For most piece-part, bracket, and housing-level components, the domestic capacity to absorb reshored volume at a competitive rate simply isn't there yet, tariff or no tariff.</p>
+<p>India's position in this shift is real but, by most industry accounts, still underexploited. India is consistently named the preeminent <a href="/blog/strategic-sourcing-for-oem-manufacturers-how-india-s-supplier-ecosystem-compares-to-china-for-precision-parts">China+1 alternative</a>, yet reporting suggests it has captured only limited share of the diversification opportunity relative to its cost position, largely because of capability, certification, and reliability gaps among suppliers rather than lack of demand. That gap, not the tariff, is the actual constraint on US OEMs moving more precision work to India, and it's the one a qualified, <a href="/manufacturing-services">AS9100/ISO-certified partner</a> closes.</p>
+<h2>The Bottom Line</h2>
+<p>A 25% Section 232 duty on Indian-machined metal parts is real, it's not going away with the next headline, and it doesn't stack with the general 10% global tariff the way most procurement teams currently assume: it's a separate, higher regime. But the underlying economics haven't flipped: the labor-cost gap between US and Indian precision machining is still large enough to absorb that duty and land meaningfully ahead on cost, provided the part is classified correctly, modeled on landed cost rather than ex-works price, and, where it's close to the 15% metal-weight threshold, engineered with duty exposure treated as a design variable, not an afterthought. The OEMs who get hurt in 2026 aren't the ones sourcing from India; they're the ones sourcing from India the way they did in 2023, without updating the model.</p>
+<h2>Related EMUSKI Resources</h2>
+<p>If you're building out the cost or sourcing model this article describes, these are the EMUSKI pages and guides that go deeper on each piece of it:</p>
+<ul>
+<li><a href="/manufacturing-services">Precision Manufacturing Services</a>: CNC machining, injection molding, casting, and fabrication capabilities, including the rapid prototyping and production-scaling paths referenced in the landed-cost model above.</li>
+<li><a href="/manufacturing-in-bangalore">Manufacturing in Bangalore, India</a>: the Indian precision-machining base this article's shop-rate comparison is built on.</li>
+<li><a href="/cost-engineering">Cost Engineering</a>: EMUSKI's product cost estimation, VAVE, and strategic sourcing practice, the same discipline this article applies to duty exposure.</li>
+<li><a href="/blog/should-cost-analysis-the-engineer-s-guide-to-accurate-product-cost-estimation">Should-Cost Analysis: The Engineer's Guide to Accurate Product Cost Estimation</a>: how to build the landed-cost model this article's worked example is based on.</li>
+<li><a href="/blog/what-is-vave-in-manufacturing-and-how-does-it-actually-save-oem-clients-money">What Is VAVE in Manufacturing and How Does It Actually Save OEM Clients Money?</a>: the value-engineering discipline behind the 15%-threshold redesign lever.</li>
+<li><a href="/blog/design-for-manufacturing-the-complete-guide-to-dfm-and-npd-engineering">Design for Manufacturing: The Complete Guide to DFM and NPD Engineering</a>: the design-stage cost-driver framework this article extends to tariff exposure.</li>
+<li><a href="/blog/strategic-sourcing-for-oem-manufacturers-how-india-s-supplier-ecosystem-compares-to-china-for-precision-parts">Strategic Sourcing for OEM Manufacturers: How India's Supplier Ecosystem Compares to China</a>: a deeper look at the China+1 dynamics this article touches on.</li>
+<li><a href="/blog/aerospace-component-suppliers-in-india-as9100-certification-material-traceability-what-global-oems-demand">Aerospace Component Suppliers in India: AS9100 Certification, Material Traceability &amp; What Global OEMs Demand</a>: qualification detail for the aerospace and titanium sourcing case discussed above.</li>
+</ul>
+<h2>Frequently Asked Questions</h2>
+<div>
+<h3>What tariff rate applies to CNC-machined parts imported from India in 2026?</h3>
+<p>Most machined steel or aluminum parts are "derivative" products under Section 232 and carry a 25% duty on full customs value as of August 2026, not the 10% Section 301 global rate, which doesn't apply to Section 232-covered goods.</p>
+</div>
+<div>
+<h3>Did the Supreme Court's IEEPA ruling lower tariffs on manufactured metal goods?</h3>
+<p>No. The February 2026 ruling struck down IEEPA-based reciprocal and fentanyl tariffs but explicitly left Section 232 (steel, aluminum, copper) and Section 301 tariffs in place.</p>
+</div>
+<div>
+<h3>Is tariff engineering legal, and how is it different from misclassification?</h3>
+<p>Tariff engineering, legally redesigning a product's materials or construction to qualify for a lower duty classification, is a long-recognized, legal practice, distinct from misclassifying or misdescribing a product to customs. It should be backed by a CBP binding ruling before you rely on it.</p>
+</div>
+<div>
+<h3>Are aerospace and titanium components taxed the same as steel and aluminum parts?</h3>
+<p>Not necessarily. Titanium and nickel-base superalloys often fall outside Section 232's steel/aluminum coverage, and a July 2026 proclamation declined to impose new tariffs specifically on commercial aircraft, jet engines, and aircraft parts, though this depends on exact HTS classification, not just end-use industry.</p>
+</div>
+<div>
+<h3>Is Indian CNC machining still cheaper than US machining after the 25% duty?</h3>
+<p>In most labor-intensive machining scenarios, yes: the US-India shop-rate gap (roughly $60–250/hr vs. $9.50–30/hr) is wide enough that landed cost after a 25% duty is typically still well below domestic US machining cost, though the margin narrows on high-material-value, low-machining-time parts.</p>
+</div>
+<div>
+<h3>How does VAVE help offset tariff costs without changing part function?</h3>
+<p>By treating duty exposure as a cost driver the same way cycle time or setup cost are treated: reducing metal-value share, consolidating assemblies, or substituting materials to legitimately shift a part's classification or landed cost, without touching the function the part delivers.</p>
+</div>`,
+    category: "Manufacturing",
+    author: "EMUSKI",
+    authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
+    authorImage: "/logo.webp",
+    publishDate: "2026-08-19T00:00:00Z",
+    lastModified: "2026-08-19T00:00:00Z",
+    readTime: "19 min read",
+    image: "/blog/images/precision-machined-parts-engineering-blueprint.jpg",
+    tags: ["Tariff Engineering", "VAVE", "Section 232", "Supply Chain", "Should-Cost Analysis", "India Manufacturing", "US OEM Sourcing"],
+    featured: false,
+    seoTitle: "US Tariffs 2026: 25% Duty vs. VAVE-Engineered India Sourcing | EMUSKI",
+    metaDescription: "Section 232 puts a 25% duty on Indian-machined parts as of Aug 2026, but the US-India labor-cost gap still makes it the cheaper source, if engineered right.",
+    keywords: ["tariff engineering", "vave", "section 232", "supply chain", "should-cost analysis", "india manufacturing", "us oem sourcing"],
+  },
+  {
     id: 1007,
     slug: "dfm-secrets-how-smart-design-can-save-30-40-of-your-manufacturing-cost",
     title: "DFM Secrets: How Smart Design Can Save 30-40% of Your Manufacturing Cost",
