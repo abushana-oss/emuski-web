@@ -5,7 +5,6 @@ export default function robots(): MetadataRoute.Robots {
 
   const sharedDisallow = [
     '/api/',
-    '/_next/',
     '/database/',
     '/src/',
     '*.json',

@@ -260,6 +260,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   const breadcrumbData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    '@id': `https://www.emuski.com/blog/${slug}#breadcrumb`,
     itemListElement: [
       {
         '@type': 'ListItem',

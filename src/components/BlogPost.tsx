@@ -389,38 +389,6 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
     }
   };
 
-  // Breadcrumb Schema
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://www.emuski.com"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Blog",
-        "item": "https://www.emuski.com/blog"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": post.category,
-        "item": `https://www.emuski.com/blog?category=${post.category.toLowerCase().replace(/\s+/g, '-')}`
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "name": post.title,
-        "item": `https://www.emuski.com/blog/${post.slug}`
-      }
-    ]
-  };
-
   // FAQ Schema
   const faqSchema = faqs.length > 0 ? {
     "@context": "https://schema.org",
@@ -523,14 +491,6 @@ export const BlogPostComponent = ({ post, allPosts }: BlogPostComponentProps) =>
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-
-      {/* Breadcrumb Schema - Rich Snippets */}
-      <Script
-        id="breadcrumb-schema"
-        type="application/ld+json"
-        nonce={nonce}
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       {/* FAQ Schema - If FAQs exist */}
