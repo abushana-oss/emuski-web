@@ -170,7 +170,13 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   }
 
   // Fetch all posts for related articles - now fetches ALL posts automatically
-  const { all: allPosts } = await fetchAllBlogs(true);
+  // Related-articles UI only reads id/slug/title/image/category/excerpt/publishDate/readTime
+  // (see BlogPost.tsx `nextPosts`) — strip the other posts' fullContent so it isn't
+  // serialized into this page's payload for every post except the one being viewed.
+  const { all: allPostsRaw } = await fetchAllBlogs(true);
+  const allPosts = allPostsRaw.map(p =>
+    p.id === post.id ? p : { ...p, fullContent: '' }
+  );
   
   // Skip CSP nonce during static generation
 
