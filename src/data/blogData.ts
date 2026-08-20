@@ -1591,31 +1591,7 @@ export const blogPosts: BlogPost[] = [
     content: "Poor product cost estimation causes true landed costs to balloon 30-60% beyond quoted prices. Hidden logistics charges, quality rejections, rework loops, and supplier gaps are not accidents—they result from weak cost estimation at the sourcing stage. This guide provides OEM procurement heads and cost engineers a structured framework for CNC machining outsourcing, VAVE, and AI-powered manufacturing decisions.",
     fullContent: `<h2>Why Product Cost Estimation Is the Most Underrated Skill in OEM Manufacturing</h2>
 <p>If you're an OEM procurement head, cost engineer or product development manager, you already know this pain: a component looks affordable on a supplier's quote sheet, but by the time it lands at your assembly line, the true cost has ballooned by 30-60%. Hidden logistics charges, quality rejections, rework loops, supplier communication gaps and missed tolerances—these are not accidents. They are the direct result of poor product cost estimation at the sourcing stage.</p>
-<h2>What Is Product Cost Estimation? (And Why Most OEMs Get It Wrong)</h2>
-<p>Product cost estimation is the process of calculating the total cost to design, manufacture and deliver a component or assembly before committing to production. It is not just a vendor's quoted price.</p>
-<h3>Direct Costs:</h3>
-<ul>
-<li>Raw material cost (steel, brass, aluminum alloys, stainless steel)</li>
-<li>Machining time (CNC milling, CNC turning, 5-axis, Swiss turning, EDM)</li>
-<li>Tooling and fixture costs</li>
-<li>Surface finishing (anodizing, plating, powder coat, passivation)</li>
-<li>Quality inspection (CMM, optical comparators, PPAP documentation)</li>
-</ul>
-<h3>Indirect Costs:</h3>
-<ul>
-<li>Freight and logistics (air vs. sea, domestic vs. offshore)</li>
-<li>Supplier communication overhead</li>
-<li>Rework and rejection costs (measured in PPM - parts per million)</li>
-<li>Intellectual property protection (NDA, master service agreements)</li>
-<li>Compliance costs (ISO 9001, IATF 16949, AS9100, CBAM for EU markets)</li>
-</ul>
-<h3>Hidden Costs Most OEMs Miss:</h3>
-<ul>
-<li>Opportunity cost of engineering time spent on supplier management</li>
-<li>Inventory holding costs (if JIT/Kanban is not in place)</li>
-<li>Time-to-market delays due to supplier qualification cycles</li>
-<li>Working capital locked in consignment or safety stock</li>
-</ul>
+<p>For the full cost-anatomy breakdown—direct and indirect costs, the six standard estimation methods, and a step-by-step calculation process—see our <a href="/blog/product-cost-estimation-in-manufacturing-the-complete-guide-for-oem-precision-engineering-teams">complete guide to product cost estimation in manufacturing</a>. This guide picks up from there and goes deep on one specific, high-stakes decision: CNC machining.</p>
 <h2>CNC Machining: The Core of Precision Component Cost Engineering</h2>
 <h3>How CNC Machining Cost Is Structured</h3>
 <p><strong>1. Material Cost</strong> — Material is typically 30-50% of total component cost in CNC machining. Strategic sourcing teams that understand local material availability in manufacturing hubs like Pune, Bangalore and Chennai can unlock significant raw material savings.</p>
@@ -4002,14 +3978,7 @@ export const blogPosts: BlogPost[] = [
 <p>In precision engineering and OEM manufacturing, a product cost estimate answers a deceptively simple question: <strong>What should this part cost to produce?</strong> The word "should" is critical. It distinguishes a rigorous, process-driven benchmark from a quoted price—and that gap is exactly where cost savings live.</p>
 <p><strong>Key Insight:</strong> Most cost estimation errors come from the method chosen, not the arithmetic. Historical averages anchor you to past conditions. Parametric curves hide cost drivers. Process-based estimation models actual manufacturing operations so you see precisely what drives cost and what to change.</p>
 <h2>The Anatomy of Product Cost</h2>
-<h3>Direct Costs</h3>
-<p><strong>Raw Materials:</strong> The physical inputs—steel, aluminium alloys, engineering plastics, electronic components. Material typically represents 40–60% of total product cost in discrete manufacturing.</p>
-<p><strong>Direct Labour:</strong> Wages and benefits of production workers—machine operators, welders, assembly technicians—whose time can be directly attributed to manufacturing a specific product.</p>
-<h3>Indirect Costs and Overhead</h3>
-<p><strong>Manufacturing Overhead:</strong> Factory depreciation, utilities, machine maintenance, tooling amortisation and equipment wear. A machine running at 60% utilisation produces more expensive parts than the same machine at 90% utilisation, even with identical cycle times. Utilisation is a hidden cost driver most spreadsheet models miss entirely.</p>
-<p><strong>Administrative and Support Costs:</strong> Quality control, production planning, supply chain management and engineering support. These vary with product complexity—a high-complexity, low-volume precision component consumes far more engineering support cost than a high-volume stamped bracket.</p>
-<h3>Variable vs Fixed Costs</h3>
-<p>Variable costs scale with volume—material, energy, direct labour hours. Understanding the variable cost fraction determines how confidently you can offer volume price breaks. Fixed costs—facility lease, salaried staff, equipment depreciation—affect unit cost through allocation, not consumption. Confusing the two creates systematic errors in every volume scenario you evaluate.</p>
+<p>Cost breaks down into direct costs (raw materials, direct labour), indirect costs and overhead (factory depreciation, utilisation, administrative support), and the variable-versus-fixed split that determines how confidently you can offer volume price breaks. If you're specifically sourcing CNC-machined components, our <a href="/blog/product-cost-estimation-in-cnc-machining-the-complete-oem-guide-to-outsourcing-savings-strategic-sourcing">guide to product cost estimation in CNC machining</a> breaks that cost structure down in detail, along with the outsourcing decision framework and an India-vs-China comparison for strategic sourcing.</p>
 <h2>How to Calculate Product Cost</h2>
 <p><strong>Total Product Cost</strong> = Direct Materials + Direct Labour + Factory Overhead</p>
 <p><strong>Should Cost</strong> = Σ (Material Cost + Process Cost + Labour Cost + Tooling Amortisation + Overhead) under efficient conditions</p>
