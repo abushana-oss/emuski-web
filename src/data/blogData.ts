@@ -4572,6 +4572,111 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "How engineers use should-cost analysis to calculate accurate product costs from materials, process, labour and overhead, enabling 20–35% cost reduction.",
     keywords: ["should-cost analysis", "product cost estimation", "manufacturing cost", "supplier negotiation", "vave", "cnc machining", "dfm"],
   },
+  {
+    id: 1040,
+    slug: "why-airbus-and-boeing-are-buying-more-from-india-in-2026",
+    title: "Why Airbus and Boeing Are Buying More From India in 2026",
+    excerpt: "Airbus just sourced aerospace-grade titanium from India for the first time, through a supplier now also machining parts for Safran's jet engines. Boeing already buys over $1.25 billion a year through 300+ Indian suppliers. Here's what's driving it, and what it takes to be part of it.",
+    content: "In 2026, Aerolloy Technologies became the first Indian supplier to cast and machine titanium components for Airbus, covering the A320neo, A330neo and A350 programmes, and is now also supplying Safran Aircraft Engines. Airbus is targeting $2 billion a year in India sourcing by 2030, up from around $1.4 billion today. Boeing already sources more than $1.25 billion a year through 300+ Indian suppliers. The driver is a combined Airbus-Boeing backlog of over 15,000 aircraft that existing suppliers can't scale fast enough to clear, and the gating requirement for any Indian shop wanting in is AS9100 certification, full material traceability and demonstrated tight-tolerance capability.",
+    fullContent: `<h2>A Titanium Part Nobody Expected From India</h2>
+<figure>
+<img src="https://images.unsplash.com/photo-1674897537555-dd6fbf72b4eb?w=1200&h=675&fit=crop&crop=entropy&q=80" alt="Commercial jetliner inside a hangar" />
+<figcaption>Airbus and Boeing are both scaling how much of their supply chain they source from India.</figcaption>
+</figure>
+<p>In 2026, an Indian company called <strong>Aerolloy Technologies</strong>, a subsidiary of PTC Industries, started supplying titanium castings to Airbus for the <strong>A320neo, A330neo and A350</strong> programmes. It is also now machining titanium components for Safran Aircraft Engines, the first time Safran has sourced this kind of work from India at all.</p>
+<p>On its own, that is a single supplier win. In context, it is a signal. Qualifying a new source for flight-critical titanium parts takes years of audits, not months, and aerospace primes do not hand that work to a new country casually. <a href="https://www.business-standard.com/companies/news/airbus-annual-sourcing-from-india-to-touch-2-bn-before-2030-ceo-faury-125032600483_1.html" target="_blank" rel="noopener noreferrer">Airbus CEO Guillaume Faury has said publicly</a> that the company's India sourcing is on track to hit <strong>$2 billion a year before 2030</strong>, up from around $1.4 billion today, and up from just $500 million in 2019. Boeing is already ahead on volume: it sources more than <strong>$1.25 billion a year</strong> through over 300 Indian suppliers, a network that includes more than 7,000 direct Boeing employees in India and roughly 13,000 more jobs across its Indian supply chain.</p>
+<p>If you make precision parts and you have assumed aerospace sourcing from India is still mostly aspirational, a "someday" market rather than a "right now" one, these numbers say otherwise.</p>
+<figure>
+<svg width="100%" viewBox="0 0 500 215" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart comparing Airbus and Boeing India sourcing values in 2026" preserveAspectRatio="xMidYMid meet">
+<text x="0" y="18" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#171A22">India Aerospace Sourcing (2026)</text>
+<line x1="150" y1="28" x2="150" y2="205" stroke="#D1D5DB" stroke-width="1"></line>
+<text x="0" y="60" font-family="Arial, sans-serif" font-size="14" fill="#171A22">Airbus 2026</text>
+<rect x="150" y="40" width="189" height="32" rx="5" fill="#14B8A6"></rect>
+<text x="347" y="60" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#171A22">$1.4B/yr</text>
+<text x="0" y="124" font-family="Arial, sans-serif" font-size="14" fill="#171A22">Airbus 2030</text>
+<rect x="150" y="104" width="270" height="32" rx="5" fill="#0F766E"></rect>
+<text x="428" y="124" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#171A22">$2.0B/yr</text>
+<text x="0" y="188" font-family="Arial, sans-serif" font-size="14" fill="#171A22">Boeing 2026</text>
+<rect x="150" y="168" width="169" height="32" rx="5" fill="#F2994A"></rect>
+<text x="327" y="188" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#171A22">$1.25B/yr</text>
+</svg>
+<figcaption>Airbus is scaling India procurement toward $2 billion a year by 2030, up from $500 million in 2019. Boeing already sources $1.25 billion a year through 300+ Indian suppliers. Figures from Business Standard, IADB and company disclosures, 2026.</figcaption>
+</figure>
+<h2>Real Programmes, Real Parts</h2>
+<p>What makes this shift concrete, rather than a talking point, is how specific it has gotten. This is not generic "India is a growing manufacturing hub" messaging. Named Indian suppliers are now on named aircraft programmes:</p>
+<ul>
+<li><strong>Tata Advanced Systems</strong> machines cargo doors for the A320neo</li>
+<li><strong>Dynamatic Technologies</strong> supplies flap track beams for the A320 and A330, and doors for the A220</li>
+<li><strong>Mahindra Aerostructures</strong> builds fuselage sections for the H130 and H125 helicopters</li>
+<li><strong>Aerolloy Technologies</strong> casts and machines <a href="https://www.argusmedia.com/en/news-and-insights/latest-market-news/2861963-aerolloy-technologies-to-supply-ti-castings-to-airbus" target="_blank" rel="noopener noreferrer">titanium components for the A320neo, A330neo, A350, and now for Safran's engines</a></li>
+</ul>
+<figure>
+<img src="https://images.unsplash.com/photo-1666634157070-6fd830fb5672?w=1200&h=675&fit=crop&crop=entropy&q=80" alt="Precision CNC machining of a metal component" />
+<figcaption>Titanium and aerospace-grade alloys demand exactly this kind of tight process control.</figcaption>
+</figure>
+<p>More than a quarter of Boeing's Indian supplier base is made up of small and mid-sized manufacturers, not just large conglomerates, according to <a href="https://www.iadb.in/2026/07/22/beyond-aircraft-orders-how-india-is-becoming-an-integral-part-of-airbus-boeings-global-supply-chains/" target="_blank" rel="noopener noreferrer">Indian Aerospace and Defence Bulletin reporting</a>. That matters, because it means the qualification bar these companies cleared is achievable by a well-run precision shop, not just a handful of giant industrial groups with decades of aerospace history.</p>
+<h2>Why Now: The Backlog Is the Story</h2>
+<p>Airbus and Boeing are sitting on a combined backlog of more than 15,000 aircraft. That is roughly a decade of production at current build rates, and it means both companies are constrained less by customer demand and more by how fast their supply chains can actually deliver.</p>
+<p>The bottleneck is not final assembly. It is upstream: engines, castings, forgings and precision-machined structural components are running behind, and so is the skilled labour needed to produce them faster. When an OEM cannot scale its existing supplier base quickly enough, the answer is not to wait. It is to qualify new capacity in parallel, in places with the technical ability and the workforce to absorb new volume.</p>
+<p>That is the opening India is stepping into. Not as a cheaper alternative to existing Western suppliers, but as capacity that simply did not exist in the qualified supply chain two or three years ago.</p>
+<figure>
+<img src="https://images.unsplash.com/photo-1696238628662-e820babaf1e3?w=1200&h=675&fit=crop&crop=entropy&q=80" alt="Jet engine on the tarmac" />
+<figcaption>Engines, forgings and castings are the specific categories driving today's supply chain bottleneck.</figcaption>
+</figure>
+<h2>What It Takes to Be Part of This Shift</h2>
+<p>None of the programmes above happened for a supplier without the fundamentals in place first. Based on what OEMs are actually qualifying suppliers against right now, the baseline looks like this:</p>
+<ul>
+<li><strong>AS9100 certification, not just ISO 9001.</strong> Aerospace buyers treat this as table stakes, not a differentiator. Without it, most OEM sourcing conversations do not get past the first screening. See our <a href="/blog/aerospace-component-suppliers-in-india-as9100-certification-material-traceability-what-global-oems-demand">guide to AS9100 aerospace suppliers in India</a> for what that certification actually covers.</li>
+<li><strong>Full material traceability.</strong> Every batch, every heat number, every certificate needs to be documented and retrievable, especially for flight-critical materials like titanium and nickel-base alloys.</li>
+<li><strong>Tight tolerance capability, demonstrated, not claimed.</strong> OEMs increasingly want to see first-article inspection reports and process capability data before they commit volume, not just a capability statement.</li>
+<li><strong>Capacity headroom.</strong> Since the whole point of this shift is absorbing volume the existing supply base cannot handle, a supplier already running near capacity is not solving the OEM's actual problem.</li>
+<li><strong>A track record with complex geometries, not just simple machining.</strong> The backlog bottleneck is concentrated in castings, forgings and precision-machined structural and engine components, the harder parts, not the easy ones.</li>
+</ul>
+<figure>
+<img src="https://images.unsplash.com/photo-1747999827332-163aa33cd597?w=1200&h=675&fit=crop&crop=entropy&q=80" alt="Engineer measuring a precision metal component" />
+<figcaption>First-article inspection and documented process capability are what move an OEM from evaluating a supplier to qualifying one.</figcaption>
+</figure>
+<h2>Where EMUSKI Fits Into This Shift</h2>
+<p>This is exactly the kind of shift EMUSKI is built for. We are an AS9100 and ISO 9001 certified precision manufacturer based in Bangalore, already supplying tight-tolerance metal components into our own <a href="/blog/satellite-broadcast-sensor-components">satellite programmes</a> and <a href="/blog/defense-sector">defense-sector work</a>. When a story like Aerolloy's titanium qualification breaks, it is not just industry news to us. It is a live signal about where OEM demand is heading and what a Tier-2 or Tier-3 supplier needs to already have in place before that RFQ arrives.</p>
+<p>We are writing this because it is the conversation our engineering team has every week with OEMs trying to work out whether their parts, tolerances and certifications line up with what Airbus and Boeing are actually qualifying against right now, and because most of what has been written about this shift so far is trade-press coverage of the announcements, not a practical breakdown of what it takes to be one of the suppliers those announcements are about.</p>
+<h2>The Gap That's Still Open</h2>
+<p>India is widely named as the natural next step for OEMs diversifying their aerospace supply base, but by most industry accounts it has captured only a fraction of the opportunity relative to its cost position, not because of demand, but because too few suppliers can consistently clear the bar above. See our guide comparing <a href="/blog/strategic-sourcing-for-oem-manufacturers-how-india-s-supplier-ecosystem-compares-to-china-for-precision-parts">India's supplier ecosystem to China's</a> for the broader version of this gap. That gap is the opportunity, and it is also exactly why it is still open in 2026 rather than already closed.</p>
+<p>If your shop is AS9100-certified, machines tight-tolerance metal components and has room to take on new programmes, this is a genuinely good moment to be having sourcing conversations with aerospace OEMs and their Tier-1 integrators, not because of a single announcement, but because the backlog driving this shift is not resolving itself in the next year or two. A decade of production backlog does not clear quickly.</p>
+<p>If you are not there yet, the certifications and traceability systems above are the actual gating item, more than price or even raw capacity. Aerospace buyers will pay for reliability before they will shop purely on cost, which is a different sales conversation than most manufacturers are used to having.</p>
+<h2>Frequently Asked Questions</h2>
+<div>
+<h3>Why is Airbus sourcing titanium from India for the first time in 2026?</h3>
+<p>An Indian supplier, Aerolloy Technologies, qualified to cast and machine titanium components for the A320neo, A330neo and A350 programmes, and is now also supplying Safran Aircraft Engines. It is part of a broader push to grow India-based procurement to $2 billion a year by 2030, driven largely by a combined Airbus-Boeing backlog of more than 15,000 aircraft that existing suppliers cannot scale fast enough to clear.</p>
+</div>
+<div>
+<h3>How much does Boeing currently source from India?</h3>
+<p>More than $1.25 billion a year, spread across over 300 Indian suppliers, more than a quarter of them small and mid-sized precision manufacturers rather than large conglomerates.</p>
+</div>
+<div>
+<h3>What certification does an Indian supplier need to work with aerospace OEMs?</h3>
+<p>AS9100 certification is the baseline expectation, along with full material traceability and demonstrated tight-tolerance machining capability. ISO 9001 alone typically is not enough to get past initial OEM screening.</p>
+</div>
+<div>
+<h3>Is this opportunity mostly for large manufacturers, or can smaller precision shops compete?</h3>
+<p>Boeing's supplier base specifically shows this working at the small and mid-sized shop level. The constraint is capability and certification, not company size.</p>
+</div>
+<div>
+<h3>Why hasn't India captured more of this opportunity already if the demand is real?</h3>
+<p>Most industry reporting points to a capability and certification gap among suppliers, not a lack of OEM demand, which is exactly the gap a properly certified, quality-focused manufacturer can close.</p>
+</div>`,
+    category: "Manufacturing",
+    author: "EMUSKI",
+    authorBio: "Expert in manufacturing excellence and precision engineering with over 10 years of industry experience.",
+    authorImage: "/logo.webp",
+    publishDate: "2026-08-24T00:00:00Z",
+    readTime: "8 min read",
+    image: "https://images.unsplash.com/photo-1674897537555-dd6fbf72b4eb?w=1200&h=675&fit=crop&crop=entropy&q=80",
+    tags: ["Aerospace Manufacturing", "AS9100", "India Manufacturing", "Supply Chain", "OEM Sourcing", "Precision Engineering", "Aerospace Suppliers"],
+    featured: false,
+    seoTitle: "Why Airbus and Boeing Are Sourcing More From India in 2026 | EMUSKI",
+    metaDescription: "Airbus is targeting $2B/year in India procurement by 2030 and just sourced titanium from India for the first time. Here's what's driving it and what aerospace suppliers need to qualify.",
+    keywords: ["aerospace supply chain diversification india", "aerospace manufacturing india 2026", "airbus india suppliers", "boeing india suppliers", "as9100 certified supplier india", "aerospace precision machining india", "titanium machining india"],
+  },
 ];
 
 // Combined blog posts for listing pages
