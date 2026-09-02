@@ -21,11 +21,11 @@ import {
 
 export const metadata: Metadata = {
   title: 'Cost Engineering Services | VAVE Consulting & Product Cost Estimation | UK USA Germany India',
-  description: 'Top cost engineering consultancy with UK team & India delivery. Expert VAVE, should-cost analysis, DFM. Reduce costs 25-45%. ISO certified, serving Fortune 500.',
+  description: 'Top cost engineering consultancy with UK team & India delivery. Expert VAVE, should-cost analysis, DFM. Reduce costs 15–25%. ISO certified, serving Fortune 500.',
   keywords: 'cost engineering services, cost engineer, costing engineer, VAVE methodology, value analysis value engineering, should cost analysis, product cost estimation, cost breakdown analysis, teardown cost analysis, DFM optimization, design for manufacturing, cost reduction engineering, manufacturing cost optimization, engineering consulting services UK, engineering consultancy London, cost engineering USA, offshore engineering services India, product cost optimization, engineering services Bangalore, cost engineering consultancy, value engineering consulting, should costing services, engineering cost analysis, product development cost reduction, cost modeling services, cost engineering Germany, engineering services for automotive, aerospace cost engineering, medical device cost optimization, electronics cost reduction, bill of material cost analysis, procurement cost engineering, supplier cost negotiation, strategic sourcing engineering, cost estimation consulting, engineering design optimization, lean manufacturing consulting, six sigma cost reduction, cost of goods sold optimization, manufacturing overhead reduction, direct labor cost analysis, material cost optimization, process cost engineering, assembly cost reduction, cost engineer salary India, cost engineer job description, cost engineer course, engineering consulting rates, offshore engineering cost savings, nearshore engineering services, global engineering delivery model, engineering outsourcing services, technical cost analysis, engineering economics consulting',
   openGraph: {
     title: 'Cost Engineering Services | VAVE & Product Cost Optimization Experts | Global Consulting',
-    description: 'ISO certified cost engineering consultancy in India with UK team. Reduce product costs by 25-45% through VAVE, should cost analysis, and DFM optimization. Serving UK, USA, Germany, and global clients with proven results.',
+    description: 'ISO certified cost engineering consultancy in India with UK team. Reduce product costs by 15–25% through VAVE, should cost analysis, and DFM optimization. Serving UK, USA, Germany, and global clients with proven results.',
     type: 'website',
     url: 'https://www.emuski.com/cost-engineering-services',
   },
@@ -62,7 +62,7 @@ const faqData = [
   },
   {
     question: "What is the cost of engineering services in India?",
-    answer: "Engineering services in India offer 40-60% cost savings compared to UK, USA, or Germany, while maintaining international quality standards. Typical rates: Product cost estimation (₹50,000-2,00,000 per project), VAVE consulting (₹1,00,000-5,00,000), DFM optimization (₹75,000-3,00,000), and should cost analysis (₹1,00,000-4,00,000). EMUSKI provides ISO 9001:2015 certified cost engineering services with proven 25-45% product cost reduction, offering exceptional value to global clients. Our UK consulting team ensures seamless project management while India delivery center provides technical excellence at competitive rates."
+    answer: "Engineering services in India offer 40-60% cost savings compared to UK, USA, or Germany, while maintaining international quality standards. Typical rates: Product cost estimation (₹50,000-2,00,000 per project), VAVE consulting (₹1,00,000-5,00,000), DFM optimization (₹75,000-3,00,000), and should cost analysis (₹1,00,000-4,00,000). EMUSKI provides ISO 9001:2015 certified cost engineering services with proven 15–25% product cost reduction, offering exceptional value to global clients. Our UK consulting team ensures seamless project management while India delivery center provides technical excellence at competitive rates."
   },
   {
     question: "What is the role of a cost engineer?",
@@ -78,11 +78,11 @@ const faqData = [
   },
   {
     question: "Which engineering service is highest value in cost optimization?",
-    answer: "VAVE (Value Analysis/Value Engineering) methodology delivers the highest ROI in cost optimization, typically achieving 25-45% cost reductions while maintaining or improving quality. EMUSKI's comprehensive approach combines VAVE with should cost analysis, DFM optimization, and strategic sourcing. Our engineering consulting services help UK, USA, and German companies reduce product development costs, optimize manufacturing expenses, and improve profit margins through data-driven cost engineering strategies. We also provide teardown analysis, cost breakdown studies, and procurement engineering support for complete cost optimization solutions."
+    answer: "VAVE (Value Analysis/Value Engineering) methodology delivers the highest ROI in cost optimization, typically achieving 20–30% cost reductions while maintaining or improving quality. EMUSKI's comprehensive approach combines VAVE with should cost analysis, DFM optimization, and strategic sourcing. Our engineering consulting services help UK, USA, and German companies reduce product development costs, optimize manufacturing expenses, and improve profit margins through data-driven cost engineering strategies. We also provide teardown analysis, cost breakdown studies, and procurement engineering support for complete cost optimization solutions."
   },
   {
     question: "How do offshore engineering services work for UK and USA companies?",
-    answer: "Offshore engineering services provide global companies access to skilled cost engineers at competitive rates with seamless collaboration. EMUSKI's proven model: UK-based consulting team for client management and business development, India-based engineering center (Bangalore) for technical execution with ISO 9001:2015 certified processes, real-time collaboration via cloud platforms (MS Teams, Zoom, secure portals), IP protection with comprehensive NDAs and security protocols, and dedicated project managers ensuring communication. We deliver cost engineering, product cost estimation, VAVE studies, and DFM optimization for UK, USA, Germany, and global clients with 98.7% on-time delivery and proven 25-45% cost reductions."
+    answer: "Offshore engineering services provide global companies access to skilled cost engineers at competitive rates with seamless collaboration. EMUSKI's proven model: UK-based consulting team for client management and business development, India-based engineering center (Bangalore) for technical execution with ISO 9001:2015 certified processes, real-time collaboration via cloud platforms (MS Teams, Zoom, secure portals), IP protection with comprehensive NDAs and security protocols, and dedicated project managers ensuring communication. We deliver cost engineering, product cost estimation, VAVE studies, and DFM optimization for UK, USA, Germany, and global clients with 98.7% on-time delivery and proven 15–25% cost reductions."
   },
   {
     question: "What is should cost analysis and how does it help?",
@@ -98,7 +98,7 @@ const faqData = [
   },
   {
     question: "How do UK companies benefit from EMUSKI's cost engineering services?",
-    answer: "UK companies gain competitive advantages through EMUSKI's unique delivery model: UK-based consulting team for seamless communication and project management, 40-60% cost savings compared to UK engineering consultancy rates, access to specialized cost engineering expertise in VAVE, should cost analysis, and DFM optimization, ISO 9001:2015 certified processes matching UK quality standards, proven 25-45% product cost reduction results, experience with UK automotive, aerospace, and medical device companies, IP protection with UK-compliant NDAs, and support for UK manufacturing and procurement teams. Contact our UK consulting team at +91-86670-88060 or enquiries@emuski.com for cost engineering consultation."
+    answer: "UK companies gain competitive advantages through EMUSKI's unique delivery model: UK-based consulting team for seamless communication and project management, 40-60% cost savings compared to UK engineering consultancy rates, access to specialized cost engineering expertise in VAVE, should cost analysis, and DFM optimization, ISO 9001:2015 certified processes matching UK quality standards, proven 15–25% product cost reduction results, experience with UK automotive, aerospace, and medical device companies, IP protection with UK-compliant NDAs, and support for UK manufacturing and procurement teams. Contact our UK consulting team at +91-86670-88060 or enquiries@emuski.com for cost engineering consultation."
   }
 ]
 
@@ -111,7 +111,7 @@ const services = [
   {
     icon: TrendingDown,
     title: "VAVE Methodology",
-    description: "Value Analysis/Value Engineering to reduce costs by 25-45% while maintaining or improving product quality and performance"
+    description: "Value Analysis/Value Engineering to reduce costs by 15–25% while maintaining or improving product quality and performance"
   },
   {
     icon: FileCheck,
@@ -144,7 +144,7 @@ const globalPresence = [
 ]
 
 const benefits = [
-  "25-45% Product Cost Reduction Proven",
+  "15–25% Product Cost Reduction Proven",
   "ISO 9001:2015 Certified Quality",
   "15+ Years Cost Engineering Experience",
   "UK Consulting Team + India Delivery",
@@ -233,7 +233,7 @@ export default function CostEngineeringServicesPage() {
                   "itemOffered": {
                     "@type": "Service",
                     "name": "VAVE Consulting",
-                    "description": "Value Analysis/Value Engineering for 25-45% cost reduction"
+                    "description": "Value Analysis/Value Engineering for 20–30% cost reduction"
                   }
                 },
                 {
@@ -413,7 +413,7 @@ export default function CostEngineeringServicesPage() {
                 Cost Engineering Services & Product Cost Optimization
               </h1>
               <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl">
-                ISO Certified Cost Engineering Consultancy | VAVE Methodology | Should Cost Analysis | 25-45% Cost Reduction Proven
+                ISO Certified Cost Engineering Consultancy | VAVE Methodology | Should Cost Analysis | 15–25% Cost Reduction Proven
               </p>
               <div className="flex flex-wrap gap-4">
                 <a
@@ -439,7 +439,7 @@ export default function CostEngineeringServicesPage() {
             <div className="max-w-7xl mx-auto px-4">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-emuski-teal mb-2">25-45%</div>
+                  <div className="text-3xl font-bold text-emuski-teal mb-2">15–25%</div>
                   <div className="text-gray-600">Cost Reduction</div>
                 </div>
                 <div className="text-center">
@@ -599,7 +599,7 @@ export default function CostEngineeringServicesPage() {
           <section className="py-16 px-4 bg-gradient-to-r from-emuski-dark to-industrial-dark text-white">
             <div className="max-w-7xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Reduce Your Product Costs by 25-45%
+                Reduce Your Product Costs by 15–25%
               </h2>
               <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
                 Get expert cost engineering services from our UK consulting team backed by India's ISO certified engineering center
@@ -656,7 +656,7 @@ export default function CostEngineeringServicesPage() {
                 <Link href="/blog/should-cost-analysis-the-engineer-s-guide-to-accurate-product-cost-estimation">
                   bottom-up should-cost analysis guide
                 </Link>{" "}
-                for the full methodology. We help UK, USA, German, and global clients reduce manufacturing costs by 25-45% while maintaining
+                for the full methodology. We help UK, USA, German, and global clients reduce manufacturing costs by 15–25% while maintaining
                 or improving quality standards.
               </p>
 
@@ -669,7 +669,7 @@ export default function CostEngineeringServicesPage() {
                 </Link>{" "}
                 used to cut waste on the shop floor. Our VAVE consulting process includes: functional analysis
                 of product requirements, identification of cost reduction opportunities, engineering validation of alternatives, supplier sourcing
-                for optimized components, and implementation support with measurable results. EMUSKI's VAVE methodology has delivered 25-45% cost
+                for optimized components, and implementation support with measurable results. EMUSKI's VAVE methodology has delivered 20–30% cost
                 reductions for Fortune 500 companies across automotive, aerospace, medical devices, and electronics sectors.
               </p>
 
@@ -691,7 +691,7 @@ export default function CostEngineeringServicesPage() {
                 analysis breaks down why. EMUSKI's offshore engineering model
                 combines UK business consulting with India's technical execution, delivering 40-60% cost savings compared to UK, USA, or German
                 engineering rates. Our ISO 9001:2015 certified processes ensure consistent quality, while our UK consulting team provides seamless
-                client management. With 15+ years of cost engineering experience, 75+ global clients, and proven 25-45% cost reduction results,
+                client management. With 15+ years of cost engineering experience, 75+ global clients, and proven 15–25% cost reduction results,
                 EMUSKI is the trusted partner for product cost optimization and value engineering services.
               </p>
 
@@ -705,7 +705,7 @@ export default function CostEngineeringServicesPage() {
                 </Link>
                 ), and cost reduction roadmap development.
                 Contact us at +91-86670-88060 or enquiries@emuski.com to discuss your cost engineering requirements and discover how we can help
-                reduce your product costs by 25-45% with ISO certified quality and proven results.
+                reduce your product costs by 15–25% with ISO certified quality and proven results.
               </p>
             </div>
           </section>
