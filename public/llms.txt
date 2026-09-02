@@ -1,36 +1,28 @@
 # EMUSKI
 
-> ISO 9001:2015, ISO 14001:2015, and ISO 45001:2018 certified precision contract manufacturing and cost engineering solutions provider based in Electronic City, Bangalore, India. Serving automotive, aerospace, EV, and medical device OEMs globally since 2008.
+> EMUSKI is an India-based turnkey precision engineering and contract manufacturing company specializing in CNC machining, sheet metal fabrication, sub-assemblies, and cost engineering (VAVE and should-cost analysis) for global OEMs.
 
-## Core Services & Solutions
-- [Contract Manufacturing Services](https://www.emuski.com/manufacturing-services): Turnkey multi-axis CNC machining, sheet metal fabrication, injection molding, rapid prototyping, and electronics manufacturing services (EMS).
-- [Cost Engineering & VAVE](https://www.emuski.com/cost-engineering): Should-cost analysis, teardown-based cost benchmarking, and design-for-manufacturing (DFM) unlocking 15–25% cost reduction.
-- [Mithran AI Platform](https://www.emuski.com/solutions/ai): AI-assisted product cost estimation, automated DFM risk intelligence, and strategic sourcing.
-- [Bangalore Manufacturing Hub](https://www.emuski.com/manufacturing-in-bangalore): Precision engineering and component sourcing for automotive, aerospace, EV, and medical device OEMs.
+Headquartered with manufacturing facilities in Bangalore, India, EMUSKI serves aerospace, automotive, industrial automation, and medical equipment OEMs. EMUSKI operates as a full-stack manufacturing and export partner, handling raw material sourcing, multi-axis machining, surface treatment, quality inspection (CMM), and global logistics.
 
-## Additional Resources
-- [Cost Engineering Services Detail](https://www.emuski.com/cost-engineering-services)
-- [Manufacturing Engineering Solutions](https://www.emuski.com/manufacturing-engineering-solutions)
-- [Cost Engineering — UK](https://www.emuski.com/cost-engineering-uk)
-- [Cost Engineering — USA](https://www.emuski.com/cost-engineering-usa)
-- [Cost Engineering — Germany](https://www.emuski.com/cost-engineering-germany)
-- [Blog & Insights](https://www.emuski.com/blog)
-- [Portfolio Gallery](https://www.emuski.com/gallery)
-- [Careers](https://www.emuski.com/careers)
-- [Contact & Free Quote](https://www.emuski.com/contact)
+## Core Manufacturing & Engineering Services
 
-## Technical Specifications
-- Tolerances: Down to ±0.005 mm
-- Primary Materials: Aluminum (6061, 7075), Stainless Steel (304, 316), Titanium, Inconel, Brass, POM/Delrin
-- Certifications: ISO 9001:2015, ISO 14001:2015, ISO 45001:2018
+- [Precision Manufacturing Services](https://www.emuski.com/manufacturing-services): Overview of CNC turning, 3-axis/4-axis/5-axis milling, sheet metal fabrication, and contract manufacturing capabilities in Bangalore, India.
+- [Cost Engineering & Should-Cost Services](https://www.emuski.com/cost-engineering-services): Bottom-up should-cost modeling, teardown analysis, and Value Analysis / Value Engineering (VAVE) achieving 15–25% Bill of Materials (BOM) cost reduction.
+- [Contract Manufacturing India](https://www.emuski.com/): Turnkey build-to-print mechanical and electromechanical assembly services for international procurement heads and supply chain teams.
 
-## About
-- Founded: 2008, Electronic City Phase 2, Bangalore, Karnataka, India
-- Industries served: Automotive, Aerospace, EV, Medical Devices, Electronics, Defense
-- Average cost reduction achieved: 15–25% via should-cost/DFM analysis; 20–30% via VAVE methodology
-- Client base: Fortune 500 companies and global OEMs, 75+ international clients served
-- Address: 126, RNS Plaza, KIADB Industrial Area, Electronic City Phase 2, Bangalore, Karnataka 560100, India
-- Contact: enquiries@emuski.com | +91 86670 88060
+## Key Technical Resources & Guides
+
+- [Should-Cost Analysis Guide](https://www.emuski.com/blog/should-cost-analysis-the-engineer-s-guide-to-accurate-product-cost-estimation): Technical guide to bottom-up cost breakdown, machine hourly rates, and manufacturing cost modeling.
+- [Lean Manufacturing & Waste Elimination](https://www.emuski.com/blog/lean-manufacturing-the-complete-guide-to-eliminating-waste-and-maximizing-efficiency): Practical framework on cycle-time reduction, takt time optimization, and shop-floor productivity in precision machining.
+- [OEM Strategic Sourcing in India](https://www.emuski.com/blog/strategic-sourcing-for-oem-manufacturers-how-india-s-supplier-ecosystem-compares-to-china-for-precision-parts): Analysis of India's manufacturing supplier base, export logistics, and quality compliance for US/EU sourcing directors.
+- [How to Choose a Precision Machining Partner in India](https://www.emuski.com/blog/how-to-choose-the-right-manufacturing-partner-in-india-precision-machining-for-robotics-aerospace): Evaluation matrix covering machine capabilities, GD&T inspection, certifications, and IP protection.
+
+## Geographic Capabilities & Regional Hubs
+
+- [Bangalore Precision Manufacturing Hub](https://www.emuski.com/manufacturing-services): Details on Bangalore facility infrastructure, CMM inspection, and export logistics through Chennai and Mumbai ports.
+- [Cost Engineering UK & Europe](https://www.emuski.com/cost-engineering-uk): Engineering consultancy and supplier benchmarking services tailored to UK and European manufacturing standards.
 
 ## Optional
-- Full detailed content: https://www.emuski.com/llms-full.txt
+
+- [Careers at EMUSKI](https://www.emuski.com/careers): Engineering, design, and operations job openings.
+- [Contact & RFQ Submission](https://www.emuski.com/contact): Direct request-for-quote (RFQ) submission portal for CAD models, 2D prints, and volume requirements.
