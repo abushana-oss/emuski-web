@@ -375,7 +375,7 @@ export const ORGANIZATION_SCHEMA = {
     }
   ],
   sameAs: [
-    'https://www.linkedin.com/company/emuski',
+    'https://www.linkedin.com/company/e-muski',
     'https://twitter.com/emuski'
   ],
   aggregateRating: {

@@ -1,31 +1,36 @@
-# EMUSKI Manufacturing Solutions
-> ISO 9001:2015 certified OEM precision manufacturing and cost engineering partner in Bangalore, India. Serving automotive, aerospace, medical device, and electronics OEMs globally since 2008.
+# EMUSKI
 
-## Core Services
-- Precision Manufacturing: https://www.emuski.com/manufacturing-services
-- Cost Engineering & VAVE: https://www.emuski.com/cost-engineering
-- Cost Engineering Services Detail: https://www.emuski.com/cost-engineering-services
-- AI-Powered Solutions (Mithran AI): https://www.emuski.com/solutions/ai
-- Manufacturing Engineering Solutions: https://www.emuski.com/manufacturing-engineering-solutions
-- Manufacturing in Bangalore: https://www.emuski.com/manufacturing-in-bangalore
-- Cost Engineering UK: https://www.emuski.com/cost-engineering-uk
-- Cost Engineering USA: https://www.emuski.com/cost-engineering-usa
-- Cost Engineering Germany: https://www.emuski.com/cost-engineering-germany
+> ISO 9001:2015, ISO 14001:2015, and ISO 45001:2018 certified precision contract manufacturing and cost engineering solutions provider based in Electronic City, Bangalore, India. Serving automotive, aerospace, EV, and medical device OEMs globally since 2008.
+
+## Core Services & Solutions
+- [Contract Manufacturing Services](https://www.emuski.com/manufacturing-services): Turnkey multi-axis CNC machining, sheet metal fabrication, injection molding, rapid prototyping, and electronics manufacturing services (EMS).
+- [Cost Engineering & VAVE](https://www.emuski.com/cost-engineering): Should-cost analysis, teardown-based cost benchmarking, and design-for-manufacturing (DFM) unlocking 15–25% cost reduction.
+- [Mithran AI Platform](https://www.emuski.com/solutions/ai): AI-assisted product cost estimation, automated DFM risk intelligence, and strategic sourcing.
+- [Bangalore Manufacturing Hub](https://www.emuski.com/manufacturing-in-bangalore): Precision engineering and component sourcing for automotive, aerospace, EV, and medical device OEMs.
+
+## Additional Resources
+- [Cost Engineering Services Detail](https://www.emuski.com/cost-engineering-services)
+- [Manufacturing Engineering Solutions](https://www.emuski.com/manufacturing-engineering-solutions)
+- [Cost Engineering — UK](https://www.emuski.com/cost-engineering-uk)
+- [Cost Engineering — USA](https://www.emuski.com/cost-engineering-usa)
+- [Cost Engineering — Germany](https://www.emuski.com/cost-engineering-germany)
+- [Blog & Insights](https://www.emuski.com/blog)
+- [Portfolio Gallery](https://www.emuski.com/gallery)
+- [Careers](https://www.emuski.com/careers)
+- [Contact & Free Quote](https://www.emuski.com/contact)
+
+## Technical Specifications
+- Tolerances: Down to ±0.005 mm
+- Primary Materials: Aluminum (6061, 7075), Stainless Steel (304, 316), Titanium, Inconel, Brass, POM/Delrin
+- Certifications: ISO 9001:2015, ISO 14001:2015, ISO 45001:2018
 
 ## About
-- Founded: 2008, Bangalore, Karnataka, India (Electronic City Phase 2)
-- Certifications: ISO 9001:2015, ISO 14001:2015, ISO 45001:2018
-- Primary specializations: OEM precision manufacturing, cost engineering (VAVE), AI-powered manufacturing
-- Industries served: Automotive, Aerospace, Medical Devices, Electronics, Defense
-- Contact: +91-86670-88060 | enquiries@emuski.com
-- Average cost reduction achieved: 25–35% via VAVE methodology
-- Client base: Fortune 500 companies and global OEMs, 100+ international clients served
-
-## Resources
-- Blog & Insights: https://www.emuski.com/blog
-- Portfolio Gallery: https://www.emuski.com/gallery
-- Careers: https://www.emuski.com/careers
-- Contact & Free Quote: https://www.emuski.com/contact
+- Founded: 2008, Electronic City Phase 2, Bangalore, Karnataka, India
+- Industries served: Automotive, Aerospace, EV, Medical Devices, Electronics, Defense
+- Average cost reduction achieved: 15–25% via should-cost/DFM analysis; 20–30% via VAVE methodology
+- Client base: Fortune 500 companies and global OEMs, 75+ international clients served
+- Address: 126, RNS Plaza, KIADB Industrial Area, Electronic City Phase 2, Bangalore, Karnataka 560100, India
+- Contact: enquiries@emuski.com | +91 86670 88060
 
 ## Optional
 - Full detailed content: https://www.emuski.com/llms-full.txt

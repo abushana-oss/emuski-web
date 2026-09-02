@@ -254,7 +254,7 @@ export const generateDailyNewsletterHTML = (date: string, featuredArticle: any, 
 
             <!-- Social Links -->
             <div class="social-links">
-                <a href="https://linkedin.com/company/EMUSKI" class="social-link">Li</a>
+                <a href="https://www.linkedin.com/company/e-muski" class="social-link">Li</a>
                 <a href="https://twitter.com/EMUSKI" class="social-link">Tw</a>
                 <a href="https://youtube.com/EMUSKI" class="social-link">Yt</a>
             </div>
@@ -448,7 +448,7 @@ export const generateWelcomeEmailHTML = (subscriberEmail: string) => {
                 <p>Questions? Need help? Simply reply to this email and our team will assist you.</p>
                 <p><strong>Follow us on social media for even more insights:</strong></p>
                 <div style="margin-top: 15px;">
-                    <a href="https://linkedin.com/company/EMUSKI" style="color: #4fd3d4; margin: 0 10px;">LinkedIn</a>
+                    <a href="https://www.linkedin.com/company/e-muski" style="color: #4fd3d4; margin: 0 10px;">LinkedIn</a>
                     <a href="https://twitter.com/EMUSKI" style="color: #4fd3d4; margin: 0 10px;">Twitter</a>
                     <a href="https://youtube.com/EMUSKI" style="color: #4fd3d4; margin: 0 10px;">YouTube</a>
                 </div>

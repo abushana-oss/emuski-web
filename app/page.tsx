@@ -11,6 +11,7 @@ import { TechnicalSpecsSection } from "@/components/TechnicalSpecsSection"
 import { ContactSection } from "@/components/ContactSection"
 import { FAQSection } from "@/components/FAQSection"
 import { ManufacturingNPDSection } from "@/components/ManufacturingNPDSection"
+import { RegionDiscovery } from "@/components/RegionDiscovery"
 import { fetchAllBlogs } from "@/lib/api/blogger"
 
 export const metadata: Metadata = {
@@ -56,7 +57,7 @@ export default async function Home() {
             longitude: 77.6603,
           },
           sameAs: [
-            'https://www.linkedin.com/company/emuski',
+            'https://www.linkedin.com/company/e-muski',
             'https://www.indiamart.com/emuski',
           ],
         }) }}
@@ -88,6 +89,10 @@ export default async function Home() {
 
         <LazyRender minHeight="300px">
           <TechnicalSpecsSection focus="metrics" compact={true} />
+        </LazyRender>
+
+        <LazyRender minHeight="300px">
+          <RegionDiscovery />
         </LazyRender>
 
         <LazyRender minHeight="400px">

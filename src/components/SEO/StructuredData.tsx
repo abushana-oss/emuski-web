@@ -218,7 +218,7 @@ export const STRUCTURED_DATA_TEMPLATES = {
       'Electronics Manufacturing'
     ],
     sameAs: [
-      'https://www.linkedin.com/company/emuski',
+      'https://www.linkedin.com/company/e-muski',
       'https://twitter.com/emuski'
     ],
     memberOf: [

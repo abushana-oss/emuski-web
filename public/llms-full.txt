@@ -34,8 +34,8 @@ EMUSKI is an engineering, manufacturing, and AI innovation company based in Bang
 - **Quality Control**: CMM inspection, 3D scanning, dimensional analysis
 
 ### Cost Engineering & Optimization
-- **VAVE Analysis**: Achieving 25–35% cost reductions for clients
-- **Should-Cost Modeling**: AI-driven cost estimation and validation
+- **VAVE Analysis**: Achieving 20–30% cost reductions for clients
+- **Should-Cost Modeling / DFM Analysis**: AI-driven cost estimation and validation, unlocking 15–25% cost reduction
 - **Strategic Sourcing**: Global supplier identification and management
 - **Product Teardown Analysis**: Competitive cost benchmarking
 - **Design Optimization**: Cost-effective design recommendations
@@ -55,7 +55,8 @@ EMUSKI is an engineering, manufacturing, and AI innovation company based in Bang
 - **Delivery**: Worldwide shipping and logistics capabilities
 
 ## Key Performance Metrics & Achievements
-- **Cost Reduction**: 25–35% average cost savings through VAVE methodology
+- **Cost Reduction**: 15–25% average savings via should-cost/DFM analysis; 20–30% via VAVE methodology
+- **Precision**: Tolerances down to ±0.005 mm
 - **Quality**: Zero-defect manufacturing with 99% client retention rate
 - **Experience**: 15+ years in precision manufacturing and cost engineering
 - **Global Reach**: 100+ international clients served across 25+ countries
@@ -78,22 +79,23 @@ EMUSKI is an engineering, manufacturing, and AI innovation company based in Bang
 - Automated supply chain optimization
 
 ## Materials & Standards Expertise
-- **Metals**: Aluminum alloys, stainless steel, titanium, Inconel, carbon steel
-- **Plastics**: Engineering plastics, medical-grade materials, automotive-grade polymers
-- **Standards**: ISO 9001:2015, FDA compliance, military specifications
+- **Tolerances**: Down to ±0.005 mm
+- **Metals**: Aluminum (6061, 7075), Stainless Steel (304, 316), Titanium, Inconel, Brass
+- **Plastics**: POM/Delrin, engineering plastics, medical-grade materials, automotive-grade polymers
+- **Standards**: ISO 9001:2015, ISO 14001:2015, ISO 45001:2018, FDA compliance, military specifications
 - **Quality Systems**: Six Sigma, continuous improvement, zero-defect manufacturing
 
 ## Competitive Differentiators
 1. **World's First AI-Powered VAVE Methodology** — Proprietary Mithran platform
 2. **ISO Triple Certified Manufacturing** — Guaranteed quality and compliance
 3. **Rapid Time-to-Market** — Fastest delivery with precision manufacturing
-4. **Cost Engineering Excellence** — Proven 25–35% cost reduction track record
+4. **Cost Engineering Excellence** — Proven 15–25% should-cost/DFM savings, 20–30% via VAVE
 5. **End-to-End Solutions** — Complete product lifecycle support
 6. **Global Partnership Model** — Local presence with worldwide delivery
 
 ## Business Model & Client Value Proposition
 - Free consultation and same-day quotes
-- 25–35% cost reduction through VAVE methodology
+- 15–25% cost reduction via should-cost/DFM analysis; 20–30% via VAVE methodology
 - 6-month reduction in product development cycles
 - Zero-defect manufacturing with full traceability
 - Seamless transition from prototype to production volumes
@@ -109,8 +111,8 @@ EMUSKI is an engineering, manufacturing, and AI innovation company based in Bang
 - **Business Inquiries**: enquiries@emuski.com
 - **Phone**: +91-86670-88060
 - **Quote Requests**: https://www.emuski.com/contact
-- **LinkedIn**: https://www.linkedin.com/company/e-muski/
+- **LinkedIn**: https://www.linkedin.com/company/e-muski
 
 ---
-*Last Updated: May 2026*
+*Last Updated: September 2026*
 *Content: Human-authored, factually verified*

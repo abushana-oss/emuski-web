@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://emuski.com'
+  const baseUrl = 'https://www.emuski.com'
 
   const sharedDisallow = [
     '/api/',
@@ -54,7 +54,25 @@ export default function robots(): MetadataRoute.Robots {
         disallow: sharedDisallow,
         crawlDelay: 1,
       },
-      // Anthropic: Claude training + web browsing
+      // Anthropic: Claude training, web search, and user-invoked fetching
+      {
+        userAgent: 'ClaudeBot',
+        allow: '/',
+        disallow: sharedDisallow,
+        crawlDelay: 1,
+      },
+      {
+        userAgent: 'Claude-SearchBot',
+        allow: '/',
+        disallow: sharedDisallow,
+        crawlDelay: 1,
+      },
+      {
+        userAgent: 'Claude-User',
+        allow: '/',
+        disallow: sharedDisallow,
+        crawlDelay: 1,
+      },
       {
         userAgent: 'anthropic-ai',
         allow: '/',

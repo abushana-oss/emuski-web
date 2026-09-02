@@ -246,7 +246,7 @@ export const ContactSection = () => {
 
                   {/* Social Icons */}
                   <div className="flex gap-2 mt-4">
-                    <a href="https://www.linkedin.com/company/e-muski/posts/?feedView=all" target="_blank" rel="noopener noreferrer" className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
+                    <a href="https://www.linkedin.com/company/e-muski" target="_blank" rel="noopener noreferrer" className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
                       <Linkedin className="w-3 h-3 text-gray-600" />
                     </a>
                     <a href="mailto:enquiries@emuski.com" className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">

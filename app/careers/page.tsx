@@ -367,7 +367,7 @@ export default function CareersPage() {
       "contactType": "customer service"
     },
     "sameAs": [
-      "https://www.linkedin.com/company/emuski",
+      "https://www.linkedin.com/company/e-muski",
       "https://twitter.com/emuski_official"
     ]
   };

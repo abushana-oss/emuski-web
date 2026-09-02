@@ -106,7 +106,7 @@ export const Footer = () => {
               <h4 className="text-foreground font-semibold mb-3">Follow Us</h4>
               <div className="flex space-x-4">
                 <a 
-                  href="https://www.linkedin.com/company/e-muski/posts/?feedView=all" 
+                  href="https://www.linkedin.com/company/e-muski" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-emuski-teal-darker transition-colors p-2 hover:bg-muted rounded-lg"

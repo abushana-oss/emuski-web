@@ -235,7 +235,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         availableLanguage: ['en', 'hi'],
       },
       sameAs: [
-        'https://www.linkedin.com/company/emuski',
+        'https://www.linkedin.com/company/e-muski',
         'https://twitter.com/emuski',
       ],
     },
@@ -317,7 +317,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       availableLanguage: ['en', 'hi'],
     },
     sameAs: [
-      'https://www.linkedin.com/company/emuski',
+      'https://www.linkedin.com/company/e-muski',
       'https://twitter.com/emuski',
     ],
   };

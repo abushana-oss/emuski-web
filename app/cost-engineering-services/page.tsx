@@ -277,7 +277,7 @@ export default function CostEngineeringServicesPage() {
             "url": "https://www.emuski.com",
             "logo": "https://www.emuski.com/logo.webp",
             "sameAs": [
-              "https://www.linkedin.com/company/emuski",
+              "https://www.linkedin.com/company/e-muski",
               "https://twitter.com/emuski"
             ],
             "address": [
