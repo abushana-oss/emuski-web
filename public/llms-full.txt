@@ -1,118 +1,104 @@
-# EMUSKI Manufacturing Solutions
-> ISO 9001:2015 certified OEM precision manufacturing and cost engineering partner in Bangalore, India. Combining 15+ years of manufacturing excellence with AI-powered optimization to serve global OEMs in automotive, aerospace, medical device, and electronics industries.
+# EMUSKI
+
+> EMUSKI is an ISO 9001:2015, ISO 14001:2015, and ISO 45001:2018 certified precision contract manufacturing and cost engineering partner headquartered in Electronic City, Bangalore, India, serving automotive, aerospace, medical device, and electronics OEMs globally since 2008.
 
 ## Company Identity
+
 - **Company Name**: EMUSKI Manufacturing Solutions
-- **Founded**: 2008 (Mithran AI platform launched 2022)
-- **Business Type**: ISO Certified OEM Precision Manufacturing & Cost Engineering Company
-- **Headquarters**: 126 RNS Plaza, Electronic City Phase 2, Bangalore, Karnataka 560100, India
+- **Founded**: 2008
+- **Business Type**: ISO-certified precision contract manufacturing and cost engineering company
+- **Headquarters**: 126, RNS Plaza, KIADB Industrial Area, Electronic City Phase 2, Bangalore, Karnataka 560100, India
 - **Manufacturing Facility**: Hosur, Tamil Nadu, India
 - **Website**: https://www.emuski.com
 - **Phone**: +91-86670-88060
 - **Email**: enquiries@emuski.com
-- **Certifications**: ISO 9001:2015, ISO 14001:2015, ISO 45001:2018, FDA Manufacturing Compliance
+- **Certifications**: ISO 9001:2015 (Quality Management), ISO 14001:2015 (Environmental Management), ISO 45001:2018 (Occupational Health & Safety)
 
 ## Core Business Description
-EMUSKI is an engineering, manufacturing, and AI innovation company based in Bangalore, India, that helps OEMs design and produce components faster using AI-driven tools and rapid prototyping. Specializing in precision manufacturing services and cost engineering (VAVE), EMUSKI provides end-to-end solutions including CNC machining, injection molding, and cost engineering aimed at enhancing profitability and reducing time-to-market across automotive, aerospace, and electronics industries.
 
-## Primary Services & Capabilities
+EMUSKI is a contract manufacturing and cost engineering company based in Bangalore, India, that helps OEMs design, cost, and produce precision components and assemblies. Services span multi-axis CNC machining and turning, sheet metal fabrication, injection molding, electronics manufacturing services (EMS), and cost engineering (should-cost analysis and VAVE), with design-for-manufacturing (DFM) discipline built into every project rather than sold as a separate add-on.
 
-### AI-Powered Engineering Solutions
-- **Mithran AI Platform**: AI-driven cost estimation providing rapid cost breakdowns and "should-cost" modeling
-- AI-powered VAVE (Value Analysis Value Engineering) methodology
-- Automated design for manufacturing (DFM) analysis
-- Predictive quality analytics and optimization
-- Smart manufacturing process optimization
+## Manufacturing Capabilities & Machine Infrastructure
 
-### Precision Manufacturing Services
-- **CNC Machining**: 3-axis, 4-axis, 5-axis VMC precision machining
-- **Rapid Prototyping**: 3D printing (SLA, SLS, FDM), vacuum casting
-- **Injection Molding**: Low-volume and high-volume plastic injection molding
-- **Casting**: Investment casting and sand casting services
-- **Sheet Metal Fabrication**: Precision sheet metal components
-- **Assembly Services**: Complete product assembly and testing
-- **Quality Control**: CMM inspection, 3D scanning, dimensional analysis
+- **CNC Machining & Turning**: 3, 4, and 5-axis VMC milling for complex geometries and tight tolerances; CNC turning with live tooling and C-axis capability for precision shafts (concentricity to ±3 microns), reducing secondary operations.
+- **Sheet Metal Fabrication**: Laser cutting, waterjet cutting, precision bending, punching, and certified welding for structural and aesthetic sheet-metal parts and assemblies.
+- **Injection Molding**: Mold design, material selection, and tooling engineered against a should-cost model before the mold is cut. Low to high volume, multiple thermoplastic grades.
+- **Tooling & Prototyping**: In-house wire EDM and tool-room capability for fast mold and fixture turnaround.
+- **Also available**: Die casting, investment casting, forging, stamping, and metal injection molding for high-volume production runs.
+- **Electronics Manufacturing Services (EMS)**: SMT and PTH PCB assembly (PCBA), box-build and electro-mechanical assembly, cable harnessing, precision housings, heat sinks, EMI/EMC shielding components, connector assemblies, and enclosures, under ESD-safe conditions (IPC-A-610 Class 2 & Class 3, or per drawing specification).
+- **Quality Control**: CMM inspection, dimensional analysis, and full quality traceability documentation.
 
-### Cost Engineering & Optimization
-- **VAVE Analysis**: Achieving 20–30% cost reductions for clients
-- **Should-Cost Modeling / DFM Analysis**: AI-driven cost estimation and validation, unlocking 15–25% cost reduction
-- **Strategic Sourcing**: Global supplier identification and management
-- **Product Teardown Analysis**: Competitive cost benchmarking
-- **Design Optimization**: Cost-effective design recommendations
-- **Supply Chain Optimization**: End-to-end cost reduction strategies
+## Tolerances & Materials
 
-## Target Industries & Specializations
-- **Automotive**: EV manufacturing, traditional automotive OEMs, Tier 1 suppliers
-- **Aerospace**: Aircraft components, defense systems, space technology
-- **Medical Devices**: FDA-compliant manufacturing, surgical instruments, diagnostics
-- **Electronics**: Semiconductor packaging, consumer electronics, industrial equipment
-- **Defense**: Military-spec components, tactical equipment, aerospace defense
+- **Tolerances**: Down to ±0.005 mm on CNC-machined features.
+- **Metals**: Aluminum (6061, 7075), Stainless Steel (304, 316), Titanium, Inconel, Brass.
+- **Plastics**: POM/Delrin, ABS, Polycarbonate, and other engineering thermoplastics.
+- **Quality Methodology**: ISO 9001:2015-certified quality management system; teams also apply Six Sigma and lean manufacturing principles where a client's project calls for it.
 
-## Geographic Market Focus
-- **Primary Markets**: USA, Europe, Asia-Pacific
-- **Service Model**: Global OEM partnerships with Bangalore manufacturing base
-- **Client Base**: Fortune 500 companies, emerging OEMs, startups to enterprise
-- **Delivery**: Worldwide shipping and logistics capabilities
+## Cost Engineering Methodology
 
-## Key Performance Metrics & Achievements
-- **Cost Reduction**: 15–25% average savings via should-cost/DFM analysis; 20–30% via VAVE methodology
-- **Precision**: Tolerances down to ±0.005 mm
-- **Quality**: Zero-defect manufacturing with 99% client retention rate
-- **Experience**: 15+ years in precision manufacturing and cost engineering
-- **Global Reach**: 100+ international clients served across 25+ countries
-- **Capacity**: Both low-volume prototyping and high-volume production
+### Should-Cost Analysis (5-Step Process)
 
-## Technological Advantages
+Should-cost analysis calculates what a product should cost from materials, process, labor, and overhead data, independent of any supplier quote:
 
-### Manufacturing Technology
-- Advanced CNC machining centers (VMC 5-axis capabilities)
-- State-of-the-art injection molding equipment
-- Precision 3D printing and additive manufacturing
-- Automated quality inspection systems
-- Industry 4.0 smart manufacturing implementation
+1. **Material cost** — finished weight plus scrap allowance, multiplied by material price per kg.
+2. **Machining time** — cycle time estimated from part geometry and process parameters.
+3. **Machine hour rate** — depreciation, maintenance, utilities, and floor space, amortized.
+4. **Secondary operations** — heat treatment, surface finishing, CMM inspection, deburring.
+5. **Overhead and profit** — factory overhead (typically 25–60% of direct costs) plus a reasonable profit margin (5–20%, depending on complexity and volume).
 
-### AI Innovation
-- **Mithran Platform**: AI-powered cost estimation and manufacturing intelligence
-- Machine learning process optimization
-- Predictive maintenance and quality analytics
-- Digital twin manufacturing simulation
-- Automated supply chain optimization
+This methodology typically identifies **15–25% cost reduction** versus unvalidated supplier quotes, and improves negotiation outcomes by 10–20% through transparent, data-driven supplier conversations.
 
-## Materials & Standards Expertise
-- **Tolerances**: Down to ±0.005 mm
-- **Metals**: Aluminum (6061, 7075), Stainless Steel (304, 316), Titanium, Inconel, Brass
-- **Plastics**: POM/Delrin, engineering plastics, medical-grade materials, automotive-grade polymers
-- **Standards**: ISO 9001:2015, ISO 14001:2015, ISO 45001:2018, FDA compliance, military specifications
-- **Quality Systems**: Six Sigma, continuous improvement, zero-defect manufacturing
+### VAVE — Value Analysis / Value Engineering (6-Phase Process)
 
-## Competitive Differentiators
-1. **World's First AI-Powered VAVE Methodology** — Proprietary Mithran platform
-2. **ISO Triple Certified Manufacturing** — Guaranteed quality and compliance
-3. **Rapid Time-to-Market** — Fastest delivery with precision manufacturing
-4. **Cost Engineering Excellence** — Proven 15–25% should-cost/DFM savings, 20–30% via VAVE
-5. **End-to-End Solutions** — Complete product lifecycle support
-6. **Global Partnership Model** — Local presence with worldwide delivery
+VAVE is a systematic methodology for improving product value (Value = Function ÷ Cost) by analyzing functions and removing cost without sacrificing quality or performance:
 
-## Business Model & Client Value Proposition
-- Free consultation and same-day quotes
-- 15–25% cost reduction via should-cost/DFM analysis; 20–30% via VAVE methodology
-- 6-month reduction in product development cycles
-- Zero-defect manufacturing with full traceability
-- Seamless transition from prototype to production volumes
-- Dedicated project managers and engineering support
+1. **Information Gathering** — design data, costs, specifications, competitive intelligence.
+2. **Function Analysis** — define what the product does; classify primary vs. secondary functions.
+3. **Creative Ideation** — generate alternatives without judgment (e.g. SCAMPER, morphological analysis).
+4. **Evaluation** — screen ideas against technical feasibility, cost impact, and risk.
+5. **Development** — refine selected concepts with detailed design, prototyping, and business case analysis.
+6. **Implementation** — execute changes and track actual vs. projected savings.
+
+A structured VAVE program typically delivers **20–30% cost reduction**; individual projects with over-engineered starting designs can see substantially higher savings on specific components.
+
+## Target Industries
+
+- **Automotive & EV**: Traditional automotive OEMs, EV components, Tier 1 suppliers.
+- **Aerospace & Defense**: Precision-machined aerospace components, tolerance stack-up and material traceability programs.
+- **Medical Devices**: FDA and ISO 13485 process requirements factored into the cost model; low-volume, high-mix production.
+- **Electronics**: Precision housings, enclosures, and EMS for consumer and industrial electronics OEMs.
+- **Industrial Equipment**: Casting, fabrication, and machining process-selection support.
+
+## Key Performance Metrics
+
+- **Cost Reduction**: 15–25% average savings via should-cost/DFM analysis; 20–30% via VAVE methodology.
+- **Precision**: Tolerances down to ±0.005 mm; CNC turning concentricity to ±3 microns.
+- **Experience**: 15+ years in precision manufacturing and cost engineering.
+- **Client Base**: 75+ global clients across automotive, aerospace, medical device, and electronics industries.
+
+## Technical Resources & Guides
+
+- [Should-Cost Analysis: The Engineer's Guide to Accurate Product Cost Estimation](https://www.emuski.com/blog/should-cost-analysis-the-engineer-s-guide-to-accurate-product-cost-estimation): Bottom-up cost modeling built from materials, machining time, machine hour rate, secondary operations, and overhead — not supplier quotes. Covers the should-cost vs. target-cost gap and how it drives design optimization, achieving 15–25% cost reduction.
+- [Lean Manufacturing: The Complete Guide to Eliminating Waste and Maximizing Efficiency](https://www.emuski.com/blog/lean-manufacturing-the-complete-guide-to-eliminating-waste-and-maximizing-efficiency): Systematic waste-elimination methodology focused on maximizing customer value — reducing costs 25–50%, improving quality 50–90%, and cutting lead times through continuous improvement on the shop floor.
+- [Strategic Sourcing for OEM Manufacturers: How India's Supplier Ecosystem Compares to China for Precision Parts](https://www.emuski.com/blog/strategic-sourcing-for-oem-manufacturers-how-india-s-supplier-ecosystem-compares-to-china-for-precision-parts): Why sourcing calculus is shifting from China toward India — cost competitiveness, AS9100 quality infrastructure, IP protection, and engineering talent as a "China Plus One" precision-parts destination.
+- [How to Choose the Right Manufacturing Partner in India: Precision Machining for Robotics & Aerospace](https://www.emuski.com/blog/how-to-choose-the-right-manufacturing-partner-in-india-precision-machining-for-robotics-aerospace): A 7-criteria evaluation framework for selecting a precision machining partner in India, covering DFM capability, GD&T inspection, ISO requirements, and IP protection.
 
 ## Geographic Service Pages
+
 - India / Bangalore: https://www.emuski.com/manufacturing-in-bangalore
 - United Kingdom: https://www.emuski.com/cost-engineering-uk
 - United States: https://www.emuski.com/cost-engineering-usa
 - Germany: https://www.emuski.com/cost-engineering-germany
 
 ## Contact & Engagement
+
 - **Business Inquiries**: enquiries@emuski.com
 - **Phone**: +91-86670-88060
 - **Quote Requests**: https://www.emuski.com/contact
+- **Careers**: https://www.emuski.com/careers
 - **LinkedIn**: https://www.linkedin.com/company/e-muski
 
 ---
 *Last Updated: September 2026*
-*Content: Human-authored, factually verified*
+*Content: Human-authored, factually verified against the live site.*
