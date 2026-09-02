@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { ShieldCheck, FileCheck2, Ruler, ClipboardList } from "lucide-react"
 
 const points = [
@@ -36,7 +37,14 @@ export function Quality() {
             </h2>
             <p className="mt-4 text-gray-600 leading-relaxed">
               A quote isn&apos;t the end of EMUSKI&apos;s involvement. Process control and documentation carry
-              through production.
+              through production, applying the same{" "}
+              <Link
+                href="/blog/lean-manufacturing-the-complete-guide-to-eliminating-waste-and-maximizing-efficiency"
+                className="text-emuski-teal-darker font-medium hover:underline"
+              >
+                lean manufacturing frameworks
+              </Link>{" "}
+              that keep cycle time and rework down on the shop floor.
             </p>
 
             <div className="mt-8 relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg aspect-[4/3]">

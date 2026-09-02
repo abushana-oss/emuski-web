@@ -15,6 +15,7 @@ import {
   VaveTeardown,
   Industries,
   Quality,
+  SourcingComparison,
   GlobalSourcing,
   Engagement,
   FAQ,
@@ -164,6 +165,7 @@ export default function ManufacturingServicesPage() {
           <VaveTeardown />
           <Industries />
           <Quality />
+          <SourcingComparison />
           <GlobalSourcing />
           <Engagement />
           <FAQ />

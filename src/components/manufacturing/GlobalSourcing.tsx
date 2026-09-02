@@ -35,7 +35,15 @@ export function GlobalSourcing() {
               <h3 className="text-lg font-semibold text-gray-900 mb-2">A verified supplier network</h3>
               <p className="text-gray-700 leading-relaxed">
                 Where a part is better made by a partner shop than in-house, EMUSKI sources against the same
-                should-cost model, through a network of 500+ verified suppliers, not an unvetted marketplace.
+                should-cost model, through a network of 500+ verified suppliers, not an unvetted marketplace. See
+                our framework for{" "}
+                <Link
+                  href="/blog/how-to-choose-the-right-manufacturing-partner-in-india-precision-machining-for-robotics-aerospace"
+                  className="text-emuski-teal-darker font-medium hover:underline"
+                >
+                  evaluating precision machining partners
+                </Link>{" "}
+                in India before committing a program.
               </p>
             </div>
             <div className="border-t border-gray-200 pt-8">

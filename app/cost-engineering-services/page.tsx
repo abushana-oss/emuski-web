@@ -652,14 +652,22 @@ export default function CostEngineeringServicesPage() {
                 Cost engineering combines engineering expertise with financial analysis to optimize product costs throughout the development
                 and manufacturing lifecycle. Our cost engineering services include product cost estimation, should cost analysis for supplier
                 negotiations, VAVE (Value Analysis/Value Engineering) consulting, teardown analysis, DFM (Design for Manufacturing) optimization,
-                and cost breakdown modeling. We help UK, USA, German, and global clients reduce manufacturing costs by 25-45% while maintaining
+                and cost breakdown modeling. See our{" "}
+                <Link href="/blog/should-cost-analysis-the-engineer-s-guide-to-accurate-product-cost-estimation">
+                  bottom-up should-cost analysis guide
+                </Link>{" "}
+                for the full methodology. We help UK, USA, German, and global clients reduce manufacturing costs by 25-45% while maintaining
                 or improving quality standards.
               </p>
 
               <h3>VAVE Methodology & Value Engineering Services</h3>
               <p>
                 Value Analysis/Value Engineering (VAVE) is our core competency, delivering systematic cost reduction through design optimization,
-                material substitution, process improvement, and supply chain optimization. Our VAVE consulting process includes: functional analysis
+                material substitution, process improvement, and supply chain optimization, applying the same{" "}
+                <Link href="/blog/lean-manufacturing-the-complete-guide-to-eliminating-waste-and-maximizing-efficiency">
+                  lean manufacturing frameworks
+                </Link>{" "}
+                used to cut waste on the shop floor. Our VAVE consulting process includes: functional analysis
                 of product requirements, identification of cost reduction opportunities, engineering validation of alternatives, supplier sourcing
                 for optimized components, and implementation support with measurable results. EMUSKI's VAVE methodology has delivered 25-45% cost
                 reductions for Fortune 500 companies across automotive, aerospace, medical devices, and electronics sectors.
@@ -676,7 +684,11 @@ export default function CostEngineeringServicesPage() {
 
               <h3>Why Choose India for Cost Engineering Services?</h3>
               <p>
-                India offers world-class engineering talent at competitive rates with global quality standards. EMUSKI's offshore engineering model
+                India offers world-class engineering talent at competitive rates with global quality standards. Our{" "}
+                <Link href="/blog/strategic-sourcing-for-oem-manufacturers-how-india-s-supplier-ecosystem-compares-to-china-for-precision-parts">
+                  India vs China precision sourcing
+                </Link>{" "}
+                analysis breaks down why. EMUSKI's offshore engineering model
                 combines UK business consulting with India's technical execution, delivering 40-60% cost savings compared to UK, USA, or German
                 engineering rates. Our ISO 9001:2015 certified processes ensure consistent quality, while our UK consulting team provides seamless
                 client management. With 15+ years of cost engineering experience, 75+ global clients, and proven 25-45% cost reduction results,
@@ -687,7 +699,11 @@ export default function CostEngineeringServicesPage() {
               <p>
                 EMUSKI serves manufacturing companies worldwide with specialized expertise in UK, USA, and German markets. Our engineering consulting
                 services include: product cost estimation with detailed breakdowns, VAVE methodology for cost reduction, should cost analysis for
-                procurement, DFM optimization for manufacturability, supplier sourcing and negotiation support, and cost reduction roadmap development.
+                procurement, DFM optimization for manufacturability, supplier sourcing and negotiation support (see our guide to{" "}
+                <Link href="/blog/how-to-choose-the-right-manufacturing-partner-in-india-precision-machining-for-robotics-aerospace">
+                  evaluating precision machining partners
+                </Link>
+                ), and cost reduction roadmap development.
                 Contact us at +91-86670-88060 or enquiries@emuski.com to discuss your cost engineering requirements and discover how we can help
                 reduce your product costs by 25-45% with ISO certified quality and proven results.
               </p>

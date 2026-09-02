@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { FileText, Search, Calculator, Cog, Factory, ShieldCheck, Truck, Target } from "lucide-react"
 
 const flow = [
@@ -102,7 +103,13 @@ export function Engineering() {
             </div>
             <p className="mt-8 text-sm text-gray-300 leading-relaxed border-t border-white/10 pt-6">
               The gap between the two bars is what a should-cost model exists to find, before the decision to
-              manufacture is locked in, not after.
+              manufacture is locked in, not after. For the full methodology, see our{" "}
+              <Link
+                href="/blog/should-cost-analysis-the-engineer-s-guide-to-accurate-product-cost-estimation"
+                className="text-emuski-teal-light font-medium hover:underline"
+              >
+                bottom-up should-cost analysis guide
+              </Link>.
             </p>
           </div>
         </div>

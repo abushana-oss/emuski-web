@@ -1,5 +1,25 @@
 export const faqData = [
   {
+    question: "What precision tolerances does EMUSKI achieve in CNC machining?",
+    answer:
+      "Down to ±0.005 mm (±5 microns) on 3-axis, 4-axis, and 5-axis milling.",
+  },
+  {
+    question: "What materials does EMUSKI machine and fabricate?",
+    answer:
+      "Aluminum (6061, 7075), Stainless Steel (304, 316), Titanium, Inconel, and high-performance engineering plastics such as POM/Delrin and Polycarbonate.",
+  },
+  {
+    question: "How does EMUSKI's should-cost engineering achieve 15–25% BOM savings?",
+    answer:
+      "Through bottom-up should-cost modeling built from material cost, machining cycle-time, and machine hour rate, cross-checked against local raw material pricing rather than relying on a supplier's quote.",
+  },
+  {
+    question: "What quality inspection standards are followed?",
+    answer:
+      "ISO 9001:2015-compliant CMM inspection, GD&T verification, and full dimensional inspection reporting on every project.",
+  },
+  {
     question: "What can EMUSKI manufacture?",
     answer:
       "Precision machined components, sheet-metal parts and assemblies, injection-molded plastic parts, and complex sub-assemblies, across aerospace, defense, medical device, automotive, and industrial applications. See What We Manufacture above for real examples.",
